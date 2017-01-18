@@ -1,0 +1,26 @@
+html { box-sizing: border-box; }
+*, *:before, *:after { box-sizing: inherit; }
+
+@font-face {
+  font-family: 'Geomanist';
+  src: url('../../assets/fonts/Geomanist-Regular.otf');
+}
+
+@font-face {
+  font-family: 'Helvetica Light';
+  src: url('../../assets/fonts/Helvetica-Light.ttf');
+}
+
+body {
+  font-family: 'Geomanist', 'Helvetica Light', sans-serif;
+  color: #404040;
+}
+
+.page-container {
+  padding-top: 50px;
+}
+
+/* Local CSS */
+
+@import "./common/index.scss";
+@import "./Login/LoginPage/index.scss";

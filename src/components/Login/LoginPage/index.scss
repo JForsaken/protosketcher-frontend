@@ -1,0 +1,20 @@
+.login-form {
+  width: 75%;
+  margin: 0 auto;
+
+  &__title {
+    text-align: center;
+  }
+
+  &__button-container {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+  }
+}
+
+.error-modal {
+  background: #f4e9e9;
+  border-top: 11px solid #c12e2a;
+  box-shadow: #c12e2a 0px 0px 1px;
+}
