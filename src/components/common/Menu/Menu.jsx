@@ -12,6 +12,7 @@ import MenuListItem from '../MenuListItem/MenuListItem';
 /* Actions */
 import * as applicationActions from '../../../actions/application';
 
+
 const menuItems = [
   {
     text: <FormattedMessage id="menu.randomTab" />,
@@ -58,7 +59,9 @@ class Menu extends Component {
       <Navbar inverse fixedTop expanded={expanded} onToggle={this.toggleNav}>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to="/">
+            <div className="brand__logo" />
+            <div className="brand__spacer" />
+            <Link className="brand__title" to="/">
               <FormattedMessage id="website.title" />
             </Link>
           </Navbar.Brand>

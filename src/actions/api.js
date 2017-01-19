@@ -1,5 +1,6 @@
 import 'whatwg-fetch';
 import processResponse from '../utils/process-response';
+import { put } from '../persistence/storage';
 import {
   LOGIN_PENDING,
   LOGIN_SUCCESS,
@@ -26,6 +27,8 @@ export function login(loginAttempt) {
     })
       .then(processResponse)
       .then(data => {
+        put('token', data.body.token);
+
         dispatch({
           type: LOGIN_SUCCESS,
           user: data.body,

@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 import { isEmpty } from 'lodash';
 import configureStore from './utils/configure-store';
+
 import * as storage from './persistence/storage';
 import * as components from './components';
 import * as constants from './actions/constants';
@@ -40,7 +41,7 @@ function logout(nextState, replaceState) {
 
 function requireAuth(nextState, replaceState) {
   const state = store.getState();
-  const isLoggedIn = !isEmpty(state.api.login.user);
+  const isLoggedIn = !isEmpty(state.api.login.user) || storage.get('token');
   if (!isLoggedIn) {
     replaceState({
       nextPathname: nextState.location.pathname,
