@@ -76,7 +76,7 @@ class Login extends Component {
 
   handleSubmit() {
     const loginAttempt = {
-      username: this.props.fields.email.value,
+      email: this.props.fields.email.value,
       password: this.props.fields.password.value,
     };
 
