@@ -1,0 +1,29 @@
+.brand {
+
+  &__logo { 
+    background-image: url(http://placehold.it/32x32);
+    position: fixed;
+    height: 32px;
+    width: 32px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-top: -6px;
+  }
+
+  &__spacer {
+    margin-right: 10px;
+    vertical-align: middle;
+    width: 40px;
+    height: 1px;
+    display: inline-block;
+  }
+
+  &__title {
+    color: #BDBDBD !important;
+    text-decoration: none !important;
+
+    :hover, :focus {
+      color: white;
+    }
+  }
+}
