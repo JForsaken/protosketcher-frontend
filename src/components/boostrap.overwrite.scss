@@ -1,0 +1,40 @@
+.waddup {
+  color: #00f;
+}
+.btn {
+  color: color('text');
+
+  &.btn-default {
+    background-color: color('primary', 'light');
+    border: color('primary', 'base');
+
+    &:hover {
+      background-color: color('primary', 'dark');
+      border: color('primary', 'light');
+    }
+  }
+
+  &.btn-primary {
+
+  }
+
+  &.btn-success {
+
+  }
+
+  &.btn-info {
+
+  }
+
+  &.btn-warning {
+
+  }
+
+  &.btn-danger {
+
+  }
+
+  &.btn-link {
+
+  }
+}

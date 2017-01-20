@@ -1,7 +1,9 @@
-@import "./variables.scss";
-
-html { box-sizing: border-box; }
-*, *:before, *:after { box-sizing: inherit; }
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
 
 @font-face {
   font-family: 'Geomanist';
@@ -18,11 +20,19 @@ body {
   color: #404040;
 }
 
-.page-container {
-  padding-top: 50px;
+#app {
+  @import "./variables.scss";
+
+  @import "./boostrap.overwrite.scss";
+
+
+
+  .page-container {
+    padding-top: 50px;
+  }
+
+  /* Local CSS */
+
+  @import "./common/index.scss";
+  @import "./Login/LoginPage/index.scss";
 }
-
-/* Local CSS */
-
-@import "./common/index.scss";
-@import "./Login/LoginPage/index.scss";
