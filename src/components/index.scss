@@ -1,3 +1,5 @@
+@import "./variables.scss";
+
 html { box-sizing: border-box; }
 *, *:before, *:after { box-sizing: inherit; }
 
@@ -12,7 +14,7 @@ html { box-sizing: border-box; }
 }
 
 body {
-  font-family: 'Geomanist', 'Helvetica Light', sans-serif;
+  font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
   color: #404040;
 }
 
