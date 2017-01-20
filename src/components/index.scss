@@ -1,5 +1,15 @@
-html { box-sizing: border-box; }
-*, *:before, *:after { box-sizing: inherit; }
+html {
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: inherit;
+
+  &::before,
+  &::after {
+    box-sizing: inherit;
+  }
+}
 
 @font-face {
   font-family: 'Geomanist';
@@ -12,15 +22,23 @@ html { box-sizing: border-box; }
 }
 
 body {
-  font-family: 'Geomanist', 'Helvetica Light', sans-serif;
   color: #404040;
+  font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
 }
 
-.page-container {
-  padding-top: 50px;
+#app {
+  @import './variables';
+
+  @import './boostrap.overwrite';
+
+
+
+  .page-container {
+    padding-top: 50px;
+  }
+
+  /* Local CSS */
+
+  @import './common/index';
+  @import './Login/LoginPage/index';
 }
-
-/* Local CSS */
-
-@import "./common/index.scss";
-@import "./Login/LoginPage/index.scss";

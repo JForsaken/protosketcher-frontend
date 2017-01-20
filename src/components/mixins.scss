@@ -1,0 +1,153 @@
+/*
+  MEDIA QUERIES
+
+  TODO: Modifier et ajouter des media queries as needed
+
+  Usage:
+  p {
+    font-size: 16px;
+
+    @include tablet {
+      font-size: 18px;
+    }
+
+    @include desktop {
+      font-size: 20px;
+    }
+  }
+*/
+$tablet-width: 768px;
+$desktop-width: 1024px;
+
+@mixin tablet {
+  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop-width}) {
+    @content;
+  }
+}
+
+
+/*
+  TRANSITION
+
+  Usage:
+  a {
+    color: gray;
+    @include transition(color .3s ease);
+    &:hover {
+      color: black;
+    }
+  }
+
+  source: http://zerosixthree.se/8-sass-mixins-you-must-have-in-your-toolbox/
+*/
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+
+/*
+  ANIMATION
+
+  Usage:
+  @include keyframes(slide-down) {
+    0% { opacity: 1; }
+    90% { opacity: 0; }
+  }
+
+  .element {
+    width: 100px;
+    height: 100px;
+    background: black;
+    @include animation('slide-down 5s 3');
+  }
+
+  source: http://zerosixthree.se/8-sass-mixins-you-must-have-in-your-toolbox/
+*/
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation-name} {
+    @content;
+  }
+  @-ms-keyframes #{$animation-name} {
+    @content;
+  }
+  @-o-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+  -moz-animation: #{$str};
+  -ms-animation: #{$str};
+  -o-animation: #{$str};
+  animation: #{$str};
+}
+
+/*
+  BOX SHADOW
+
+  Usage:
+  a {
+    @include box-shadow(5px, 7px, 3px, #000, true);
+  }
+
+  Source: https://gist.github.com/garyharan/957284
+*/
+@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow:inset $top $left $blur $color;
+    -moz-box-shadow:inset $top $left $blur $color;
+    box-shadow:inset $top $left $blur $color;
+  } @else {
+    -webkit-box-shadow: $top $left $blur $color;
+    -moz-box-shadow: $top $left $blur $color;
+    box-shadow: $top $left $blur $color;
+  }
+}
+
+/*
+  ROUNDED CORNERS
+
+  Usage:
+  a {
+    @include rounded(2[em|px]);
+  }
+
+  Source: https://gist.github.com/garyharan/957284
+*/
+@mixin rounded($radius: 0.5em) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+/*
+  GRADIENT
+
+  Usage:
+  a {
+    @include gradient(#000, #FFF);
+  }
+
+  Source: https://gist.github.com/garyharan/957284
+*/
+@mixin gradient($from, $to) {
+  background: -webkit-gradient(linear, left top, left bottom, from($from), to($to));
+  background: -moz-linear-gradient(top,  $from, $to);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}');
+}
