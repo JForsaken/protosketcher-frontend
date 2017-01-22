@@ -10,7 +10,7 @@ export default class Footer extends Component {
     return (
       <footer>
         <Button className="page-tab active"><FormattedMessage id="footer.page" /> 1</Button>
-        <Button className="page-tab active"><FormattedMessage id="footer.page" /> 2</Button>
+        <Button className="page-tab"><FormattedMessage id="footer.page" /> 2</Button>
         <Button className="page-tab page-tab-add" title={<FormattedMessage id="footer.addPage" />}>
           <i className="fa fa-plus" aria-hidden="true"> </i>
         </Button>

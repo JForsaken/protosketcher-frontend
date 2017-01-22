@@ -22,7 +22,7 @@ html {
 body {
   font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
   color: color('text');
-  background-color: color('background');
+  background-color: color('background') !important;
 }
 
 #app {
