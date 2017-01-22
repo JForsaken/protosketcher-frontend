@@ -4,7 +4,6 @@ import { put, remove } from '../persistence/storage';
 import {
   LOGIN_PENDING,
   FETCH_ME,
-  API_FAILED,
   LOGIN,
   LOGOUT,
 } from './constants';
@@ -16,6 +15,7 @@ export function loginPending() {
     type: LOGIN_PENDING,
     user: {},
     pending: true,
+    error: {},
   });
 }
 
@@ -35,19 +35,22 @@ export function login(loginAttempt) {
 
         dispatch({
           type: LOGIN,
-          token: data.body.token,
-          user: data.body,
+          user: { token: data.body.token },
+          error: {},
           pending: false,
         });
       })
-      .catch(() => {
+      .catch((data) => {
         remove('token');
 
         dispatch({
-          type: API_FAILED,
+          type: LOGIN,
+          user: {},
           pending: false,
-          msg: data.msg,
-          code: data.code,
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
         });
       });
   };
@@ -67,15 +70,24 @@ export function fetchMe(token) {
       .then(data => {
         dispatch({
           type: FETCH_ME,
-          user: { ...data.body, token },
+          user: {
+            id: data.body._id,
+            email: data.body.email,
+            token,
+          },
+          error: {},
         });
       })
       .catch((data) => {
+        remove('token');
+
         dispatch({
-          type: API_FAILED,
-          pending: false,
-          msg: data.msg,
-          code: data.code,
+          type: FETCH_ME,
+          user: {},
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
         });
       });
   };
@@ -87,7 +99,7 @@ export function logout() {
   return dispatch => dispatch({
     type: LOGOUT,
     user: {},
-    errors: false,
-    pending: true,
+    error: {},
+    pending: false,
   });
 }

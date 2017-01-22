@@ -1,7 +1,7 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { isEqual } from 'lodash';
+import { isEqual, isEmpty } from 'lodash';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -13,6 +13,9 @@ import FieldGroup from '../../common/FieldGroup/FieldGroup';
 
 /* Actions */
 import * as apiActions from '../../../actions/api';
+
+/* Constants */
+import { LOGIN } from '../../../actions/constants';
 
 /* Utils */
 import loginValidation, { fields } from './loginValidation';
@@ -41,10 +44,12 @@ class Login extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { api } = this.props;
+    const { login } = nextProps.api;
 
-    if (!isEqual(api.login, nextProps.api.login) && !nextProps.api.login.pending) {
-      if (nextProps.api.login.errors) {
+    if (!isEqual(this.props.api.login, login)
+        && login.lastAction === LOGIN) {
+      // if the login has errors
+      if (!isEmpty(login.error)) {
         this.setState({ isShowingModal: true });
       } else {
         this.redirectToSketch();

@@ -5,8 +5,8 @@ const initialState = {
   login: {
     user: {},
     lastAction: null,
-    errors: false,
     pending: false,
+    error: {},
   },
 };
 
@@ -17,6 +17,7 @@ const actionHandlers = {
       user: action.user,
       lastAction: action.type,
       pending: action.pending,
+      error: action.error,
     },
   }),
   [constants.LOGIN]: (state, action) => ({
@@ -24,38 +25,22 @@ const actionHandlers = {
       user: action.user,
       lastAction: action.type,
       pending: action.pending,
+      error: action.error,
     },
-    error: {
-      lastAction: action.type,
-      errors: true,
-      msg: action.msg,
-      code: action.code,
-    }
   }),
   [constants.LOGOUT]: (state, action) => ({
     login: {
       user: action.user,
       lastAction: action.type,
-      errors: action.errors,
       pending: action.pending,
+      error: action.error,
     },
   }),
   [constants.FETCH_ME]: (state, action) => ({
     login: {
-      user: {
-        id: action.user._id,
-        email: action.user.email,
-        token: action.user.token,
-      },
-    },
-  }),
-
-  /* Generic Errors */
-  [constants.API_FAILED]: (state, action) => ({
-    error: {
+      user: action.user,
       lastAction: action.type,
-      msg: action.msg,
-      code: action.code,
+      error: action.error,
     },
   }),
 };

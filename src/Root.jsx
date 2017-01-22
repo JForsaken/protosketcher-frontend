@@ -26,13 +26,11 @@ const {
 
 const initialState = {
   application: {
-    token: storage.get('token'),
     locale: storage.get('locale') || 'en',
     locales: [
       'en',
       'fr',
     ],
-    user: { permissions: [/* 'manage_account'*/] },
   },
 };
 
