@@ -1,12 +1,11 @@
 import 'whatwg-fetch';
 import processResponse from '../utils/process-response';
-import { put } from '../persistence/storage';
+import { put, remove } from '../persistence/storage';
 import {
   LOGIN_PENDING,
-  LOGIN_SUCCESS,
-  LOGIN_FAILED,
   FETCH_ME,
-  API_FAILED,
+  LOGIN,
+  LOGOUT,
 } from './constants';
 
 const BACKEND_API = 'http://localhost:5000/api/v1';
@@ -14,6 +13,9 @@ const BACKEND_API = 'http://localhost:5000/api/v1';
 export function loginPending() {
   return dispatch => dispatch({
     type: LOGIN_PENDING,
+    user: {},
+    pending: true,
+    error: {},
   });
 }
 
@@ -32,16 +34,23 @@ export function login(loginAttempt) {
         put('token', data.body.token);
 
         dispatch({
-          type: LOGIN_SUCCESS,
-          token: data.body.token,
-          errors: false,
+          type: LOGIN,
+          user: { token: data.body.token },
+          error: {},
+          pending: false,
         });
       })
-      .catch(() => {
+      .catch((data) => {
+        remove('token');
+
         dispatch({
-          type: LOGIN_FAILED,
-          errors: true,
+          type: LOGIN,
+          user: {},
           pending: false,
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
         });
       });
   };
@@ -61,19 +70,36 @@ export function fetchMe(token) {
       .then(data => {
         dispatch({
           type: FETCH_ME,
-          user: { ...data.body, token },
-          errors: false,
+          user: {
+            id: data.body._id,
+            email: data.body.email,
+            token,
+          },
+          error: {},
         });
       })
       .catch((data) => {
+        remove('token');
+
         dispatch({
-          type: API_FAILED,
-          errors: true,
-          pending: false,
-          msg: data.msg,
-          code: data.code,
+          type: FETCH_ME,
+          user: {},
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
         });
       });
   };
 }
 
+export function logout() {
+  remove('token');
+
+  return dispatch => dispatch({
+    type: LOGOUT,
+    user: {},
+    error: {},
+    pending: false,
+  });
+}
