@@ -25,10 +25,12 @@ class Application extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { login } = nextProps.api;
+
     // Redirect to the login page if the /me call failed (invalid or expired token)
-    if (!isEqual(nextProps.api.login, nextProps.api.login)
-        && nextProps.api.login.lastAction === FETCH_ME) {
-      if (!nextProps.api.login.user.id) {
+    if (!isEqual(this.props.api.login, login)
+        && login.lastAction === FETCH_ME) {
+      if (!login.user.id) {
         this.redirectToLoginPage();
       }
     }
