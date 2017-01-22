@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
 import classnames from 'classnames';
+import { connect } from 'react-redux';
 import Menu from './common/Menu/Menu';
 import Footer from './common/Footer/Footer';
 import DisplayError from './common/DisplayErrors/DisplayError';
 
-export default class Application extends React.Component {
+class Application extends React.Component {
   static propTypes = {
     children: PropTypes.any,
   };
@@ -17,6 +18,13 @@ export default class Application extends React.Component {
     this.state = {
       isMenuActive: false,
     };
+  }
+
+  componentWillReceiveProps(newProps) {
+    // Redirect to the login page if the /me call failed (invalid or expired token)
+    if (!newProps.api.login.user.id && !newProps.api.login.pending) {
+      this.props.history.push('/login');
+    }
   }
 
   handleMenuClick(evt) {
@@ -51,3 +59,8 @@ export default class Application extends React.Component {
     );
   }
 }
+
+export default (connect(
+  ({ api }) => ({ api }),
+  null
+  )(Application));
