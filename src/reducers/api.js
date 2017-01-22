@@ -11,43 +11,33 @@ const initialState = {
 };
 
 const actionHandlers = {
-
   /* LOGIN */
   [constants.LOGIN_PENDING]: (state, action) => ({
     login: {
-      user: {},
+      user: action.user,
       lastAction: action.type,
-      pending: true,
+      pending: action.pending,
     },
   }),
-  [constants.LOGIN_SUCCESS]: (state, action) => ({
+  [constants.LOGIN]: (state, action) => ({
     login: {
-      user: {
-        token: action.token,
-      },
+      user: action.user,
       lastAction: action.type,
-      pending: true,
-    },
-  }),
-  [constants.LOGIN_FAILED]: (state, action) => ({
-    login: {
-      user: {},
-      lastAction: action.type,
-      pending: false,
+      pending: action.pending,
     },
     error: {
       lastAction: action.type,
       errors: true,
       msg: action.msg,
       code: action.code,
-    },
+    }
   }),
   [constants.LOGOUT]: (state, action) => ({
     login: {
-      user: {},
+      user: action.user,
       lastAction: action.type,
-      errors: false,
-      pending: false,
+      errors: action.errors,
+      pending: action.pending,
     },
   }),
   [constants.FETCH_ME]: (state, action) => ({
@@ -57,7 +47,6 @@ const actionHandlers = {
         email: action.user.email,
         token: action.user.token,
       },
-      pending: false,
     },
   }),
 
@@ -65,12 +54,10 @@ const actionHandlers = {
   [constants.API_FAILED]: (state, action) => ({
     error: {
       lastAction: action.type,
-      errors: true,
       msg: action.msg,
       code: action.code,
     },
   }),
-
 };
 
 export default createReducer(initialState, actionHandlers);

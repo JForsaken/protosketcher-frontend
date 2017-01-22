@@ -1,12 +1,12 @@
 import 'whatwg-fetch';
 import processResponse from '../utils/process-response';
-import { put } from '../persistence/storage';
+import { put, remove } from '../persistence/storage';
 import {
   LOGIN_PENDING,
-  LOGIN_SUCCESS,
-  LOGIN_FAILED,
   FETCH_ME,
   API_FAILED,
+  LOGIN,
+  LOGOUT,
 } from './constants';
 
 const BACKEND_API = 'http://localhost:5000/api/v1';
@@ -14,6 +14,9 @@ const BACKEND_API = 'http://localhost:5000/api/v1';
 export function loginPending() {
   return dispatch => dispatch({
     type: LOGIN_PENDING,
+    user: {},
+    errors: false,
+    pending: true,
   });
 }
 
@@ -32,16 +35,20 @@ export function login(loginAttempt) {
         put('token', data.body.token);
 
         dispatch({
-          type: LOGIN_SUCCESS,
+          type: LOGIN,
           token: data.body.token,
-          errors: false,
+          user: data.body,
+          pending: false,
         });
       })
       .catch(() => {
+        remove('token');
+
         dispatch({
-          type: LOGIN_FAILED,
-          errors: true,
+          type: API_FAILED,
           pending: false,
+          msg: data.msg,
+          code: data.code,
         });
       });
   };
@@ -62,13 +69,11 @@ export function fetchMe(token) {
         dispatch({
           type: FETCH_ME,
           user: { ...data.body, token },
-          errors: false,
         });
       })
       .catch((data) => {
         dispatch({
           type: API_FAILED,
-          errors: true,
           pending: false,
           msg: data.msg,
           code: data.code,
@@ -77,3 +82,13 @@ export function fetchMe(token) {
   };
 }
 
+export function logout() {
+  remove('token');
+
+  return dispatch => dispatch({
+    type: LOGOUT,
+    user: {},
+    errors: false,
+    pending: true,
+  });
+}
