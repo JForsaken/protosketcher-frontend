@@ -5,6 +5,8 @@ import {
   LOGIN_PENDING,
   LOGIN_SUCCESS,
   LOGIN_FAILED,
+  FETCH_ME,
+  API_FAILED,
 } from './constants';
 
 const BACKEND_API = 'http://localhost:5000/api/v1';
@@ -31,7 +33,7 @@ export function login(loginAttempt) {
 
         dispatch({
           type: LOGIN_SUCCESS,
-          user: data.body,
+          token: data.body.token,
           errors: false,
         });
       })
@@ -44,3 +46,34 @@ export function login(loginAttempt) {
       });
   };
 }
+
+export function fetchMe(token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/users/me`, {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: FETCH_ME,
+          user: { ...data.body, token },
+          errors: false,
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: API_FAILED,
+          errors: true,
+          pending: false,
+          msg: data.msg,
+          code: data.code,
+        });
+      });
+  };
+}
+

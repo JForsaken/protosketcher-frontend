@@ -6,8 +6,12 @@ import DevTools from './components/common/DevTools/DevTools';
 import { ReduxRouter } from 'redux-router';
 import { connect } from 'react-redux';
 import { IntlProvider } from 'react-intl';
-import { isEmpty } from 'lodash';
 import configureStore from './utils/configure-store';
+
+import { bindActionCreators } from 'redux';
+
+import { fetchMe } from './actions/api.js';
+
 
 import * as storage from './persistence/storage';
 import * as components from './components';
@@ -39,21 +43,20 @@ function logout(nextState, replaceState) {
   replaceState({}, '/login');
 }
 
-function requireAuth(nextState, replaceState) {
-  const state = store.getState();
-  const isLoggedIn = !isEmpty(state.api.login.user) || storage.get('token');
-  if (!isLoggedIn) {
-    replaceState({
-      nextPathname: nextState.location.pathname,
-    }, '/login');
+const requireAuth = (props) => (nextState, replaceState) => {
+  const token = storage.get('token');
+  if (token) {
+    props.actions.fetchMe(token);
+  } else {
+    replaceState({}, '/login');
   }
-}
+};
 
-function renderRoutes() {
+function renderRoutes(props) {
   return (
     <ReduxRouter>
       <Route component={Application}>
-        <Route path="/" component={HomePage} onEnter={requireAuth} />
+        <Route path="/" component={HomePage} onEnter={requireAuth(props)} />
         <Route path="login" component={LoginPage} />
         <Route path="logout" onEnter={logout} />
       </Route>
@@ -69,7 +72,7 @@ function getRootChildren(props) {
   const rootChildren = [
     <IntlProvider key="intl" {...intlData}>
       <StyleRoot>
-        {renderRoutes()}
+        {renderRoutes(props)}
       </StyleRoot>
     </IntlProvider>,
   ];
@@ -92,4 +95,11 @@ Root.propTypes = {
   application: PropTypes.object.isRequired,
 };
 
-export default connect(({ application }) => ({ application }))(Root);
+export default (connect(
+  ({ application }) => ({ application }),
+  dispatch => ({
+    actions: bindActionCreators({
+      fetchMe,
+    }, dispatch),
+  })
+)(Root));

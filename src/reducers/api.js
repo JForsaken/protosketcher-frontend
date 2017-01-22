@@ -17,24 +17,29 @@ const actionHandlers = {
     login: {
       user: {},
       lastAction: action.type,
-      errors: false,
       pending: true,
     },
   }),
   [constants.LOGIN_SUCCESS]: (state, action) => ({
     login: {
-      user: action.user,
+      user: {
+        token: action.token,
+      },
       lastAction: action.type,
-      errors: false,
-      pending: false,
+      pending: true,
     },
   }),
   [constants.LOGIN_FAILED]: (state, action) => ({
     login: {
       user: {},
       lastAction: action.type,
-      errors: true,
       pending: false,
+    },
+    error: {
+      lastAction: action.type,
+      errors: true,
+      msg: action.msg,
+      code: action.code,
     },
   }),
   [constants.LOGOUT]: (state, action) => ({
@@ -43,6 +48,26 @@ const actionHandlers = {
       lastAction: action.type,
       errors: false,
       pending: false,
+    },
+  }),
+  [constants.FETCH_ME]: (state, action) => ({
+    login: {
+      user: {
+        id: action.user._id,
+        email: action.user.email,
+        token: action.user.token,
+      },
+      pending: false,
+    },
+  }),
+
+  /* Generic Errors */
+  [constants.API_FAILED]: (state, action) => ({
+    error: {
+      lastAction: action.type,
+      errors: true,
+      msg: action.msg,
+      code: action.code,
     },
   }),
 
