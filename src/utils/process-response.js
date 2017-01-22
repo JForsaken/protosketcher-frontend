@@ -15,8 +15,8 @@ export default function processResponse(response) {
     if (isOk) {
       return {
         body: bodyCopy,
-        statusCode: response.status,
-        statusText: response.statusText,
+        code: response.status,
+        msg: response.statusText,
         url: response.url,
       };
     }
@@ -24,8 +24,8 @@ export default function processResponse(response) {
     const objectToThrow = {
       body: bodyCopy,
       url: response.url,
-      statusText: response.statusText,
-      statusCode: response.status,
+      msg: response.statusText,
+      code: response.status,
     };
 
     throw objectToThrow;
