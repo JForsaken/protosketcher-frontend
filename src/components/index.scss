@@ -1,5 +1,9 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+
 html {
   box-sizing: border-box;
+  background-color: color('background');
 }
 *, *:before, *:after {
   box-sizing: inherit;
@@ -17,12 +21,11 @@ html {
 
 body {
   font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
-  color: #404040;
+  color: color('text');
+  background-color: color('background');
 }
 
 #app {
-  @import "./variables.scss";
-
   @import "./boostrap.overwrite.scss";
 
 

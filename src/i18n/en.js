@@ -28,5 +28,6 @@ export default {
   'language.switcher': 'Language',
 
   // FOOTER
-  'footer.title': 'Cute little footer',
+  'footer.page': 'Page',
+  'footer.addPage': 'Add a new page',
 };

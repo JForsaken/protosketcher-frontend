@@ -4,5 +4,20 @@ footer {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 10px;
+  height: 40px;
+  padding-left: $left-menu-width + $base-padding-size;
+
+  .page-tab {
+    @include rounded-indiv(0px, 0px, 5px, 5px);
+    margin-right: $base-padding-size;
+
+    &.active {
+      background-color: color('background');
+      @include box-shadow(0px, 0px, 0px, #000, true);
+
+      &:hover {
+        background-color: color('background');
+      }
+    }
+  }
 }
