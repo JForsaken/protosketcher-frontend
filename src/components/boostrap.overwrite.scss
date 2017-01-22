@@ -15,26 +15,57 @@
   }
 
   &.btn-primary {
+    background-color: color('accent', 'base');
+    border: color('accent', 'dark');
 
+    &:hover {
+      background-color: color('accent', 'dark');
+      border: color('accent', 'light');
+    }
   }
 
   &.btn-success {
+    background-color: color('primary', 'base');
+    border: color('primary', 'dark');
 
+    &:hover {
+      background-color: color('primary', 'light');
+      border: color('primary', 'dark');
+    }
   }
 
   &.btn-info {
+    background-color: color('primary', 'dark');
+    border: color('primary', 'light');
 
+    &:hover {
+      background-color: color('primary', 'light');
+      border: color('primary', 'dark');
+    }
   }
 
   &.btn-warning {
+    background-color: color('secondary', 'light');
+    border: color('secondary', 'dark');
 
+    &:hover {
+      background-color: color('secondary', 'base');
+      border: color('secondary', 'light');
+    }
   }
 
   &.btn-danger {
+    background-color: color('secondary', 'dark');
+    border: color('secondary', 'light');
+    color: color('text', 'light');
 
+    &:hover {
+      background-color: color('secondary', 'light');
+      border: color('secondary', 'dark');
+    }
   }
 
   &.btn-link {
-
+    color: color('text', 'light');
   }
 }
