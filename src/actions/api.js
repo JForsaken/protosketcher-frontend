@@ -15,7 +15,6 @@ export function loginPending() {
   return dispatch => dispatch({
     type: LOGIN_PENDING,
     user: {},
-    errors: false,
     pending: true,
   });
 }
