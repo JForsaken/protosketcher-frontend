@@ -1,6 +1,7 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { isEqual, isEmpty } from 'lodash';
+import { FormattedMessage } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -56,7 +57,7 @@ class SaveTimer extends Component {
   render() {
     return (
       <div>
-        {this.state.isShowing && <p>Saving...</p>}
+        {this.state.isShowing && <FormattedMessage id="hud.saving" />}
       </div>
     );
   }
