@@ -1,17 +1,23 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
-
+import { injectIntl } from 'react-intl';
+import forEach from 'lodash/forEach';
+@injectIntl
 
 export default class Footer extends Component {
   render() {
-    // TODO: fix the addPage message to render properly
+    const pages = [];
+    forEach(this.props.pages, (page, index) => {
+      pages.push(<Button key={index} className="page-tab active">{page}</Button>);
+    });
     return (
       <footer>
-        <Button className="page-tab active"><FormattedMessage id="footer.page" /> 1</Button>
-        <Button className="page-tab"><FormattedMessage id="footer.page" /> 2</Button>
-        <Button className="page-tab page-tab-add" title={<FormattedMessage id="footer.addPage" />}>
+        {pages}
+        <Button
+          className="page-tab page-tab-add"
+          title={this.props.intl.messages['footer.addPage']}
+        >
           <i className="fa fa-plus" aria-hidden="true"> </i>
         </Button>
       </footer>
