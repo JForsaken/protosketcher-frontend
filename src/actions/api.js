@@ -1,11 +1,12 @@
 import 'whatwg-fetch';
 import processResponse from '../utils/process-response';
-import { put, remove } from '../persistence/storage';
+import { get, put, remove } from '../persistence/storage';
 import {
   LOGIN_PENDING,
   FETCH_ME,
   LOGIN,
   LOGOUT,
+  SAVE,
 } from './constants';
 
 const BACKEND_API = 'http://localhost:5000/api/v1';
@@ -102,4 +103,40 @@ export function logout() {
     error: {},
     pending: false,
   });
+}
+
+export function save() {
+  const date = new Date();
+
+  return dispatch => {
+    // TODO: replace with the actual save call
+    fetch(`${BACKEND_API}/users/`, {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': get('token'),
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: SAVE,
+          users: data.body,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: SAVE,
+          users: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
 }
