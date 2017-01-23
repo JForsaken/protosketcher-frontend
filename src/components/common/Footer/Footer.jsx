@@ -5,9 +5,9 @@ import { FormattedMessage } from 'react-intl';
 export default class Footer extends Component {
   render() {
     return (
-      <div>
+      <footer>
         <FormattedMessage id="footer.title" />
-      </div>
+      </footer>
     );
   }
 }
