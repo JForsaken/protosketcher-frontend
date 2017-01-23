@@ -5,8 +5,14 @@ html {
   box-sizing: border-box;
   background-color: color('background');
 }
-*, *:before, *:after {
+
+* {
   box-sizing: inherit;
+
+  &::before,
+  &::after {
+    box-sizing: inherit;
+  }
 }
 
 @font-face {
@@ -20,15 +26,13 @@ html {
 }
 
 body {
-  font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
   color: color('text');
   background-color: color('background') !important;
+  font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
 }
 
 #app {
-  @import "./boostrap.overwrite.scss";
-
-
+  @import './boostrap.overwrite';
 
   .page-container {
     padding-top: 50px;
@@ -36,6 +40,6 @@ body {
 
   /* Local CSS */
 
-  @import "./common/index.scss";
-  @import "./Login/LoginPage/index.scss";
+  @import './common/index';
+  @import './Login/LoginPage/index';
 }

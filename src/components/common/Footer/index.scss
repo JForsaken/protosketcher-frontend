@@ -1,11 +1,11 @@
 footer {
   background-color: color('foreground', 'dark');
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   height: 40px;
   padding-left: $left-menu-width + $base-padding-size;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
 
   .page-tab {
     @include rounded-indiv(0px, 0px, 5px, 5px);
