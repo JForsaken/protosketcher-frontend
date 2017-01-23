@@ -5,72 +5,44 @@ const initialState = {
   login: {
     user: {},
     lastAction: null,
-    errors: false,
     pending: false,
+    error: {},
   },
 };
 
 const actionHandlers = {
-
   /* LOGIN */
   [constants.LOGIN_PENDING]: (state, action) => ({
     login: {
-      user: {},
+      user: action.user,
       lastAction: action.type,
-      pending: true,
+      pending: action.pending,
+      error: action.error,
     },
   }),
-  [constants.LOGIN_SUCCESS]: (state, action) => ({
+  [constants.LOGIN]: (state, action) => ({
     login: {
-      user: {
-        token: action.token,
-      },
+      user: action.user,
       lastAction: action.type,
-      pending: true,
-    },
-  }),
-  [constants.LOGIN_FAILED]: (state, action) => ({
-    login: {
-      user: {},
-      lastAction: action.type,
-      pending: false,
-    },
-    error: {
-      lastAction: action.type,
-      errors: true,
-      msg: action.msg,
-      code: action.code,
+      pending: action.pending,
+      error: action.error,
     },
   }),
   [constants.LOGOUT]: (state, action) => ({
     login: {
-      user: {},
+      user: action.user,
       lastAction: action.type,
-      errors: false,
-      pending: false,
+      pending: action.pending,
+      error: action.error,
     },
   }),
   [constants.FETCH_ME]: (state, action) => ({
     login: {
-      user: {
-        id: action.user._id,
-        email: action.user.email,
-        token: action.user.token,
-      },
-      pending: false,
-    },
-  }),
-
-  /* Generic Errors */
-  [constants.API_FAILED]: (state, action) => ({
-    error: {
+      user: action.user,
       lastAction: action.type,
-      errors: true,
-      msg: action.msg,
-      code: action.code,
+      error: action.error,
     },
   }),
-
 };
 
 export default createReducer(initialState, actionHandlers);

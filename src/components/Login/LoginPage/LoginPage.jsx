@@ -1,6 +1,7 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import { isEqual, isEmpty } from 'lodash';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -13,15 +14,11 @@ import FieldGroup from '../../common/FieldGroup/FieldGroup';
 /* Actions */
 import * as apiActions from '../../../actions/api';
 
+/* Constants */
+import { LOGIN } from '../../../actions/constants';
+
 /* Utils */
 import loginValidation, { fields } from './loginValidation';
-
-/* Constants */
-import {
-  LOGIN_FAILED,
-  LOGIN_SUCCESS,
-} from '../../../actions/constants';
-
 
 @injectIntl
 class Login extends Component {
@@ -46,32 +43,22 @@ class Login extends Component {
     };
   }
 
-  componentWillUpdate(nextProps) {
-    const { api } = this.props;
+  componentWillReceiveProps(nextProps) {
+    const { login } = nextProps.api;
 
-    if (api.login.lastAction !== nextProps.api.login.lastAction) {
-      this.handleApiResponse(nextProps.api.login.lastAction);
+    if (!isEqual(this.props.api.login, login)
+        && login.lastAction === LOGIN) {
+      // if the login has errors
+      if (!isEmpty(login.error)) {
+        this.setState({ isShowingModal: true });
+      } else {
+        this.redirectToSketch();
+      }
     }
   }
 
   handleModalClose() {
     this.setState({ isShowingModal: false });
-  }
-
-  handleApiResponse(response) {
-    switch (response) {
-
-      case LOGIN_FAILED:
-        this.setState({ isShowingModal: true });
-        break;
-
-      case LOGIN_SUCCESS:
-        this.redirectToSketch();
-        break;
-
-      default:
-        break;
-    }
   }
 
   handleSubmit() {

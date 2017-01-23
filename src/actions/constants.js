@@ -7,7 +7,6 @@ export const HIDE_ERROR = 'HIDE_ERROR';
 
 // Login
 export const LOGIN_PENDING = 'LOGIN_PENDING';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAILED = 'LOGIN_FAILED';
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
 export const FETCH_ME = 'FETCH_ME';
-export const API_FAILED = 'API_FAILED';
