@@ -37,8 +37,7 @@ class Application extends Component {
   }
 
   redirectToLoginPage() {
-    const { history } = this.context;
-    const { location } = this.props;
+    const { history, location } = this.props;
     let nextPath = '/login';
 
     if (location.state && location.state.nextPathname) {
