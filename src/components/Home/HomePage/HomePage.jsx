@@ -5,6 +5,7 @@ import SaveTimer from '../SaveTimer/SaveTimer';
 /* Components */
 import Menu from '../../common/Menu/Menu';
 import Footer from '../../common/Footer/Footer';
+import Workspace from '../../Workspace/Workspace';
 
 export default class Home extends Component {
   render() {
@@ -12,6 +13,7 @@ export default class Home extends Component {
       <div className="page-container">
         <Menu />
         <SaveTimer />
+        <Workspace />
         <Footer />
       </div>
     );
