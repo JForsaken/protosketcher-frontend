@@ -1,8 +1,14 @@
 html {
   box-sizing: border-box;
 }
-*, *:before, *:after {
+
+* {
   box-sizing: inherit;
+
+  &::before,
+  &::after {
+    box-sizing: inherit;
+  }
 }
 
 @font-face {
@@ -16,14 +22,14 @@ html {
 }
 
 body {
-  font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
   color: #404040;
+  font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
 }
 
 #app {
-  @import "./variables.scss";
+  @import './variables';
 
-  @import "./boostrap.overwrite.scss";
+  @import './boostrap.overwrite';
 
 
 
@@ -33,6 +39,6 @@ body {
 
   /* Local CSS */
 
-  @import "./common/index.scss";
-  @import "./Login/LoginPage/index.scss";
+  @import './common/index';
+  @import './Login/LoginPage/index';
 }
