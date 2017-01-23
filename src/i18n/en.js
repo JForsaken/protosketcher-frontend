@@ -21,6 +21,9 @@ export default {
   'form.errors.maxLength': 'Must be no more than 30 characters',
   'form.errors.maxCapacity': ' No more than 10 kids allowed!',
 
+  // HUD MENU
+  'hud.saving': 'Saving...',
+
   // MENU
   'menu.randomTab': 'Random tab',
 

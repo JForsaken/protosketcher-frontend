@@ -10,3 +10,6 @@ export const LOGIN_PENDING = 'LOGIN_PENDING';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const FETCH_ME = 'FETCH_ME';
+
+// API
+export const SAVE = 'SAVE';
