@@ -43,6 +43,17 @@ const actionHandlers = {
       error: action.error,
     },
   }),
+
+  /* API */
+  [constants.SAVE]: (state, action) => ({
+    saving: {
+      users: action.users,
+      time: action.time,
+      lastAction: action.type,
+      error: action.error,
+    },
+  }),
+
 };
 
 export default createReducer(initialState, actionHandlers);

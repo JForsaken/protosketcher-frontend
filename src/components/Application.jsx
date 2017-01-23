@@ -90,4 +90,3 @@ class Application extends Component {
 export default (connect(
   ({ api, router }) => ({ api, router }),
   )(Application));
-
