@@ -11,13 +11,19 @@ export default class Footer extends Component {
 
     this.state = {
       pages: ['Page 1', 'Page 2'],
+      activePage: 0,
     };
   }
 
   render() {
     const pages = [];
+    let className;
     forEach(this.state.pages, (page, index) => {
-      pages.push(<Button key={index} className="page-tab active">{page}</Button>);
+      className = 'page-tab';
+      if (this.state.activePage === index) {
+        className += ' active';
+      }
+      pages.push(<Button key={index} className={className}>{page}</Button>);
     });
     return (
       <footer>
