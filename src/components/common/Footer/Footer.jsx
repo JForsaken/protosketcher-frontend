@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import { injectIntl } from 'react-intl';
 import forEach from 'lodash/forEach';
+import classNames from 'classnames';
 @injectIntl
 
 export default class Footer extends Component {
@@ -33,12 +34,12 @@ export default class Footer extends Component {
 
   render() {
     const pages = [];
-    let className;
     forEach(this.state.pages, (page, index) => {
-      className = 'page-tab';
-      if (this.state.activePage === index) {
-        className += ' active';
-      }
+      const className = classNames({
+        'page-tab': true,
+        'page-tab--active': this.state.activePage === index,
+      });
+
       pages.push(
         <Button key={index} className={className} onClick={() => this.changePage(index)}>
           {page}

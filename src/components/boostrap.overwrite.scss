@@ -1,5 +1,6 @@
 .btn {
   color: color('text');
+  @include rounded-equal(2px);
 
   &.btn-default {
     background-color: color('primary', 'light');

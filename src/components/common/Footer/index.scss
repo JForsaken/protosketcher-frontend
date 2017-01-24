@@ -7,12 +7,12 @@ footer {
   bottom: 0;
   left: 0;
 
-  .page-tab {
-    @include rounded-indiv(0px, 0px, 5px, 5px);
+  .btn.page-tab {
+    @include rounded-indiv(0px, 0px, 2px, 2px);
     margin-right: $base-padding-size;
     font-weight: 600;
 
-    &.active {
+    &--active {
       background-color: color('background');
       cursor: default;
       @include box-shadow(0px, 0px, 0px, #000, true);
