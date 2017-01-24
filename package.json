@@ -19,7 +19,7 @@
     "deploy": "npm run dist && gh-pages -d dist",
     "dist": "npm run clean && npm run lint && NODE_ENV=production webpack --config webpack.config.production.js",
     "lint": "eslint --ext .js --ext .jsx --fix src ; exit 0",
-    "start": "npm install && npm run build && node server.js",
+    "start": "npm run build && node server.js",
     "dev": "npm run build && DEVTOOLS=true node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
