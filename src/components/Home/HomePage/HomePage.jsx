@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import Footer from '../../common/Footer/Footer';
 
 export default class Home extends Component {
-    render() {
+  render() {
     return (
       <div className="page-container">
         Welcome to the sketch
