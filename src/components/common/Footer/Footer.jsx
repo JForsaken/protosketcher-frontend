@@ -15,6 +15,13 @@ export default class Footer extends Component {
     };
   }
 
+  changePage(index) {
+    if (this.state.activePage === index) {
+      return;
+    }
+    this.setState({ activePage: index });
+  }
+
   render() {
     const pages = [];
     let className;
@@ -23,7 +30,11 @@ export default class Footer extends Component {
       if (this.state.activePage === index) {
         className += ' active';
       }
-      pages.push(<Button key={index} className={className}>{page}</Button>);
+      pages.push(
+        <Button key={index} className={className} onClick={() => this.changePage(index)}>
+          {page}
+        </Button>
+      );
     });
     return (
       <footer>
