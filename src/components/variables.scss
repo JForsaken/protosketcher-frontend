@@ -1,3 +1,4 @@
+/* COLORS */
 $colors: (
   'primary': (
     'base': #8e3329,
@@ -34,3 +35,7 @@ $colors: (
 @function color($key: 'primary', $tone: 'base') {
   @return map-get(map-get($colors, $key), $tone);
 }
+
+/* SIZES */
+$left-menu-width: 15%;
+$base-padding-size: 1%;

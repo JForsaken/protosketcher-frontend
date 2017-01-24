@@ -1,5 +1,9 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+
 html {
   box-sizing: border-box;
+  background-color: color('background');
 }
 
 * {
@@ -22,16 +26,13 @@ html {
 }
 
 body {
-  color: #404040;
+  color: color('text');
+  background-color: color('background') !important;
   font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
 }
 
 #app {
-  @import './variables';
-
   @import './boostrap.overwrite';
-
-
 
   .page-container {
     padding-top: 50px;

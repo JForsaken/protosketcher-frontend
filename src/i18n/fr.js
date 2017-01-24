@@ -31,5 +31,7 @@ export default {
   'language.switcher': 'Langue',
 
   // FOOTER
-  'footer.title': 'Pied de page assez cute',
+  'footer.page': 'Page',
+  'footer.addPage': 'Ajouter une nouvelle page',
+  'footer.newPage': 'Nouvelle Page',
 };
