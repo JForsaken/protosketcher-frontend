@@ -5,44 +5,52 @@ const initialState = {
   login: {
     user: {},
     lastAction: null,
-    errors: false,
     pending: false,
+    error: {},
   },
 };
 
 const actionHandlers = {
-
   /* LOGIN */
   [constants.LOGIN_PENDING]: (state, action) => ({
     login: {
-      user: {},
+      user: action.user,
       lastAction: action.type,
-      errors: false,
-      pending: true,
+      pending: action.pending,
+      error: action.error,
     },
   }),
-  [constants.LOGIN_SUCCESS]: (state, action) => ({
+  [constants.LOGIN]: (state, action) => ({
     login: {
       user: action.user,
       lastAction: action.type,
-      errors: false,
-      pending: false,
-    },
-  }),
-  [constants.LOGIN_FAILED]: (state, action) => ({
-    login: {
-      user: {},
-      lastAction: action.type,
-      errors: true,
-      pending: false,
+      pending: action.pending,
+      error: action.error,
     },
   }),
   [constants.LOGOUT]: (state, action) => ({
     login: {
-      user: {},
+      user: action.user,
       lastAction: action.type,
-      errors: false,
-      pending: false,
+      pending: action.pending,
+      error: action.error,
+    },
+  }),
+  [constants.FETCH_ME]: (state, action) => ({
+    login: {
+      user: action.user,
+      lastAction: action.type,
+      error: action.error,
+    },
+  }),
+
+  /* API */
+  [constants.SAVE]: (state, action) => ({
+    saving: {
+      users: action.users,
+      time: action.time,
+      lastAction: action.type,
+      error: action.error,
     },
   }),
 

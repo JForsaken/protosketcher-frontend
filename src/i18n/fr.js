@@ -24,6 +24,9 @@ export default {
   // MENU
   'menu.randomTab': 'Onglet pas rapport',
 
+  // HUD MENU
+  'hud.saving': 'Enregistrement en cours...',
+
   // LANGUAGE
   'language.switcher': 'Langue',
 
