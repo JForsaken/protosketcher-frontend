@@ -30,4 +30,5 @@ export default {
   // FOOTER
   'footer.page': 'Page',
   'footer.addPage': 'Add a new page',
+  'footer.newPage': 'New Page',
 };

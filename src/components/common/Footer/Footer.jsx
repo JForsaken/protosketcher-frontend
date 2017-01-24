@@ -22,6 +22,15 @@ export default class Footer extends Component {
     this.setState({ activePage: index });
   }
 
+  addPage() {
+    const newPages = this.state.pages;
+    newPages.push(this.props.intl.messages['footer.newPage']);
+    this.setState({
+      pages: newPages,
+      activePage: newPages.length - 1,
+    });
+  }
+
   render() {
     const pages = [];
     let className;
@@ -42,6 +51,7 @@ export default class Footer extends Component {
         <Button
           className="page-tab page-tab-add"
           title={this.props.intl.messages['footer.addPage']}
+          onClick={() => this.addPage()}
         >
           <i className="fa fa-plus" aria-hidden="true"> </i>
         </Button>
