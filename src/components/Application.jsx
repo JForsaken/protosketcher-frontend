@@ -1,9 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
-import Menu from './common/Menu/Menu';
-import Footer from './common/Footer/Footer';
 import DisplayError from './common/DisplayErrors/DisplayError';
 
 /* Constants */
@@ -13,16 +10,6 @@ class Application extends Component {
   static propTypes = {
     children: PropTypes.any,
   };
-
-  constructor(props, context) {
-    super(props, context);
-
-    this.handleMenuClick = this.handleMenuClick.bind(this);
-
-    this.state = {
-      isMenuActive: false,
-    };
-  }
 
   componentWillReceiveProps(nextProps) {
     const { login } = nextProps.api;
@@ -47,27 +34,9 @@ class Application extends Component {
     history.pushState({}, nextPath);
   }
 
-  handleMenuClick(evt) {
-    evt.preventDefault();
-    this.setState({ isMenuActive: !this.state.isMenuActive });
-  }
-
   render() {
-    const { isMenuActive } = this.state;
-    const activeClass = isMenuActive ? 'active' : '';
-
     return (
-      <div id="layout" className={activeClass}>
-        <a
-          href="#menu" id="menuLink"
-          className={classnames('menu-link', activeClass)}
-          onClick={this.handleMenuClick}
-        >
-          <span></span>
-        </a>
-
-        <Menu activeClass={activeClass} />
-
+      <div id="layout">
         <div id="main">
           <DisplayError />
 
@@ -80,8 +49,6 @@ class Application extends Component {
           {/* this will render the child routes */}
           {this.props.children}
         </div>
-
-        <Footer />
       </div>
     );
   }

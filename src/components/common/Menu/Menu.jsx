@@ -25,7 +25,6 @@ class Menu extends Component {
 
   static propTypes = {
     actions: PropTypes.object,
-    activeClass: PropTypes.string.isRequired,
     application: PropTypes.object.isRequired,
   };
 
