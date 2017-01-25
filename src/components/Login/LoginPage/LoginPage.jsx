@@ -1,143 +1,88 @@
 /* Node modules */
-import React, { Component, PropTypes } from 'react';
-import { Button, Form } from 'react-bootstrap';
-import { isEqual, isEmpty } from 'lodash';
-import { reduxForm, Field } from 'redux-form';
-import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
-import { bindActionCreators } from 'redux';
-import { ModalContainer, ModalDialog } from 'react-modal-dialog';
+import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 /* Components */
-import ValidatedField from '../../common/ValidatedField/ValidatedField';
+import LoginSection from '../LoginSection/LoginSection';
+import SignupSection from '../SignupSection/SignupSection';
 
-/* Actions */
-import * as apiActions from '../../../actions/api';
+const animationTime = 600;
 
-/* Constants */
-import { LOGIN } from '../../../actions/constants';
-
-/* Utils */
-import { isEmail, isRequired } from '../../../utils/validation';
-
-@injectIntl
-class Login extends Component {
-  static propTypes = {
-    router: PropTypes.object.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-  };
-
-  constructor(props, context) {
-    super(props, context);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleModalClose = this.handleModalClose.bind(this);
+export default class LoginPage extends Component {
+  constructor(props) {
+    super(props);
 
     this.state = {
-      isShowingModal: false,
+      isLoginButtonActive: true,
+      canToggle: true,
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { login } = nextProps.api;
+  loginClick() {
+    if (!this.state.isLoginButtonActive && this.state.canToggle) {
+      const timeoutId = setTimeout(() => {
+        this.setState({ canToggle: true });
+      }, animationTime);
 
-    if (!isEqual(this.props.api.login, login)
-        && login.lastAction === LOGIN) {
-      // if the login has errors
-      if (!isEmpty(login.error)) {
-        this.setState({ isShowingModal: true });
-      } else {
-        this.redirectToSketch();
-      }
+      this.setState({
+        timeoutId,
+        isLoginButtonActive: true,
+        canToggle: false,
+      });
     }
   }
 
-  handleModalClose() {
-    this.setState({ isShowingModal: false });
-  }
+  signupClick() {
+    if (this.state.isLoginButtonActive && this.state.canToggle) {
+      const timeoutId = setTimeout(() => {
+        this.setState({ canToggle: true });
+      }, animationTime);
 
-  handleSubmit() {
-    const { email, password } = this.props.form.loginForm.values;
-
-    this.props.actions.loginPending();
-    this.props.actions.login({ email, password });
-  }
-
-  redirectToSketch() {
-    this.props.router.push('/');
-  }
-
-  renderModal() {
-    return (
-      <ModalContainer onClose={this.handleModalClose}>
-        <ModalDialog className="error-modal" onClose={this.handleModalClose}>
-          <h2>
-            <FormattedMessage id="login.form.modal.title" />
-          </h2>
-          <h4>
-            <FormattedMessage id="login.form.modal.content" />
-          </h4>
-        </ModalDialog>
-      </ModalContainer>
-    );
+      this.setState({
+        timeoutId,
+        isLoginButtonActive: false,
+        canToggle: false,
+      });
+    }
   }
 
   render() {
-    const {
-      handleSubmit,
-      api,
-      intl,
-    } = this.props;
+    const loginButtonClass = classNames({
+      'login-form__context-button': true,
+      'login-form__context-button--active': this.state.isLoginButtonActive,
+    });
 
-    const submitButtonContent = api.login.pending ?
-      <div className="spinner" /> :
-      <div><i className="fa fa-paper-plane" /> {intl.messages['login.form.title']}</div>;
+    const signupButtonClass = classNames({
+      'login-form__context-button': true,
+      'login-form__context-button--active': !this.state.isLoginButtonActive,
+    });
+
+    const { location } = this.props;
 
     return (
-      <div className="page-container">
-        {this.state.isShowingModal && this.renderModal()}
-        <Form className="login-form" onSubmit={handleSubmit(this.handleSubmit)}>
-          <h1 className="login-form__title">
-            <FormattedMessage id="login.form.title" />
-          </h1>
-          <Field
-            name="email"
-            component={ValidatedField}
-            validate={[isRequired, isEmail]}
-            type="email"
-            placeholder={intl.messages['login.form.email']}
-          />
-          <Field
-            name="password"
-            component={ValidatedField}
-            type="password"
-            validate={isRequired}
-            placeholder={intl.messages['login.form.password']}
-          />
-          <div className="login-form__button-container">
-            <Button
-              style={{ width: 150, height: 45 }}
-              bsStyle="primary"
-              bsSize="large"
-              type="submit"
-              disabled={api.login.pending}
-            >
-              {submitButtonContent}
-            </Button>
-          </div>
-        </Form>
+      <div className="page-container login-page">
+        <div className="login-form">
+          <a className={loginButtonClass} onClick={() => this.loginClick()}>
+            <FormattedMessage id="login.form.button" />
+          </a>
+          <a className={signupButtonClass} onClick={() => this.signupClick()}>
+            <FormattedMessage id="signup.form.button" />
+          </a>
+
+          <ReactCSSTransitionGroup
+            transitionName="form"
+            transitionEnterTimeout={animationTime}
+            transitionLeaveTimeout={animationTime}
+          >
+            {this.state.isLoginButtonActive ?
+              <LoginSection key="login-section" location={location} /> :
+              <SignupSection key="signup-section" location={location} />
+            }
+          </ReactCSSTransitionGroup>
+        </div>
       </div>
     );
   }
 }
-
-export default reduxForm({
-  form: 'loginForm',
-  destroyOnUnmount: false,
-})(connect(
-  ({ api, form }) => ({ api, form }),
-  dispatch => ({
-    actions: bindActionCreators({
-      ...apiActions,
-    }, dispatch),
-  })
-)(Login));

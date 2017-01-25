@@ -5,7 +5,12 @@ export default {
   'website.title': 'Protosketcher',
 
   // LOGIN FORM
-  'login.form.title': 'Connexion',
+  'login.form.title': 'Bon Retour!',
+  'signup.form.title': 'Vous enregistrer Gratuitement',
+  'login.form.button': 'Connexion',
+  'signup.form.button': "S'enregistrer",
+  'login.form.firstname': 'Prénom',
+  'login.form.lastname': 'Nom',
   'login.form.email': 'Courriel',
   'login.form.password': 'Mot de passe',
   'login.form.modal.title': 'Échec de connection.',

@@ -5,7 +5,12 @@ export default {
   'website.title': 'Protosketcher',
 
   // LOGIN FORM
-  'login.form.title': 'Login',
+  'login.form.title': 'Welcome Back!',
+  'signup.form.title': 'Sign Up for Free',
+  'login.form.button': 'Log in',
+  'signup.form.button': 'Get started',
+  'login.form.firstname': 'First Name',
+  'login.form.lastname': 'Last Name',
   'login.form.email': 'Email',
   'login.form.password': 'Password',
   'login.form.modal.title': 'Failed login.',

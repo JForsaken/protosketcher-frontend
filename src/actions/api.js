@@ -42,8 +42,6 @@ export function login(loginAttempt) {
         });
       })
       .catch((data) => {
-        remove('token');
-
         dispatch({
           type: LOGIN,
           user: {},
