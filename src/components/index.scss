@@ -35,12 +35,12 @@ body {
   @import './boostrap.overwrite';
 
   .page-container {
-    padding-top: 50px;
+    padding-top: $top-menu-height;
   }
 
   /* Local CSS */
 
   @import './common/index';
   @import './Login/LoginPage/index';
-@import './Workspace/index';
+  @import './Workspace/index';
 }

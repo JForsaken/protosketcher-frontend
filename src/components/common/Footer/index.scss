@@ -1,6 +1,6 @@
 footer {
   background-color: color('foreground', 'dark');
-  height: 40px;
+  height: $footer-height;
   padding-left: $left-menu-width + $base-padding-size;
   position: absolute;
   right: 0;
