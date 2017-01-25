@@ -15,7 +15,11 @@ import FieldGroup from '../../common/FieldGroup/FieldGroup';
 import * as apiActions from '../../../actions/api';
 
 /* Constants */
+<<<<<<< HEAD
 import { LOGIN, CREATE_USER } from '../../../actions/constants';
+=======
+import { LOGIN } from '../../../actions/constants';
+>>>>>>> Created style for the login
 
 /* Utils */
 import loginValidation, { fields } from './loginValidation';
@@ -44,6 +48,7 @@ class SignupSection extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+<<<<<<< HEAD
     const { login, createUser } = nextProps.api;
 
     if (!isEqual(this.props.api.createUser, createUser)
@@ -60,6 +65,12 @@ class SignupSection extends Component {
       }
     } else if (!isEqual(this.props.api.login, login)
                && login.lastAction === LOGIN) {
+=======
+    const { login } = nextProps.api;
+
+    if (!isEqual(this.props.api.login, login)
+        && login.lastAction === LOGIN) {
+>>>>>>> Created style for the login
       // if the login has errors
       if (!isEmpty(login.error)) {
         this.setState({ isShowingModal: true });
@@ -74,13 +85,22 @@ class SignupSection extends Component {
   }
 
   handleSubmit() {
+<<<<<<< HEAD
     const userCredentials = {
+=======
+    const loginAttempt = {
+>>>>>>> Created style for the login
       email: this.props.fields.email.value,
       password: this.props.fields.password.value,
     };
 
+<<<<<<< HEAD
     this.props.actions.createUserPending();
     this.props.actions.createUser(userCredentials);
+=======
+    this.props.actions.loginPending();
+    this.props.actions.login(loginAttempt);
+>>>>>>> Created style for the login
   }
 
   redirectToSketch() {
@@ -121,7 +141,11 @@ class SignupSection extends Component {
       intl,
     } = this.props;
 
+<<<<<<< HEAD
     const submitButtonContent = api.login.pending || api.createUser.pending ?
+=======
+    const submitButtonContent = api.login.pending ?
+>>>>>>> Created style for the login
       <div className="spinner" /> :
       intl.messages['signup.form.button'];
 
