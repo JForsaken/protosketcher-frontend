@@ -1,3 +1,7 @@
+.form-control {
+  @include rounded-equal(2px);
+}
+
 .btn {
   color: color('text');
   @include rounded-equal(2px);

@@ -8,14 +8,13 @@
     padding: 5px 10px;
     background: none;
     background-image: none;
-    border: 1px solid #a0b3b0;
-    color: #ffffff;
-    border-radius: 0;
+    border: 1px solid color('background', 'dark');
+    color: color('text', 'light');
     transition: border-color .25s ease, box-shadow .25s ease;
 
     &:focus {
       outline: 0;
-      border-color: #1ab188;
+      border-color: color('accent', 'light');
     }
 
     &--narrow {
@@ -29,42 +28,39 @@
   }
 
   &__forgot-password {
-    bottom: 20;
     display: block;
     text-align: right;
     text-decoration: none;
-    color: #1ab188;
+    color: color('accent', 'light');
     transition: .5s ease;
 
     &:hover {
-      color: #179b77;
+      color: color('accent', 'dark');
       cursor: pointer;
     }
   }
 
-  &__login-button {
+  &__login-button.btn {
     height: 60px;
     position: absolute;
     right:  0;
     bottom: 0;
     width: 100%;
-    border: 0;
     margin-top: 20px;
     outline: none;
-    border-radius: 0;
+    @include rounded-indiv(0px, 0px, 2px, 2px);
     padding: 15px 0;
     font-size: 2rem;
     font-weight: 600;
 
     text-transform: uppercase;
     letter-spacing: .1em;
-    background: #1ab188 !important;
-    color: #ffffff;
-    -webkit-transition: all 0.5s ease;
+    background: color('accent', 'light');
+    color: color('text', 'light');
     transition: all 0.5s ease;
 
     &:hover {
-      background: #179b77 !important;
+      background: color('accent', 'dark');
     }
   }
 }
