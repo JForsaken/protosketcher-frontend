@@ -7,6 +7,8 @@ export default {
   // LOGIN FORM
   'login.form.title': 'Welcome Back!',
   'signup.form.title': 'Sign Up for Free',
+  'login.form.context': 'Log in',
+  'signup.form.context': 'Sign up',
   'login.form.button': 'Log in',
   'signup.form.button': 'Get started',
   'login.form.firstname': 'First Name',

@@ -65,10 +65,10 @@ export default class LoginPage extends Component {
       <div className="page-container login-page">
         <div className="login-form">
           <a className={loginButtonClass} onClick={() => this.loginClick()}>
-            <FormattedMessage id="login.form.button" />
+            <FormattedMessage id="login.form.context" />
           </a>
           <a className={signupButtonClass} onClick={() => this.signupClick()}>
-            <FormattedMessage id="signup.form.button" />
+            <FormattedMessage id="signup.form.context" />
           </a>
 
           <ReactCSSTransitionGroup

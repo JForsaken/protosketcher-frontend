@@ -15,7 +15,7 @@ import FieldGroup from '../../common/FieldGroup/FieldGroup';
 import * as apiActions from '../../../actions/api';
 
 /* Constants */
-import { LOGIN } from '../../../actions/constants';
+import { LOGIN, CREATE_USER } from '../../../actions/constants';
 
 /* Utils */
 import loginValidation, { fields } from './loginValidation';
@@ -44,10 +44,22 @@ class SignupSection extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { login } = nextProps.api;
+    const { login, createUser } = nextProps.api;
 
-    if (!isEqual(this.props.api.login, login)
-        && login.lastAction === LOGIN) {
+    if (!isEqual(this.props.api.createUser, createUser)
+        && createUser.lastAction === CREATE_USER) {
+      // if the user creation has errors
+      if (!isEmpty(createUser.error)) {
+        this.setState({ isShowingModal: true });
+      } else {
+        const loginAttempt = {
+          email: this.props.fields.email.value,
+          password: this.props.fields.password.value,
+        };
+        this.props.actions.login(loginAttempt);
+      }
+    } else if (!isEqual(this.props.api.login, login)
+               && login.lastAction === LOGIN) {
       // if the login has errors
       if (!isEmpty(login.error)) {
         this.setState({ isShowingModal: true });
@@ -62,13 +74,13 @@ class SignupSection extends Component {
   }
 
   handleSubmit() {
-    const loginAttempt = {
+    const userCredentials = {
       email: this.props.fields.email.value,
       password: this.props.fields.password.value,
     };
 
-    this.props.actions.loginPending();
-    this.props.actions.login(loginAttempt);
+    this.props.actions.createUserPending();
+    this.props.actions.createUser(userCredentials);
   }
 
   redirectToSketch() {
@@ -109,7 +121,7 @@ class SignupSection extends Component {
       intl,
     } = this.props;
 
-    const submitButtonContent = api.login.pending ?
+    const submitButtonContent = api.login.pending || api.createUser.pending ?
       <div className="spinner" /> :
       intl.messages['signup.form.button'];
 

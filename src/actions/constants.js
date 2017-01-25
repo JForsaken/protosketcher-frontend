@@ -11,5 +11,9 @@ export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const FETCH_ME = 'FETCH_ME';
 
+// Create User
+export const CREATE_USER = 'CREATE_USER';
+export const CREATE_USER_PENDING = 'CREATE_USER_PENDING';
+
 // API
 export const SAVE = 'SAVE';
