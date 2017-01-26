@@ -1,6 +1,6 @@
 /* global __DEVTOOLS__ */
 import React, { PropTypes, Component } from 'react';
-import { Router, Route, hashHistory } from 'react-router';
+import { IndexRoute, Router, Route, hashHistory } from 'react-router';
 import DevTools from './components/common/DevTools/DevTools';
 import { connect } from 'react-redux';
 import { IntlProvider } from 'react-intl';
@@ -36,7 +36,7 @@ export const store = configureStore(initialState);
 
 function logout(nextState, replaceState) {
   store.dispatch({ type: constants.LOGOUT });
-  replaceState({}, '/login');
+  replaceState('/login');
 }
 
 const requireAuth = (props) => (nextState, replaceState) => {
@@ -44,15 +44,15 @@ const requireAuth = (props) => (nextState, replaceState) => {
   if (token) {
     props.actions.fetchMe(token);
   } else {
-    replaceState({}, '/login');
+    replaceState('/login');
   }
 };
 
 function renderRoutes(props) {
   return (
     <Router history={hashHistory}>
-      <Route component={Application}>
-        <Route path="/" component={HomePage} onEnter={requireAuth(props)} />
+      <Route path="/" component={Application}>
+        <IndexRoute component={HomePage} onEnter={requireAuth(props)} />
         <Route path="login" component={LoginPage} />
         <Route path="logout" onEnter={logout} />
       </Route>

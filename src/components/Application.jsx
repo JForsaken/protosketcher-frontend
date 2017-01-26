@@ -35,6 +35,7 @@ class Application extends Component {
   }
 
   render() {
+    console.log(this);
     return (
       <div id="layout">
         <div id="main">
