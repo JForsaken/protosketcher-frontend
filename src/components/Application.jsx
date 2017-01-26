@@ -40,7 +40,7 @@ class Application extends Component {
         <div id="main">
           <DisplayError />
 
-          {!this.props.api.login.user.id && this.props.router.location.pathname === '/'
+          {!this.props.api.login.user.id && this.props.location.pathname === '/'
            // TODO: replace with with loading or spinner or whatever
            ? <p>LOADING FETCH ME</p>
            : null

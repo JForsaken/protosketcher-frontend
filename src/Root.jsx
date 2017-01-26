@@ -1,9 +1,7 @@
 /* global __DEVTOOLS__ */
 import React, { PropTypes, Component } from 'react';
-import { StyleRoot } from 'radium';
-import { Route } from 'react-router';
+import { Router, Route, hashHistory } from 'react-router';
 import DevTools from './components/common/DevTools/DevTools';
-import { ReduxRouter } from 'redux-router';
 import { connect } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 import configureStore from './utils/configure-store';
@@ -52,13 +50,13 @@ const requireAuth = (props) => (nextState, replaceState) => {
 
 function renderRoutes(props) {
   return (
-    <ReduxRouter>
+    <Router history={hashHistory}>
       <Route component={Application}>
         <Route path="/" component={HomePage} onEnter={requireAuth(props)} />
         <Route path="login" component={LoginPage} />
         <Route path="logout" onEnter={logout} />
       </Route>
-    </ReduxRouter>
+    </Router>
   );
 }
 
@@ -69,9 +67,7 @@ function getRootChildren(props) {
   };
   const rootChildren = [
     <IntlProvider key="intl" {...intlData}>
-      <StyleRoot>
-        {renderRoutes(props)}
-      </StyleRoot>
+      {renderRoutes(props)}
     </IntlProvider>,
   ];
 

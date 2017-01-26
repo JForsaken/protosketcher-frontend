@@ -2,23 +2,14 @@
 
 /* global __DEVTOOLS__ */
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
-import { reduxReactRouter, routerStateReducer } from 'redux-router';
 import { reducer as formReducer } from 'redux-form';
 import thunk from 'redux-thunk';
 import logger from '../middleware/logger';
 import persistenceStore from '../persistence/store';
 import * as reducers from '../reducers';
-import createHistory from 'history/lib/createHashHistory';
-import withScroll from 'scroll-behavior';
-
-const history = withScroll(createHistory(), (prevLocation, location) => (
-  // Don't scroll if the pathname is the same.
-  !prevLocation || location.pathname !== prevLocation.pathname
-));
 
 const storeEnhancers = [
   persistenceStore,
-  reduxReactRouter({ history }),
 ];
 
 if (__DEVTOOLS__) {
@@ -32,7 +23,6 @@ const finalCreateStore = compose(
 )(createStore);
 
 const combinedReducer = combineReducers(Object.assign({
-  router: routerStateReducer,
   form: formReducer,
 }, reducers));
 
