@@ -9,7 +9,6 @@ footer {
 
   .btn.page-tab {
     @include rounded-indiv(0px, 0px, 2px, 2px);
-    margin-right: $base-padding-size;
     font-weight: 600;
 
     &--active {
@@ -19,6 +18,64 @@ footer {
 
       &:hover {
         background-color: color('background');
+      }
+    }
+  }
+
+  .react-contextmenu-wrapper {
+    float: left;
+    margin-right: $base-padding-size;
+  }
+
+  .react-contextmenu {
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 16px;
+    color: color('text', 'dark');
+    text-align: left;
+    background-color: color('background');
+    background-clip: padding-box;
+    border: 1px solid color('foreground', 'light');
+    @include rounded-equal(.25rem);
+    outline: none;
+    opacity: 0;
+    pointer-events: none;
+
+    &.react-contextmenu--visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .react-contextmenu-item {
+      width: 200px;
+      padding: 3px 20px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: color('text', 'dark');
+      text-align: inherit;
+      white-space: nowrap;
+      background: 0 0;
+      border: 0;
+      cursor: pointer;
+
+      &.react-contextmenu-item--active,
+      &.react-contextmenu-item:hover {
+        color: color('text', 'light');
+        background-color: color('accent', 'base');
+        border-color: color('accent', 'base');
+        text-decoration: none;
+      }
+
+      &.react-contextmenu-submenu {
+        padding: 0;
+
+        > .react-contextmenu-item:after {
+          content: "▶";
+          display: inline-block;
+          position: absolute;
+          right: 7px;
+        }
       }
     }
   }

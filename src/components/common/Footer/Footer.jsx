@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import { injectIntl } from 'react-intl';
 import forEach from 'lodash/forEach';
 import classNames from 'classnames';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 @injectIntl
 
 export default class Footer extends Component {
@@ -34,16 +35,31 @@ export default class Footer extends Component {
 
   render() {
     const pages = [];
+    const contextMenus = [];
+    let pageIndex;
+    let menuIndex;
     forEach(this.state.pages, (page, index) => {
+      pageIndex = `page-, ${index}!`;
+      menuIndex = `menu-, ${index}!`;
       const className = classNames({
         'page-tab': true,
         'page-tab--active': this.state.activePage === index,
       });
 
       pages.push(
-        <Button key={index} className={className} onClick={() => this.changePage(index)}>
-          {page}
-        </Button>
+        <ContextMenuTrigger id={pageIndex}>
+          <Button key={pageIndex} className={className} onClick={() => this.changePage(index)}>
+            {page}
+          </Button>
+        </ContextMenuTrigger>
+      );
+
+      contextMenus.push(
+        <ContextMenu key={menuIndex} id={pageIndex}>
+          <MenuItem>
+            ContextMenu Item 1
+          </MenuItem>
+        </ContextMenu>
       );
     });
     return (
@@ -56,6 +72,7 @@ export default class Footer extends Component {
         >
           <i className="fa fa-plus" aria-hidden="true"> </i>
         </Button>
+        {contextMenus}
       </footer>
     );
   }
