@@ -27,5 +27,8 @@ export default {
   // FOOTER
   'footer.page': 'Page',
   'footer.addPage': 'Ajouter une nouvelle page',
-  'footer.newPage': 'Nouvelle Page',
+  'footer.newPage': 'Nouvelle page',
+  'footer.deletePage': 'Retirer la page',
+  'footer.renamePage': 'Renommer la page',
+  'footer.newName': 'Nouveau nom de page',
 };

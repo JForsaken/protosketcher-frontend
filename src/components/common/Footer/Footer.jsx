@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import forEach from 'lodash/forEach';
 import classNames from 'classnames';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
+import Popup from 'react-popup';
 @injectIntl
 
 export default class Footer extends Component {
@@ -33,6 +34,32 @@ export default class Footer extends Component {
     });
   }
 
+  renamePage(index) {
+    const newPages = this.state.pages.slice();
+
+    // Show popup to set new name
+    Popup.prompt(
+      this.props.intl.messages['footer.renamePage'],
+      this.props.intl.messages['footer.newName'],
+      {
+        placeholder: newPages[index],
+        type: 'text',
+      },
+      {
+        text: 'Ok',
+        className: 'success',
+        action: (Box) => {
+          // Button pressed, rename the page
+          newPages[index] = Box.value;
+          this.setState({
+            pages: newPages,
+          });
+          Box.close();
+        },
+      }
+    );
+  }
+
   render() {
     const pages = [];
     const contextMenus = [];
@@ -56,14 +83,17 @@ export default class Footer extends Component {
 
       contextMenus.push(
         <ContextMenu key={menuIndex} id={pageIndex}>
-          <MenuItem>
-            ContextMenu Item 1
+          <MenuItem key={`rename-, ${menuIndex}!`} onClick={() => this.renamePage(index)}>
+            {this.props.intl.messages['footer.renamePage']}
+          </MenuItem>
+          <MenuItem key={`remove-, ${menuIndex}!`}>
+            {this.props.intl.messages['footer.deletePage']}
           </MenuItem>
         </ContextMenu>
       );
     });
     return (
-      <footer>
+      <footer id="footer">
         {pages}
         <Button
           className="page-tab page-tab-add"
