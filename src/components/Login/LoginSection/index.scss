@@ -8,23 +8,13 @@
     padding: 5px 10px;
     background: none;
     background-image: none;
-<<<<<<< HEAD
     border: 1px solid color('background', 'dark');
     color: color('text', 'light');
-=======
-    border: 1px solid #a0b3b0;
-    color: #ffffff;
-    border-radius: 0;
->>>>>>> Created style for the login
     transition: border-color .25s ease, box-shadow .25s ease;
 
     &:focus {
       outline: 0;
-<<<<<<< HEAD
       border-color: color('accent', 'light');
-=======
-      border-color: #1ab188;
->>>>>>> Created style for the login
     }
 
     &--narrow {
@@ -38,7 +28,6 @@
   }
 
   &__forgot-password {
-<<<<<<< HEAD
     display: block;
     text-align: right;
     text-decoration: none;
@@ -47,63 +36,30 @@
 
     &:hover {
       color: color('accent', 'dark');
-=======
-    bottom: 20;
-    display: block;
-    text-align: right;
-    text-decoration: none;
-    color: #1ab188;
-    transition: .5s ease;
-
-    &:hover {
-      color: #179b77;
->>>>>>> Created style for the login
       cursor: pointer;
     }
   }
 
-<<<<<<< HEAD
   &__login-button.btn {
-=======
-  &__login-button {
->>>>>>> Created style for the login
     height: 60px;
     position: absolute;
     right:  0;
     bottom: 0;
     width: 100%;
-<<<<<<< HEAD
     margin-top: 20px;
     outline: none;
     @include rounded-indiv(0px, 0px, 2px, 2px);
-=======
-    border: 0;
-    margin-top: 20px;
-    outline: none;
-    border-radius: 0;
->>>>>>> Created style for the login
     padding: 15px 0;
     font-size: 2rem;
     font-weight: 600;
-
     text-transform: uppercase;
     letter-spacing: .1em;
-<<<<<<< HEAD
     background: color('accent', 'light');
     color: color('text', 'light');
     transition: all 0.5s ease;
 
     &:hover {
       background: color('accent', 'dark');
-=======
-    background: #1ab188 !important;
-    color: #ffffff;
-    -webkit-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-
-    &:hover {
-      background: #179b77 !important;
->>>>>>> Created style for the login
     }
   }
 }
