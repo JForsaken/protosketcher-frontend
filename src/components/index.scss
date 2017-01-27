@@ -33,6 +33,7 @@ body {
 
 #app {
   @import './boostrap.overwrite';
+  @import './popup';
 
   .page-container {
     padding-top: 50px;
