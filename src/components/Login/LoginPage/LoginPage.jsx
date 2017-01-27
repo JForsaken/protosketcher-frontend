@@ -2,14 +2,14 @@
 import React, { Component, PropTypes } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { isEqual, isEmpty } from 'lodash';
-import { reduxForm } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { ModalContainer, ModalDialog } from 'react-modal-dialog';
 
 /* Components */
-import FieldGroup from '../../common/FieldGroup/FieldGroup';
+import ValidatedField from '../../common/ValidatedField/ValidatedField';
 
 /* Actions */
 import * as apiActions from '../../../actions/api';
@@ -18,19 +18,13 @@ import * as apiActions from '../../../actions/api';
 import { LOGIN } from '../../../actions/constants';
 
 /* Utils */
-import loginValidation, { fields } from './loginValidation';
+import { isEmail, isRequired } from '../../../utils/validation';
 
 @injectIntl
 class Login extends Component {
-
   static propTypes = {
-    location: PropTypes.object,
+    router: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    fields: PropTypes.object.isRequired,
-  };
-
-  static contextTypes = {
-    history: PropTypes.object.isRequired,
   };
 
   constructor(props, context) {
@@ -62,25 +56,14 @@ class Login extends Component {
   }
 
   handleSubmit() {
-    const loginAttempt = {
-      email: this.props.fields.email.value,
-      password: this.props.fields.password.value,
-    };
+    const { email, password } = this.props.form.loginForm.values;
 
     this.props.actions.loginPending();
-    this.props.actions.login(loginAttempt);
+    this.props.actions.login({ email, password });
   }
 
   redirectToSketch() {
-    const { history } = this.context;
-    const { location } = this.props;
-    let nextPath = '/';
-
-    if (location.state && location.state.nextPathname) {
-      nextPath = location.state.nextPathname;
-    }
-
-    history.pushState({}, nextPath);
+    this.props.router.push('/');
   }
 
   renderModal() {
@@ -100,10 +83,6 @@ class Login extends Component {
 
   render() {
     const {
-      fields: {
-        email,
-        password,
-      },
       handleSubmit,
       api,
       intl,
@@ -120,19 +99,19 @@ class Login extends Component {
           <h1 className="login-form__title">
             <FormattedMessage id="login.form.title" />
           </h1>
-          <FieldGroup
-            id="email"
-            type="text"
-            label={intl.messages['login.form.email']}
+          <Field
+            name="email"
+            component={ValidatedField}
+            validate={[isRequired, isEmail]}
+            type="email"
             placeholder={intl.messages['login.form.email']}
-            {...email}
           />
-          <FieldGroup
-            id="password"
+          <Field
+            name="password"
+            component={ValidatedField}
             type="password"
-            label={intl.messages['login.form.password']}
+            validate={isRequired}
             placeholder={intl.messages['login.form.password']}
-            {...password}
           />
           <div className="login-form__button-container">
             <Button
@@ -154,10 +133,8 @@ class Login extends Component {
 export default reduxForm({
   form: 'loginForm',
   destroyOnUnmount: false,
-  validate: loginValidation,
-  fields,
 })(connect(
-  ({ api }) => ({ api }),
+  ({ api, form }) => ({ api, form }),
   dispatch => ({
     actions: bindActionCreators({
       ...apiActions,

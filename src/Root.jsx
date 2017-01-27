@@ -1,6 +1,7 @@
 /* global __DEVTOOLS__ */
 import React, { PropTypes, Component } from 'react';
-import { IndexRoute, Router, Route, hashHistory } from 'react-router';
+import { IndexRoute, Router, Route, useRouterHistory } from 'react-router';
+import { createHashHistory } from 'history';
 import DevTools from './components/common/DevTools/DevTools';
 import { connect } from 'react-redux';
 import { IntlProvider } from 'react-intl';
@@ -10,11 +11,12 @@ import { bindActionCreators } from 'redux';
 
 import { fetchMe } from './actions/api.js';
 
-
 import * as storage from './persistence/storage';
 import * as components from './components';
 import * as constants from './actions/constants';
 import * as i18n from './i18n';
+
+const appHistory = useRouterHistory(createHashHistory)({ queryKey: true });
 
 const {
   Application,
@@ -50,7 +52,7 @@ const requireAuth = (props) => (nextState, replaceState) => {
 
 function renderRoutes(props) {
   return (
-    <Router history={hashHistory}>
+    <Router history={appHistory}>
       <Route path="/" component={Application}>
         <IndexRoute component={HomePage} onEnter={requireAuth(props)} />
         <Route path="login" component={LoginPage} />

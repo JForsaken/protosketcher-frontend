@@ -14,12 +14,6 @@ export default {
   // FORM ERRORS
   'form.errors.required': 'Champs requis',
   'form.errors.email': 'Adresse courriel invalide',
-  'form.errors.phoneNumber': 'Numéro de téléphone invalide',
-  'form.errors.selectOption': 'Veuillez sélectionner une option',
-  'form.errors.selectDateOption': ' ',
-  'form.errors.date': 'Format de date invalide',
-  'form.errors.maxLength': 'Ne doit pas être plus que 30 caractères',
-  'form.errors.maxCapacity': ' Un maximum de 10 enfants est permis!',
 
   // MENU
   'menu.randomTab': 'Onglet pas rapport',

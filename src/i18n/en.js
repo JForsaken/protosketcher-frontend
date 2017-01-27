@@ -14,12 +14,6 @@ export default {
   // FORM ERRORS
   'form.errors.required': 'Required',
   'form.errors.email': 'Invalid email',
-  'form.errors.phoneNumber': 'Invalid phone number',
-  'form.errors.selectOption': 'Please select an option',
-  'form.errors.selectDateOption': ' ',
-  'form.errors.date': 'Invalid date format',
-  'form.errors.maxLength': 'Must be no more than 30 characters',
-  'form.errors.maxCapacity': ' No more than 10 kids allowed!',
 
   // HUD MENU
   'hud.saving': 'Saving...',
