@@ -1,3 +1,11 @@
+/**
+ * Displays a radial menu with specified items
+ *
+ * Props :
+ *
+ * items: Array of objects containig props for each RadialMenuItem
+ */
+
 /* Node modules */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -6,12 +14,6 @@ import { connect } from 'react-redux';
 import RadialMenuItem from './RadialMenuItem/RadialMenuItem';
 
 /* Actions */
-
-
-const menuItems = [
-  {
-  },
-];
 
 class RadialMenu extends Component {
 
@@ -29,22 +31,16 @@ class RadialMenu extends Component {
     };
 
     return (
-      <div className="radial-menu" style={menuStyle}>
-        <svg>
-          <circle cx="100" cy="100" r="25" />
-        </svg>
-        <div>
+      <svg className="radial-menu" style={menuStyle}>
         {
-          menuItems.map((item, i) =>
+          this.props.items.map((item, i) =>
             <RadialMenuItem
               {...item}
               key={i}
-                /* Constants */
-              // import onClick={this.state.expanded ? this.toggleNav : null}
             />)
         }
-        </div>
-      </div>
+        <circle cx="100" cy="100" r="35" />
+      </svg>
     );
   }
 }

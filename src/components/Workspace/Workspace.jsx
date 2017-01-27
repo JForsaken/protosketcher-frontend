@@ -5,6 +5,29 @@ import { connect } from 'react-redux';
 /* Components */
 import RadialMenu from '../common/RadialMenu/RadialMenu';
 
+const menuItems = [
+  {
+    startAngle: 0,
+    endAngle: Math.PI / 2,
+    color: '#F44336',
+  },
+  {
+    startAngle: Math.PI / 2,
+    endAngle: Math.PI,
+    color: '#4CAF50',
+  },
+  {
+    startAngle: Math.PI,
+    endAngle: 3 * Math.PI / 2,
+    color: '#FFEB3B',
+  },
+  {
+    startAngle: 3 * Math.PI / 2,
+    endAngle: Math.PI * 2,
+    color: '#2196F3',
+  },
+];
+
 class Workspace extends Component {
 
   constructor(props, context) {
@@ -40,7 +63,7 @@ class Workspace extends Component {
         onMouseUp={this.toggleMenu}
         onMouseLeave={this.toggleMenu}
       >
-      {this.state.showMenu && <RadialMenu />}
+      {this.state.showMenu && <RadialMenu items={menuItems} />}
       </div>
       );
   }
