@@ -6,9 +6,8 @@
  * icon: Icon to display in the item
  * color: Color of the background
  * action: Function to execute when the item is hovered
- * items: Items to display when the item is hovered
- * startAngle: Starting degree of section
- * endAngle: Ending degree of section
+ * items: Items to display when the item is hovered <RadialMenuItem>
+ * flex: Flex property applied to menu generation || 1
  */
 
 /* Node modules */
