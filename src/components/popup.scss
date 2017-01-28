@@ -97,14 +97,25 @@
   }
 }
 
+.mm-popup__btn--warning {
+  background-color: color('secondary', 'light');
+  border: color('foreground', 'light');
+  color: color('text', 'light');
+
+  &:hover {
+    background-color: color('secondary', 'base');
+    border: color('foreground', 'light');
+  }
+}
+
 .mm-popup__box {
-  width: 350px;
+  width: 400px;
   position: absolute;
   top: 30%;
   left: 50%;
-  margin-left: -175px;
+  margin-left: -200px;
   background: color('background', 'light');
-  box-shadow: 0px 5px 20px 0px rgba(126,137,140,0.20);
+  box-shadow: 0 5px 20px 0 rgba(126,137,140,0.20);
   border-radius: 5px;
   border: 1px solid color('background', 'dark');
   overflow: hidden;
@@ -112,7 +123,7 @@
 }
 
 .mm-popup__box__header {
-  padding: 15px 20px;
+  padding: 15px 56px 15px 20px;
   background: color('background', 'base');
   color: color('text');
 }

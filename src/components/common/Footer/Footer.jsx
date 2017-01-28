@@ -26,23 +26,23 @@ export default class Footer extends Component {
   }
 
   addPage() {
-    const newPages = this.state.pages;
-    newPages.push(this.props.intl.messages['footer.newPage']);
+    const pages = this.state.pages;
+    pages.push(this.props.intl.messages['footer.newPage']);
     this.setState({
-      pages: newPages,
-      activePage: newPages.length - 1,
+      pages,
+      activePage: pages.length - 1,
     });
   }
 
   renamePage(index) {
-    const newPages = this.state.pages.slice();
+    const pages = this.state.pages.slice();
 
     // Show popup to set new name
     Popup.prompt(
       this.props.intl.messages['footer.renamePage'],
       this.props.intl.messages['footer.newName'],
       {
-        placeholder: newPages[index],
+        placeholder: pages[index],
         type: 'text',
       },
       {
@@ -50,14 +50,54 @@ export default class Footer extends Component {
         className: 'success',
         action: (Box) => {
           // Button pressed, rename the page
-          newPages[index] = Box.value;
+          pages[index] = Box.value;
+          // TODO Validate
           this.setState({
-            pages: newPages,
+            pages,
           });
           Box.close();
         },
       }
     );
+  }
+
+  removePage(index) {
+    const pages = this.state.pages.slice();
+    if (pages.length === 1) {
+      Popup.alert(this.props.intl.messages['footer.moreThanOnePage']);
+      return;
+    }
+
+    // Show popup to ask if the user really wants to delete
+    Popup.create({
+      title: `${this.props.intl.messages['footer.deletePageConfirm']} (${pages[index]})?`,
+      content: this.props.intl.messages['footer.deletePageCantBeUndone'],
+      className: 'alert',
+      buttons: {
+        right: [{
+          text: this.props.intl.messages['footer.delete'],
+          className: 'warning',
+          action: (popup) => {
+            pages.splice(index, 1);
+            let activePage = this.state.activePage;
+            if (activePage === index) {
+              activePage = 0;
+            }
+            this.setState({
+              pages,
+              activePage,
+            });
+            popup.close();
+          },
+        }],
+        left: [{
+          text: this.props.intl.messages['footer.cancel'],
+          action: (popup) => {
+            popup.close();
+          },
+        }],
+      },
+    });
   }
 
   render() {
@@ -66,8 +106,8 @@ export default class Footer extends Component {
     let pageIndex;
     let menuIndex;
     forEach(this.state.pages, (page, index) => {
-      pageIndex = `page-, ${index}!`;
-      menuIndex = `menu-, ${index}!`;
+      pageIndex = `page-${index}`;
+      menuIndex = `menu-${index}`;
       const className = classNames({
         'page-tab': true,
         'page-tab--active': this.state.activePage === index,
@@ -83,10 +123,10 @@ export default class Footer extends Component {
 
       contextMenus.push(
         <ContextMenu key={menuIndex} id={pageIndex}>
-          <MenuItem key={`rename-, ${menuIndex}!`} onClick={() => this.renamePage(index)}>
+          <MenuItem key={`rename${menuIndex}`} onClick={() => this.renamePage(index)}>
             {this.props.intl.messages['footer.renamePage']}
           </MenuItem>
-          <MenuItem key={`remove-, ${menuIndex}!`}>
+          <MenuItem key={`remove-${menuIndex}`} onClick={() => this.removePage(index)}>
             {this.props.intl.messages['footer.deletePage']}
           </MenuItem>
         </ContextMenu>

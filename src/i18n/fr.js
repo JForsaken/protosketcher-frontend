@@ -31,4 +31,9 @@ export default {
   'footer.deletePage': 'Retirer la page',
   'footer.renamePage': 'Renommer la page',
   'footer.newName': 'Nouveau nom de page',
+  'footer.deletePageConfirm': 'Voulez-vous vraiment supprimer cette page',
+  'footer.deletePageCantBeUndone': 'Cette opération ne peut pas être annulée',
+  'footer.delete': 'Supprimer',
+  'footer.cancel': 'Annuler',
+  'footer.moreThanOnePage': 'Vous devez avoir au moins une page en tout temps',
 };
