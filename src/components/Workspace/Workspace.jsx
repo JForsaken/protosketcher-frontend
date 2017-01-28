@@ -7,23 +7,15 @@ import RadialMenu from '../common/RadialMenu/RadialMenu';
 
 const menuItems = [
   {
-    startAngle: 0,
-    endAngle: Math.PI / 2,
     color: '#F44336',
   },
   {
-    startAngle: Math.PI / 2,
-    endAngle: Math.PI,
     color: '#4CAF50',
   },
   {
-    startAngle: Math.PI,
-    endAngle: 3 * Math.PI / 2,
     color: '#FFEB3B',
   },
   {
-    startAngle: 3 * Math.PI / 2,
-    endAngle: Math.PI * 2,
     color: '#2196F3',
   },
 ];
@@ -138,7 +130,7 @@ class Workspace extends Component {
         onTouchEnd={this.touchEnd}
         onContextMenu={this.toggleMenu}
       >
-      {this.state.showMenu && <RadialMenu items={menuItems} />}
+      {this.state.showMenu && <RadialMenu offset="0.4" items={menuItems} />}
       </div>
       );
   }

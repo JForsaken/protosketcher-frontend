@@ -4,6 +4,7 @@
  * Props :
  *
  * items: Array of objects containig props for each RadialMenuItem
+ * offset: Offset to aply to the first element's angle
  */
 
 /* Node modules */
@@ -22,6 +23,26 @@ class RadialMenu extends Component {
     this.state = {
       selectedIndex: -1,
     };
+
+    this.initElements();
+  }
+
+  initElements() {
+    let flexTotal = 0;
+    for (const item of this.props.items) {
+      flexTotal += item.flex || 1;
+    }
+    let offset = this.props.offset || 0;
+    offset = parseFloat(offset);
+
+    for (const item of this.props.items) {
+      item.startAngle = offset;
+      offset += 2 * Math.PI * (item.flex || 1) / flexTotal;
+      if (offset > 2 * Math.pi) {
+        offset -= 2 * Math.PI;
+      }
+      item.endAngle = offset;
+    }
   }
 
   render() {
