@@ -34,6 +34,7 @@ body {
 #app {
   @import './boostrap.overwrite';
   @import './popup';
+  @import './react-context-menu';
 
   .page-container {
     padding-top: 50px;
