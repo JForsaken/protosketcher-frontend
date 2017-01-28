@@ -50,8 +50,11 @@ export default class Footer extends Component {
         className: 'success',
         action: (Box) => {
           // Button pressed, rename the page
-          pages[index] = Box.value;
-          // TODO Validate
+          let pageName = Box.value;
+          if (pageName === '' || pageName === ' ') {
+            pageName = ' - ';
+          }
+          pages[index] = pageName.replace(/(<([^>]+)>)/ig, '');
           this.setState({
             pages,
           });
