@@ -12,66 +12,57 @@ class Workspace extends Component {
 
     this.toggleMenu = this.toggleMenu.bind(this);
     this.onDrawing = this.onDrawing.bind(this);
-    this.computeSvgPathStrings = this.computeSvgPathStrings.bind(this);
+    this.computeSvgPathString = this.computeSvgPathString.bind(this);
+    this.createSvgPathString = this.createSvgPathString.bind(this);
 
     this.state = {
       showMenu: false,
       mode: 0,
-      coordsBuffer: [],
-      paths: [],
+      isDrawing: false,
       svgPathStrings: [],
     };
   }
 
   onDrawing(e) {
     const points = new Array(2);
-    const b = this.state.coordsBuffer;
-    if (e.type === 'mousemove' && b.length > 0) {
-      const p = this.state.paths;
+    if (e.type === 'mousemove' && this.state.isDrawing) {
       points[0] = e.pageX - document.getElementById('workspace').offsetLeft;
       points[1] = e.pageY - document.getElementById('workspace').offsetTop;
-      b.push(points);
-      p[p.length - 1] = b;
-      this.setState({
-        coordsBuffer: b,
-        paths: p,
-      });
-      this.computeSvgPathStrings();
+      this.computeSvgPathString(points, 'L');
     } else if (e.type === 'mousedown') {
-      const p = this.state.paths;
       points[0] = e.pageX - document.getElementById('workspace').offsetLeft;
       points[1] = e.pageY - document.getElementById('workspace').offsetTop;
-      b.push(points);
-      p.push(b);
       this.setState({
-        coordsBuffer: b,
-        paths: p,
+        isDrawing: true,
       });
-      this.computeSvgPathStrings();
+      this.createSvgPathString();
+      this.computeSvgPathString(points, 'M');
     } else if ((e.type === 'mouseup' || e.type === 'mouseleave')
-        && b.length > 0) {
+        && this.state.isDrawing) {
       this.setState({
-        coordsBuffer: [],
+        isDrawing: false,
       });
-      this.computeSvgPathStrings();
     }
   }
 
-  computeSvgPathStrings() {
-    const paths = this.state.paths;
-    const pathStrings = [];
-    for (const path of paths) {
-      let pathString = '';
-      for (let index = 0; index < path.length; ++index) {
-        if (index === 0) {
-          pathString += `M${path[index][0]} ${path[index][1]} `;
-        } else {
-          pathString += `L${path[index][0]} ${path[index][1]} `;
-        }
-      }
-      pathStrings.push(pathString);
+  createSvgPathString() {
+    const paths = this.state.svgPathStrings;
+    const minimumLength = 20;
+    if (paths.length > 0 && paths[paths.length - 1].length < minimumLength) {
+      paths.pop();
     }
-    this.setState({ svgPathStrings: pathStrings });
+    paths.push('');
+    this.setState({
+      svgPathStrings: paths,
+    });
+  }
+
+  computeSvgPathString(points, prefix) {
+    const pathStrings = this.state.svgPathStrings;
+    pathStrings[pathStrings.length - 1] += `${prefix}${points[0]} ${points[1]} `;
+    this.setState({
+      svgPathStrings: pathStrings,
+    });
   }
 
   toggleMenu(e) {
