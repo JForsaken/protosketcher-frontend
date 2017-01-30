@@ -9,6 +9,9 @@ import iconText from '../../../assets/images/icons/text-fields.png';
 /* Components */
 import RadialMenu from '../common/RadialMenu/RadialMenu';
 
+let offsetTop;
+let offsetLeft;
+
 const menuItems = [
   {
     color: '#F44336',
@@ -34,13 +37,85 @@ class Workspace extends Component {
     this.touchStart = this.touchStart.bind(this);
     this.touchEnd = this.touchEnd.bind(this);
     this.touchMove = this.touchMove.bind(this);
+    this.onDrawing = this.onDrawing.bind(this);
+    this.computeSvgPathString = this.computeSvgPathString.bind(this);
+    this.createSvgPathString = this.createSvgPathString.bind(this);
+    this.arePointsFeedable = this.arePointsFeedable.bind(this);
 
     this.state = {
       showMenu: false,
       mode: 0,
+      isDrawing: false,
+      svgPathStrings: [],
+      previousPoints: new Array(2),
     };
 
     this.touchTimer = 0;
+  }
+
+componentDidMount() {
+    offsetTop = document.getElementById('workspace').offsetTop;
+    offsetLeft = document.getElementById('workspace').offsetLeft;
+  }
+  onDrawing(e) {
+    const points = new Array(2);
+    let pointer = e;
+    if (e.type.substring(0, 5) === 'touch') {
+      pointer = e.touches[0];
+    }
+    if ((e.type === 'mousemove' && this.state.isDrawing) || e.type === 'touchmove') {
+      points[0] = pointer.pageX - offsetLeft;
+      points[1] = pointer.pageY - offsetTop;
+      if (this.arePointsFeedable(points)) {
+        this.computeSvgPathString(points, 'L');
+        this.setState({
+          previousPoints: points,
+        });
+      }
+    } else if (e.type === 'mousedown' || e.type === 'touchstart') {
+      points[0] = pointer.pageX - offsetLeft;
+      points[1] = pointer.pageY - offsetTop;
+      this.setState({
+        isDrawing: true,
+        previousPoints: points,
+      });
+      this.createSvgPathString();
+      this.computeSvgPathString(points, 'M');
+    } else if (((e.type === 'mouseup' || e.type === 'mouseleave')
+        && this.state.isDrawing) || e.type === 'touchend') {
+      this.setState({
+        isDrawing: false,
+        previousPoints: new Array(2),
+      });
+    }
+  }
+
+  arePointsFeedable(currentPoints) {
+    const minDistance = 10;
+    const a = this.state.previousPoints[0] - currentPoints[0];
+    const b = this.state.previousPoints[1] - currentPoints[1];
+    const c = Math.sqrt(a * a + b * b);
+    return c > minDistance;
+  }
+
+  createSvgPathString() {
+    const paths = this.state.svgPathStrings;
+    const minimumLength = 20;
+    if (paths.length > 0 && paths[paths.length - 1].length < minimumLength) {
+      paths.pop();
+    }
+    paths.push('');
+    this.setState({
+      svgPathStrings: paths,
+    });
+  }
+
+  computeSvgPathString(points, prefix) {
+    const pathStrings = this.state.svgPathStrings;
+    pathStrings[pathStrings.length - 1] += `${prefix}${points[0]} ${points[1]} `;
+    this.setState({
+      svgPathStrings: pathStrings,
+    });
   }
 
   toggleMenu(e) {
@@ -59,72 +134,13 @@ class Workspace extends Component {
     }
   }
 
-  touchStart(e) {
-    e.stopPropagation();
-
-    if (e.type === 'touchstart') {
-      this.props.application.touchStartPos = {
-        clientX: e.changedTouches.item(0).clientX,
-        clientY: e.changedTouches.item(0).clientY,
-      };
-    } else {
-      this.props.application.touchStartPos = {
-        clientX: e.clientX,
-        clientY: e.clientY,
-      };
-    }
-
-    const evt = {
-      type: 'touchstart',
-      ...this.props.application.touchStartPos,
-    };
-    this.touchTimer = setTimeout(() => this.toggleMenu(evt), 500);
-  }
-
-  touchEnd(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const evt = {
-      type: 'touchend',
-    };
-    this.toggleMenu(evt);
-
-    // stops short touches from firing the event
-    if (this.touchTimer) {
-      clearTimeout(this.touchTimer);
-    }
-  }
-
-  touchMove(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    let deltaX = 0;
-    let deltaY = 0;
-
-    if (e.type === 'touchmove') {
-      const touch = e.changedTouches.item(0);
-      deltaX = Math.abs(touch.clientX - this.props.application.touchStartPos.clientX);
-      deltaY = Math.abs(touch.clientY - this.props.application.touchStartPos.clientY);
-      if (this.state.showMenu === true) {
-        // const el = document.elementFromPoint(touch.clientX, touch.clientY);
-        // console.log(el);
-      }
-    } else {
-      deltaX = Math.abs(e.clientX - this.props.application.touchStartPos.clientX);
-      deltaY = Math.abs(e.clientY - this.props.application.touchStartPos.clientY);
-    }
-    if (this.state.showMenu === false) {
-      // Add error margin for small moves
-      if (deltaX > 25 || deltaY > 25) {
-        // stops move (draw action) from firing the event
-        if (this.touchTimer) {
-          clearTimeout(this.touchTimer);
-        }
-      }
-    }
-  }
-
   render() {
+    const svgPaths = [];
+    for (let i = 0; i < this.state.svgPathStrings.length; i++) {
+      svgPaths.push(
+        <path d={this.state.svgPathStrings[i]} stroke="blue" strokeWidth="3" fill="none">
+        </path>);
+    }
     return (
       <div
         className="workspace-container"
@@ -138,6 +154,9 @@ class Workspace extends Component {
         onContextMenu={this.toggleMenu}
       >
       {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
+        <svg height="100%" width="100%">
+          {svgPaths}
+        </svg>
       </div>
       );
   }
