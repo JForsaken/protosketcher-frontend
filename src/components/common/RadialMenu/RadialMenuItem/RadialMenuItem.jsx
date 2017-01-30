@@ -32,17 +32,12 @@ class RadialMenuItem extends Component {
 
     // Functions
     this.createSvgArc = this.createSvgArc.bind(this);
+    this.createCSSTransform = this.createCSSTransform.bind(this);
   }
 
   createSvgArc(x, y, r, startAngle, endAngle) {
-    let angle0 = startAngle;
-    let angle1 = endAngle;
-    if (angle0 > angle1) {
-      [angle0, angle1] = [angle1, angle0];
-    }
-    if (angle1 - angle0 > Math.PI * 2) {
-      angle1 = Math.PI * 1.99999;
-    }
+    const angle0 = startAngle;
+    const angle1 = endAngle;
 
     const largeArc = angle1 - angle0 <= Math.PI ? 0 : 1;
 
@@ -53,13 +48,30 @@ class RadialMenuItem extends Component {
     ].join(' ');
   }
 
+  createCSSTransform() {
+    const angleStop = this.props.endAngle > this.props.startAngle
+      ? this.props.endAngle : 2 * Math.PI + this.props.endAngle;
+    const angleOffset = this.props.startAngle + (angleStop - this.props.startAngle) / 2;
+    const x = Math.cos(angleOffset) * 65 + 80;
+    const y = Math.sin(angleOffset) * -65 + 75;
+    return { transform: `translate(${x}px,${y}px)`,
+    };
+  }
+
+
   render() {
     return (
-      <path
-        className="radial-menu-item"
-        d={this.createSvgArc(100, 100, 100, this.props.startAngle, this.props.endAngle)}
-        fill={this.props.color}
-      />
+      <g className="radial-menu-item">
+        <path
+          d={this.createSvgArc(100, 100, 100, this.props.startAngle, this.props.endAngle)}
+          fill={this.props.color}
+        />
+        <path
+          className="radial-menu-item-icon"
+          d={this.props.icon}
+          style={this.createCSSTransform()}
+        />
+      </g>
     );
   }
 }

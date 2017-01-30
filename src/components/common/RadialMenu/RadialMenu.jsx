@@ -38,7 +38,7 @@ class RadialMenu extends Component {
     for (const item of this.props.items) {
       item.startAngle = offset;
       offset += 2 * Math.PI * (item.flex || 1) / flexTotal;
-      if (offset > 2 * Math.pi) {
+      if (offset > 2 * Math.PI) {
         offset -= 2 * Math.PI;
       }
       item.endAngle = offset;
@@ -47,8 +47,8 @@ class RadialMenu extends Component {
 
   render() {
     const menuStyle = {
-      left: this.props.application.menu.pageX - 100,
-      top: this.props.application.menu.pageY - 150,
+      left: this.props.application.menu.clientX - 100,
+      top: this.props.application.menu.clientY - 150,
     };
 
     return (
