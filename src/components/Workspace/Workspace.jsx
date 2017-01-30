@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 /* Components */
 import RadialMenu from '../common/RadialMenu/RadialMenu';
 
+let offsetTop;
+let offsetLeft;
+
 class Workspace extends Component {
 
   constructor(props, context) {
@@ -26,12 +29,12 @@ class Workspace extends Component {
   onDrawing(e) {
     const points = new Array(2);
     if (e.type === 'mousemove' && this.state.isDrawing) {
-      points[0] = e.pageX - document.getElementById('workspace').offsetLeft;
-      points[1] = e.pageY - document.getElementById('workspace').offsetTop;
+      points[0] = e.pageX - offsetLeft;
+      points[1] = e.pageY - offsetTop;
       this.computeSvgPathString(points, 'L');
     } else if (e.type === 'mousedown') {
-      points[0] = e.pageX - document.getElementById('workspace').offsetLeft;
-      points[1] = e.pageY - document.getElementById('workspace').offsetTop;
+      points[0] = e.pageX - offsetLeft;
+      points[1] = e.pageY - offsetTop;
       this.setState({
         isDrawing: true,
       });
@@ -80,6 +83,10 @@ class Workspace extends Component {
   }
 
   render() {
+    window.onload = () => {
+      offsetTop = document.getElementById('workspace').offsetTop;
+      offsetLeft = document.getElementById('workspace').offsetLeft;
+    };
     const svgPaths = [];
     for (let i = 0; i < this.state.svgPathStrings.length; i++) {
       svgPaths.push(
