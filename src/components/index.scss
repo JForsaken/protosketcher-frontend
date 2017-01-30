@@ -35,11 +35,12 @@ body {
   @import './bootstrap-override.scss';
 
   .page-container {
-    padding-top: 50px;
+    padding-top: $top-menu-height;
   }
 
   /* Local CSS */
 
   @import './common/index';
   @import './Login/index';
+  @import './Workspace/index';
 }
