@@ -8,10 +8,16 @@ const initialState = {
     pending: false,
     error: {},
   },
+  createUser: {
+    user: {},
+    lastAction: null,
+    pending: false,
+    error: {},
+  },
 };
 
 const actionHandlers = {
-  /* LOGIN */
+  /* --- User Login --- */
   [constants.LOGIN_PENDING]: (state, action) => ({
     login: {
       user: action.user,
@@ -44,7 +50,25 @@ const actionHandlers = {
     },
   }),
 
-  /* API */
+  /* --- Create User --- */
+  [constants.CREATE_USER_PENDING]: (state, action) => ({
+    createUser: {
+      user: action.user,
+      lastAction: action.type,
+      pending: action.pending,
+      error: action.error,
+    },
+  }),
+  [constants.CREATE_USER]: (state, action) => ({
+    createUser: {
+      user: action.user,
+      lastAction: action.type,
+      pending: action.pending,
+      error: action.error,
+    },
+  }),
+
+  /* --- Auto Saving --- */
   [constants.SAVE]: (state, action) => ({
     saving: {
       users: action.users,
@@ -53,7 +77,6 @@ const actionHandlers = {
       error: action.error,
     },
   }),
-
 };
 
 export default createReducer(initialState, actionHandlers);

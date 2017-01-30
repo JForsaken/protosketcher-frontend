@@ -1,19 +1,15 @@
 import 'whatwg-fetch';
 import processResponse from '../utils/process-response';
 import { get, put, remove } from '../persistence/storage';
-import {
-  LOGIN_PENDING,
-  FETCH_ME,
-  LOGIN,
-  LOGOUT,
-  SAVE,
-} from './constants';
+import * as constants from './constants';
 
 const BACKEND_API = 'http://localhost:5000/api/v1';
 
+
+/* --- User Login --- */
 export function loginPending() {
   return dispatch => dispatch({
-    type: LOGIN_PENDING,
+    type: constants.LOGIN_PENDING,
     user: {},
     pending: true,
     error: {},
@@ -35,17 +31,15 @@ export function login(loginAttempt) {
         put('token', data.body.token);
 
         dispatch({
-          type: LOGIN,
+          type: constants.LOGIN,
           user: { token: data.body.token },
           error: {},
           pending: false,
         });
       })
       .catch((data) => {
-        remove('token');
-
         dispatch({
-          type: LOGIN,
+          type: constants.LOGIN,
           user: {},
           pending: false,
           error: {
@@ -70,7 +64,7 @@ export function fetchMe(token) {
       .then(processResponse)
       .then(data => {
         dispatch({
-          type: FETCH_ME,
+          type: constants.FETCH_ME,
           user: {
             id: data.body._id,
             email: data.body.email,
@@ -83,7 +77,7 @@ export function fetchMe(token) {
         remove('token');
 
         dispatch({
-          type: FETCH_ME,
+          type: constants.FETCH_ME,
           user: {},
           error: {
             msg: data.msg,
@@ -98,20 +92,66 @@ export function logout() {
   remove('token');
 
   return dispatch => dispatch({
-    type: LOGOUT,
+    type: constants.LOGOUT,
     user: {},
     error: {},
     pending: false,
   });
 }
 
+
+/* --- Create User --- */
+export function createUser(userCredentials) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/users`, {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userCredentials),
+    })
+      .then(processResponse)
+      .then(() => {
+        dispatch({
+          type: constants.CREATE_USER,
+          user: { email: userCredentials.email },
+          error: {},
+          pending: false,
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.CREATE_USER,
+          pending: false,
+          user: {},
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+export function createUserPending() {
+  return dispatch => dispatch({
+    type: constants.CREATE_USER_PENDING,
+    user: {},
+    pending: true,
+    error: {},
+  });
+}
+
+
+/* --- Auto Saving --- */
 export function save() {
   const date = new Date();
 
   return dispatch => {
     // TODO: replace with the actual save call
     fetch(`${BACKEND_API}/users/`, {
-      method: 'get',
+
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -121,7 +161,7 @@ export function save() {
       .then(processResponse)
       .then(data => {
         dispatch({
-          type: SAVE,
+          type: constants.SAVE,
           users: data.body,
           time: date.toUTCString(),
           error: {},
@@ -129,7 +169,7 @@ export function save() {
       })
       .catch((data) => {
         dispatch({
-          type: SAVE,
+          type: constants.SAVE,
           users: {},
           time: date.toUTCString(),
           error: {

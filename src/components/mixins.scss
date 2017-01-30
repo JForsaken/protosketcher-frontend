@@ -125,7 +125,7 @@ $desktop-width: 1024px;
 
   Usage:
   a {
-    @include rounded(2[em|px]);
+    @include rounded-equal(2[em|px]);
   }
 
   Source: https://gist.github.com/garyharan/957284
@@ -141,7 +141,7 @@ $desktop-width: 1024px;
 
   Usage:
   a {
-    @include rounded(2[em|px]);
+    @include rounded-indiv(1px, 2px, 3px, 4px) {
   }
 
   Source: https://gist.github.com/garyharan/957284

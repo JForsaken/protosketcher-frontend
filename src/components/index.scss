@@ -32,7 +32,7 @@ body {
 }
 
 #app {
-  @import './boostrap.overwrite';
+  @import './bootstrap-override.scss';
 
   .page-container {
     padding-top: $top-menu-height;
@@ -41,6 +41,6 @@ body {
   /* Local CSS */
 
   @import './common/index';
-  @import './Login/LoginPage/index';
+  @import './Login/index';
   @import './Workspace/index';
 }

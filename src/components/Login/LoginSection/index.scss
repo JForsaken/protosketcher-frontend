@@ -1,0 +1,82 @@
+.login-section {
+
+  &__input-container {
+    padding-top: 17px;
+    padding-bottom: 17px;
+
+    &__input {
+      font-size: 22px;
+      display: block;
+      width: 100%;
+      height: 100%;
+      padding: 5px 10px;
+      background: none;
+      background-image: none;
+      border: 1px solid color('background', 'dark');
+      color: color('text', 'light');
+      transition: border-color .25s ease, box-shadow .25s ease;
+
+      &:focus {
+        outline: 0;
+        border-color: color('accent', 'light');
+      }
+
+      &--narrow {
+        @extend .login-section__input-container__input;
+        float: left;
+        width: 48%;
+        margin-right: 4%;
+        position: relative;
+        margin-bottom: 40px;
+      }
+    }
+
+    &__forgot-password {
+      display: block;
+      text-align: right;
+      text-decoration: none;
+      color: color('accent', 'light');
+      transition: .5s ease;
+
+      &:hover {
+        color: color('accent', 'dark');
+        cursor: pointer;
+      }
+    }
+
+    &__error-label {
+      position: absolute;
+      color: #a94442;
+    }
+  }
+
+
+  &__login-button.btn {
+    height: 60px;
+    position: absolute;
+    right:  0;
+    bottom: 0;
+    width: 100%;
+    margin-top: 20px;
+    outline: none;
+    @include rounded-indiv(0px, 0px, 2px, 2px);
+    padding: 15px 0;
+    font-size: 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    background: color('accent', 'light');
+    color: color('text', 'light');
+    transition: all 0.5s ease;
+
+    &:hover {
+      background: color('accent', 'dark');
+    }
+  }
+}
+
+.error-modal {
+  background: #f4e9e9;
+  border-top: 11px solid #c12e2a;
+  box-shadow: #c12e2a 0px 0px 1px;
+}
