@@ -151,7 +151,7 @@ export function save() {
   return dispatch => {
     // TODO: replace with the actual save call
     fetch(`${BACKEND_API}/users/`, {
-      method: 'get',
+
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

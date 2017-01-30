@@ -59,7 +59,7 @@ export default class LoginPage extends Component {
       'login-form__context-button--active': !this.state.isLoginButtonActive,
     });
 
-    const { location } = this.props;
+    const { location, router } = this.props;
 
     return (
       <div className="page-container login-page">
@@ -77,8 +77,8 @@ export default class LoginPage extends Component {
             transitionLeaveTimeout={animationTime}
           >
             {this.state.isLoginButtonActive ?
-              <LoginSection key="login-section" location={location} /> :
-              <SignupSection key="signup-section" location={location} />
+              <LoginSection key="login-section" router={router} location={location} /> :
+              <SignupSection key="signup-section" router={router} location={location} />
             }
           </ReactCSSTransitionGroup>
         </div>

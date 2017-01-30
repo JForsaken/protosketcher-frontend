@@ -2,14 +2,14 @@
 import React, { Component, PropTypes } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { isEqual, isEmpty } from 'lodash';
-import { reduxForm } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { ModalContainer, ModalDialog } from 'react-modal-dialog';
 
 /* Components */
-import FieldGroup from '../../common/FieldGroup/FieldGroup';
+import ValidatedField from '../../common/ValidatedField/ValidatedField';
 
 /* Actions */
 import * as apiActions from '../../../actions/api';
@@ -18,29 +18,23 @@ import * as apiActions from '../../../actions/api';
 import { LOGIN, CREATE_USER } from '../../../actions/constants';
 
 /* Utils */
-import loginValidation, { fields } from './loginValidation';
+import { isRequired, isEmail } from '../../../utils/validation';
 
 @injectIntl
 class SignupSection extends Component {
-
   static propTypes = {
-    location: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    fields: PropTypes.object.isRequired,
-  };
-
-  static contextTypes = {
-    history: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
   };
 
   constructor(props, context) {
     super(props, context);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleModalClose = this.handleModalClose.bind(this);
 
     this.state = {
       isShowingModal: false,
     };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,11 +46,8 @@ class SignupSection extends Component {
       if (!isEmpty(createUser.error)) {
         this.setState({ isShowingModal: true });
       } else {
-        const loginAttempt = {
-          email: this.props.fields.email.value,
-          password: this.props.fields.password.value,
-        };
-        this.props.actions.login(loginAttempt);
+        const { email, password } = this.props.form.signupForm.values;
+        this.props.actions.login({ email, password });
       }
     } else if (!isEqual(this.props.api.login, login)
                && login.lastAction === LOGIN) {
@@ -74,31 +65,20 @@ class SignupSection extends Component {
   }
 
   handleSubmit() {
-    const loginAttempt = {
-      email: this.props.fields.email.value,
-      password: this.props.fields.password.value,
-    };
+    const { email, password } = this.props.form.signupForm.values;
 
     this.props.actions.createUserPending();
-    this.props.actions.createUser(loginAttempt);
+    this.props.actions.createUser({ email, password });
   }
 
   redirectToSketch() {
-    const { history } = this.context;
-    const { location } = this.props;
-    let nextPath = '/';
-
-    if (location.state && location.state.nextPathname) {
-      nextPath = location.state.nextPathname;
-    }
-
-    history.pushState({}, nextPath);
+    this.props.router.push('/');
   }
 
   renderModal() {
     return (
-      <ModalContainer onClose={this.handleModalClose}>
-        <ModalDialog className="error-modal" onClose={this.handleModalClose}>
+      <ModalContainer onClose={() => this.handleModalClose()}>
+        <ModalDialog className="error-modal" onClose={() => this.handleModalClose()}>
           <h2>
             <FormattedMessage id="login.form.modal.title" />
           </h2>
@@ -112,10 +92,6 @@ class SignupSection extends Component {
 
   render() {
     const {
-      fields: {
-        email,
-        password,
-      },
       handleSubmit,
       api,
       intl,
@@ -130,19 +106,25 @@ class SignupSection extends Component {
         {this.state.isShowingModal && this.renderModal()}
         <h1 className="login-form__title"><FormattedMessage id="signup.form.title" /></h1>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
-          <FieldGroup
-            id="email"
-            type="text"
-            className="login-section__input"
+          <Field
+            name="email"
+            component={ValidatedField}
+            validate={[isRequired, isEmail]}
+            containerClass="login-section__input-container"
+            inputClass="login-section__input-container__input"
+            errorClass="login-section__input-container__error-label"
+            type="email"
             placeholder={intl.messages['login.form.email']}
-            {...email}
           />
-          <FieldGroup
-            id="password"
+          <Field
+            name="password"
+            component={ValidatedField}
+            containerClass="login-section__input-container"
+            inputClass="login-section__input-container__input"
+            errorClass="login-section__input-container__error-label"
             type="password"
-            className="login-section__input"
+            validate={isRequired}
             placeholder={intl.messages['login.form.password']}
-            {...password}
           />
           <Button
             className="login-section__login-button"
@@ -160,10 +142,8 @@ class SignupSection extends Component {
 export default reduxForm({
   form: 'signupForm',
   destroyOnUnmount: false,
-  validate: loginValidation,
-  fields,
 })(connect(
-  ({ api }) => ({ api }),
+  ({ api, form }) => ({ api, form }),
   dispatch => ({
     actions: bindActionCreators({
       ...apiActions,
