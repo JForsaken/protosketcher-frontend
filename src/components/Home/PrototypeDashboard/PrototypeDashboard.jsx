@@ -1,7 +1,7 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { isEqual, isEmpty } from 'lodash';
-import { FormGroup, FormControl, Radio, Row, Col, Modal, Button } from 'react-bootstrap';
+import { FormGroup, FormControl, Row, Col, Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -83,9 +83,10 @@ class PrototypeDashboard extends Component {
         show={this.state.showModal}
         onHide={() => this.closeModal()}
       >
+        <Modal.Header closeButton>
+          <i className="fa fa-plus-circle" />
+        </Modal.Header>
         <Modal.Body>
-          <h4>Create new prototype</h4>
-          <hr />
           <FormGroup controlId="prototype-name">
             <FormControl
               type="text"
@@ -95,12 +96,21 @@ class PrototypeDashboard extends Component {
           </FormGroup>
           <hr />
           <FormGroup controlId="prototype-type">
-            <Radio inline checked={this.state.desktopRadio} onChange={() => this.onDesktopChange()}>
-              Desktop
-            </Radio>
-            <Radio inline checked={this.state.mobileRadio} onChange={() => this.onMobileChange()}>
-              Mobile
-            </Radio>
+            <ul>
+              <li>
+                <input type="radio" id="f-option" name="selector" />
+                <label htmlFor="f-option">Desktop</label>
+
+                <div className="check"></div>
+              </li>
+              <li>
+                <input type="radio" id="s-option" name="selector" />
+                <label htmlFor="s-option">Mobile</label>
+                <div className="check">
+                  <div className="inside"></div>
+                </div>
+              </li>
+            </ul>
           </FormGroup>
         </Modal.Body>
         <Modal.Footer>
@@ -111,7 +121,6 @@ class PrototypeDashboard extends Component {
           >
             Create
           </Button>
-          <Button onClick={() => this.closeModal()}>Close</Button>
         </Modal.Footer>
       </Modal>
     );
