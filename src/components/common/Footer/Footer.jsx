@@ -118,7 +118,12 @@ export default class Footer extends Component {
 
       pages.push(
         <ContextMenuTrigger id={pageIndex}>
-          <Button key={pageIndex} className={className} onClick={() => this.changePage(index)}>
+          <Button
+            key={pageIndex}
+            className={className}
+            onDoubleClick={() => this.renamePage(index)}
+            onClick={() => this.changePage(index)}
+          >
             {page}
           </Button>
         </ContextMenuTrigger>
@@ -135,6 +140,7 @@ export default class Footer extends Component {
         </ContextMenu>
       );
     });
+
     return (
       <footer id="footer">
         {pages}
