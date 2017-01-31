@@ -157,6 +157,13 @@ export function getPrototypes(userId, token) {
     })
       .then(processResponse)
       .then(data => {
+        // rename _id to id
+        data.body.forEach((d) => {
+          const cur = d;
+          cur.id = cur._id;
+          delete cur._id;
+        });
+
         dispatch({
           type: constants.GET_PROTOTYPES,
           prototypes: data.body,
@@ -167,6 +174,38 @@ export function getPrototypes(userId, token) {
         dispatch({
           type: constants.GET_PROTOTYPES,
           prototypes: {},
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+export function createPrototype(prototype, token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes`, {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(prototype),
+    })
+      .then(processResponse)
+      .then((data) => {
+        dispatch({
+          type: constants.CREATE_PROTOTYPE,
+          prototype: data.body,
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.CREATE_PROTOTYPE,
+          prototype: {},
           error: {
             msg: data.msg,
             code: data.code,

@@ -19,6 +19,11 @@ const initialState = {
     lastAction: null,
     error: {},
   },
+  createPrototype: {
+    prototype: {},
+    lastAction: null,
+    error: {},
+  },
 };
 
 const actionHandlers = {
@@ -77,6 +82,13 @@ const actionHandlers = {
   [constants.GET_PROTOTYPES]: (state, action) => ({
     getPrototypes: {
       prototypes: action.prototypes,
+      lastAction: action.type,
+      error: action.error,
+    },
+  }),
+  [constants.CREATE_PROTOTYPE]: (state, action) => ({
+    createPrototype: {
+      prototypes: action.prototype,
       lastAction: action.type,
       error: action.error,
     },

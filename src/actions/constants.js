@@ -17,6 +17,8 @@ export const CREATE_USER_PENDING = 'CREATE_USER_PENDING';
 
 // Prototypes
 export const GET_PROTOTYPES = 'GET_PROTOTYPES';
+export const CREATE_PROTOTYPE = 'CREATE_PROTOTYPE';
+export const SELECT_PROTOTYPE = 'SELECT_PROTOTYPE';
 
 // API
 export const SAVE = 'SAVE';

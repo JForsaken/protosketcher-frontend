@@ -9,19 +9,18 @@ const initialState = {
     'fr',
   ],
   error: null,
+  user: null,
+  prototype: null,
 };
 
 const actionHandlers = {
+  /* --- Locale switcher --- */
   [constants.LOCALE_SWITCHED]: (_, action) => ({ locale: action.payload }),
 
-  // TODO: this handle only API error responses.
-  // We should also handle all other kind of application errors,
-  // report them and show some kind of helpful message to the user.
+  /* --- Error logging --- */
   [constants.SHOW_ERROR]: (state, action) => {
     const { payload, source } = action;
     return Object.assign({}, state, {
-      // TODO: ideally we want to map API error response codes
-      // with some user-friendly messages.
       error: {
         source,
         message: payload.message,
@@ -32,6 +31,21 @@ const actionHandlers = {
     });
   },
   [constants.HIDE_ERROR]: state => ({ ...state, ...{ error: null } }),
+
+  /* --- Session persistence --- */
+  [constants.FETCH_ME]: (state, action) => ({
+    user: {
+      id: action.user.id,
+      token: action.user.token,
+      email: action.user.email,
+      user: action.user,
+    },
+  }),
+  [constants.SELECT_PROTOTYPE]: (state, action) => ({
+    prototype: {
+      id: action.id,
+    },
+  }),
 };
 
 export default createReducer(initialState, actionHandlers);

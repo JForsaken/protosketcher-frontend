@@ -18,7 +18,8 @@ const {
 } = components;
 
 /* Actions */
-import { fetchMe, getPrototypes } from './actions/api.js';
+import { fetchMe, getPrototypes } from './actions/api';
+import { selectPrototype } from './actions/application';
 
 /* Utils */
 import * as storage from './persistence/storage';
@@ -57,8 +58,15 @@ class Root extends Component {
     // Route authentication middleware
     this.requireAuth = (myProps) => (nextState, replaceState) => {
       const token = storage.get('token');
+      const prototype = storage.get('prototype');
+
       if (token) {
         myProps.actions.fetchMe(token);
+
+        // get last prototype used in session
+        if (prototype) {
+          myProps.actions.selectPrototype(prototype);
+        }
       } else {
         replaceState('/login');
       }
@@ -124,6 +132,7 @@ export default (connect(
     actions: bindActionCreators({
       fetchMe,
       getPrototypes,
+      selectPrototype,
     }, dispatch),
   })
 )(Root));
