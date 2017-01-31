@@ -1,20 +1,75 @@
+.login-page {
+  background: color('background', 'base');
+  height: 100vh;
+}
+
 .login-form {
-  width: 75%;
-  margin: 0 auto;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  color: white;
+  background: color('foreground', 'base');
+  padding: 40px;
+  max-width: 600px;
+  max-height: 430px;
+  height: 430px;
+  @include rounded-equal(2px);
+  box-shadow: 0 4px 10px 4px color('background', 'dark');
+
+  &__title {
+    font-weight: 300;
+    margin-top: 100px;
+  }
+
+  &__context-button {
+    @include rounded-indiv(2px, 0px, 2px, 0px);
+    display: block;
+    text-decoration: none;
+    padding: 15px;
+    background: color('foreground', 'light');
+    color: color('text', 'medium');
+    font-size: 20px;
+    float: left;
+    width: 50%;
+    text-align: center;
+    cursor: pointer;
+    transition: .5s ease;
+
+    &+.login-form__context-button {
+      @include rounded-indiv(0px, 2px, 0px, 2px);
+    }
+
+    &--active {
+      background: color('accent', 'light');
+      color: color('text', 'light');
+    }
+
+    &:hover {
+      background: color('accent', 'dark');
+    }
+  }
 
   &__title {
     text-align: center;
   }
-
-  &__button-container {
-    display: flex;
-    flex-flow: row;
-    justify-content: center;
-  }
 }
 
-.error-modal {
-  background: #f4e9e9;
-  border-top: 11px solid #c12e2a;
-  box-shadow: #c12e2a 0px 0px 1px;
+.form-enter {
+  opacity: 0.01;
+}
+
+.form-enter.form-enter-active {
+  opacity: 1;
+  transition: opacity 600ms ease-in;
+}
+
+.form-leave {
+  opacity: 0;
+}
+
+.form-leave.form-leave-active {
+  opacity: 0;
 }

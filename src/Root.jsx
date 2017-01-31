@@ -6,23 +6,27 @@ import DevTools from './components/common/DevTools/DevTools';
 import { connect } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 import configureStore from './utils/configure-store';
-
 import { bindActionCreators } from 'redux';
 
-import { fetchMe } from './actions/api.js';
-
-import * as storage from './persistence/storage';
+/* Components */
 import * as components from './components';
-import * as constants from './actions/constants';
-import * as i18n from './i18n';
-
-const appHistory = useRouterHistory(createHashHistory)({ queryKey: true });
-
 const {
   Application,
   HomePage,
   LoginPage,
 } = components;
+
+/* Actions */
+import { fetchMe } from './actions/api.js';
+
+/* Utils */
+import * as storage from './persistence/storage';
+
+/* Constants */
+import * as constants from './actions/constants';
+import * as i18n from './i18n';
+
+const appHistory = useRouterHistory(createHashHistory)({ queryKey: true });
 
 const initialState = {
   application: {

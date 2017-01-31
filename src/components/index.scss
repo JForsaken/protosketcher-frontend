@@ -32,16 +32,17 @@ body {
 }
 
 #app {
-  @import './boostrap.overwrite';
+  @import './bootstrap-override.scss';
   @import './popup';
   @import './react-context-menu';
 
   .page-container {
-    padding-top: 50px;
+    padding-top: $top-menu-height;
   }
 
   /* Local CSS */
 
   @import './common/index';
-  @import './Login/LoginPage/index';
+  @import './Login/index';
+  @import './Workspace/index';
 }

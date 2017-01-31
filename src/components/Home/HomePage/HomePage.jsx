@@ -6,6 +6,7 @@ import SaveTimer from '../SaveTimer/SaveTimer';
 import Menu from '../../common/Menu/Menu';
 import Footer from '../../common/Footer/Footer';
 import Popup from 'react-popup';
+import Workspace from '../../Workspace/Workspace';
 
 export default class Home extends Component {
   render() {
@@ -13,6 +14,7 @@ export default class Home extends Component {
       <div className="page-container">
         <Menu />
         <SaveTimer />
+        <Workspace />
         <Popup />
         <Footer />
       </div>
