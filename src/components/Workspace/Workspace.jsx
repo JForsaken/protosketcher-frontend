@@ -17,12 +17,14 @@ class Workspace extends Component {
     this.onDrawing = this.onDrawing.bind(this);
     this.computeSvgPathString = this.computeSvgPathString.bind(this);
     this.createSvgPathString = this.createSvgPathString.bind(this);
+    this.arePointsFeedable = this.arePointsFeedable.bind(this);
 
     this.state = {
       showMenu: false,
       mode: 0,
       isDrawing: false,
       svgPathStrings: [],
+      previousPoints: new Array(2),
     };
   }
 
@@ -31,12 +33,18 @@ class Workspace extends Component {
     if (e.type === 'mousemove' && this.state.isDrawing) {
       points[0] = e.pageX - offsetLeft;
       points[1] = e.pageY - offsetTop;
-      this.computeSvgPathString(points, 'L');
+      if (this.arePointsFeedable(points)) {
+        this.computeSvgPathString(points, 'L');
+        this.setState({
+          previousPoints: points,
+        });
+      }
     } else if (e.type === 'mousedown') {
       points[0] = e.pageX - offsetLeft;
       points[1] = e.pageY - offsetTop;
       this.setState({
         isDrawing: true,
+        previousPoints: points,
       });
       this.createSvgPathString();
       this.computeSvgPathString(points, 'M');
@@ -44,8 +52,17 @@ class Workspace extends Component {
         && this.state.isDrawing) {
       this.setState({
         isDrawing: false,
+        previousPoints: new Array(2),
       });
     }
+  }
+
+  arePointsFeedable(currentPoints) {
+    const minDistance = 5;
+    const a = this.state.previousPoints[0] - currentPoints[0];
+    const b = this.state.previousPoints[1] - currentPoints[1];
+    const c = Math.sqrt(a * a + b * b);
+    return c > minDistance;
   }
 
   createSvgPathString() {
@@ -90,7 +107,7 @@ class Workspace extends Component {
     const svgPaths = [];
     for (let i = 0; i < this.state.svgPathStrings.length; i++) {
       svgPaths.push(
-        <path d={this.state.svgPathStrings[i]} stroke="orange" strokeWidth="3" fill="none">
+        <path d={this.state.svgPathStrings[i]} stroke="blue" strokeWidth="3" fill="none">
         </path>);
     }
     return (
