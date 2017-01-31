@@ -30,26 +30,30 @@ class Workspace extends Component {
 
   onDrawing(e) {
     const points = new Array(2);
-    if (e.type === 'mousemove' && this.state.isDrawing) {
-      points[0] = e.pageX - offsetLeft;
-      points[1] = e.pageY - offsetTop;
+    let pointer = e;
+    if (e.type.substring(0, 5) === 'touch') {
+      pointer = e.touches[0];
+    }
+    if ((e.type === 'mousemove' && this.state.isDrawing) || e.type === 'touchmove') {
+      points[0] = pointer.pageX - offsetLeft;
+      points[1] = pointer.pageY - offsetTop;
       if (this.arePointsFeedable(points)) {
         this.computeSvgPathString(points, 'L');
         this.setState({
           previousPoints: points,
         });
       }
-    } else if (e.type === 'mousedown') {
-      points[0] = e.pageX - offsetLeft;
-      points[1] = e.pageY - offsetTop;
+    } else if (e.type === 'mousedown' || e.type === 'touchstart') {
+      points[0] = pointer.pageX - offsetLeft;
+      points[1] = pointer.pageY - offsetTop;
       this.setState({
         isDrawing: true,
         previousPoints: points,
       });
       this.createSvgPathString();
       this.computeSvgPathString(points, 'M');
-    } else if ((e.type === 'mouseup' || e.type === 'mouseleave')
-        && this.state.isDrawing) {
+    } else if (((e.type === 'mouseup' || e.type === 'mouseleave')
+        && this.state.isDrawing) || e.type === 'touchend') {
       this.setState({
         isDrawing: false,
         previousPoints: new Array(2),
@@ -58,7 +62,7 @@ class Workspace extends Component {
   }
 
   arePointsFeedable(currentPoints) {
-    const minDistance = 5;
+    const minDistance = 10;
     const a = this.state.previousPoints[0] - currentPoints[0];
     const b = this.state.previousPoints[1] - currentPoints[1];
     const c = Math.sqrt(a * a + b * b);
@@ -118,6 +122,9 @@ class Workspace extends Component {
         onMouseDown={this.onDrawing}
         onMouseUp={this.onDrawing}
         onMouseLeave={this.onDrawing}
+        onTouchStart={this.onDrawing}
+        onTouchMove={this.onDrawing}
+        onTouchEnd={this.onDrawing}
       >
       {this.state.showMenu && <RadialMenu />}
         <svg height="100%" width="100%">
