@@ -1,5 +1,6 @@
 /* Node modules */
 import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { isEqual, isEmpty } from 'lodash';
 import { FormGroup, FormControl, Row, Col, Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -98,14 +99,30 @@ class PrototypeDashboard extends Component {
           <FormGroup controlId="prototype-type">
             <ul>
               <li>
-                <input type="radio" id="f-option" name="selector" />
-                <label htmlFor="f-option">Desktop</label>
+                <input
+                  checked={this.state.desktopRadio}
+                  onChange={() => this.onDesktopChange()}
+                  type="radio"
+                  id="f-option"
+                  name="selector"
+                />
+                <label htmlFor="f-option">
+                  <FormattedMessage id="dashboard.modal.desktop" />
+                </label>
 
                 <div className="check"></div>
               </li>
               <li>
-                <input type="radio" id="s-option" name="selector" />
-                <label htmlFor="s-option">Mobile</label>
+                <input
+                  checked={this.state.mobileRadio}
+                  onChange={() => this.onMobileChange()}
+                  type="radio"
+                  id="s-option"
+                  name="selector"
+                />
+                <label htmlFor="s-option">
+                  <FormattedMessage id="dashboard.modal.mobile" />
+                </label>
                 <div className="check">
                   <div className="inside"></div>
                 </div>
@@ -119,7 +136,7 @@ class PrototypeDashboard extends Component {
             disabled={!this.state.prototypeName}
             onClick={() => this.createPrototype()}
           >
-            Create
+            <FormattedMessage id="dashboard.modal.create" />
           </Button>
         </Modal.Footer>
       </Modal>
@@ -157,7 +174,9 @@ class PrototypeDashboard extends Component {
       <div>
         {this.renderModal()}
         <div className="prototype-dashboard">
-          <h1 className="title">Prototypes</h1>
+          <h1 className="title">
+            <FormattedMessage id="dashboard.title" />
+          </h1>
           <Row>
             {this.renderPrototypes()}
           </Row>

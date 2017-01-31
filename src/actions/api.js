@@ -7,14 +7,6 @@ const BACKEND_API = 'http://localhost:5000/api/v1';
 
 
 /* --- User Login --- */
-export function loginPending() {
-  return dispatch => dispatch({
-    type: constants.LOGIN_PENDING,
-    user: {},
-    pending: true,
-    error: {},
-  });
-}
 
 export function login(loginAttempt) {
   return dispatch => {
@@ -34,14 +26,12 @@ export function login(loginAttempt) {
           type: constants.LOGIN,
           user: { token: data.body.token },
           error: {},
-          pending: false,
         });
       })
       .catch((data) => {
         dispatch({
           type: constants.LOGIN,
           user: {},
-          pending: false,
           error: {
             msg: data.msg,
             code: data.code,
@@ -95,7 +85,6 @@ export function logout() {
     type: constants.LOGOUT,
     user: {},
     error: {},
-    pending: false,
   });
 }
 
@@ -117,13 +106,11 @@ export function createUser(userCredentials) {
           type: constants.CREATE_USER,
           user: { email: userCredentials.email },
           error: {},
-          pending: false,
         });
       })
       .catch((data) => {
         dispatch({
           type: constants.CREATE_USER,
-          pending: false,
           user: {},
           error: {
             msg: data.msg,
@@ -132,15 +119,6 @@ export function createUser(userCredentials) {
         });
       });
   };
-}
-
-export function createUserPending() {
-  return dispatch => dispatch({
-    type: constants.CREATE_USER_PENDING,
-    user: {},
-    pending: true,
-    error: {},
-  });
 }
 
 

@@ -38,7 +38,6 @@ const actionHandlers = {
       id: action.user.id,
       token: action.user.token,
       email: action.user.email,
-      user: action.user,
     },
   }),
   [constants.SELECT_PROTOTYPE]: (state, action) => ({

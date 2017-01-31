@@ -18,6 +18,13 @@ export default {
   'login.form.modal.title': 'Échec de connection.',
   'login.form.modal.content': 'Veuillez vérifier vos informations. :(',
 
+  // PROTOTYPE DASHBOARD
+  'dashboard.title': 'Prototypes',
+  'dashboard.modal.input': 'Nom du prototype',
+  'dashboard.modal.desktop': 'Bureau',
+  'dashboard.modal.mobile': 'Mobile',
+  'dashboard.modal.create': 'Créer',
+
   // FORM ERRORS
   'form.errors.required': 'Champs requis',
   'form.errors.email': 'Adresse courriel invalide',
