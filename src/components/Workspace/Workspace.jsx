@@ -31,33 +31,39 @@ class Workspace extends Component {
   onDrawing(e) {
     const points = new Array(2);
     let pointer = e;
+    let pointerCount = 1;
     if (e.type.substring(0, 5) === 'touch') {
-      pointer = e.touches[0];
+      pointerCount = e.touches.length;
     }
-    if ((e.type === 'mousemove' && this.state.isDrawing) || e.type === 'touchmove') {
-      points[0] = pointer.pageX - offsetLeft;
-      points[1] = pointer.pageY - offsetTop;
-      if (this.arePointsFeedable(points)) {
-        this.computeSvgPathString(points, 'L');
+    for (let i = 0; i < pointerCount; i++) {
+      if (e.type.substring(0, 5) === 'touch') {
+        pointer = e.touches[i];
+      }
+      if ((e.type === 'mousemove' && this.state.isDrawing) || e.type === 'touchmove') {
+        points[0] = pointer.pageX - offsetLeft;
+        points[1] = pointer.pageY - offsetTop;
+        if (this.arePointsFeedable(points)) {
+          this.computeSvgPathString(points, i, pointerCount, 'L');
+          this.setState({
+            previousPoints: points,
+          });
+        }
+      } else if (e.type === 'mousedown' || e.type === 'touchstart') {
+        points[0] = pointer.pageX - offsetLeft;
+        points[1] = pointer.pageY - offsetTop;
         this.setState({
+          isDrawing: true,
           previousPoints: points,
         });
+        this.createSvgPathString();
+        this.computeSvgPathString(points, i, pointerCount, 'M');
+      } else if (((e.type === 'mouseup' || e.type === 'mouseleave')
+          && this.state.isDrawing) || e.type === 'touchend') {
+        this.setState({
+          isDrawing: false,
+          previousPoints: new Array(2),
+        });
       }
-    } else if (e.type === 'mousedown' || e.type === 'touchstart') {
-      points[0] = pointer.pageX - offsetLeft;
-      points[1] = pointer.pageY - offsetTop;
-      this.setState({
-        isDrawing: true,
-        previousPoints: points,
-      });
-      this.createSvgPathString();
-      this.computeSvgPathString(points, 'M');
-    } else if (((e.type === 'mouseup' || e.type === 'mouseleave')
-        && this.state.isDrawing) || e.type === 'touchend') {
-      this.setState({
-        isDrawing: false,
-        previousPoints: new Array(2),
-      });
     }
   }
 
@@ -81,9 +87,10 @@ class Workspace extends Component {
     });
   }
 
-  computeSvgPathString(points, prefix) {
+  computeSvgPathString(points, pointerIndex, pointerCount, prefix) {
     const pathStrings = this.state.svgPathStrings;
-    pathStrings[pathStrings.length - 1] += `${prefix}${points[0]} ${points[1]} `;
+    pathStrings[pathStrings.length - pointerCount + pointerIndex] +=
+      `${prefix}${points[0]} ${points[1]} `;
     this.setState({
       svgPathStrings: pathStrings,
     });
