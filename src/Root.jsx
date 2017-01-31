@@ -1,5 +1,6 @@
 /* global __DEVTOOLS__ */
 import React, { PropTypes, Component } from 'react';
+import { isEqual, isEmpty } from 'lodash';
 import { IndexRoute, Router, Route, useRouterHistory } from 'react-router';
 import { createHashHistory } from 'history';
 import DevTools from './components/common/DevTools/DevTools';
@@ -17,7 +18,7 @@ const {
 } = components;
 
 /* Actions */
-import { fetchMe } from './actions/api.js';
+import { fetchMe, getPrototypes } from './actions/api.js';
 
 /* Utils */
 import * as storage from './persistence/storage';
@@ -45,61 +46,84 @@ function logout(nextState, replaceState) {
   replaceState('/login');
 }
 
-const requireAuth = (props) => (nextState, replaceState) => {
-  const token = storage.get('token');
-  if (token) {
-    props.actions.fetchMe(token);
-  } else {
-    replaceState('/login');
-  }
-};
+class Root extends Component {
+  static propTypes = {
+    application: PropTypes.object.isRequired,
+  };
 
-function renderRoutes(props) {
-  return (
-    <Router history={appHistory}>
+  constructor(props) {
+    super(props);
+
+    // Route authentication middleware
+    this.requireAuth = (myProps) => (nextState, replaceState) => {
+      const token = storage.get('token');
+      if (token) {
+        myProps.actions.fetchMe(token);
+      } else {
+        replaceState('/login');
+      }
+    };
+
+    // Route definitions
+    this.routes = (
       <Route path="/" component={Application}>
-        <IndexRoute component={HomePage} onEnter={requireAuth(props)} />
+        <IndexRoute component={HomePage} onEnter={this.requireAuth(this.props)} />
         <Route path="login" component={LoginPage} />
         <Route path="logout" onEnter={logout} />
       </Route>
-    </Router>
-  );
-}
-
-function getRootChildren(props) {
-  const intlData = {
-    locale: props.application.locale,
-    messages: i18n[props.application.locale],
-  };
-  const rootChildren = [
-    <IntlProvider key="intl" {...intlData}>
-      {renderRoutes(props)}
-    </IntlProvider>,
-  ];
-
-  if (__DEVTOOLS__) {
-    rootChildren.push(<DevTools key="devtools" />);
+    );
   }
-  return rootChildren;
-}
 
-class Root extends Component {
+  componentWillReceiveProps(nextProps) {
+    const { login } = nextProps.api;
+
+    if (!isEqual(this.props.api.login.user, login.user)
+        && login.lastAction === constants.FETCH_ME) {
+      // if the login has no errors
+      if (isEmpty(login.error)) {
+        this.props.actions.getPrototypes(login.user.id, storage.get('token'));
+      }
+    }
+  }
+
+  getRootChildren(props) {
+    const intlData = {
+      locale: props.application.locale,
+      messages: i18n[props.application.locale],
+    };
+    const rootChildren = [
+      <IntlProvider key="intl" {...intlData}>
+        {this.renderRoutes(props)}
+      </IntlProvider>,
+    ];
+
+    if (__DEVTOOLS__) {
+      rootChildren.push(<DevTools key="devtools" />);
+    }
+    return rootChildren;
+  }
+
+  renderRoutes() {
+    return (
+      <Router history={appHistory}>
+        {this.routes}
+      </Router>
+    );
+  }
+
   render() {
     return (
-      <div>{getRootChildren(this.props)}</div>
+      <div>{this.getRootChildren(this.props)}</div>
     );
   }
 }
 
-Root.propTypes = {
-  application: PropTypes.object.isRequired,
-};
-
 export default (connect(
-  ({ application }) => ({ application }),
+  ({ application, api }) => ({ application, api }),
   dispatch => ({
     actions: bindActionCreators({
       fetchMe,
+      getPrototypes,
     }, dispatch),
   })
 )(Root));

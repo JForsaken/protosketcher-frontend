@@ -144,6 +144,38 @@ export function createUserPending() {
 }
 
 
+/* --- Prototypes --- */
+export function getPrototypes(userId, token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes?user=${userId}`, {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.GET_PROTOTYPES,
+          prototypes: data.body,
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_PROTOTYPES,
+          prototypes: {},
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
 /* --- Auto Saving --- */
 export function save() {
   const date = new Date();

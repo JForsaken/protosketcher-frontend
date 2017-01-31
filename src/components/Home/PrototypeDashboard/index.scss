@@ -1,0 +1,69 @@
+.prototype-dashboard {
+  padding-top: 120px;
+  padding-left: 100px;
+  padding-right: 100px;
+  background: color('background', 'base');
+  height: 100vh;
+}
+
+.title {
+  position: absolute;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 92px;
+  height: 60px;
+  margin: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  outline: none;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  background: color('accent', 'light');
+  color: color('text', 'light');
+  transition: all 0.5s ease;
+
+  &:hover {
+    background: color('accent', 'dark');
+  }
+}
+
+.prototype-container {
+  padding: 15px;
+  padding-bottom: 30px;
+  text-align: center;
+
+  &__prototype {
+    position: relative;
+    color: white;
+    height: 200px;
+    width: 200px;
+    background: color('foreground', 'light');
+    box-shadow: 0 4px 10px 4px #bbbbbb;
+    transition: .2s ease;
+
+    @include rounded-equal(10px);
+
+    margin: 0 auto;
+
+    &:hover {
+      background: color('accent', 'light');
+      cursor: pointer;
+    }
+
+    &__title {
+      font-size: 20px;
+      font-weight: 600;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+
+      &--add {
+        @extend .prototype-container__prototype__title;
+        font-size: 60px;
+      }
+    }
+  }
+}

@@ -14,6 +14,11 @@ const initialState = {
     pending: false,
     error: {},
   },
+  getPrototypes: {
+    prototypes: {},
+    lastAction: null,
+    error: {},
+  },
 };
 
 const actionHandlers = {
@@ -64,6 +69,15 @@ const actionHandlers = {
       user: action.user,
       lastAction: action.type,
       pending: action.pending,
+      error: action.error,
+    },
+  }),
+
+  /* --- Prototypes */
+  [constants.GET_PROTOTYPES]: (state, action) => ({
+    getPrototypes: {
+      prototypes: action.prototypes,
+      lastAction: action.type,
       error: action.error,
     },
   }),

@@ -15,5 +15,8 @@ export const FETCH_ME = 'FETCH_ME';
 export const CREATE_USER = 'CREATE_USER';
 export const CREATE_USER_PENDING = 'CREATE_USER_PENDING';
 
+// Prototypes
+export const GET_PROTOTYPES = 'GET_PROTOTYPES';
+
 // API
 export const SAVE = 'SAVE';
