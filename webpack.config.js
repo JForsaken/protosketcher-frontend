@@ -50,8 +50,8 @@ module.exports = {
         test: /\.(jpg|png|gif|svg)$/i,
         loader:'file-loader',
       },
-      { test: /\.(ttf|otf|eot|)$/,
-        loader:'file-loader',
+      { test: /\.(ttf|otf|eot)$/,
+        loader:'file-loader?name=fonts/[name].[ext]',
       },
       {
         test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/,

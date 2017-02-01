@@ -18,7 +18,7 @@ app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, './dist/index.html'));
 });
 
-app.listen(3001, 'localhost', function (err) {
+app.listen(3001, '0.0.0.0', function (err) {
   if (err) {
     console.error(err);
     return;

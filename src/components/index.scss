@@ -17,25 +17,40 @@ html {
 
 @font-face {
   font-family: 'Geomanist';
-  src: url('../../assets/fonts/Geomanist-Regular.otf');
+  src: url('../../assets/fonts/Geomanist-Regular.otf') format('otf');
 }
 
 @font-face {
   font-family: 'Helvetica Light';
-  src: url('../../assets/fonts/Helvetica-Light.ttf');
+  src: url('../../assets/fonts/Helvetica-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'PermanentMarker';
+  src: url('https://fonts.googleapis.com/css?family=Permanent+Marker') format('truetype');
+}
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('../../node_modules/font-awesome/fonts/FontAwesome.otf') format('otf'),
+       url('../../node_modules/font-awesome/fonts/fontawesome-webfont.eot?') format('eot'),
+       url('../../node_modules/font-awesome/fonts/fontawesome-webfont.svg') format('svg'),
+       url('../../node_modules/font-awesome/fonts/fontawesome-webfont.ttf') format('truetype'),
+       url('../../node_modules/font-awesome/fonts/fontawesome-webfont.woff') format('woff'),
+       url('../../node_modules/font-awesome/fonts/fontawesome-webfont.woff2') format('woff2');
 }
 
 body {
   color: color('text');
   background-color: color('background') !important;
-  font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
+  font-family: 'PermanentMarker', 'Geomanist', 'Helvetica Light', sans-serif !important;
 
   @import './bootstrap-override.scss';
 }
-
 @import './Home/index.scss';
 
 #app {
+
   .page-container {
     padding-top: $top-menu-height;
   }
