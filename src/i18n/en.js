@@ -4,6 +4,10 @@ export default {
   // WEBSITE
   'website.title': 'Protosketcher',
 
+  // COMMON
+  'cancel': 'Cancel',
+  'save': 'Save',
+
   // LOGIN FORM
   'login.form.title': 'Welcome Back!',
   'signup.form.title': 'Sign Up for Free',
@@ -45,9 +49,8 @@ export default {
   'footer.deletePage': 'Delete the page',
   'footer.renamePage': 'Rename the page',
   'footer.newName': 'New page name',
-  'footer.deletePageConfirm': 'Are you sure you want to delete this page',
+  'footer.deletePageConfirm': 'Are you sure you want to delete this page?',
   'footer.deletePageCantBeUndone': 'This operation can not be undone',
   'footer.delete': 'Delete',
-  'footer.cancel': 'Cancel',
   'footer.moreThanOnePage': 'You need to have at least one page at all times',
 };

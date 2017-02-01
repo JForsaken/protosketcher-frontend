@@ -7,7 +7,6 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 /* Components */
 import Menu from '../../common/Menu/Menu';
 import Footer from '../../common/Footer/Footer';
-import Popup from 'react-popup';
 import PrototypeDashboard from '../PrototypeDashboard/PrototypeDashboard';
 import Workspace from '../../Workspace/Workspace';
 
@@ -29,7 +28,6 @@ class HomePage extends Component {
             <Menu />
             <SaveTimer />
             <Workspace />
-            <Popup />
             <Footer />
           </div> :
           <div key="dashboard-anim">
