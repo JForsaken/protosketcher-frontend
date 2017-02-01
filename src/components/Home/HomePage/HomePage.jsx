@@ -1,7 +1,7 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import SaveTimer from '../SaveTimer/SaveTimer';
+// import SaveTimer from '../SaveTimer/SaveTimer';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 /* Components */
@@ -14,6 +14,7 @@ const animationTime = 300;
 
 class HomePage extends Component {
   render() {
+    // TODO : add <SaveTimer /> back for prod
     /* if no prototype is currently selected,
      * we show the prototype dashboard
     */
@@ -26,7 +27,6 @@ class HomePage extends Component {
         {this.props.application.prototype ?
           <div className="page-container" key="homepage-anim">
             <Menu />
-            <SaveTimer />
             <Workspace />
             <Footer />
           </div> :
@@ -38,7 +38,6 @@ class HomePage extends Component {
     );
   }
 }
-
 export default (connect(
   ({ application }) => ({ application }),
 )(HomePage));

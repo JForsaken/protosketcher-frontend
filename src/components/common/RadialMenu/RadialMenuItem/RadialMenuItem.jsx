@@ -67,8 +67,7 @@ class RadialMenuItem extends Component {
           fill={this.props.color}
         />
         <path
-          className="radial-menu-item-icon"
-          d={this.props.icon}
+          className={this.props.icon}
           style={this.createCSSTransform()}
         />
       </g>

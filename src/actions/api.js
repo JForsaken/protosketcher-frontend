@@ -3,7 +3,7 @@ import processResponse from '../utils/process-response';
 import { get, put, remove } from '../persistence/storage';
 import * as constants from './constants';
 
-const BACKEND_API = 'http://localhost:5000/api/v1';
+const BACKEND_API = 'http://0.0.0.0:5000/api/v1';
 
 
 /* --- User Login --- */
