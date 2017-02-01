@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SaveTimer from '../SaveTimer/SaveTimer';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 /* Components */
 import Menu from '../../common/Menu/Menu';
@@ -9,26 +10,31 @@ import Footer from '../../common/Footer/Footer';
 import PrototypeDashboard from '../PrototypeDashboard/PrototypeDashboard';
 import Workspace from '../../Workspace/Workspace';
 
+const animationTime = 300;
+
 class HomePage extends Component {
   render() {
     /* if no prototype is currently selected,
      * we show the prototype dashboard
     */
-    if (!this.props.application.prototype) {
-      return (
-        <div>
-          <PrototypeDashboard />
-        </div>
-      );
-    }
-
     return (
-      <div className="page-container">
-        <Menu />
-        <SaveTimer />
-        <Workspace />
-        <Footer />
-      </div>
+      <ReactCSSTransitionGroup
+        transitionName="homepage-dashboard"
+        transitionEnterTimeout={animationTime}
+        transitionLeaveTimeout={animationTime}
+      >
+        {this.props.application.prototype ?
+          <div className="page-container" key="homepage-anim">
+            <Menu />
+            <SaveTimer />
+            <Workspace />
+            <Footer />
+          </div> :
+          <div key="dashboard-anim">
+            <PrototypeDashboard />
+          </div>
+        }
+      </ReactCSSTransitionGroup>
     );
   }
 }
