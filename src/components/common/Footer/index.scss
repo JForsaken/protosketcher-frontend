@@ -10,6 +10,7 @@ footer#footer {
   .btn.page-tab {
     @include rounded-indiv(0px, 0px, 2px, 2px);
     font-weight: 600;
+    @include box-shadow(0px, 0px, 0px, #000, true);
 
     &--active {
       background-color: color('background');

@@ -5,32 +5,32 @@ const initialState = {
   login: {
     user: {},
     lastAction: null,
-    pending: false,
     error: {},
   },
   createUser: {
     user: {},
     lastAction: null,
-    pending: false,
+    error: {},
+  },
+  getPrototypes: {
+    prototypes: {},
+    lastAction: null,
+    error: {},
+  },
+  createPrototype: {
+    prototype: {},
+    lastAction: null,
     error: {},
   },
 };
 
 const actionHandlers = {
+
   /* --- User Login --- */
-  [constants.LOGIN_PENDING]: (state, action) => ({
-    login: {
-      user: action.user,
-      lastAction: action.type,
-      pending: action.pending,
-      error: action.error,
-    },
-  }),
   [constants.LOGIN]: (state, action) => ({
     login: {
       user: action.user,
       lastAction: action.type,
-      pending: action.pending,
       error: action.error,
     },
   }),
@@ -38,7 +38,6 @@ const actionHandlers = {
     login: {
       user: action.user,
       lastAction: action.type,
-      pending: action.pending,
       error: action.error,
     },
   }),
@@ -51,19 +50,26 @@ const actionHandlers = {
   }),
 
   /* --- Create User --- */
-  [constants.CREATE_USER_PENDING]: (state, action) => ({
-    createUser: {
-      user: action.user,
-      lastAction: action.type,
-      pending: action.pending,
-      error: action.error,
-    },
-  }),
   [constants.CREATE_USER]: (state, action) => ({
     createUser: {
       user: action.user,
       lastAction: action.type,
-      pending: action.pending,
+      error: action.error,
+    },
+  }),
+
+  /* --- Prototypes */
+  [constants.GET_PROTOTYPES]: (state, action) => ({
+    getPrototypes: {
+      prototypes: action.prototypes,
+      lastAction: action.type,
+      error: action.error,
+    },
+  }),
+  [constants.CREATE_PROTOTYPE]: (state, action) => ({
+    createPrototype: {
+      prototypes: action.prototype,
+      lastAction: action.type,
       error: action.error,
     },
   }),

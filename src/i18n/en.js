@@ -18,6 +18,13 @@ export default {
   'login.form.modal.title': 'Failed login.',
   'login.form.modal.content': 'Please review your login information. :(',
 
+  // PROTOTYPE DASHBOARD
+  'dashboard.title': 'Prototypes',
+  'dashboard.modal.input': 'Prototype name',
+  'dashboard.modal.desktop': 'Desktop',
+  'dashboard.modal.mobile': 'Mobile',
+  'dashboard.modal.create': 'Create',
+
   // FORM ERRORS
   'form.errors.required': 'Required',
   'form.errors.email': 'Invalid email',

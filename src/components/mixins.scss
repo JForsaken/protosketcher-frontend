@@ -108,7 +108,7 @@ $desktop-width: 1024px;
 
   Source: https://gist.github.com/garyharan/957284
 */
-@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+@mixin box-shadow($top: 0, $left: 4px, $blur: 10px, $color: #bbbbbb, $inset: false) {
   @if $inset {
     -webkit-box-shadow:inset $top $left $blur $color;
     -moz-box-shadow:inset $top $left $blur $color;

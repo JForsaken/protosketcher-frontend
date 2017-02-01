@@ -29,13 +29,15 @@ body {
   color: color('text');
   background-color: color('background') !important;
   font-family: 'Geomanist', 'Helvetica Light', sans-serif !important;
-}
 
-#app {
   @import './bootstrap-override.scss';
   @import './popup';
   @import './react-context-menu';
+}
 
+@import './Home/index.scss';
+
+#app {
   .page-container {
     padding-top: $top-menu-height;
   }
