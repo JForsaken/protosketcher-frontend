@@ -32,6 +32,7 @@ class SignupSection extends Component {
 
     this.state = {
       isShowingModal: false,
+      pending: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -44,13 +45,15 @@ class SignupSection extends Component {
         && createUser.lastAction === CREATE_USER) {
       // if the user creation has errors
       if (!isEmpty(createUser.error)) {
-        this.setState({ isShowingModal: true });
+        this.setState({ isShowingModal: true, pending: false });
       } else {
         const { email, password } = this.props.form.signupForm.values;
         this.props.actions.login({ email, password });
       }
     } else if (!isEqual(this.props.api.login, login)
                && login.lastAction === LOGIN) {
+      this.setState({ pending: false });
+
       // if the login has errors
       if (!isEmpty(login.error)) {
         this.setState({ isShowingModal: true });
@@ -67,7 +70,7 @@ class SignupSection extends Component {
   handleSubmit() {
     const { email, password } = this.props.form.signupForm.values;
 
-    this.props.actions.createUserPending();
+    this.setState({ pending: true });
     this.props.actions.createUser({ email, password });
   }
 
@@ -93,11 +96,12 @@ class SignupSection extends Component {
   render() {
     const {
       handleSubmit,
-      api,
       intl,
     } = this.props;
 
-    const submitButtonContent = api.login.pending || api.createUser.pending ?
+    const { pending } = this.state;
+
+    const submitButtonContent = pending ?
       <div className="spinner" /> :
       intl.messages['signup.form.button'];
 
@@ -129,7 +133,7 @@ class SignupSection extends Component {
           <Button
             className="login-section__login-button"
             type="submit"
-            disabled={api.login.pending}
+            disabled={pending}
           >
             {submitButtonContent}
           </Button>

@@ -1,0 +1,103 @@
+.prototype-dashboard {
+  background: color('background', 'base');
+  height: 100vh;
+
+  .title {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 92px;
+    height: 60px;
+    margin: 0;
+    width: 100%;
+    outline: none;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    background: color('accent', 'light');
+    color: color('text', 'light');
+    @include transition(all 0.5s ease);
+
+    &:hover {
+      background: color('accent', 'dark');
+    }
+  }
+
+  .row {
+    padding-top: 50px;
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+}
+
+.prototype-container {
+  padding: 15px;
+  padding-bottom: 30px;
+  text-align: center;
+
+  &__prototype {
+    position: relative;
+    color: white;
+    height: 200px;
+    width: 200px;
+    background: color('foreground', 'light');
+    @include box-shadow();
+    @include transition(.2s ease);
+
+    @include rounded-equal(10px);
+
+    margin: 0 auto;
+
+    &:hover {
+      background: color('accent', 'dark');
+      cursor: pointer;
+    }
+
+    &--add {
+      @extend .prototype-container__prototype;
+      background: color('accent', 'light');
+    }
+
+    &__title {
+      font-size: 20px;
+      font-weight: 600;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+
+      &--add {
+        @extend .prototype-container__prototype__title;
+        font-size: 60px;
+      }
+    }
+  }
+}
+
+.modal-content {
+  .form-group {
+    text-align: center;
+    margin-bottom: 0;
+  }
+
+  .modal-footer {
+    position: relative;
+
+    .btn {
+      text-align: center;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50px;
+      border: none;
+      width: 100%;
+      font-size: 1.5em;
+      color: color('text', 'light');
+      font-weight: bold;
+      text-transform: uppercase;
+      @include rounded-indiv(0, 0, 2px, 2px);
+      @include box-shadow(0, 0, 0, 0)
+
+    }
+
+  }
+}

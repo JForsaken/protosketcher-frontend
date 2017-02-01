@@ -1,0 +1,17 @@
+.homepage-dashboard-enter {
+  opacity: 0.01;
+}
+
+.homepage-dashboard-enter.homepage-dashboard-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+
+.homepage-dashboard-leave {
+  opacity: 0;
+}
+
+.homepage-dashboard-leave.homepage-dashboard-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
