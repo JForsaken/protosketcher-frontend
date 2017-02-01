@@ -147,7 +147,7 @@ class PrototypeDashboard extends Component {
     const prototypes = [(
       <Col sm={4} md={3} key="add-prototype" className="prototype-container">
         <div
-          className="prototype-container__prototype"
+          className="prototype-container__prototype--add"
           onClick={() => this.onAddClick()}
         >
           <div className="prototype-container__prototype__title--add">
