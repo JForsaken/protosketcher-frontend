@@ -34,7 +34,6 @@ class Workspace extends Component {
     this.state = {
       showMenu: false,
       mode: 0,
-      touchStartPos: {},
     };
 
     this.touchTimer = 0;
@@ -45,14 +44,13 @@ class Workspace extends Component {
     if (e.stopPropagation) e.stopPropagation();
 
     if (e.type === 'contextmenu' || e.type === 'touchstart') {
-      this.props.application.menu = {
+      this.props.application.touchStartPos = {
         clientX: e.clientX,
         clientY: e.clientY,
       };
       this.setState({ showMenu: true });
     } else if (e.type === 'touchend' || e.type === 'touchcancel'
       || (e.type === 'mouseleave' && e.target.classList.contains('workspace-container'))) {
-      this.props.application.menu = {};
       this.setState({ showMenu: false });
     }
   }
@@ -61,12 +59,12 @@ class Workspace extends Component {
     e.stopPropagation();
 
     if (e.type === 'touchstart') {
-      this.state.touchStartPos = {
+      this.props.application.touchStartPos = {
         clientX: e.changedTouches.item(0).clientX,
         clientY: e.changedTouches.item(0).clientY,
       };
     } else {
-      this.state.touchStartPos = {
+      this.props.application.touchStartPos = {
         clientX: e.clientX,
         clientY: e.clientY,
       };
@@ -74,7 +72,7 @@ class Workspace extends Component {
 
     const evt = {
       type: 'touchstart',
-      ...this.state.touchStartPos,
+      ...this.props.application.touchStartPos,
     };
     this.touchTimer = setTimeout(() => this.toggleMenu(evt), 500);
   }
@@ -82,7 +80,6 @@ class Workspace extends Component {
   touchEnd(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.state.touchStartPos = {};
     const evt = {
       type: 'touchend',
     };
@@ -102,15 +99,15 @@ class Workspace extends Component {
 
     if (e.type === 'touchmove') {
       const touch = e.changedTouches.item(0);
-      deltaX = Math.abs(touch.clientX - this.state.touchStartPos.clientX);
-      deltaY = Math.abs(touch.clientY - this.state.touchStartPos.clientY);
+      deltaX = Math.abs(touch.clientX - this.props.application.touchStartPos.clientX);
+      deltaY = Math.abs(touch.clientY - this.props.application.touchStartPos.clientY);
       if (this.state.showMenu === true) {
         // const el = document.elementFromPoint(touch.clientX, touch.clientY);
         // console.log(el);
       }
     } else {
-      deltaX = Math.abs(e.clientX - this.state.touchStartPos.clientX);
-      deltaY = Math.abs(e.clientY - this.state.touchStartPos.clientY);
+      deltaX = Math.abs(e.clientX - this.props.application.touchStartPos.clientX);
+      deltaY = Math.abs(e.clientY - this.props.application.touchStartPos.clientY);
     }
     if (this.state.showMenu === false) {
       // Add error margin for small moves
