@@ -90,18 +90,6 @@ export default class Footer extends Component {
     });
   }
 
-  showAddPageMenu() {
-    this.setState({
-      isAddPageMenuVisible: true,
-    });
-  }
-
-  hideAddPageMenu() {
-    this.setState({
-      isAddPageMenuVisible: false,
-    });
-  }
-
   addPage() {
     const pages = this.state.pages;
     pages.push(this.props.intl.messages['footer.newPage']);
@@ -230,7 +218,7 @@ export default class Footer extends Component {
       });
 
       pages.push(
-        <ContextMenuTrigger key={`menuTrigger-${index}`} id={pageIndex}>
+        <ContextMenuTrigger id={pageIndex}>
           <Button
             key={pageIndex}
             className={className}
@@ -254,27 +242,17 @@ export default class Footer extends Component {
       );
     });
 
-    const addPageMenu = <div id="addPageMenu">Allo</div>;
-
     return (
       <footer id="footer">
         {this.renderModal()}
         {pages}
-        <div
-          id="pageAddZone"
-          className={this.state.isAddPageMenuVisible ? 'menuVisible' : ''}
-          onMouseOver={() => this.showAddPageMenu()}
-          onMouseOut={() => this.hideAddPageMenu()}
+        <Button
+          className="page-tab page-tab-add"
+          title={this.props.intl.messages['footer.addPage']}
+          onClick={() => this.addPage()}
         >
-          {this.state.isAddPageMenuVisible ? addPageMenu : null}
-          <Button
-            className="page-tab page-tab-add"
-            title={this.props.intl.messages['footer.addPage']}
-            onClick={() => this.addPage()}
-          >
-            <i className="fa fa-plus" />
-          </Button>
-        </div>
+          <i className="fa fa-plus" />
+        </Button>
         {contextMenus}
       </footer>
     );

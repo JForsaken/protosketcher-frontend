@@ -22,18 +22,4 @@ footer#footer {
       }
     }
   }
-
-  #pageAddZone {
-    display: inline-block;
-
-    &.menuVisible {
-      margin-top: -100px;
-    }
-
-    #addPageMenu {
-      width: 35px;
-      height: 100px;
-      background-color: color(foreground);
-    }
-  }
 }
