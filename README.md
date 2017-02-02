@@ -71,36 +71,6 @@ After, just setup your trigger and the menu:
 </ContextMenu>
 ```
 
-## Popup
-
-A plugin was added to handle custom popups (alerts, prompts, etc.)
-The documentation is here: https://github.com/minutemailer/react-popup
-
-To use the popup, just import:
-
-```bash
-import Popup from 'react-popup';
-```
-
-There are multiple ways to use the popup. The easiest being:
-
-```bash
-Popup.alert('Hello, look at me');
-```
-
-But, you can also customize the features:
-
-```bash
-Popup.create({
-  title: 'I have a title',
-  content: 'Hello, look at me',
-  className: 'alert',
-  buttons: {
-      right: ['ok']
-  }
-});
-```
-
 Look at the [doc](https://github.com/minutemailer/react-popup) to check all the features.
 
 ## Collaborators
