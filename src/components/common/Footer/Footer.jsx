@@ -16,6 +16,7 @@ export default class Footer extends Component {
       activePage: 0,
       showRenameModal: false,
       showDeleteModal: false,
+      showOnePageWarning: false,
       pageName: '',
       pageModifiedIndex: -1,
     };
@@ -44,10 +45,6 @@ export default class Footer extends Component {
 
   removePage() {
     const pages = this.state.pages.slice();
-    if (pages.length === 1) {
-      // TODO Do something when only one page
-      return;
-    }
 
     pages.splice(this.state.pageModifiedIndex, 1);
     let activePage = this.state.activePage;
@@ -71,6 +68,13 @@ export default class Footer extends Component {
   }
 
   showDeleteModal(index) {
+    if (this.state.pages.length <= 1) {
+      this.setState({
+        showOnePageWarningModal: true,
+        showDeleteModal: false,
+      });
+      return;
+    }
     this.setState({
       showDeleteModal: true,
       pageModifiedIndex: index,
@@ -81,6 +85,7 @@ export default class Footer extends Component {
     this.setState({
       showRenameModal: false,
       showDeleteModal: false,
+      showOnePageWarningModal: false,
       pageModifiedIndex: -1,
     });
   }
@@ -116,7 +121,6 @@ export default class Footer extends Component {
 
   renderModal() {
     if (this.state.showRenameModal) {
-      console.log('wejpwfjepofjwepofjpowef');
       return (
         <Modal
           dialogClassName="add-modal"
@@ -179,6 +183,31 @@ export default class Footer extends Component {
               className="doubleButton"
             >
               <FormattedMessage id="footer.delete" />
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      );
+    }
+    if (this.state.showOnePageWarningModal) {
+      return (
+        <Modal
+          dialogClassName="add-modal"
+          show={this.state.showOnePageWarningModal}
+          onHide={() => this.closeModal()}
+        >
+          <Modal.Header closeButton>
+            <i className="fa fa-exclamation-triangle" />
+          </Modal.Header>
+          <Modal.Body>
+            <h4><FormattedMessage id="footer.moreThanOnePage" /></h4>
+            <hr />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              bsStyle="primary"
+              onClick={() => this.closeModal()}
+            >
+              <FormattedMessage id="OK" />
             </Button>
           </Modal.Footer>
         </Modal>
