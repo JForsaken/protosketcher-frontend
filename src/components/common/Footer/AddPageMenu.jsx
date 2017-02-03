@@ -21,11 +21,13 @@ export default class AddPageMenu extends Component {
           primaryText: this.props.intl.messages['footer.addModalPage'],
           rightAvatar: <Avatar backgroundColor={amber500} icon={<IconModal />} />,
           onClick: this.props.addPage,
+          className: 'smallButton',
         },
         {
           primaryText: this.props.intl.messages['footer.addNormalPage'],
           rightAvatar: <Avatar backgroundColor={amber500} icon={<IconPage />} />,
           onClick: this.props.addPage,
+          className: 'smallButton',
         },
       ],
     };

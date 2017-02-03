@@ -25,10 +25,14 @@ footer#footer {
   .addPageMenu {
     bottom: -8px;
 
+    // Important is necessary, because I'm overriding inline styles
+    button, .smallButton div, .smallButton span {
+      border-radius: 2px !important;
+    }
+
     .addPageBackdrop {
       background: none;
       left: 0;
-
       > a {
         background: none !important;
       }
