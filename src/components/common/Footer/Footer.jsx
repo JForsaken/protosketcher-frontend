@@ -225,7 +225,7 @@ export default class Footer extends Component {
     const icons = {
       modal: <i className="fa fa-window-maximize" />,
       normal: <i className="fa fa-television" />,
-    }
+    };
 
     forEach(this.state.pages, (page) => {
       pageIndex = `page-${page.id}`;
