@@ -66,8 +66,8 @@ class RadialMenuItem extends Component {
           d={this.createSvgArc(100, 100, 100, this.props.startAngle, this.props.endAngle)}
           fill={this.props.color}
         />
-        <path
-          className={this.props.icon}
+        <image
+          xlinkHref={this.props.icon}
           style={this.createCSSTransform()}
         />
       </g>

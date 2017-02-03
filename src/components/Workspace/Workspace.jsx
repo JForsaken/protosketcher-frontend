@@ -2,22 +2,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import iconSelect from '../../../assets/images/icons/select-area.svg';
+import iconPalette from '../../../assets/images/icons/palette.png';
+import iconText from '../../../assets/images/icons/text-fields.png';
+
 /* Components */
 import RadialMenu from '../common/RadialMenu/RadialMenu';
 
 const menuItems = [
   {
     color: '#F44336',
-    icon: 'icon-palette', // Color
+    icon: iconPalette, // Color
   },
   {
     color: '#4CAF50',
-    icon: 'icon-text', // Text
+    icon: iconText, // Text
   },
   {
     color: '#2196F3',
     flex: 2,
-    icon: 'icon-selection', // Selection
+    icon: iconSelect, // Selection
   },
 ];
 
