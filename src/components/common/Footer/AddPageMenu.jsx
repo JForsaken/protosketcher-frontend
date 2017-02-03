@@ -20,10 +20,12 @@ export default class AddPageMenu extends Component {
         {
           primaryText: this.props.intl.messages['footer.addModalPage'],
           rightAvatar: <Avatar backgroundColor={amber500} icon={<IconModal />} />,
+          onClick: this.props.addPage,
         },
         {
           primaryText: this.props.intl.messages['footer.addNormalPage'],
           rightAvatar: <Avatar backgroundColor={amber500} icon={<IconPage />} />,
+          onClick: this.props.addPage,
         },
       ],
     };
@@ -35,12 +37,17 @@ export default class AddPageMenu extends Component {
     return (
       <MuiThemeProvider>
         <SpeedDial
-          hasBackdrop={false}
           floatingActionButtonProps={floatingActionButtonProps}
+          positionV="inline"
+          positionH="right"
+          className="addPageMenu"
+          classNameBackdrop="addPageBackdrop"
         >
-          <BubbleList>
+          <BubbleList
+            direction="up"
+          >
             {buttonList.items.map(
-              (item, index) => (<BubbleListItem key={`buble${index}`} {...item} />)
+              (item, index) => (<BubbleListItem key={`bubble${index}`} {...item} />)
             )}
           </BubbleList>
         </SpeedDial>

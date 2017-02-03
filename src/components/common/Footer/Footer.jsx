@@ -245,17 +245,12 @@ export default class Footer extends Component {
 
     return (
       <footer id="footer">
-        {this.renderModal()}
-        {pages}
-        <Button
-          className="page-tab page-tab-add"
-          title={this.props.intl.messages['footer.addPage']}
-          onClick={() => this.addPage()}
-        >
-          <i className="fa fa-plus" />
-        </Button>
-        <AddPageMenu />
-        {contextMenus}
+        <div className="container">
+          {this.renderModal()}
+          {pages}
+          <AddPageMenu addPage={() => this.addPage()} />
+          {contextMenus}
+        </div>
       </footer>
     );
   }

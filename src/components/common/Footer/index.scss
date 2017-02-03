@@ -1,7 +1,6 @@
 footer#footer {
   background-color: color('foreground', 'dark');
   height: $footer-height;
-  padding-left: $left-menu-width + $base-padding-size;
   position: absolute;
   right: 0;
   bottom: 0;
@@ -19,6 +18,19 @@ footer#footer {
 
       &:hover {
         background-color: color('background');
+      }
+    }
+  }
+
+  .addPageMenu {
+    bottom: -8px;
+
+    .addPageBackdrop {
+      background: none;
+      left: 0;
+
+      > a {
+        background: none !important;
       }
     }
   }
