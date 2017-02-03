@@ -13,7 +13,15 @@ export default class Footer extends Component {
     super(props, context);
 
     this.state = {
-      pages: ['Page 1', 'Page 2'],
+      pages: [{
+        id: 0,
+        name: 'Page 1',
+        type: 'normal',
+      }, {
+        id: 1,
+        name: 'Page 2',
+        type: 'modal',
+      }],
       activePage: 0,
       showRenameModal: false,
       showDeleteModal: false,
@@ -35,7 +43,7 @@ export default class Footer extends Component {
     if (pageName === '' || pageName === ' ') {
       pageName = ' - ';
     }
-    pages[this.state.pageModifiedIndex] = pageName;
+    pages[this.state.pageModifiedIndex].name = pageName;
     this.setState({
       pages,
       pageModifiedIndex: -1,
@@ -91,9 +99,13 @@ export default class Footer extends Component {
     });
   }
 
-  addPage() {
+  addPage(type) {
     const pages = this.state.pages;
-    pages.push(this.props.intl.messages['footer.newPage']);
+    pages.push({
+      id: pages.length,
+      name: this.props.intl.messages['footer.newPage'],
+      type,
+    });
     this.setState({
       pages,
       activePage: pages.length - 1,
@@ -210,33 +222,39 @@ export default class Footer extends Component {
     const contextMenus = [];
     let pageIndex;
     let menuIndex;
-    forEach(this.state.pages, (page, index) => {
-      pageIndex = `page-${index}`;
-      menuIndex = `menu-${index}`;
+    const icons = {
+      modal: <i className="fa fa-window-maximize" />,
+      normal: <i className="fa fa-television" />,
+    }
+
+    forEach(this.state.pages, (page) => {
+      pageIndex = `page-${page.id}`;
+      menuIndex = `menu-${page.id}`;
       const className = classNames({
         'page-tab': true,
-        'page-tab--active': this.state.activePage === index,
+        'page-tab--active': this.state.activePage === page.id,
       });
 
       pages.push(
-        <ContextMenuTrigger id={pageIndex} key={`trigger${index}`}>
+        <ContextMenuTrigger id={pageIndex} key={`trigger${page.id}`}>
           <Button
             key={pageIndex}
             className={className}
-            onDoubleClick={() => this.showRenameModal(index)}
-            onClick={() => this.changePage(index)}
+            onDoubleClick={() => this.showRenameModal(page.id)}
+            onClick={() => this.changePage(page.id)}
           >
-            {page}
+            {page.name}
+            {icons[page.type]}
           </Button>
         </ContextMenuTrigger>
       );
 
       contextMenus.push(
         <ContextMenu key={menuIndex} id={pageIndex}>
-          <MenuItem key={`rename${menuIndex}`} onClick={() => this.showRenameModal(index)}>
+          <MenuItem key={`rename${menuIndex}`} onClick={() => this.showRenameModal(page.id)}>
             {this.props.intl.messages['footer.renamePage']}
           </MenuItem>
-          <MenuItem key={`remove-${menuIndex}`} onClick={() => this.showDeleteModal(index)}>
+          <MenuItem key={`remove-${menuIndex}`} onClick={() => this.showDeleteModal(page.id)}>
             {this.props.intl.messages['footer.deletePage']}
           </MenuItem>
         </ContextMenu>
@@ -248,7 +266,10 @@ export default class Footer extends Component {
         <div className="container">
           {this.renderModal()}
           {pages}
-          <AddPageMenu addPage={() => this.addPage()} />
+          <AddPageMenu
+            addNormalPage={() => this.addPage('normal')}
+            addModalPage={() => this.addPage('modal')}
+          />
           {contextMenus}
         </div>
       </footer>
