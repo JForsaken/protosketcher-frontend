@@ -5,6 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import forEach from 'lodash/forEach';
 import classNames from 'classnames';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
+import AddPageMenu from './AddPageMenu';
 @injectIntl
 
 export default class Footer extends Component {
@@ -218,7 +219,7 @@ export default class Footer extends Component {
       });
 
       pages.push(
-        <ContextMenuTrigger id={pageIndex}>
+        <ContextMenuTrigger id={pageIndex} key={`trigger${index}`}>
           <Button
             key={pageIndex}
             className={className}
@@ -253,6 +254,7 @@ export default class Footer extends Component {
         >
           <i className="fa fa-plus" />
         </Button>
+        <AddPageMenu />
         {contextMenus}
       </footer>
     );

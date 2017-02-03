@@ -53,4 +53,6 @@ export default {
   'footer.deletePageCantBeUndone': 'Cette opération ne peut pas être annulée',
   'footer.delete': 'Supprimer',
   'footer.moreThanOnePage': 'Vous devez avoir au moins une page en tout temps',
+  'footer.addModalPage': 'Page modale ("popup")',
+  'footer.addNormalPage': 'Page complète',
 };
