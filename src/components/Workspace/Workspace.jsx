@@ -28,6 +28,11 @@ class Workspace extends Component {
     };
   }
 
+  componentDidMount() {
+    offsetTop = document.getElementById('workspace').offsetTop;
+    offsetLeft = document.getElementById('workspace').offsetLeft;
+  }
+
   onDrawing(e) {
     const points = new Array(2);
     let pointer = e;
@@ -111,10 +116,6 @@ class Workspace extends Component {
   }
 
   render() {
-    window.onload = () => {
-      offsetTop = document.getElementById('workspace').offsetTop;
-      offsetLeft = document.getElementById('workspace').offsetLeft;
-    };
     const svgPaths = [];
     for (let i = 0; i < this.state.svgPathStrings.length; i++) {
       svgPaths.push(
