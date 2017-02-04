@@ -16,8 +16,8 @@ html {
 }
 
 @font-face {
-  font-family: 'Geomanist';
-  src: url('../../assets/fonts/Geomanist-Regular.otf') format('otf');
+  font-family: 'Roboto';
+  src: url('../../assets/fonts/Roboto-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -26,8 +26,8 @@ html {
 }
 
 @font-face {
-  font-family: 'PermanentMarker';
-  src: url('https://fonts.googleapis.com/css?family=Permanent+Marker') format('truetype');
+  font-family: 'Permanent Marker';
+  src: url('../../assets/fonts/PermanentMarker.ttf') format('truetype');
 }
 
 @font-face {
@@ -43,7 +43,7 @@ html {
 body {
   color: color('text');
   background-color: color('background') !important;
-  font-family: 'PermanentMarker', 'Geomanist', 'Helvetica Light', sans-serif !important;
+  font-family: 'Roboto', 'Helvetica Light', sans-serif !important;
 
   @import './bootstrap-override.scss';
 }
