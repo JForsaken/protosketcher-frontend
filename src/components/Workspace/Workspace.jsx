@@ -37,7 +37,6 @@ class Workspace extends Component {
     this.onStartingEvent = this.onStartingEvent.bind(this);
     this.onEndingEvent = this.onEndingEvent.bind(this);
     this.onMovingEvent = this.onMovingEvent.bind(this);
-    this.onDrawing = this.onDrawing.bind(this);
     this.computeSvgPathString = this.computeSvgPathString.bind(this);
     this.createSvgPathString = this.createSvgPathString.bind(this);
     this.arePointsFeedable = this.arePointsFeedable.bind(this);
@@ -47,48 +46,16 @@ class Workspace extends Component {
       mode: 0,
       isDrawing: false,
       svgPathStrings: [],
-      previousPoints: new Array(2),
+      previousPoints: null,
     };
 
     this.touchTimer = 0;
   }
 
-  componentDidUpdate() {
-    offsetTop = document.getElementById('workspace').offsetTop;
-    offsetLeft = document.getElementById('workspace').offsetLeft;
-  }
-
-  onDrawing(e) {
-    const points = new Array(2);
-    let pointer = e;
-    if (e.type.substring(0, 5) === 'touch') {
-      pointer = e.touches[0];
-    }
-    if ((e.type === 'mousemove' && this.state.isDrawing) || e.type === 'touchmove') {
-      points[0] = pointer.pageX - offsetLeft;
-      points[1] = pointer.pageY - offsetTop;
-      if (this.arePointsFeedable(points)) {
-        this.computeSvgPathString(points, 'L');
-        this.setState({
-          previousPoints: points,
-        });
-      }
-    } else if (e.type === 'mousedown' || e.type === 'touchstart') {
-      points[0] = pointer.pageX - offsetLeft;
-      points[1] = pointer.pageY - offsetTop;
-      this.setState({
-        isDrawing: true,
-        previousPoints: points,
-      });
-      this.createSvgPathString();
-      this.computeSvgPathString(points, 'M');
-    } else if (((e.type === 'mouseup' || e.type === 'mouseleave')
-        && this.state.isDrawing) || e.type === 'touchend') {
-      this.setState({
-        isDrawing: false,
-        previousPoints: new Array(2),
-      });
-    }
+  componentDidMount() {
+    const workspaceElement = document.getElementById('workspace');
+    offsetTop = workspaceElement.offsetTop;
+    offsetLeft = workspaceElement.offsetLeft;
   }
 
   onStartingEvent(e) {
@@ -113,21 +80,20 @@ class Workspace extends Component {
     this.touchTimer = setTimeout(() => this.toggleMenu(evt), 500);
 
     // Start Drawing
-    if (!this.state.showMenu) {
-      const points = new Array(2);
-      let pointer = e;
-      if (e.type.substring(0, 5) === 'touch') {
-        pointer = e.touches[0];
-      }
-      points[0] = pointer.pageX - offsetLeft;
-      points[1] = pointer.pageY - offsetTop;
-      this.setState({
-        isDrawing: true,
-        previousPoints: points,
-      });
-      this.createSvgPathString();
-      this.computeSvgPathString(points, 'M');
+    let pointer = e;
+    if (e.type.substring(0, 5) === 'touch') {
+      pointer = e.touches[0];
     }
+    const points = {
+      x: pointer.pageX - offsetLeft,
+      y: pointer.pageY - offsetTop,
+    };
+    this.setState({
+      isDrawing: true,
+      previousPoints: points,
+    });
+    this.createSvgPathString();
+    this.computeSvgPathString(points, 'M');
   }
 
   onEndingEvent(e) {
@@ -146,7 +112,7 @@ class Workspace extends Component {
     // Stop Drawing
     this.setState({
       isDrawing: false,
-      previousPoints: new Array(2),
+      previousPoints: null,
     });
   }
 
@@ -180,13 +146,14 @@ class Workspace extends Component {
 
     // Drawing
     if (!this.state.showMenu) {
-      const points = new Array(2);
       let pointer = e;
       if (e.type.substring(0, 5) === 'touch') {
         pointer = e.touches[0];
       }
-      points[0] = pointer.pageX - offsetLeft;
-      points[1] = pointer.pageY - offsetTop;
+      const points = {
+        x: pointer.pageX - offsetLeft,
+        y: pointer.pageY - offsetTop,
+      };
       if (this.arePointsFeedable(points)) {
         this.computeSvgPathString(points, 'L');
         this.setState({
@@ -198,8 +165,8 @@ class Workspace extends Component {
 
   arePointsFeedable(currentPoints) {
     const minDistance = 10;
-    const a = this.state.previousPoints[0] - currentPoints[0];
-    const b = this.state.previousPoints[1] - currentPoints[1];
+    const a = this.state.previousPoints.x - currentPoints.x;
+    const b = this.state.previousPoints.y - currentPoints.y;
     const c = Math.sqrt(a * a + b * b);
     return c > minDistance;
   }
@@ -218,7 +185,7 @@ class Workspace extends Component {
 
   computeSvgPathString(points, prefix) {
     const pathStrings = this.state.svgPathStrings;
-    pathStrings[pathStrings.length - 1] += `${prefix}${points[0]} ${points[1]} `;
+    pathStrings[pathStrings.length - 1] += `${prefix}${points.x} ${points.y} `;
     this.setState({
       svgPathStrings: pathStrings,
     });
