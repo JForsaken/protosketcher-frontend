@@ -47,8 +47,8 @@ class RadialMenu extends Component {
 
   render() {
     const menuStyle = {
-      left: this.props.application.touchStartPos.clientX - 100,
-      top: this.props.application.touchStartPos.clientY - 150,
+      left: this.props.application.workspace.currentPos.x - 100,
+      top: this.props.application.workspace.currentPos.y - 100,
     };
 
     return (

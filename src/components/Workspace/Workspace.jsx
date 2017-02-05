@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 import iconSelect from '../../../assets/images/icons/select-area.svg';
 import iconPalette from '../../../assets/images/icons/palette.png';
 import iconText from '../../../assets/images/icons/text-fields.png';
+import { bindActionCreators } from 'redux';
+import * as constants from '../constants';
 
 /* Components */
 import RadialMenu from '../common/RadialMenu/RadialMenu';
 
-let offsetTop;
-let offsetLeft;
+/* Actions */
+import { updateWorkspace } from '../../actions/application';
 
 const menuItems = [
   {
@@ -41,132 +43,137 @@ class Workspace extends Component {
     this.createSvgPathString = this.createSvgPathString.bind(this);
     this.arePointsFeedable = this.arePointsFeedable.bind(this);
 
+    // Set initial props
+    this.props.actions.updateWorkspace({
+      currentPos: {
+        x: 0,
+        y: 0,
+      },
+      drawColor: 'black',
+      menuHidden: true,
+      action: null,
+      selectedItems: null,
+    });
+
     this.state = {
       showMenu: false,
-      mode: 0,
+      menuPending: false,
       isDrawing: false,
       svgPathStrings: [],
-      previousPoints: null,
+      previousPoint: null,
     };
 
     this.touchTimer = 0;
   }
 
-  componentDidMount() {
-    const workspaceElement = document.getElementById('workspace');
-    offsetTop = workspaceElement.offsetTop;
-    offsetLeft = workspaceElement.offsetLeft;
-  }
-
   onStartingEvent(e) {
+    e.preventDefault();
     e.stopPropagation();
 
+    // Set the initial position
     if (e.type === 'touchstart') {
-      this.props.application.touchStartPos = {
-        clientX: e.changedTouches.item(0).clientX,
-        clientY: e.changedTouches.item(0).clientY,
-      };
+      this.props.actions.updateWorkspace({
+        currentPos: {
+          x: e.changedTouches.item(0).clientX - constants.leftMenuWidth,
+          y: e.changedTouches.item(0).clientY - constants.topMenuHeight,
+        },
+      });
     } else {
-      this.props.application.touchStartPos = {
-        clientX: e.clientX,
-        clientY: e.clientY,
-      };
+      this.props.actions.updateWorkspace({
+        currentPos: {
+          x: e.clientX - constants.leftMenuWidth,
+          y: e.clientY - constants.topMenuHeight,
+        },
+      });
     }
 
-    const evt = {
-      type: 'touchstart',
-      ...this.props.application.touchStartPos,
-    };
-    this.touchTimer = setTimeout(() => this.toggleMenu(evt), 500);
-
-    // Start Drawing
-    let pointer = e;
-    if (e.type.substring(0, 5) === 'touch') {
-      pointer = e.touches[0];
+    if (e.type === 'contextmenu') {
+      this.toggleMenu(true);
+    } else {
+      // Set timer for menu
+      this.touchTimer = setTimeout(() => this.toggleMenu(true), 500);
     }
-    const points = {
-      x: pointer.pageX - offsetLeft,
-      y: pointer.pageY - offsetTop,
-    };
     this.setState({
-      isDrawing: true,
-      previousPoints: points,
+      menuPending: true,
     });
-    this.createSvgPathString();
-    this.computeSvgPathString(points, 'M');
   }
 
   onEndingEvent(e) {
     e.preventDefault();
     e.stopPropagation();
-    const evt = {
-      type: 'touchend',
-    };
-    this.toggleMenu(evt);
+
+    if (!(e.type === 'mouseleave' && e.target.classList.contains('workspace-container'))) {
+      this.toggleMenu(false);
+    }
 
     // stops short touches from firing the event
     if (this.touchTimer) {
       clearTimeout(this.touchTimer);
     }
-
     // Stop Drawing
     this.setState({
       isDrawing: false,
-      previousPoints: null,
+      previousPoint: null,
     });
   }
 
   onMovingEvent(e) {
     e.preventDefault();
     e.stopPropagation();
-    let deltaX = 0;
-    let deltaY = 0;
 
+    // Get event position
+    let pointer = e;
     if (e.type === 'touchmove') {
-      const touch = e.changedTouches.item(0);
-      deltaX = Math.abs(touch.clientX - this.props.application.touchStartPos.clientX);
-      deltaY = Math.abs(touch.clientY - this.props.application.touchStartPos.clientY);
-      if (this.state.showMenu === true) {
-        // const el = document.elementFromPoint(touch.clientX, touch.clientY);
-        // console.log(el);
-      }
-    } else {
-      deltaX = Math.abs(e.clientX - this.props.application.touchStartPos.clientX);
-      deltaY = Math.abs(e.clientY - this.props.application.touchStartPos.clientY);
+      pointer = e.changedTouches.item(0);
     }
-    if (this.state.showMenu === false) {
+    const point = {
+      x: pointer.clientX - constants.leftMenuWidth,
+      y: pointer.clientY - constants.topMenuHeight,
+    };
+
+    // Determine if we draw or wait for the menu
+    if (this.state.menuPending === true) {
+      let deltaX = 0;
+      let deltaY = 0;
+
+      deltaX = Math.abs(pointer.clientX
+        - constants.leftMenuWidth - this.props.application.workspace.currentPos.x);
+      deltaY = Math.abs(pointer.clientY
+        - constants.topMenuHeight - this.props.application.workspace.currentPos.y);
+
       // Add error margin for small moves
       if (deltaX > 25 || deltaY > 25) {
         // stops move (draw action) from firing the event
         if (this.touchTimer) {
           clearTimeout(this.touchTimer);
+
+          // Start Drawing
+          this.setState({
+            menuPending: false,
+            isDrawing: true,
+            previousPoint: point,
+          });
+          this.createSvgPathString();
+          this.computeSvgPathString(point, 'M');
         }
       }
-    }
-
-    // Drawing
-    if (!this.state.showMenu) {
-      let pointer = e;
-      if (e.type.substring(0, 5) === 'touch') {
-        pointer = e.touches[0];
-      }
-      const points = {
-        x: pointer.pageX - offsetLeft,
-        y: pointer.pageY - offsetTop,
-      };
-      if (this.arePointsFeedable(points)) {
-        this.computeSvgPathString(points, 'L');
+    } else if (this.state.showMenu === true) {
+      // const el = document.elementFromPoint(touch.clientX, touch.clientY);
+      // console.log(el);
+    } else if (this.state.isDrawing === true) {
+      if (this.arePointsFeedable(point)) {
+        this.computeSvgPathString(point, 'L');
         this.setState({
-          previousPoints: points,
+          previousPoint: point,
         });
       }
     }
   }
 
-  arePointsFeedable(currentPoints) {
+  arePointsFeedable(currentPoint) {
     const minDistance = 10;
-    const a = this.state.previousPoints.x - currentPoints.x;
-    const b = this.state.previousPoints.y - currentPoints.y;
+    const a = this.state.previousPoint.x - currentPoint.x;
+    const b = this.state.previousPoint.y - currentPoint.y;
     const c = Math.sqrt(a * a + b * b);
     return c > minDistance;
   }
@@ -191,29 +198,14 @@ class Workspace extends Component {
     });
   }
 
-  toggleMenu(e) {
-    if (e.preventDefault) e.preventDefault();
-    if (e.stopPropagation) e.stopPropagation();
-
-    if (e.type === 'contextmenu' || e.type === 'touchstart') {
-      this.props.application.touchStartPos = {
-        clientX: e.clientX,
-        clientY: e.clientY,
-      };
-      this.setState({ showMenu: true });
-    } else if (e.type === 'touchend' || e.type === 'touchcancel'
-      || (e.type === 'mouseleave' && e.target.classList.contains('workspace-container'))) {
-      this.setState({ showMenu: false });
-    }
+  toggleMenu(state) {
+    this.setState({
+      menuPending: false,
+      showMenu: state,
+    });
   }
 
   render() {
-    const svgPaths = [];
-    for (let i = 0; i < this.state.svgPathStrings.length; i++) {
-      svgPaths.push(
-        <path d={this.state.svgPathStrings[i]} stroke="blue" strokeWidth="3" fill="none">
-        </path>);
-    }
     return (
       <div
         id="workspace"
@@ -222,15 +214,22 @@ class Workspace extends Component {
         onMouseMove={this.onMovingEvent}
         onMouseUp={this.onEndingEvent}
         onMouseLeave={this.onEndingEvent}
-        onMouseLeave={this.toggleMenu}
         onTouchStart={this.onStartingEvent}
         onTouchMove={this.onMovingEvent}
         onTouchEnd={this.onEndingEvent}
-        onContextMenu={this.toggleMenu}
+        onContextMenu={this.onStartingEvent}
       >
       {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
         <svg height="100%" width="100%">
-          {svgPaths}
+          {
+            this.state.svgPathStrings.map((item, i) =>
+              <path
+                className="workspace-line"
+                d={item}
+                stroke={this.props.application.workspace.drawColor}
+                key={i}
+              />)
+          }
         </svg>
       </div>
     );
@@ -239,5 +238,9 @@ class Workspace extends Component {
 
 export default connect(
   ({ application }) => ({ application }),
-  null
+  dispatch => ({
+    actions: bindActionCreators({
+      updateWorkspace,
+    }, dispatch),
+  })
 )(Workspace);
