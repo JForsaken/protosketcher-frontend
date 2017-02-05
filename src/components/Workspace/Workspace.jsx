@@ -150,10 +150,8 @@ class Workspace extends Component {
       let deltaX = 0;
       let deltaY = 0;
 
-      deltaX = Math.abs(pointer.clientX
-        - constants.leftMenuWidth - this.props.application.workspace.currentPos.x);
-      deltaY = Math.abs(pointer.clientY
-        - constants.topMenuHeight - this.props.application.workspace.currentPos.y);
+      deltaX = Math.abs(point.x - this.props.application.workspace.currentPos.x);
+      deltaY = Math.abs(point.y - this.props.application.workspace.currentPos.y);
 
       // Add error margin for small moves
       if (deltaX > 25 || deltaY > 25) {
