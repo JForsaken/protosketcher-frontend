@@ -33,7 +33,9 @@ export default {
   'hud.saving': 'Saving...',
 
   // MENU
-  'menu.randomTab': 'Random tab',
+  'menu.backToPrototypes': 'Back to prototypes',
+  'menu.save': 'Save',
+  'menu.logout': 'Logout',
 
   // LANGUAGE
   'language.switcher': 'Language',

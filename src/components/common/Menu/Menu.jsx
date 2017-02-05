@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { Nav, Navbar, NavItem } from 'react-bootstrap';
 import { Link } from 'react-router';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
 /* Components */
@@ -15,12 +15,18 @@ import * as applicationActions from '../../../actions/application';
 
 const menuItems = [
   {
-    text: <FormattedMessage id="menu.randomTab" />,
+    text: <FormattedMessage id="menu.backToPrototypes" />,
     link: '/',
-    icon: 'fa fa-dot-circle-o',
+    icon: 'fa fa-list-alt',
+  },
+  {
+    text: <FormattedMessage id="menu.save" />,
+    link: '/',
+    icon: 'fa fa-floppy-o',
   },
 ];
 
+@injectIntl
 class Menu extends Component {
 
   static propTypes = {
@@ -58,9 +64,9 @@ class Menu extends Component {
       <Navbar inverse fixedTop expanded={expanded} onToggle={this.toggleNav}>
         <Navbar.Header>
           <Navbar.Brand>
-            <div className="brand__logo" />
-            <div className="brand__spacer" />
             <Link className="brand__title" to="/">
+              <div className="brand__logo" />
+              <div className="brand__spacer" />
               <FormattedMessage id="website.title" />
             </Link>
           </Navbar.Brand>
@@ -81,6 +87,9 @@ class Menu extends Component {
           <Nav pullRight>
             <NavItem onClick={this.handleSwitchLocale}>
               {locale.toUpperCase()}
+            </NavItem>
+            <NavItem title={this.props.intl.messages['menu.logout']}>
+              <i className="fa fa-sign-out" />
             </NavItem>
           </Nav>
         </Navbar.Collapse>

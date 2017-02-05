@@ -30,7 +30,9 @@ export default {
   'form.errors.email': 'Adresse courriel invalide',
 
   // MENU
-  'menu.randomTab': 'Onglet pas rapport',
+  'menu.backToPrototypes': 'Retour aux prototypes',
+  'menu.save': 'Sauvegarder',
+  'menu.logout': 'Déconnexion',
 
   // HUD MENU
   'hud.saving': 'Enregistrement en cours...',
