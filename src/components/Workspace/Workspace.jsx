@@ -6,6 +6,7 @@ import iconSelect from '../../../assets/images/icons/select-area.svg';
 import iconPalette from '../../../assets/images/icons/palette.png';
 import iconText from '../../../assets/images/icons/text-fields.png';
 import { bindActionCreators } from 'redux';
+
 import * as constants from '../constants';
 
 /* Components */
@@ -16,14 +17,17 @@ import { updateWorkspace } from '../../actions/application';
 
 const menuItems = [
   {
+    action: 'changeColor',
     color: '#F44336',
     icon: iconPalette, // Color
   },
   {
+    action: 'addText',
     color: '#4CAF50',
     icon: iconText, // Text
   },
   {
+    action: 'selectArea',
     color: '#2196F3',
     flex: 2,
     icon: iconSelect, // Selection
@@ -104,6 +108,7 @@ class Workspace extends Component {
 
     if (!(e.type === 'mouseleave' && e.target.classList.contains('workspace-container'))) {
       this.toggleMenu(false);
+      this.props.actions.updateWorkspace({ action: null });
     }
 
     // stops short touches from firing the event
@@ -125,6 +130,15 @@ class Workspace extends Component {
     let pointer = e;
     if (e.type === 'touchmove') {
       pointer = e.changedTouches.item(0);
+
+      // HACK : The touchmove event is not fired on the svg : we have to handle it here
+      const el = document.elementFromPoint(pointer.clientX, pointer.clientY);
+      if (el.nodeName === 'path' && el.className) {
+        const classes = el.className.baseVal.split('-');
+        if (classes[0] === 'action' && classes[1] !== this.props.application.workspace.action) {
+          this.props.actions.updateWorkspace({ action: classes[1] });
+        }
+      }
     }
     const point = {
       x: pointer.clientX - constants.leftMenuWidth,
@@ -157,9 +171,6 @@ class Workspace extends Component {
           this.computeSvgPathString(point, 'M');
         }
       }
-    } else if (this.state.showMenu === true) {
-      // const el = document.elementFromPoint(touch.clientX, touch.clientY);
-      // console.log(el);
     } else if (this.state.isDrawing === true) {
       if (this.arePointsFeedable(point)) {
         this.computeSvgPathString(point, 'L');

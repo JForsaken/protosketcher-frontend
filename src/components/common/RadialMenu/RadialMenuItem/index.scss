@@ -5,7 +5,7 @@
     stroke: color(background, base);
     stroke-width: 3;
 
-    &:hover {
+    &.hover {
       fill-opacity: .75;
     }
 
@@ -17,7 +17,7 @@
       width: 48px;
     }
 
-    &:hover + image {
+    &.hover + image {
       opacity: .75;
     }
 
