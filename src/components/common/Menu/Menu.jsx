@@ -11,7 +11,7 @@ import MenuListItem from '../MenuListItem/MenuListItem';
 
 /* Actions */
 import * as applicationActions from '../../../actions/application';
-
+import * as apiActions from '../../../actions/api';
 
 const menuItems = [
   {
@@ -50,6 +50,11 @@ class Menu extends Component {
     this.props.actions.switchLocale(locales[nextLocale]);
   }
 
+  logout() {
+    this.props.actions.logout();
+    this.props.router.push('/login');
+  }
+
   toggleNav() {
     this.setState({
       expanded: !this.state.expanded,
@@ -79,7 +84,7 @@ class Menu extends Component {
                 <MenuListItem
                   {...item}
                   key={i}
-                    /* Constants */
+                  /* Constants */
                   import onClick={this.state.expanded ? this.toggleNav : null}
                 />)
             }
@@ -88,7 +93,10 @@ class Menu extends Component {
             <NavItem onClick={this.handleSwitchLocale}>
               {locale.toUpperCase()}
             </NavItem>
-            <NavItem title={this.props.intl.messages['menu.logout']}>
+            <NavItem
+              title={this.props.intl.messages['menu.logout']}
+              onClick={() => this.logout()}
+            >
               <i className="fa fa-sign-out" />
             </NavItem>
           </Nav>
@@ -103,6 +111,7 @@ export default connect(
   dispatch => ({
     actions: bindActionCreators({
       ...applicationActions,
+      ...apiActions,
     }, dispatch),
   })
 )(Menu);
