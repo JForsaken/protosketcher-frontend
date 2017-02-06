@@ -27,7 +27,7 @@ class PrototypeDashboard extends Component {
     const { prototypes } = this.props.application;
     if (!isEqual(prototypes, nextProps.application.prototypes)) {
       this.setState({
-        prototypes: map(nextProps.application.prototypes, ((o, k) => ({ ...o, id: k }))),
+        prototypes: map(nextProps.application.prototypes, ((o, k) => ({ id: k, name: o.name }))),
       });
     }
   }
