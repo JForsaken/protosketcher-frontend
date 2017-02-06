@@ -45,6 +45,12 @@ const actionHandlers = {
       id: action.id,
     },
   }),
+  [constants.UPDATE_WORKSPACE]: (state, action) => ({
+    workspace: {
+      ...state.workspace,
+      ...action.data,
+    },
+  }),
 };
 
 export default createReducer(initialState, actionHandlers);

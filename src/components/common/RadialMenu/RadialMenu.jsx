@@ -14,7 +14,8 @@ import { connect } from 'react-redux';
 /* Components */
 import RadialMenuItem from './RadialMenuItem/RadialMenuItem';
 
-/* Actions */
+/* Constants */
+const MENU_SIZE = 100;
 
 class RadialMenu extends Component {
 
@@ -47,8 +48,8 @@ class RadialMenu extends Component {
 
   render() {
     const menuStyle = {
-      left: this.props.application.touchStartPos.clientX - 100,
-      top: this.props.application.touchStartPos.clientY - 150,
+      left: this.props.application.workspace.currentPos.x - MENU_SIZE,
+      top: this.props.application.workspace.currentPos.y - MENU_SIZE,
     };
 
     return (
