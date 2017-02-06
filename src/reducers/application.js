@@ -85,6 +85,12 @@ const actionHandlers = {
   [constants.SELECT_PROTOTYPE]: (state, action) => ({
     selectedPrototype: action.id,
   }),
+  [constants.UPDATE_WORKSPACE]: (state, action) => ({
+    workspace: {
+      ...state.workspace,
+      ...action.data,
+    },
+  }),
   [constants.GET_PROTOTYPES]: (state, action) => onGetPrototypes(state, action),
   [constants.CREATE_PROTOTYPE]: (state, action) => onCreatePrototype(state, action),
 };

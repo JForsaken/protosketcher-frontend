@@ -13,10 +13,12 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 /* Components */
 
 /* Actions */
+import { updateWorkspace } from '../../../../actions/application';
 
 
 class RadialMenuItem extends Component {
@@ -33,6 +35,21 @@ class RadialMenuItem extends Component {
     // Functions
     this.createSvgArc = this.createSvgArc.bind(this);
     this.createCSSTransform = this.createCSSTransform.bind(this);
+    this.onMovingEvent = this.onMovingEvent.bind(this);
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.application.workspace.action === this.props.action) {
+      this.setState({ selected: true });
+    } else {
+      this.setState({ selected: false });
+    }
+  }
+
+  onMovingEvent() {
+    if (this.props.action !== this.props.application.workspace.action) {
+      this.props.actions.updateWorkspace({ action: this.props.action });
+    }
   }
 
   createSvgArc(x, y, r, startAngle, endAngle) {
@@ -58,13 +75,15 @@ class RadialMenuItem extends Component {
     };
   }
 
-
   render() {
     return (
       <g className="radial-menu-item">
         <path
+          className={this.state.selected ? 'hover' : `action-${this.props.action}`}
           d={this.createSvgArc(100, 100, 100, this.props.startAngle, this.props.endAngle)}
           fill={this.props.color}
+          onMouseMove={this.onMovingEvent}
+          onTouchMove={this.onMovingEvent}
         />
         <image
           xlinkHref={this.props.icon}
@@ -77,5 +96,9 @@ class RadialMenuItem extends Component {
 
 export default connect(
   ({ application }) => ({ application }),
-  null
+  dispatch => ({
+    actions: bindActionCreators({
+      updateWorkspace,
+    }, dispatch),
+  })
 )(RadialMenuItem);

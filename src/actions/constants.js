@@ -20,3 +20,6 @@ export const SELECT_PROTOTYPE = 'SELECT_PROTOTYPE';
 
 // API
 export const SAVE = 'SAVE';
+
+// Workspace
+export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE';
