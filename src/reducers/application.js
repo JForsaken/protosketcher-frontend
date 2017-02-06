@@ -83,9 +83,7 @@ const actionHandlers = {
     },
   }),
   [constants.SELECT_PROTOTYPE]: (state, action) => ({
-    selectedPrototype: {
-      id: action.id,
-    },
+    selectedPrototype: action.id,
   }),
   [constants.GET_PROTOTYPES]: (state, action) => onGetPrototypes(state, action),
   [constants.CREATE_PROTOTYPE]: (state, action) => onCreatePrototype(state, action),
