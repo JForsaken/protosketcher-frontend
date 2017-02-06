@@ -75,23 +75,23 @@ class Workspace extends Component {
     e.stopPropagation();
 
     // Set the initial position
-    if (e.type === 'touchstart') {
+    if (e.type === constants.events.TOUCH_START) {
       this.props.actions.updateWorkspace({
         currentPos: {
-          x: e.changedTouches.item(0).clientX - constants.leftMenuWidth,
-          y: e.changedTouches.item(0).clientY - constants.topMenuHeight,
+          x: e.changedTouches.item(0).clientX - constants.LEFT_MENU_WIDTH,
+          y: e.changedTouches.item(0).clientY - constants.TOP_MENU_HEIGHT,
         },
       });
     } else {
       this.props.actions.updateWorkspace({
         currentPos: {
-          x: e.clientX - constants.leftMenuWidth,
-          y: e.clientY - constants.topMenuHeight,
+          x: e.clientX - constants.LEFT_MENU_WIDTH,
+          y: e.clientY - constants.TOP_MENU_HEIGHT,
         },
       });
     }
 
-    if (e.type === 'contextmenu') {
+    if (e.type === constants.events.CONTEXT_MENU) {
       this.toggleMenu(true);
     } else {
       // Set timer for menu
@@ -106,7 +106,8 @@ class Workspace extends Component {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!(e.type === 'mouseleave' && e.target.classList.contains('workspace-container'))) {
+    if (!(e.type === constants.events.MOUSE_LEAVE
+      && e.target.classList.contains('workspace-container'))) {
       this.toggleMenu(false);
       this.props.actions.updateWorkspace({ action: null });
     }
@@ -128,7 +129,7 @@ class Workspace extends Component {
 
     // Get event position
     let pointer = e;
-    if (e.type === 'touchmove') {
+    if (e.type === constants.events.TOUCH_MOVE) {
       pointer = e.changedTouches.item(0);
 
       // HACK : The touchmove event is not fired on the svg : we have to handle it here
@@ -141,8 +142,8 @@ class Workspace extends Component {
       }
     }
     const point = {
-      x: pointer.clientX - constants.leftMenuWidth,
-      y: pointer.clientY - constants.topMenuHeight,
+      x: pointer.clientX - constants.LEFT_MENU_WIDTH,
+      y: pointer.clientY - constants.TOP_MENU_HEIGHT,
     };
 
     // Determine if we draw or wait for the menu
@@ -150,8 +151,9 @@ class Workspace extends Component {
       let deltaX = 0;
       let deltaY = 0;
 
-      deltaX = Math.abs(point.x - this.props.application.workspace.currentPos.x);
-      deltaY = Math.abs(point.y - this.props.application.workspace.currentPos.y);
+      const { currentPos } = this.props.application.workspace;
+      deltaX = Math.abs(point.x - currentPos.x);
+      deltaY = Math.abs(point.y - currentPos.y);
 
       // Add error margin for small moves
       if (deltaX > 25 || deltaY > 25) {
