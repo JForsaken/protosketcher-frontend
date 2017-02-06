@@ -1,5 +1,6 @@
 import * as constants from '../actions/constants';
 import createReducer from '../utils/create-reducer';
+import { isEmpty, omit } from 'lodash';
 
 const initialState = {
   token: null,
@@ -10,8 +11,49 @@ const initialState = {
   ],
   error: null,
   user: null,
-  prototype: null,
+  selectedPrototype: null,
+  selectedPage: null,
+  prototypes: {},
 };
+
+function onGetPrototypes(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const dict = action.prototypes.reduce((acc, current) => {
+    const copy = acc;
+    if (!state.prototypes || !state.prototypes[current.id]) {
+      copy[current.id] = omit(current, ['user', 'id']);
+    }
+    return copy;
+  }, {});
+
+  const currentPrototypes = state.prototypes || {};
+
+  return {
+    prototypes: {
+      ...currentPrototypes,
+      ...dict,
+    },
+  };
+}
+
+function onCreatePrototype(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const newProto = {};
+  newProto[action.prototype.id] = omit(action.prototype, ['user', 'id']);
+
+  return {
+    prototypes: {
+      ...state.prototypes,
+      ...newProto,
+    },
+  };
+}
 
 const actionHandlers = {
   /* --- Locale switcher --- */
@@ -41,10 +83,12 @@ const actionHandlers = {
     },
   }),
   [constants.SELECT_PROTOTYPE]: (state, action) => ({
-    prototype: {
+    selectedPrototype: {
       id: action.id,
     },
   }),
+  [constants.GET_PROTOTYPES]: (state, action) => onGetPrototypes(state, action),
+  [constants.CREATE_PROTOTYPE]: (state, action) => onCreatePrototype(state, action),
 };
 
 export default createReducer(initialState, actionHandlers);

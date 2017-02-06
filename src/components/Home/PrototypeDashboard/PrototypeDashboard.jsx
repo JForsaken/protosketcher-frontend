@@ -1,7 +1,7 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { isEqual, isEmpty } from 'lodash';
+import { isEqual, map } from 'lodash';
 import { FormGroup, FormControl, Row, Col, Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -24,18 +24,11 @@ class PrototypeDashboard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { getPrototypes, createPrototype } = nextProps.api;
-
-    if (!isEqual(this.props.api.getPrototypes.prototypes, getPrototypes.prototypes)) {
-      // if the login has no errors
-      if (isEmpty(getPrototypes.error)) {
-        this.setState({ prototypes: getPrototypes.prototypes });
-      }
-    } else if (!isEqual(this.props.api.createPrototype, createPrototype)) {
-      if (isEmpty(createPrototype.error)) {
-        const { id, token } = nextProps.application.user;
-        nextProps.actions.getPrototypes(id, token);
-      }
+    const { prototypes } = this.props.application;
+    if (!isEqual(prototypes, nextProps.application.prototypes)) {
+      this.setState({
+        prototypes: map(nextProps.application.prototypes, ((o, k) => ({ ...o, id: k }))),
+      });
     }
   }
 

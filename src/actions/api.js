@@ -1,6 +1,6 @@
 import 'whatwg-fetch';
 import processResponse from '../utils/process-response';
-import { get, put, remove } from '../persistence/storage';
+import { put, remove } from '../persistence/storage';
 import * as constants from './constants';
 
 const BACKEND_API = 'http://0.0.0.0:5000/api/v1';
@@ -9,6 +9,8 @@ const BACKEND_API = 'http://0.0.0.0:5000/api/v1';
 /* --- User Login --- */
 
 export function login(loginAttempt) {
+  const date = new Date();
+
   return dispatch => {
     fetch(`${BACKEND_API}/authenticate`, {
       method: 'post',
@@ -25,6 +27,7 @@ export function login(loginAttempt) {
         dispatch({
           type: constants.LOGIN,
           user: { token: data.body.token },
+          time: date.toUTCString(),
           error: {},
         });
       })
@@ -32,6 +35,7 @@ export function login(loginAttempt) {
         dispatch({
           type: constants.LOGIN,
           user: {},
+          time: date.toUTCString(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -42,6 +46,8 @@ export function login(loginAttempt) {
 }
 
 export function fetchMe(token) {
+  const date = new Date();
+
   return dispatch => {
     fetch(`${BACKEND_API}/users/me`, {
       method: 'get',
@@ -60,6 +66,7 @@ export function fetchMe(token) {
             email: data.body.email,
             token,
           },
+          time: date.toUTCString(),
           error: {},
         });
       })
@@ -69,6 +76,7 @@ export function fetchMe(token) {
         dispatch({
           type: constants.FETCH_ME,
           user: {},
+          time: date.toUTCString(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -79,11 +87,14 @@ export function fetchMe(token) {
 }
 
 export function logout() {
+  const date = new Date();
+
   remove('token');
 
   return dispatch => dispatch({
     type: constants.LOGOUT,
     user: {},
+    time: date.toUTCString(),
     error: {},
   });
 }
@@ -91,6 +102,8 @@ export function logout() {
 
 /* --- Create User --- */
 export function createUser(userCredentials) {
+  const date = new Date();
+
   return dispatch => {
     fetch(`${BACKEND_API}/users`, {
       method: 'post',
@@ -105,6 +118,7 @@ export function createUser(userCredentials) {
         dispatch({
           type: constants.CREATE_USER,
           user: { email: userCredentials.email },
+          time: date.toUTCString(),
           error: {},
         });
       })
@@ -112,6 +126,7 @@ export function createUser(userCredentials) {
         dispatch({
           type: constants.CREATE_USER,
           user: {},
+          time: date.toUTCString(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -124,6 +139,8 @@ export function createUser(userCredentials) {
 
 /* --- Prototypes --- */
 export function getPrototypes(userId, token) {
+  const date = new Date();
+
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes?user=${userId}`, {
       method: 'get',
@@ -140,11 +157,13 @@ export function getPrototypes(userId, token) {
           const cur = d;
           cur.id = cur._id;
           delete cur._id;
+          delete cur.__v;
         });
 
         dispatch({
           type: constants.GET_PROTOTYPES,
           prototypes: data.body,
+          time: date.toUTCString(),
           error: {},
         });
       })
@@ -152,6 +171,7 @@ export function getPrototypes(userId, token) {
         dispatch({
           type: constants.GET_PROTOTYPES,
           prototypes: {},
+          time: date.toUTCString(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -162,6 +182,8 @@ export function getPrototypes(userId, token) {
 }
 
 export function createPrototype(prototype, token) {
+  const date = new Date();
+
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes`, {
       method: 'post',
@@ -174,9 +196,15 @@ export function createPrototype(prototype, token) {
     })
       .then(processResponse)
       .then((data) => {
+        const proto = data.body;
+        proto.id = proto._id;
+        delete proto._id;
+        delete proto.__v;
+
         dispatch({
           type: constants.CREATE_PROTOTYPE,
-          prototype: data.body,
+          prototype: proto,
+          time: date.toUTCString(),
           error: {},
         });
       })
@@ -184,42 +212,6 @@ export function createPrototype(prototype, token) {
         dispatch({
           type: constants.CREATE_PROTOTYPE,
           prototype: {},
-          error: {
-            msg: data.msg,
-            code: data.code,
-          },
-        });
-      });
-  };
-}
-
-/* --- Auto Saving --- */
-export function save() {
-  const date = new Date();
-
-  return dispatch => {
-    // TODO: replace with the actual save call
-    fetch(`${BACKEND_API}/users/`, {
-
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'x-access-token': get('token'),
-      },
-    })
-      .then(processResponse)
-      .then(data => {
-        dispatch({
-          type: constants.SAVE,
-          users: data.body,
-          time: date.toUTCString(),
-          error: {},
-        });
-      })
-      .catch((data) => {
-        dispatch({
-          type: constants.SAVE,
-          users: {},
           time: date.toUTCString(),
           error: {
             msg: data.msg,

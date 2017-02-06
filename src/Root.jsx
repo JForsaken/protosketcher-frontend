@@ -58,14 +58,14 @@ class Root extends Component {
     // Route authentication middleware
     this.requireAuth = (myProps) => (nextState, replaceState) => {
       const token = storage.get('token');
-      const prototype = storage.get('prototype');
+      const selectedPrototype = storage.get('selectedPrototype');
 
       if (token) {
         myProps.actions.fetchMe(token);
 
         // get last prototype used in session
-        if (prototype) {
-          myProps.actions.selectPrototype(prototype);
+        if (selectedPrototype) {
+          myProps.actions.selectPrototype(selectedPrototype);
         }
       } else {
         replaceState('/login');
