@@ -16,14 +16,14 @@ export default class MenuListItem extends Component {
     const { link, onClick, icon, text, isExternal } = this.props;
     let generatedlink = (
       <Link to={link} onClick={onClick}>
-        <i className={icon}></i> {text}
+        <i className={icon} /> {text}
       </Link>
     );
 
     if (isExternal) {
       generatedlink = (
         <a href={link} target="_blank">
-          <i className={icon}></i> {text}
+          <i className={icon} /> {text}
         </a>
       );
     }

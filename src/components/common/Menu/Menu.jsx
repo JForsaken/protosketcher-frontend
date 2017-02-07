@@ -13,22 +13,9 @@ import MenuListItem from '../MenuListItem/MenuListItem';
 import * as applicationActions from '../../../actions/application';
 import * as apiActions from '../../../actions/api';
 
-const menuItems = [
-  {
-    text: <FormattedMessage id="menu.backToPrototypes" />,
-    link: '/',
-    icon: 'fa fa-list-alt',
-  },
-  {
-    text: <FormattedMessage id="menu.save" />,
-    link: '/',
-    icon: 'fa fa-floppy-o',
-  },
-];
 
 @injectIntl
 class Menu extends Component {
-
   static propTypes = {
     actions: PropTypes.object,
     application: PropTypes.object.isRequired,
@@ -61,9 +48,26 @@ class Menu extends Component {
     });
   }
 
+  save() {
+    // TODO add api call to save
+  }
+
   render() {
     const { application: { locale } } = this.props;
     const { expanded } = this.state;
+    const menuItems = [
+      {
+        text: <FormattedMessage id="menu.backToPrototypes" />,
+        link: '/',
+        icon: 'fa fa-list-alt',
+      },
+      {
+        text: <FormattedMessage id="menu.save" />,
+        link: '/',
+        onClick: this.save,
+        icon: 'fa fa-floppy-o',
+      },
+    ];
 
     return (
       <Navbar inverse fixedTop expanded={expanded} onToggle={this.toggleNav}>
@@ -85,7 +89,8 @@ class Menu extends Component {
                   {...item}
                   key={i}
                   /* Constants */
-                  import onClick={this.state.expanded ? this.toggleNav : null}
+                  // TODO check why this is there
+                  // import onClick={this.state.expanded ? this.toggleNav : null}
                 />)
             }
           </Nav>
