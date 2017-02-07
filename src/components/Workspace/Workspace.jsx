@@ -16,21 +16,41 @@ import RadialMenu from '../common/RadialMenu/RadialMenu';
 import { updateWorkspace } from '../../actions/application';
 
 const menuItems = [
-  {
+  { // Color
     action: 'changeColor',
     color: '#F44336',
-    icon: iconPalette, // Color
+    icon: iconPalette,
+    items: [
+      {
+        actionValue: 'red',
+        color: '#F44336',
+      },
+      {
+        actionValue: 'blue',
+        color: '#2196F3',
+      },
+      {
+        actionValue: 'green',
+        color: '#4CAF50',
+      },
+      {
+        actionValue: 'black',
+        color: '#000000',
+      },
+    ],
   },
-  {
+  { // Text
     action: 'addText',
     color: '#4CAF50',
-    icon: iconText, // Text
+    icon: iconText,
+    items: [],
   },
-  {
+  { // Selection
     action: 'selectArea',
     color: '#2196F3',
     flex: 2,
-    icon: iconSelect, // Selection
+    icon: iconSelect,
+    items: [],
   },
 ];
 
@@ -56,6 +76,7 @@ class Workspace extends Component {
       drawColor: 'black',
       menuHidden: true,
       action: null,
+      actionValue: null,
       selectedItems: null,
     });
 
@@ -137,10 +158,18 @@ class Workspace extends Component {
       if (el.nodeName === 'path' && el.className) {
         const classes = el.className.baseVal.split('-');
         if (classes[0] === 'action' && classes[1] !== this.props.application.workspace.action) {
-          this.props.actions.updateWorkspace({ action: classes[1] });
+          if (classes.length > 2 && classes[2] !== this.props.application.workspace.actionValue) {
+            this.props.actions.updateWorkspace({
+              action: classes[1],
+              actionValue: classes[2],
+            });
+          } else {
+            this.props.actions.updateWorkspace({ action: classes[1] });
+          }
         }
       }
     }
+
     const point = {
       x: pointer.clientX - constants.LEFT_MENU_WIDTH,
       y: pointer.clientY - constants.TOP_MENU_HEIGHT,

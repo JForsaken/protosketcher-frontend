@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import RadialMenuItem from './RadialMenuItem/RadialMenuItem';
 
 /* Constants */
-const MENU_SIZE = 100;
+const MENU_SIZE = 150;
 
 class RadialMenu extends Component {
 
@@ -61,7 +61,7 @@ class RadialMenu extends Component {
               key={i}
             />)
         }
-        <circle cx="100" cy="100" r="35" />
+        <circle cx={MENU_SIZE} cy={MENU_SIZE} r="35" />
       </svg>
     );
   }
