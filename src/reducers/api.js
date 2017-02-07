@@ -5,21 +5,25 @@ const initialState = {
   login: {
     user: {},
     lastAction: null,
+    time: null,
     error: {},
   },
   createUser: {
     user: {},
     lastAction: null,
+    time: null,
     error: {},
   },
   getPrototypes: {
     prototypes: {},
     lastAction: null,
+    time: null,
     error: {},
   },
   createPrototype: {
     prototype: {},
     lastAction: null,
+    time: null,
     error: {},
   },
 };
@@ -31,6 +35,7 @@ const actionHandlers = {
     login: {
       user: action.user,
       lastAction: action.type,
+      time: action.time,
       error: action.error,
     },
   }),
@@ -38,6 +43,7 @@ const actionHandlers = {
     login: {
       user: action.user,
       lastAction: action.type,
+      time: action.time,
       error: action.error,
     },
   }),
@@ -45,6 +51,7 @@ const actionHandlers = {
     login: {
       user: action.user,
       lastAction: action.type,
+      time: action.time,
       error: action.error,
     },
   }),
@@ -54,6 +61,7 @@ const actionHandlers = {
     createUser: {
       user: action.user,
       lastAction: action.type,
+      time: action.time,
       error: action.error,
     },
   }),
@@ -63,6 +71,7 @@ const actionHandlers = {
     getPrototypes: {
       prototypes: action.prototypes,
       lastAction: action.type,
+      time: action.time,
       error: action.error,
     },
   }),
@@ -70,16 +79,7 @@ const actionHandlers = {
     createPrototype: {
       prototypes: action.prototype,
       lastAction: action.type,
-      error: action.error,
-    },
-  }),
-
-  /* --- Auto Saving --- */
-  [constants.SAVE]: (state, action) => ({
-    saving: {
-      users: action.users,
       time: action.time,
-      lastAction: action.type,
       error: action.error,
     },
   }),

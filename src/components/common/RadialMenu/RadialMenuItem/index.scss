@@ -5,19 +5,19 @@
     stroke: color(background, base);
     stroke-width: 3;
 
-    &:hover {
+    &.hover {
       fill-opacity: .75;
     }
 
     & + image {
-      @include transition(fill-opacity .3s cubic-bezier(.4, 0, .2, 1));
+      @include transition(opacity .3s cubic-bezier(.4, 0, .2, 1));
       opacity: .5;
       pointer-events: none;
       height: 48px;
       width: 48px;
     }
 
-    &:hover + image {
+    &.hover + image {
       opacity: .75;
     }
 
