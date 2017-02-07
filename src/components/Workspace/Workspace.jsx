@@ -6,6 +6,7 @@ import iconSelect from '../../../assets/images/icons/select-area.svg';
 import iconPalette from '../../../assets/images/icons/palette.png';
 import iconText from '../../../assets/images/icons/text-fields.png';
 import { bindActionCreators } from 'redux';
+import uuidV1 from 'uuid/v1';
 
 import * as constants from '../constants';
 
@@ -14,6 +15,10 @@ import RadialMenu from '../common/RadialMenu/RadialMenu';
 
 /* Actions */
 import { updateWorkspace } from '../../actions/application';
+
+// TODO
+// - Keep first points and delete them if menu
+// - Keep last point regardless of distance
 
 const menuItems = [
   { // Color
@@ -64,8 +69,9 @@ class Workspace extends Component {
     this.onEndingEvent = this.onEndingEvent.bind(this);
     this.onMovingEvent = this.onMovingEvent.bind(this);
     this.computeSvgPathString = this.computeSvgPathString.bind(this);
-    this.createSvgPathString = this.createSvgPathString.bind(this);
+    this.createShape = this.createShape.bind(this);
     this.arePointsFeedable = this.arePointsFeedable.bind(this);
+    this.doAction = this.doAction.bind(this);
 
     // Set initial props
     this.props.actions.updateWorkspace({
@@ -78,13 +84,14 @@ class Workspace extends Component {
       action: null,
       actionValue: null,
       selectedItems: null,
+      shapes: {}, // TODO Update with page/shape structure when done
     });
 
     this.state = {
       showMenu: false,
       menuPending: false,
       isDrawing: false,
-      svgPathStrings: [],
+      currentPath: '',
       previousPoint: null,
     };
 
@@ -127,6 +134,10 @@ class Workspace extends Component {
     e.preventDefault();
     e.stopPropagation();
 
+    if (this.state.isDrawing === true) {
+      this.createShape();
+    }
+
     if (!(e.type === constants.events.MOUSE_LEAVE
       && e.target.classList.contains('workspace-container'))) {
       this.toggleMenu(false);
@@ -142,6 +153,8 @@ class Workspace extends Component {
       isDrawing: false,
       previousPoint: null,
     });
+
+    this.doAction();
   }
 
   onMovingEvent(e) {
@@ -196,7 +209,7 @@ class Workspace extends Component {
             isDrawing: true,
             previousPoint: point,
           });
-          this.createSvgPathString();
+          this.setState({ currentPath: '' });
           this.computeSvgPathString(point, 'M');
         }
       }
@@ -210,6 +223,16 @@ class Workspace extends Component {
     }
   }
 
+  doAction() {
+    if (this.props.application.workspace.action === 'changeColor') {
+      if (this.props.application.workspace.actionValue) {
+        this.props.actions.updateWorkspace({
+          drawColor: this.props.application.workspace.actionValue,
+        });
+      }
+    }
+  }
+
   arePointsFeedable(currentPoint) {
     const minDistance = 10;
     const a = this.state.previousPoint.x - currentPoint.x;
@@ -218,23 +241,24 @@ class Workspace extends Component {
     return c > minDistance;
   }
 
-  createSvgPathString() {
-    const paths = this.state.svgPathStrings;
-    const minimumStringLength = 20;
-    if (paths.length > 0 && paths[paths.length - 1].length < minimumStringLength) {
-      paths.pop();
-    }
-    paths.push('');
-    this.setState({
-      svgPathStrings: paths,
+  createShape() {
+    const uuid = uuidV1();
+    this.props.actions.updateWorkspace({
+      shapes: {
+        ...this.props.application.workspace.shapes,
+        [uuid]: {
+          path: this.state.currentPath,
+          color: this.props.application.workspace.drawColor,
+        },
+      },
     });
+    this.setState({ currentPath: '' });
   }
-
   computeSvgPathString(points, prefix) {
-    const pathStrings = this.state.svgPathStrings;
-    pathStrings[pathStrings.length - 1] += `${prefix}${points.x} ${points.y} `;
+    let path = this.state.currentPath;
+    path += `${prefix}${points.x} ${points.y} `;
     this.setState({
-      svgPathStrings: pathStrings,
+      currentPath: path,
     });
   }
 
@@ -246,6 +270,7 @@ class Workspace extends Component {
   }
 
   render() {
+    const shapes = this.props.application.workspace.shapes;
     return (
       <div
         id="workspace"
@@ -259,17 +284,22 @@ class Workspace extends Component {
         onTouchEnd={this.onEndingEvent}
         onContextMenu={this.onStartingEvent}
       >
-      {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
+        {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
         <svg height="100%" width="100%">
           {
-            this.state.svgPathStrings.map((item, i) =>
+            Object.entries(shapes).map((item, i) =>
               <path
                 className="workspace-line"
-                d={item}
-                stroke={this.props.application.workspace.drawColor}
+                d={item[1].path}
+                stroke={item[1].color}
                 key={i}
               />)
           }
+          <path
+            className="workspace-line"
+            d={this.state.currentPath}
+            stroke={this.props.application.workspace.drawColor}
+          />)
         </svg>
       </div>
     );
