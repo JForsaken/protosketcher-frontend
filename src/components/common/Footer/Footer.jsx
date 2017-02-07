@@ -77,9 +77,7 @@ export default class Footer extends Component {
   }
 
   showDeleteModal(index) {
-    console.log('Show', this.state.pages);
     if (this.state.pages.length <= 1) {
-      console.log('one poage');
       this.setState({
         showOnePageWarningModal: true,
         showDeleteModal: false,
@@ -239,10 +237,11 @@ export default class Footer extends Component {
     let pageIndex;
     let menuIndex;
     const icons = {
-      modal: <i className="fa fa-window-maximize" />,
-      normal: <i className="fa fa-television" />,
+      modal: <i className="fa fa-space-shuttle" />,
+      normal: <i className="fa fa-desktop" />,
     };
 
+    // Add components for each page
     forEach(this.state.pages, (page) => {
       pageIndex = `page-${page.id}`;
       menuIndex = `menu-${page.id}`;
