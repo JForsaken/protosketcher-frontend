@@ -129,29 +129,31 @@ export default class Footer extends Component {
         show={this.state.showRenameModal}
         onHide={() => this.closeModal()}
       >
-        <Modal.Header closeButton>
-          <i className="fa fa-pencil-square" />
-        </Modal.Header>
-        <Modal.Body>
-          <FormGroup controlId="prototype-name">
-            <label><FormattedMessage id="footer.renamePage" /></label>
-            <FormControl
-              type="text"
-              onChange={(e) => this.onPageNameChanged(e)}
-              placeholder={this.props.intl.messages['footer.newName']}
-            />
-          </FormGroup>
-          <hr />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            bsStyle="primary"
-            disabled={!this.state.pageName}
-            onClick={() => this.renamePage()}
-          >
-            <FormattedMessage id="save" />
-          </Button>
-        </Modal.Footer>
+        <form onSubmit={() => this.renamePage()}>
+          <Modal.Header closeButton>
+            <i className="fa fa-pencil-square" />
+          </Modal.Header>
+          <Modal.Body>
+            <FormGroup controlId="prototype-name">
+              <label><FormattedMessage id="footer.renamePage" /></label>
+              <FormControl
+                type="text"
+                onChange={(e) => this.onPageNameChanged(e)}
+                placeholder={this.props.intl.messages['footer.newName']}
+              />
+            </FormGroup>
+            <hr />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              bsStyle="primary"
+              disabled={!this.state.pageName}
+              onClick={() => this.renamePage()}
+            >
+              <FormattedMessage id="save" />
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     );
   }
