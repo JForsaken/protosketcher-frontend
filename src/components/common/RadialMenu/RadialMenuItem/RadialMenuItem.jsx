@@ -41,6 +41,7 @@ class RadialMenuItem extends Component {
     this.createSvgArc = this.createSvgArc.bind(this);
     this.createCSSTransform = this.createCSSTransform.bind(this);
     this.onMovingEvent = this.onMovingEvent.bind(this);
+    this.onMovingEventOnItem = this.onMovingEventOnItem.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -49,11 +50,28 @@ class RadialMenuItem extends Component {
     } else {
       this.setState({ selected: false });
     }
+
+    if (!isEmpty(this.props.items)) {
+      for (const item of this.props.items) {
+        item.selected = newProps.application.workspace.actionValue === item.actionValue;
+      }
+    }
   }
 
   onMovingEvent() {
     if (this.props.action !== this.props.application.workspace.action) {
       this.props.actions.updateWorkspace({ action: this.props.action });
+    } else if (this.props.application.workspace.actionValue) {
+      this.props.actions.updateWorkspace({ actionValue: null });
+    }
+  }
+
+  onMovingEventOnItem(e) {
+    const classes = e.target.className.baseVal.split('-');
+    if (classes.length > 2 && classes[2] !== this.props.application.workspace.actionValue) {
+      this.props.actions.updateWorkspace({
+        actionValue: classes[2],
+      });
     }
   }
 
@@ -114,11 +132,11 @@ class RadialMenuItem extends Component {
               d={this.createSvgArc(150, 150, 150, item.startAngle, item.endAngle)}
             />
             <path
-              className={item.selected ? 'hover' : `${baseClassName}-${item.action}`}
+              className={item.selected ? 'hover' : `${baseClassName}-${item.actionValue}`}
               d={this.createSvgArc(150, 150, 150, item.startAngle, item.endAngle)}
               fill={item.color}
-              onMouseMove={this.onMovingEvent}
-              onTouchMove={this.onMovingEvent}
+              onMouseMove={this.onMovingEventOnItem}
+              onTouchMove={this.onMovingEventOnItem}
             />
             <image
               xlinkHref={item.icon}

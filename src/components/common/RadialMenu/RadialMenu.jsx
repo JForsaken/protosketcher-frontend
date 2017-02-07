@@ -10,9 +10,13 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 /* Components */
 import RadialMenuItem from './RadialMenuItem/RadialMenuItem';
+
+/* Actions */
+import { updateWorkspace } from '../../../actions/application';
 
 /* Constants */
 const MENU_SIZE = 150;
@@ -25,7 +29,15 @@ class RadialMenu extends Component {
       selectedIndex: -1,
     };
 
+    this.onMovingEvent = this.onMovingEvent.bind(this);
+
     this.initElements();
+  }
+
+  onMovingEvent() {
+    if (this.props.application.workspace.action) {
+      this.props.actions.updateWorkspace({ action: null });
+    }
   }
 
   initElements() {
@@ -61,12 +73,23 @@ class RadialMenu extends Component {
               key={i}
             />)
         }
-        <circle cx={MENU_SIZE} cy={MENU_SIZE} r="35" />
+        <circle
+          cx={MENU_SIZE}
+          cy={MENU_SIZE}
+          r="35"
+          onMouseMove={this.onMovingEvent}
+          onTouchMove={this.onMovingEvent}
+        />
       </svg>
     );
   }
 }
 
 export default connect(
-  ({ application }) => ({ application })
+  ({ application }) => ({ application }),
+    dispatch => ({
+      actions: bindActionCreators({
+        updateWorkspace,
+      }, dispatch),
+    })
 )(RadialMenu);
