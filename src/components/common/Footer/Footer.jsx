@@ -77,7 +77,9 @@ export default class Footer extends Component {
   }
 
   showDeleteModal(index) {
+    console.log('Show', this.state.pages);
     if (this.state.pages.length <= 1) {
+      console.log('one poage');
       this.setState({
         showOnePageWarningModal: true,
         showDeleteModal: false,
@@ -120,99 +122,111 @@ export default class Footer extends Component {
     this.setState({ activePage: index });
   }
 
+  renderRenameModal() {
+    return (
+      <Modal
+        dialogClassName="add-modal"
+        show={this.state.showRenameModal}
+        onHide={() => this.closeModal()}
+      >
+        <Modal.Header closeButton>
+          <i className="fa fa-pencil-square" />
+        </Modal.Header>
+        <Modal.Body>
+          <FormGroup controlId="prototype-name">
+            <label><FormattedMessage id="footer.renamePage" /></label>
+            <FormControl
+              type="text"
+              onChange={(e) => this.onPageNameChanged(e)}
+              placeholder={this.props.intl.messages['footer.newName']}
+            />
+          </FormGroup>
+          <hr />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            bsStyle="primary"
+            disabled={!this.state.pageName}
+            onClick={() => this.renamePage()}
+          >
+            <FormattedMessage id="save" />
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+  renderDeleteModal() {
+    return (
+      <Modal
+        dialogClassName="add-modal"
+        show={this.state.showDeleteModal}
+        onHide={() => this.closeModal()}
+      >
+        <Modal.Header closeButton>
+          <i className="fa fa-trash" />
+        </Modal.Header>
+        <Modal.Body>
+          <FormGroup controlId="prototype-name">
+            <label><FormattedMessage id="footer.deletePageConfirm" /></label>
+          </FormGroup>
+          <hr />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            bsStyle="primary"
+            onClick={() => this.closeModal()}
+            className="doubleButton"
+          >
+            <FormattedMessage id="cancel" />
+          </Button>
+          <Button
+            bsStyle="warning"
+            onClick={() => this.removePage()}
+            className="doubleButton"
+          >
+            <FormattedMessage id="footer.delete" />
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+  renderOnePageWarningModal() {
+    return (
+      <Modal
+        dialogClassName="add-modal"
+        show={this.state.showOnePageWarningModal}
+        onHide={() => this.closeModal()}
+      >
+        <Modal.Header closeButton>
+          <i className="fa fa-exclamation-triangle" />
+        </Modal.Header>
+        <Modal.Body>
+          <h4><FormattedMessage id="footer.moreThanOnePage" /></h4>
+          <hr />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            bsStyle="primary"
+            onClick={() => this.closeModal()}
+          >
+            <FormattedMessage id="OK" />
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
   renderModal() {
     if (this.state.showRenameModal) {
-      return (
-        <Modal
-          dialogClassName="add-modal"
-          show={this.state.showRenameModal}
-          onHide={() => this.closeModal()}
-        >
-          <Modal.Header closeButton>
-            <i className="fa fa-pencil-square" />
-          </Modal.Header>
-          <Modal.Body>
-            <FormGroup controlId="prototype-name">
-              <label><FormattedMessage id="footer.renamePage" /></label>
-              <FormControl
-                type="text"
-                onChange={(e) => this.onPageNameChanged(e)}
-                placeholder={this.props.intl.messages['footer.newName']}
-              />
-            </FormGroup>
-            <hr />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              bsStyle="primary"
-              disabled={!this.state.pageName}
-              onClick={() => this.renamePage()}
-            >
-              <FormattedMessage id="save" />
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      );
+      return this.renderRenameModal();
     }
     if (this.state.showDeleteModal) {
-      return (
-        <Modal
-          dialogClassName="add-modal"
-          show={this.state.showDeleteModal}
-          onHide={() => this.closeModal()}
-        >
-          <Modal.Header closeButton>
-            <i className="fa fa-trash" />
-          </Modal.Header>
-          <Modal.Body>
-            <FormGroup controlId="prototype-name">
-              <label><FormattedMessage id="footer.deletePageConfirm" /></label>
-            </FormGroup>
-            <hr />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              bsStyle="primary"
-              onClick={() => this.closeModal()}
-              className="doubleButton"
-            >
-              <FormattedMessage id="cancel" />
-            </Button>
-            <Button
-              bsStyle="warning"
-              onClick={() => this.removePage()}
-              className="doubleButton"
-            >
-              <FormattedMessage id="footer.delete" />
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      );
+      return this.renderDeleteModal();
     }
     if (this.state.showOnePageWarningModal) {
-      return (
-        <Modal
-          dialogClassName="add-modal"
-          show={this.state.showOnePageWarningModal}
-          onHide={() => this.closeModal()}
-        >
-          <Modal.Header closeButton>
-            <i className="fa fa-exclamation-triangle" />
-          </Modal.Header>
-          <Modal.Body>
-            <h4><FormattedMessage id="footer.moreThanOnePage" /></h4>
-            <hr />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              bsStyle="primary"
-              onClick={() => this.closeModal()}
-            >
-              <FormattedMessage id="OK" />
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      );
+      return this.renderOnePageWarningModal();
     }
     return '';
   }
