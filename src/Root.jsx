@@ -46,7 +46,7 @@ const initialState = {
       menuHidden: true,
       action: null,
       actionValue: null,
-      selectedItems: null,
+      selectedItems: [],
     },
     selectedPrototype: null,
     selectedPage: null,
