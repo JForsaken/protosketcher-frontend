@@ -27,11 +27,21 @@ footer#footer {
   }
 
   .addPageMenu {
-    bottom: -8px;
+    bottom: -3px;
 
     // Important is necessary, because I'm overriding inline styles
     button, .smallButton div, .smallButton span {
       border-radius: 2px !important;
+      width: 48px !important;
+      height: 48px !important;
+
+      div {
+
+        svg:first-child {
+          height: 100% !important;
+          line-height: 100% !important;
+        }
+      }
     }
 
     .addPageBackdrop {
