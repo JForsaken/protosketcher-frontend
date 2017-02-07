@@ -7,6 +7,7 @@ export default {
   // COMMON
   'cancel': 'Cancel',
   'save': 'Save',
+  'OK': 'OK',
 
   // LOGIN FORM
   'login.form.title': 'Welcome Back!',
