@@ -2,9 +2,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import iconSelect from '../../../assets/images/icons/select-area.svg';
-import iconPalette from '../../../assets/images/icons/palette.png';
-import iconText from '../../../assets/images/icons/text-fields.png';
 import { bindActionCreators } from 'redux';
 import uuidV1 from 'uuid/v1';
 
@@ -16,47 +13,17 @@ import RadialMenu from '../common/RadialMenu/RadialMenu';
 /* Actions */
 import { updateWorkspace } from '../../actions/application';
 
+/* Helpers */
+import { changeColor } from './helpers';
+
 // TODO
 // - Keep first points and delete them if menu
 // - Keep last point regardless of distance
 
 const menuItems = [
-  { // Color
-    action: 'changeColor',
-    color: '#F44336',
-    icon: iconPalette,
-    items: [
-      {
-        actionValue: 'red',
-        color: '#F44336',
-      },
-      {
-        actionValue: 'blue',
-        color: '#2196F3',
-      },
-      {
-        actionValue: 'green',
-        color: '#4CAF50',
-      },
-      {
-        actionValue: 'black',
-        color: '#000000',
-      },
-    ],
-  },
-  { // Text
-    action: 'addText',
-    color: '#4CAF50',
-    icon: iconText,
-    items: [],
-  },
-  { // Selection
-    action: 'selectArea',
-    color: '#2196F3',
-    flex: 2,
-    icon: iconSelect,
-    items: [],
-  },
+  constants.menuItems.CHANGE_COLOR,
+  constants.menuItems.ADD_TEXT,
+  constants.menuItems.SELECT_AREA,
 ];
 
 class Workspace extends Component {
@@ -72,6 +39,8 @@ class Workspace extends Component {
     this.createShape = this.createShape.bind(this);
     this.arePointsFeedable = this.arePointsFeedable.bind(this);
     this.doAction = this.doAction.bind(this);
+
+    this.changeColor = changeColor.bind(this);
 
     // Set initial props
     this.props.actions.updateWorkspace({
@@ -225,11 +194,7 @@ class Workspace extends Component {
 
   doAction() {
     if (this.props.application.workspace.action === 'changeColor') {
-      if (this.props.application.workspace.actionValue) {
-        this.props.actions.updateWorkspace({
-          drawColor: this.props.application.workspace.actionValue,
-        });
-      }
+      this.changeColor();
     }
   }
 
