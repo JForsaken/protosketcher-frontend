@@ -44,6 +44,9 @@ export default class AddPageMenu extends Component {
           positionH="right"
           className="addPageMenu"
           classNameBackdrop="addPageBackdrop"
+          styleButtonWrap={{
+            right: '22px', // To adjust to the changes made in CSS to the size
+          }}
         >
           <BubbleList
             direction="up"
