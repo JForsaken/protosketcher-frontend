@@ -10,6 +10,10 @@ export function hideError() {
 }
 
 export function selectPrototype(id) {
-  put('prototype', id);
+  put('selectedPrototype', id);
   return { type: constants.SELECT_PROTOTYPE, id };
+}
+
+export function updateWorkspace(data) {
+  return { type: constants.UPDATE_WORKSPACE, data };
 }

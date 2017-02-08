@@ -21,6 +21,7 @@
     "lint": "eslint --ext .js --ext .jsx --fix src",
     "start": "npm run build && node server.js",
     "dev": "npm run build && DEVTOOLS=true node server.js",
+    "debug": "npm run clean && webpack && DEVTOOLS=true node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "pre-commit": [

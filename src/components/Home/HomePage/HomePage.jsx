@@ -1,7 +1,6 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import SaveTimer from '../SaveTimer/SaveTimer';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 /* Components */
@@ -23,10 +22,9 @@ class HomePage extends Component {
         transitionEnterTimeout={animationTime}
         transitionLeaveTimeout={animationTime}
       >
-        {this.props.application.prototype ?
+        {this.props.application.selectedPrototype ?
           <div className="page-container" key="homepage-anim">
             <Menu />
-            <SaveTimer />
             <Workspace />
             <Footer />
           </div> :
@@ -38,7 +36,6 @@ class HomePage extends Component {
     );
   }
 }
-
 export default (connect(
   ({ application }) => ({ application }),
 )(HomePage));
