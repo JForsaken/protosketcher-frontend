@@ -5,6 +5,7 @@ import { isEqual, map } from 'lodash';
 import { FormGroup, FormControl, Row, Col, Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import FontAwesome from 'react-fontawesome';
 
 /* Actions */
 import * as apiActions from '../../../actions/api';
@@ -78,7 +79,7 @@ class PrototypeDashboard extends Component {
         onHide={() => this.closeModal()}
       >
         <Modal.Header closeButton>
-          <i className="fa fa-plus-circle" />
+          <FontAwesome name="plus-circle" />
         </Modal.Header>
         <Modal.Body>
           <FormGroup controlId="prototype-name">
@@ -144,7 +145,7 @@ class PrototypeDashboard extends Component {
           onClick={() => this.onAddClick()}
         >
           <div className="prototype-container__prototype__title--add">
-            <i className="fa fa-plus" aria-hidden="true" />
+            <FontAwesome name="plus" />
           </div>
         </div>
       </Col>

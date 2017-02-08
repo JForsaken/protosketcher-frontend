@@ -5,7 +5,11 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import forEach from 'lodash/forEach';
 import classNames from 'classnames';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
+import FontAwesome from 'react-fontawesome';
+
+// Components
 import AddPageMenu from './AddPageMenu';
+
 @injectIntl
 
 export default class Footer extends Component {
@@ -129,7 +133,7 @@ export default class Footer extends Component {
       >
         <form onSubmit={() => this.renamePage()}>
           <Modal.Header closeButton>
-            <i className="fa fa-pencil-square" />
+            <FontAwesome name="pencil-square" />
           </Modal.Header>
           <Modal.Body>
             <FormGroup controlId="prototype-name">
@@ -164,7 +168,7 @@ export default class Footer extends Component {
         onHide={() => this.closeModal()}
       >
         <Modal.Header closeButton>
-          <i className="fa fa-trash" />
+          <FontAwesome name="trash" />
         </Modal.Header>
         <Modal.Body>
           <FormGroup controlId="prototype-name">
@@ -200,7 +204,7 @@ export default class Footer extends Component {
         onHide={() => this.closeModal()}
       >
         <Modal.Header closeButton>
-          <i className="fa fa-exclamation-triangle" />
+          <FontAwesome name="exclamation-triangle" />
         </Modal.Header>
         <Modal.Body>
           <h4><FormattedMessage id="footer.moreThanOnePage" /></h4>
@@ -237,8 +241,8 @@ export default class Footer extends Component {
     let pageIndex;
     let menuIndex;
     const icons = {
-      modal: <i className="fa fa-space-shuttle" />,
-      normal: <i className="fa fa-desktop" />,
+      modal: <FontAwesome name="window-maximize" />,
+      normal: <FontAwesome name="desktop" />,
     };
 
     // Add components for each page

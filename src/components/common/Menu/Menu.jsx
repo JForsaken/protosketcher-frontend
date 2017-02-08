@@ -17,7 +17,7 @@ const menuItems = [
   {
     text: <FormattedMessage id="menu.randomTab" />,
     link: '/',
-    icon: 'fa fa-dot-circle-o',
+    icon: 'dot-circle-o',
   },
 ];
 
