@@ -39,20 +39,6 @@ class Workspace extends Component {
 
     this.changeColor = changeColor.bind(this);
 
-    // Set initial props
-    this.props.actions.updateWorkspace({
-      currentPos: {
-        x: 0,
-        y: 0,
-      },
-      drawColor: 'black',
-      menuHidden: true,
-      action: null,
-      actionValue: null,
-      selectedItems: null,
-      shapes: {}, // TODO Update with page/shape structure when done
-    });
-
     this.state = {
       showMenu: false,
       menuPending: false,
@@ -200,7 +186,7 @@ class Workspace extends Component {
   }
 
   doAction() {
-    if (this.props.application.workspace.action === 'changeColor') {
+    if (this.props.application.workspace.action === constants.menuItems.CHANGE_COLOR.action) {
       this.changeColor();
     }
   }
