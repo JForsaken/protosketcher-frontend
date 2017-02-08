@@ -37,6 +37,18 @@ const initialState = {
       'en',
       'fr',
     ],
+    workspace: {
+      currentPos: {
+        x: 0,
+        y: 0,
+      },
+      drawColor: '#000000',
+      menuHidden: true,
+      action: null,
+      actionValue: null,
+      selectedItems: null,
+      shapes: {}, // TODO Update with page/shape structure when done
+    },
   },
 };
 

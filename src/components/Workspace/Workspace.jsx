@@ -9,16 +9,13 @@ import * as constants from '../constants';
 
 /* Components */
 import RadialMenu from '../common/RadialMenu/RadialMenu';
+import Shape from './Shape/Shape';
 
 /* Actions */
 import { updateWorkspace } from '../../actions/application';
 
 /* Helpers */
 import { changeColor } from './helpers';
-
-// TODO
-// - Keep first points and delete them if menu
-// - Keep last point regardless of distance
 
 const menuItems = [
   constants.menuItems.CHANGE_COLOR,
@@ -72,39 +69,57 @@ class Workspace extends Component {
     e.stopPropagation();
 
     // Set the initial position
+    let pointer = e;
     if (e.type === constants.events.TOUCH_START) {
-      this.props.actions.updateWorkspace({
-        currentPos: {
-          x: e.changedTouches.item(0).clientX - constants.LEFT_MENU_WIDTH,
-          y: e.changedTouches.item(0).clientY - constants.TOP_MENU_HEIGHT,
-        },
-      });
-    } else {
-      this.props.actions.updateWorkspace({
-        currentPos: {
-          x: e.clientX - constants.LEFT_MENU_WIDTH,
-          y: e.clientY - constants.TOP_MENU_HEIGHT,
-        },
-      });
+      pointer = e.changedTouches.item(0);
     }
+    const point = {
+      x: pointer.clientX - constants.LEFT_MENU_WIDTH,
+      y: pointer.clientY - constants.TOP_MENU_HEIGHT,
+    };
+    this.props.actions.updateWorkspace({
+      currentPos: {
+        x: point.x,
+        y: point.y,
+      },
+    });
+
 
     if (e.type === constants.events.CONTEXT_MENU) {
       this.toggleMenu(true);
     } else {
       // Set timer for menu
       this.touchTimer = setTimeout(() => this.toggleMenu(true), 500);
+
+      // Start drawing
+      this.setState({
+        menuPending: true,
+        isDrawing: true,
+        previousPoint: point,
+        currentPath: '',
+      });
+      this.computeSvgPathString(point, 'M');
     }
-    this.setState({
-      menuPending: true,
-    });
   }
 
   onEndingEvent(e) {
     e.preventDefault();
     e.stopPropagation();
 
+    // Get event position
+    let pointer = e;
+    if (e.type === constants.events.TOUCH_END) {
+      pointer = e.changedTouches.item(0);
+    }
+
+    const point = {
+      x: pointer.clientX - constants.LEFT_MENU_WIDTH,
+      y: pointer.clientY - constants.TOP_MENU_HEIGHT,
+    };
+
+    // Finish drawing by adding last point
     if (this.state.isDrawing === true) {
-      this.createShape();
+      this.createShape(point);
     }
 
     if (!(e.type === constants.events.MOUSE_LEAVE
@@ -171,18 +186,10 @@ class Workspace extends Component {
         // stops move (draw action) from firing the event
         if (this.touchTimer) {
           clearTimeout(this.touchTimer);
-
-          // Start Drawing
-          this.setState({
-            menuPending: false,
-            isDrawing: true,
-            previousPoint: point,
-          });
-          this.setState({ currentPath: '' });
-          this.computeSvgPathString(point, 'M');
         }
       }
-    } else if (this.state.isDrawing === true) {
+    }
+    if (this.state.isDrawing === true) {
       if (this.arePointsFeedable(point)) {
         this.computeSvgPathString(point, 'L');
         this.setState({
@@ -206,36 +213,44 @@ class Workspace extends Component {
     return c > minDistance;
   }
 
-  createShape() {
+  createShape(point) {
     const uuid = uuidV1();
     this.props.actions.updateWorkspace({
       shapes: {
         ...this.props.application.workspace.shapes,
         [uuid]: {
-          path: this.state.currentPath,
+          path: this.state.currentPath += `L${point.x} ${point.y}`,
           color: this.props.application.workspace.drawColor,
         },
       },
     });
     this.setState({ currentPath: '' });
   }
-  computeSvgPathString(points, prefix) {
+  computeSvgPathString(point, prefix) {
     let path = this.state.currentPath;
-    path += `${prefix}${points.x} ${points.y} `;
+    path += `${prefix}${point.x} ${point.y} `;
     this.setState({
       currentPath: path,
     });
   }
 
   toggleMenu(state) {
-    this.setState({
-      menuPending: false,
-      showMenu: state,
-    });
+    if (this.state.isDrawing === true) {
+      this.setState({
+        menuPending: false,
+        showMenu: state,
+        isDrawing: false,
+        currentPath: '',
+      });
+    } else {
+      this.setState({
+        menuPending: false,
+        showMenu: state,
+      });
+    }
   }
 
   render() {
-    const shapes = this.props.application.workspace.shapes;
     return (
       <div
         id="workspace"
@@ -252,11 +267,9 @@ class Workspace extends Component {
         {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
         <svg height="100%" width="100%">
           {
-            Object.entries(shapes).map((item, i) =>
-              <path
-                className="workspace-line"
-                d={item[1].path}
-                stroke={item[1].color}
+            Object.entries(this.props.application.workspace.shapes).map((item, i) =>
+              <Shape
+                {...item[1]}
                 key={i}
               />)
           }
