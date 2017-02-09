@@ -95,8 +95,22 @@
       font-weight: bold;
       text-transform: uppercase;
       @include rounded-indiv(0, 0, 2px, 2px);
-      @include box-shadow(0, 0, 0, 0)
+      @include box-shadow(0, 0, 0, 0);
 
+      &.doubleButton {
+        width: 50%;
+        margin: 0;
+
+        &:first-child {
+          right: 50%;
+          @include rounded-indiv(0, 0, 2px, 0);
+        }
+
+        &+.btn {
+          left: 50%;
+          @include rounded-indiv(0, 0, 0, 2px);
+        }
+      }
     }
 
   }

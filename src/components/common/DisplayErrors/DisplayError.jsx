@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as applicationActions from '../../../actions/application';
+import FontAwesome from 'react-fontawesome';
 
 class DisplayError extends React.Component {
   static propTypes = {
@@ -23,7 +24,7 @@ class DisplayError extends React.Component {
             type="button"
             className="close-button"
           >
-            <i className="fa fa-times-circle" />
+            <FontAwesome name="times-circle" />
           </button>
           <p>{error.message}</p>
           <pre>

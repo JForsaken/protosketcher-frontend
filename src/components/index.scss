@@ -30,22 +30,14 @@ html {
   src: url('../../assets/fonts/PermanentMarker.ttf') format('truetype');
 }
 
-@font-face {
-  font-family: 'FontAwesome';
-  src: url('../../node_modules/font-awesome/fonts/FontAwesome.otf') format('otf'),
-       url('../../node_modules/font-awesome/fonts/fontawesome-webfont.eot?') format('eot'),
-       url('../../node_modules/font-awesome/fonts/fontawesome-webfont.svg') format('svg'),
-       url('../../node_modules/font-awesome/fonts/fontawesome-webfont.ttf') format('truetype'),
-       url('../../node_modules/font-awesome/fonts/fontawesome-webfont.woff') format('woff'),
-       url('../../node_modules/font-awesome/fonts/fontawesome-webfont.woff2') format('woff2');
-}
-
 body {
   color: color('text');
   background-color: color('background') !important;
   font-family: 'Roboto', 'Helvetica Light', sans-serif !important;
 
   @import './bootstrap-override.scss';
+  @import './popup';
+  @import './react-context-menu';
 }
 @import './Home/index.scss';
 

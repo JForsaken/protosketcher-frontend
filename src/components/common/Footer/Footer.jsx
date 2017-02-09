@@ -1,9 +1,15 @@
 /* Node modules */
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
-import { injectIntl } from 'react-intl';
+import { FormGroup, FormControl, Modal, Button } from 'react-bootstrap';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import forEach from 'lodash/forEach';
 import classNames from 'classnames';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
+import FontAwesome from 'react-fontawesome';
+
+// Components
+import AddPageMenu from './AddPageMenu';
+
 @injectIntl
 
 export default class Footer extends Component {
@@ -11,9 +17,104 @@ export default class Footer extends Component {
     super(props, context);
 
     this.state = {
-      pages: ['Page 1', 'Page 2'],
+      pages: [{
+        id: 0,
+        name: 'Page 1',
+        type: 'normal',
+      }, {
+        id: 1,
+        name: 'Page 2',
+        type: 'modal',
+      }],
       activePage: 0,
+      showRenameModal: false,
+      showDeleteModal: false,
+      showOnePageWarning: false,
+      pageName: '',
+      pageModifiedIndex: -1,
     };
+  }
+
+  onPageNameChanged(e) {
+    this.setState({
+      pageName: e.target.value,
+    });
+  }
+
+  renamePage() {
+    const pages = this.state.pages.slice();
+    let pageName = this.state.pageName;
+    if (pageName === '' || pageName === ' ') {
+      pageName = ' - ';
+    }
+    pages[this.state.pageModifiedIndex].name = pageName;
+    this.setState({
+      pages,
+      pageModifiedIndex: -1,
+      pageName: '',
+      showRenameModal: false,
+    });
+  }
+
+  removePage() {
+    const pages = this.state.pages.slice();
+
+    pages.splice(this.state.pageModifiedIndex, 1);
+    let activePage = this.state.activePage;
+    if (activePage === this.state.pageModifiedIndex) {
+      activePage = 0;
+    }
+    this.setState({
+      pages,
+      activePage,
+      showDeleteModal: false,
+      pageModifiedIndex: -1,
+    });
+  }
+
+  showRenameModal(index) {
+    this.setState({
+      showRenameModal: true,
+      pageModifiedIndex: index,
+      pageName: '',
+    });
+  }
+
+  showDeleteModal(index) {
+    if (this.state.pages.length <= 1) {
+      this.setState({
+        showOnePageWarningModal: true,
+        showDeleteModal: false,
+      });
+      return;
+    }
+    this.setState({
+      showDeleteModal: true,
+      pageModifiedIndex: index,
+    });
+  }
+
+  closeModal() {
+    this.setState({
+      showRenameModal: false,
+      showDeleteModal: false,
+      showOnePageWarningModal: false,
+      pageModifiedIndex: -1,
+    });
+  }
+
+  addPage(type) {
+    const pages = this.state.pages;
+    pages.push({
+      id: pages.length,
+      name: this.props.intl.messages['footer.newPage'],
+      type,
+    });
+    this.setState({
+      pages,
+      activePage: pages.length - 1,
+      isAddPageMenuVisible: false,
+    });
   }
 
   changePage(index) {
@@ -23,39 +124,173 @@ export default class Footer extends Component {
     this.setState({ activePage: index });
   }
 
-  addPage() {
-    const newPages = this.state.pages;
-    newPages.push(this.props.intl.messages['footer.newPage']);
-    this.setState({
-      pages: newPages,
-      activePage: newPages.length - 1,
-    });
+  renderRenameModal() {
+    return (
+      <Modal
+        dialogClassName="add-modal"
+        show={this.state.showRenameModal}
+        onHide={() => this.closeModal()}
+      >
+        <form onSubmit={() => this.renamePage()}>
+          <Modal.Header closeButton>
+            <FontAwesome name="pencil-square" />
+          </Modal.Header>
+          <Modal.Body>
+            <FormGroup controlId="prototype-name">
+              <label><FormattedMessage id="footer.renamePage" /></label>
+              <FormControl
+                type="text"
+                onChange={(e) => this.onPageNameChanged(e)}
+                placeholder={this.props.intl.messages['footer.newName']}
+              />
+            </FormGroup>
+            <hr />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              bsStyle="primary"
+              disabled={!this.state.pageName}
+              onClick={() => this.renamePage()}
+            >
+              <FormattedMessage id="save" />
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+    );
+  }
+
+  renderDeleteModal() {
+    return (
+      <Modal
+        dialogClassName="add-modal"
+        show={this.state.showDeleteModal}
+        onHide={() => this.closeModal()}
+      >
+        <Modal.Header closeButton>
+          <FontAwesome name="trash" />
+        </Modal.Header>
+        <Modal.Body>
+          <FormGroup controlId="prototype-name">
+            <label><FormattedMessage id="footer.deletePageConfirm" /></label>
+          </FormGroup>
+          <hr />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            bsStyle="primary"
+            onClick={() => this.closeModal()}
+            className="doubleButton"
+          >
+            <FormattedMessage id="cancel" />
+          </Button>
+          <Button
+            bsStyle="warning"
+            onClick={() => this.removePage()}
+            className="doubleButton"
+          >
+            <FormattedMessage id="footer.delete" />
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+  renderOnePageWarningModal() {
+    return (
+      <Modal
+        dialogClassName="add-modal"
+        show={this.state.showOnePageWarningModal}
+        onHide={() => this.closeModal()}
+      >
+        <Modal.Header closeButton>
+          <FontAwesome name="exclamation-triangle" />
+        </Modal.Header>
+        <Modal.Body>
+          <h4><FormattedMessage id="footer.moreThanOnePage" /></h4>
+          <hr />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            bsStyle="primary"
+            onClick={() => this.closeModal()}
+          >
+            <FormattedMessage id="OK" />
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+  renderModal() {
+    if (this.state.showRenameModal) {
+      return this.renderRenameModal();
+    }
+    if (this.state.showDeleteModal) {
+      return this.renderDeleteModal();
+    }
+    if (this.state.showOnePageWarningModal) {
+      return this.renderOnePageWarningModal();
+    }
+    return '';
   }
 
   render() {
     const pages = [];
-    forEach(this.state.pages, (page, index) => {
+    const contextMenus = [];
+    let pageIndex;
+    let menuIndex;
+    const icons = {
+      modal: <FontAwesome name="window-maximize" />,
+      normal: <FontAwesome name="desktop" />,
+    };
+
+    // Add components for each page
+    forEach(this.state.pages, (page) => {
+      pageIndex = `page-${page.id}`;
+      menuIndex = `menu-${page.id}`;
       const className = classNames({
         'page-tab': true,
-        'page-tab--active': this.state.activePage === index,
+        'page-tab--active': this.state.activePage === page.id,
       });
 
       pages.push(
-        <Button key={index} className={className} onClick={() => this.changePage(index)}>
-          {page}
-        </Button>
+        <ContextMenuTrigger id={pageIndex} key={`trigger${page.id}`}>
+          <Button
+            key={pageIndex}
+            className={className}
+            onDoubleClick={() => this.showRenameModal(page.id)}
+            onClick={() => this.changePage(page.id)}
+          >
+            {page.name}
+            {icons[page.type]}
+          </Button>
+        </ContextMenuTrigger>
+      );
+
+      contextMenus.push(
+        <ContextMenu key={menuIndex} id={pageIndex}>
+          <MenuItem key={`rename${menuIndex}`} onClick={() => this.showRenameModal(page.id)}>
+            {this.props.intl.messages['footer.renamePage']}
+          </MenuItem>
+          <MenuItem key={`remove-${menuIndex}`} onClick={() => this.showDeleteModal(page.id)}>
+            {this.props.intl.messages['footer.deletePage']}
+          </MenuItem>
+        </ContextMenu>
       );
     });
+
     return (
-      <footer>
-        {pages}
-        <Button
-          className="page-tab page-tab-add"
-          title={this.props.intl.messages['footer.addPage']}
-          onClick={() => this.addPage()}
-        >
-          <i className="fa fa-plus" aria-hidden="true"> </i>
-        </Button>
+      <footer id="footer">
+        <div className="container">
+          {this.renderModal()}
+          {pages}
+          <AddPageMenu
+            addNormalPage={() => this.addPage('normal')}
+            addModalPage={() => this.addPage('modal')}
+          />
+          {contextMenus}
+        </div>
       </footer>
     );
   }
