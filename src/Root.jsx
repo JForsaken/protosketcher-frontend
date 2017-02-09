@@ -101,7 +101,7 @@ class Root extends Component {
         && login.lastAction === constants.FETCH_ME) {
       // if the login has no errors
       if (isEmpty(login.error)) {
-        this.props.actions.getPrototypes(login.user.id, storage.get('token'));
+        this.props.actions.getPrototypes(storage.get('token'));
       }
     }
   }

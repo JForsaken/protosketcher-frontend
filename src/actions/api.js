@@ -138,11 +138,11 @@ export function createUser(userCredentials) {
 
 
 /* --- Prototypes --- */
-export function getPrototypes(userId, token) {
+export function getPrototypes(token) {
   const date = new Date();
 
   return dispatch => {
-    fetch(`${BACKEND_API}/prototypes?user=${userId}`, {
+    fetch(`${BACKEND_API}/prototypes`, {
       method: 'get',
       headers: {
         Accept: 'application/json',
