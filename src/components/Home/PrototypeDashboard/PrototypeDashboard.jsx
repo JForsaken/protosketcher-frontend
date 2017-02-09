@@ -66,7 +66,10 @@ class PrototypeDashboard extends Component {
 
   createPrototype() {
     const { actions, application } = this.props;
-    actions.createPrototype({ name: this.state.prototypeName }, application.user.token);
+    actions.createPrototype({
+      name: this.state.prototypeName,
+      isMobile: this.state.mobileRadio === true,
+    }, application.user.token);
     this.setState({ showModal: false });
   }
 

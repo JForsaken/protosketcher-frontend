@@ -36,6 +36,7 @@
     "intl": "~1.0.1",
     "lodash": "^4.13.1",
     "lru-memoize": "^1.0.1",
+    "material-ui": "^0.16.7",
     "react": "^15.4.2",
     "react-addons-css-transition-group": "^15.4.2",
     "react-bootstrap": "^0.30.7",
@@ -47,6 +48,7 @@
     "redux": "^3.6.0",
     "redux-form": "^6.4.3",
     "redux-thunk": "~1.0.3",
+    "uuid": "^3.0.1",
     "whatwg-fetch": "~0.10.1"
   },
   "devDependencies": {
