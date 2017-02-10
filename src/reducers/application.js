@@ -99,6 +99,11 @@ const actionHandlers = {
     selectedPage: null,
     prototypes: {},
   }),
+
+  [constants.REDIRECT_DASHBOARD]: () => ({
+    selectedPrototype: null,
+    selectedPage: null,
+  }),
 };
 
 export default createReducer(initialState, actionHandlers);

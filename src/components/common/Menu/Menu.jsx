@@ -31,7 +31,7 @@ class Menu extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (isEqual(this.props.application.user, nextProps.application.user) &&
+    if (!isEqual(this.props.application.user, nextProps.application.user) &&
       nextProps.application.user == null) {
       this.props.router.push('/login');
     }
@@ -48,6 +48,10 @@ class Menu extends Component {
 
   logout() {
     this.props.actions.logout();
+  }
+
+  redirectToDashboard() {
+    this.props.actions.backToDashboard();
   }
 
   toggleNav() {
@@ -68,6 +72,7 @@ class Menu extends Component {
         text: <FormattedMessage id="menu.backToPrototypes" />,
         link: '/',
         icon: 'list-alt',
+        onClick: () => this.redirectToDashboard(),
       },
       {
         text: <FormattedMessage id="menu.save" />,

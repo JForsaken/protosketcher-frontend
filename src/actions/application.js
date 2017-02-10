@@ -24,3 +24,9 @@ export function logout() {
   remove('selectedPage');
   return { type: constants.LOGOUT };
 }
+
+export function backToDashboard() {
+  remove('selectedPrototype');
+  remove('selectedPage');
+  return { type: constants.REDIRECT_DASHBOARD };
+}
