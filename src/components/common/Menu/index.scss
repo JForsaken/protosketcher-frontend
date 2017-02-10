@@ -13,16 +13,17 @@
   &__spacer {
     margin-right: 10px;
     vertical-align: middle;
-    width: 40px;
+    width: 30px;
     height: 1px;
     display: inline-block;
   }
 
   &__title {
-    color: #BDBDBD !important;
-    text-decoration: none !important;
+    color: #BDBDBD;
+    text-decoration: none;
+    font-family: 'Permanent Marker';
 
-    :hover, :focus {
+    &:hover, :focus {
       color: white;
     }
   }
