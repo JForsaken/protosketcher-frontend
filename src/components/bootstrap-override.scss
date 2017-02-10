@@ -1,11 +1,16 @@
-.modal.in {
+.modal.in, .modal.fade, .modal {
   .modal-dialog {
     top: 50%;
     transform: translateY(-50%);
+    margin-top: 0;
 
     .modal-content {
       @include rounded-equal(3px);
       background-color: color('background', 'dark');
+
+      h4 {
+        text-align: center;
+      }
 
       .modal-header {
         background-color: color('accent');

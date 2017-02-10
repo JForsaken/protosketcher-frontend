@@ -37,6 +37,18 @@ const initialState = {
       'en',
       'fr',
     ],
+    workspace: {
+      currentPos: {
+        x: 0,
+        y: 0,
+      },
+      drawColor: '#000000',
+      menuHidden: true,
+      action: null,
+      actionValue: null,
+      selectedItems: null,
+      shapes: {}, // TODO Update with page/shape structure when done
+    },
   },
 };
 
@@ -89,7 +101,7 @@ class Root extends Component {
         && login.lastAction === constants.FETCH_ME) {
       // if the login has no errors
       if (isEmpty(login.error)) {
-        this.props.actions.getPrototypes(login.user.id, storage.get('token'));
+        this.props.actions.getPrototypes(storage.get('token'));
       }
     }
   }
