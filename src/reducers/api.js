@@ -39,14 +39,6 @@ const actionHandlers = {
       error: action.error,
     },
   }),
-  [constants.LOGOUT]: (state, action) => ({
-    login: {
-      user: action.user,
-      lastAction: action.type,
-      time: action.time,
-      error: action.error,
-    },
-  }),
   [constants.FETCH_ME]: (state, action) => ({
     login: {
       user: action.user,

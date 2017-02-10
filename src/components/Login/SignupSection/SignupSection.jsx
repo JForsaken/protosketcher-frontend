@@ -145,7 +145,7 @@ class SignupSection extends Component {
 
 export default reduxForm({
   form: 'signupForm',
-  destroyOnUnmount: false,
+  destroyOnUnmount: true,
 })(connect(
   ({ api, form }) => ({ api, form }),
   dispatch => ({

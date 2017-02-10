@@ -86,20 +86,6 @@ export function fetchMe(token) {
   };
 }
 
-export function logout() {
-  const date = new Date();
-
-  remove('token');
-
-  return dispatch => dispatch({
-    type: constants.LOGOUT,
-    user: {},
-    time: date.toUTCString(),
-    error: {},
-  });
-}
-
-
 /* --- Create User --- */
 export function createUser(userCredentials) {
   const date = new Date();

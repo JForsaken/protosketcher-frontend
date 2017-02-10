@@ -137,7 +137,7 @@ class LoginSection extends Component {
 
 export default reduxForm({
   form: 'loginForm',
-  destroyOnUnmount: false,
+  destroyOnUnmount: true,
 })(connect(
   ({ api, form }) => ({ api, form }),
   dispatch => ({

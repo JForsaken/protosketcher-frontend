@@ -3,7 +3,6 @@ import createReducer from '../utils/create-reducer';
 import { isEmpty, omit } from 'lodash';
 
 const initialState = {
-  token: null,
   locale: 'en',
   locales: [
     'en',
@@ -93,6 +92,13 @@ const actionHandlers = {
   }),
   [constants.GET_PROTOTYPES]: (state, action) => onGetPrototypes(state, action),
   [constants.CREATE_PROTOTYPE]: (state, action) => onCreatePrototype(state, action),
+
+  [constants.LOGOUT]: () => ({
+    user: null,
+    selectedPrototype: null,
+    selectedPage: null,
+    prototypes: {},
+  }),
 };
 
 export default createReducer(initialState, actionHandlers);

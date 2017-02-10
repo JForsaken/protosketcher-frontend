@@ -5,13 +5,14 @@ import { Nav, Navbar, NavItem } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import FontAwesome from 'react-fontawesome';
+import { isEqual } from 'lodash';
 
 /* Components */
 import MenuListItem from '../MenuListItem/MenuListItem';
 
 /* Actions */
 import * as applicationActions from '../../../actions/application';
-import * as apiActions from '../../../actions/api';
 
 
 @injectIntl
@@ -19,6 +20,7 @@ class Menu extends Component {
   static propTypes = {
     actions: PropTypes.object,
     application: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
   };
 
   constructor(props, context) {
@@ -26,6 +28,13 @@ class Menu extends Component {
     this.handleSwitchLocale = this.handleSwitchLocale.bind(this);
     this.toggleNav = this.toggleNav.bind(this);
     this.state = { expanded: false };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (isEqual(this.props.application.user, nextProps.application.user) &&
+      nextProps.application.user == null) {
+      this.props.router.push('/login');
+    }
   }
 
   handleSwitchLocale() {
@@ -39,7 +48,6 @@ class Menu extends Component {
 
   logout() {
     this.props.actions.logout();
-    this.props.router.push('/login');
   }
 
   toggleNav() {
@@ -59,13 +67,13 @@ class Menu extends Component {
       {
         text: <FormattedMessage id="menu.backToPrototypes" />,
         link: '/',
-        icon: 'fa fa-list-alt',
+        icon: 'list-alt',
       },
       {
         text: <FormattedMessage id="menu.save" />,
         link: '/',
         onClick: this.save,
-        icon: 'fa fa-floppy-o',
+        icon: 'floppy-o',
       },
     ];
 
@@ -102,7 +110,7 @@ class Menu extends Component {
               title={this.props.intl.messages['menu.logout']}
               onClick={() => this.logout()}
             >
-              <i className="fa fa-sign-out" />
+              <FontAwesome name="sign-out" />
             </NavItem>
           </Nav>
         </Navbar.Collapse>
@@ -116,7 +124,6 @@ export default connect(
   dispatch => ({
     actions: bindActionCreators({
       ...applicationActions,
-      ...apiActions,
     }, dispatch),
   })
 )(Menu);
