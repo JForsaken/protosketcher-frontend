@@ -1,12 +1,11 @@
 .brand {
 
   &__logo { 
-    background-image: url(http://placehold.it/32x32);
+    background: url(http://placehold.it/32x32) no-repeat;
     position: fixed;
     height: 32px;
     width: 32px;
     background-size: contain;
-    background-repeat: no-repeat;
     margin-top: -6px;
   }
 
@@ -21,7 +20,7 @@
   &__title {
     color: #BDBDBD;
     text-decoration: none;
-    font-family: 'Permanent Marker';
+    font-family: 'Permanent Marker', 'Roboto', 'Helvetica Light', sans-serif;
 
     &:hover, :focus {
       color: white;
