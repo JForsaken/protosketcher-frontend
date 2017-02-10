@@ -1,35 +1,51 @@
-.brand {
+nav.navbar {
 
-  &__logo { 
-    background: url(http://placehold.it/32x32) no-repeat;
-    position: fixed;
-    height: 32px;
-    width: 32px;
-    background-size: contain;
-    margin-top: -6px;
-  }
-
-  &__spacer {
-    margin-right: 10px;
-    vertical-align: middle;
-    width: 30px;
-    height: 1px;
-    display: inline-block;
-  }
-
-  &__title {
-    color: #BDBDBD;
-    text-decoration: none;
-    font-family: 'Permanent Marker', 'Roboto', 'Helvetica Light', sans-serif;
-
-    &:hover, :focus {
-      color: white;
-    }
-  }
-}
-
-.nav {
   a {
+    position: relative;
     cursor: pointer;
+    z-index: 3;
+  }
+
+  h2.centered {
+    position: absolute;
+    top: 13px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0;
+    margin: 0;
+    color: color('text', 'light');
+    font-family: 'Roboto', 'Helvetica Light', sans-serif;
+    font-size: 1.5em;
+    z-index: 2;
+  }
+
+  .brand {
+
+    &__logo {
+      background: url(http://placehold.it/32x32) no-repeat;
+      position: fixed;
+      height: 32px;
+      width: 32px;
+      background-size: contain;
+      margin-top: -6px;
+    }
+
+    &__spacer {
+      margin-right: 10px;
+      vertical-align: middle;
+      width: 30px;
+      height: 1px;
+      display: inline-block;
+    }
+
+    &__title {
+      color: #BDBDBD;
+      text-decoration: none;
+      font-family: 'Permanent Marker', 'Roboto', 'Helvetica Light', sans-serif;
+
+      &:hover, :focus {
+        color: white;
+      }
+    }
   }
 }

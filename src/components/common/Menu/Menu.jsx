@@ -97,6 +97,9 @@ class Menu extends Component {
                 />)
             }
           </Nav>
+          <h2 className="centered">
+            Prototype Name
+          </h2>
           <Nav pullRight>
             <NavItem onClick={this.handleSwitchLocale}>
               {locale.toUpperCase()}
