@@ -60,10 +60,6 @@ class Menu extends Component {
     });
   }
 
-  save() {
-    // TODO add api call to save
-  }
-
   render() {
     const { application: { locale } } = this.props;
     const { expanded } = this.state;
@@ -73,12 +69,6 @@ class Menu extends Component {
         link: '/',
         icon: 'list-alt',
         onClick: () => this.redirectToDashboard(),
-      },
-      {
-        text: <FormattedMessage id="menu.save" />,
-        link: '/',
-        onClick: this.save,
-        icon: 'floppy-o',
       },
     ];
 
