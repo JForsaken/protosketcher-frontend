@@ -55,6 +55,35 @@ function onCreatePrototype(state, action) {
   };
 }
 
+function onGetPages(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const prototype = state.prototypes[state.selectedPrototype];
+
+  const dict = action.pages.reduce((acc, current) => {
+    const copy = acc;
+    if (!prototype.pages || !prototype.pages[current.id]) {
+      copy[current.id] = omit(current, ['id']);
+    }
+    return copy;
+  }, {});
+
+  const currentPages = prototype.pages || {};
+
+  return {
+    prototypes: {
+      [state.selectedPrototype]: {
+        pages: {
+          ...currentPages,
+          ...dict,
+        },
+      },
+    },
+  };
+}
+
 const actionHandlers = {
   /* --- Locale switcher --- */
   [constants.LOCALE_SWITCHED]: (_, action) => ({ locale: action.payload }),
@@ -93,6 +122,7 @@ const actionHandlers = {
   }),
   [constants.GET_PROTOTYPES]: (state, action) => onGetPrototypes(state, action),
   [constants.CREATE_PROTOTYPE]: (state, action) => onCreatePrototype(state, action),
+  [constants.GET_PAGES]: (state, action) => onGetPages(state, action),
 };
 
 export default createReducer(initialState, actionHandlers);

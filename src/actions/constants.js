@@ -18,6 +18,9 @@ export const GET_PROTOTYPES = 'GET_PROTOTYPES';
 export const CREATE_PROTOTYPE = 'CREATE_PROTOTYPE';
 export const SELECT_PROTOTYPE = 'SELECT_PROTOTYPE';
 
+// Pages
+export const GET_PAGES = 'GET_PAGES';
+
 // API
 export const SAVE = 'SAVE';
 

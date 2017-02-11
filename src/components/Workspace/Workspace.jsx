@@ -6,12 +6,14 @@ import { bindActionCreators } from 'redux';
 import uuidV1 from 'uuid/v1';
 
 import * as constants from '../constants';
+import * as actions from '../../actions/constants';
 
 /* Components */
 import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
 
 /* Actions */
+import { getPages } from '../../actions/api';
 import { updateWorkspace } from '../../actions/application';
 
 /* Helpers */
@@ -45,9 +47,25 @@ class Workspace extends Component {
       isDrawing: false,
       currentPath: '',
       previousPoint: null,
+      currentPageId: null,
+      shapes: null,
+      texts: null,
     };
 
     this.touchTimer = 0;
+  }
+
+  componentWillReceiveProps(newProps) {
+    const { prototypes } = newProps.application;
+    if (!prototypes) return;
+    if (!prototypes[newProps.application.selectedPrototype].pages) {
+      newProps.actions.getPages(newProps.application.selectedPrototype,
+        newProps.application.user.token);
+    }
+    if (newProps.api.getPages.lastAction === actions.GET_PAGES) {
+      // Set first page as current
+      this.setState({ currentPage: Object.keys(prototypes)[0] });
+    }
   }
 
   onStartingEvent(e) {
@@ -201,9 +219,9 @@ class Workspace extends Component {
 
   createShape(point) {
     const uuid = uuidV1();
-    this.props.actions.updateWorkspace({
+    this.setState({
       shapes: {
-        ...this.props.application.workspace.shapes,
+        ...this.state.shapes,
         [uuid]: {
           path: this.state.currentPath += `L${point.x} ${point.y}`,
           color: this.props.application.workspace.drawColor,
@@ -238,43 +256,48 @@ class Workspace extends Component {
 
   render() {
     return (
-      <div
-        id="workspace"
-        className="workspace-container"
-        onMouseDown={this.onStartingEvent}
-        onMouseMove={this.onMovingEvent}
-        onMouseUp={this.onEndingEvent}
-        onMouseLeave={this.onEndingEvent}
-        onTouchStart={this.onStartingEvent}
-        onTouchMove={this.onMovingEvent}
-        onTouchEnd={this.onEndingEvent}
-        onContextMenu={this.onStartingEvent}
-      >
-        {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
-        <svg height="100%" width="100%">
-          {
-            Object.entries(this.props.application.workspace.shapes).map((item, i) =>
-              <Shape
-                {...item[1]}
-                key={i}
+      <div>
+        {this.state.currentPageId && this.state.shapes && this.state.texts &&
+          <div
+            id="workspace"
+            className="workspace-container"
+            onMouseDown={this.onStartingEvent}
+            onMouseMove={this.onMovingEvent}
+            onMouseUp={this.onEndingEvent}
+            onMouseLeave={this.onEndingEvent}
+            onTouchStart={this.onStartingEvent}
+            onTouchMove={this.onMovingEvent}
+            onTouchEnd={this.onEndingEvent}
+            onContextMenu={this.onStartingEvent}
+          >
+            {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
+            <svg height="100%" width="100%">
+              {
+                Object.entries(this.state.shapes).map((item, i) =>
+                  <Shape
+                    {...item[1]}
+                    key={i}
+                  />)
+              }
+              <path
+                className="workspace-line"
+                d={this.state.currentPath}
+                stroke={this.props.application.workspace.drawColor}
               />)
-          }
-          <path
-            className="workspace-line"
-            d={this.state.currentPath}
-            stroke={this.props.application.workspace.drawColor}
-          />)
-        </svg>
+            </svg>
+          </div>
+        }
       </div>
     );
   }
 }
 
 export default connect(
-  ({ application }) => ({ application }),
+  ({ application, api }) => ({ application, api }),
   dispatch => ({
     actions: bindActionCreators({
       updateWorkspace,
+      getPages,
     }, dispatch),
   })
 )(Workspace);

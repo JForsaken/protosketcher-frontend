@@ -47,7 +47,6 @@ const initialState = {
       action: null,
       actionValue: null,
       selectedItems: null,
-      shapes: {}, // TODO Update with page/shape structure when done
     },
   },
 };

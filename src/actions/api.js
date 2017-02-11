@@ -221,3 +221,46 @@ export function createPrototype(prototype, token) {
       });
   };
 }
+
+/* --- Pages --- */
+export function getPages(prototypeId, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages?attributes=name, id`, {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        // rename _id to id
+        data.body.forEach((d) => {
+          const cur = d;
+          cur.id = cur._id;
+          delete cur._id;
+        });
+
+        dispatch({
+          type: constants.GET_PAGES,
+          pages: data.body,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_PAGES,
+          pages: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}

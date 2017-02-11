@@ -26,6 +26,12 @@ const initialState = {
     time: null,
     error: {},
   },
+  getPages: {
+    pages: {},
+    lastAction: null,
+    time: null,
+    error: {},
+  },
 };
 
 const actionHandlers = {
@@ -78,6 +84,16 @@ const actionHandlers = {
   [constants.CREATE_PROTOTYPE]: (state, action) => ({
     createPrototype: {
       prototypes: action.prototype,
+      lastAction: action.type,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+
+  /* --- Pages --- */
+  [constants.GET_PAGES]: (state, action) => ({
+    getPages: {
+      pages: action.pages,
       lastAction: action.type,
       time: action.time,
       error: action.error,
