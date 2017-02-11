@@ -71,6 +71,8 @@ class Menu extends Component {
         onClick: () => this.redirectToDashboard(),
       },
     ];
+    const prototypeId = this.props.application.selectedPrototype;
+    const prototypeName = this.props.application.prototypes[prototypeId].name;
 
     return (
       <Navbar inverse fixedTop expanded={expanded} onToggle={this.toggleNav}>
@@ -98,7 +100,7 @@ class Menu extends Component {
             }
           </Nav>
           <h2 className="centered">
-            Prototype Name
+            {prototypeName}
           </h2>
           <Nav pullRight>
             <NavItem onClick={this.handleSwitchLocale}>
