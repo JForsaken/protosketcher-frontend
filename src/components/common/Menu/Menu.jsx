@@ -1,7 +1,7 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
-import { Nav, Navbar, NavItem } from 'react-bootstrap';
+import { Nav, Navbar, NavItem, FormGroup, FormControl, Modal, Button } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -13,6 +13,7 @@ import MenuListItem from '../MenuListItem/MenuListItem';
 
 /* Actions */
 import * as applicationActions from '../../../actions/application';
+import * as apiActions from '../../../actions/api';
 
 
 @injectIntl
@@ -27,7 +28,11 @@ class Menu extends Component {
     super(props, context);
     this.handleSwitchLocale = this.handleSwitchLocale.bind(this);
     this.toggleNav = this.toggleNav.bind(this);
-    this.state = { expanded: false };
+    this.state = {
+      expanded: false,
+      showRenameModal: false,
+      prototypeName: '',
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -35,6 +40,12 @@ class Menu extends Component {
       nextProps.application.user == null) {
       this.props.router.push('/login');
     }
+  }
+
+  onPrototypeNameChanged(e) {
+    this.setState({
+      prototypeName: e.target.value,
+    });
   }
 
   handleSwitchLocale() {
@@ -60,6 +71,61 @@ class Menu extends Component {
     });
   }
 
+  changePrototypeName() {
+    this.setState({ showRenameModal: true });
+  }
+
+  renamePrototype() {
+    this.props.actions.patchPrototype({
+      name: this.state.prototypeName,
+      id: this.props.application.selectedPrototype,
+    });
+    this.closeModal();
+  }
+
+  closeModal() {
+    this.setState({
+      showRenameModal: false,
+      prototypeName: '',
+    });
+  }
+
+  renderRenameModal() {
+    return (
+      <Modal
+        dialogClassName="add-modal"
+        show={this.state.showRenameModal}
+        onHide={() => this.closeModal()}
+      >
+        <form onSubmit={() => this.renamePage()}>
+          <Modal.Header closeButton>
+            <FontAwesome name="pencil-square" />
+          </Modal.Header>
+          <Modal.Body>
+            <FormGroup controlId="prototype-name">
+              <label><FormattedMessage id="menu.renamePrototype" /></label>
+              <FormControl
+                type="text"
+                onChange={(e) => this.onPrototypeNameChanged(e)}
+                placeholder={this.props.intl.messages['menu.newName']}
+              />
+            </FormGroup>
+            <hr />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              bsStyle="primary"
+              disabled={!this.state.prototypeName}
+              onClick={() => this.renamePrototype()}
+            >
+              <FormattedMessage id="save" />
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+    );
+  }
+
   render() {
     const { application: { locale } } = this.props;
     const { expanded } = this.state;
@@ -76,6 +142,7 @@ class Menu extends Component {
 
     return (
       <Navbar inverse fixedTop expanded={expanded} onToggle={this.toggleNav}>
+        {this.renderRenameModal()}
         <Navbar.Header>
           <Navbar.Brand>
             <Link className="brand__title" to="/">
@@ -99,7 +166,7 @@ class Menu extends Component {
                 />)
             }
           </Nav>
-          <h2 className="centered">
+          <h2 className="centered" onDoubleClick={() => this.changePrototypeName()}>
             {prototypeName}
           </h2>
           <Nav pullRight>
@@ -120,10 +187,11 @@ class Menu extends Component {
 }
 
 export default connect(
-  ({ application }) => ({ application }),
+  ({ api, application }) => ({ api, application }),
   dispatch => ({
     actions: bindActionCreators({
       ...applicationActions,
+      ...apiActions,
     }, dispatch),
   })
 )(Menu);

@@ -104,6 +104,15 @@ const actionHandlers = {
     selectedPrototype: null,
     selectedPage: null,
   }),
+
+  [constants.RENAME_PROTOTYPE]: (state, action) => {
+    const prototypeName = action.name;
+    const prototypes = state.prototypes;
+    prototypes[state.selectedPrototype].name = prototypeName;
+    return Object.assign({}, state, {
+      prototypes,
+    });
+  },
 };
 
 export default createReducer(initialState, actionHandlers);

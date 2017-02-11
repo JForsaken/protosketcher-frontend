@@ -38,6 +38,8 @@ export default {
   'menu.backToPrototypes': 'Retour aux prototypes',
   'menu.save': 'Sauvegarder',
   'menu.logout': 'Déconnexion',
+  'menu.renamePrototype': 'Renommer votre prototype',
+  'menu.newName': 'Nouveau nom de page',
 
   // HUD MENU
   'hud.saving': 'Enregistrement en cours...',

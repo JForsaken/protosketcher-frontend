@@ -41,6 +41,8 @@ export default {
   'menu.backToPrototypes': 'Back to prototypes',
   'menu.save': 'Save',
   'menu.logout': 'Logout',
+  'menu.renamePrototype': 'Rename your prototype',
+  'menu.newName': 'New prototype name',
 
   // LANGUAGE
   'language.switcher': 'Language',

@@ -207,3 +207,45 @@ export function createPrototype(prototype, token) {
       });
   };
 }
+
+export function patchPrototype(prototype, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototype.id}`, {
+      method: 'patch',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Access-Control-Request-Methods': 'GET,PUT,POST,PATCH,DELETE',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(prototype),
+    })
+      .then(processResponse)
+      .then((data) => {
+        const proto = data.body;
+        proto.id = proto._id;
+        delete proto._id;
+        delete proto.__v;
+
+        dispatch({
+          type: constants.RENAME_PROTOTYPE,
+          prototype: proto,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.RENAME_PROTOTYPE,
+          prototype: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
