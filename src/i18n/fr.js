@@ -40,6 +40,7 @@ export default {
   'menu.logout': 'Déconnexion',
   'menu.renamePrototype': 'Renommer votre prototype',
   'menu.newName': 'Nouveau nom de page',
+  'menu.dblClickRename': 'Double-clicker pour renommer',
 
   // HUD MENU
   'hud.saving': 'Enregistrement en cours...',

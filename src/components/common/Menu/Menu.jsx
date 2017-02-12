@@ -167,7 +167,11 @@ class Menu extends Component {
                 />)
             }
           </Nav>
-          <h2 className="centered" onDoubleClick={() => this.changePrototypeName()}>
+          <h2
+            className="centered"
+            onDoubleClick={() => this.changePrototypeName()}
+            title={this.props.intl.messages['menu.dblClickRename']}
+          >
             {prototypeName}
           </h2>
           <Nav pullRight>

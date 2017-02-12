@@ -43,6 +43,7 @@ export default {
   'menu.logout': 'Logout',
   'menu.renamePrototype': 'Rename your prototype',
   'menu.newName': 'New prototype name',
+  'menu.dblClickRename': 'Double-click to rename',
 
   // LANGUAGE
   'language.switcher': 'Language',
