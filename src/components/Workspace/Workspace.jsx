@@ -49,6 +49,7 @@ class Workspace extends Component {
       currentPath: '',
       previousPoint: null,
       pages: null,
+      currentPageId: null,
       shapes: null,
       texts: null,
     };
@@ -64,7 +65,22 @@ class Workspace extends Component {
 
     // If the selected page has changed, set the state to reflect the new page
     if (this.state.currentPageId !== newProps.application.selectedPage) {
-      this.setState({ currentPageId: newProps.application.selectedPage });
+      const { shapes, texts } = this.state.pages[newProps.application.selectedPage];
+      this.setState({
+        currentPageId: newProps.application.selectedPage,
+        shapes: shapes || null,
+        texts: texts || null,
+      });
+
+      // Get shapes and texts if they are not cached
+      if (!shapes) {
+        this.props.actions.getShapes(selectedPrototype, selectedPage,
+        newProps.application.user.token);
+      }
+      if (!texts) {
+        this.props.actions.getTexts(selectedPrototype, selectedPage,
+        newProps.application.user.token);
+      }
     }
 
     // If the selected prototype's pages are not cached, get them
@@ -80,21 +96,13 @@ class Workspace extends Component {
     }
 
     // If you just cached the shapes, copy them in the state
-    else if (newProps.api.lastAction === actions.GET_SHAPES) {
+    else if (newProps.api.lastAction === actions.GET_SHAPES && !this.state.shapes) {
       this.setState({ shapes: prototype.pages[selectedPage].shapes });
     }
 
     // If you just cached the texts, copy them in the state
-    else if (newProps.api.lastAction === actions.GET_TEXTS) {
+    else if (newProps.api.lastAction === actions.GET_TEXTS && !this.state.texts) {
       this.setState({ texts: prototype.pages[selectedPage].texts });
-    }
-
-    // If you have a selected page but its elements are not in cache, get them
-    else if (newProps.application.selectedPage && !this.state.shapes) {
-      this.props.actions.getShapes(selectedPrototype, selectedPage,
-        newProps.application.user.token);
-      this.props.actions.getTexts(selectedPrototype, selectedPage,
-        newProps.application.user.token);
     }
   }
 

@@ -13,8 +13,7 @@ import { isEmpty } from 'lodash';
 import AddPageMenu from './AddPageMenu';
 
 /* Actions */
-import { getPage } from '../../../actions/api';
-import { updateWorkspace } from '../../../actions/application';
+import { selectPage } from '../../../actions/application';
 
 @injectIntl
 
@@ -27,7 +26,7 @@ class Footer extends Component {
       showDeleteModal: false,
       showOnePageWarning: false,
       pageName: '',
-      pageModifiedIndex: -1,
+      pageModifiedId: '',
     };
 
     this.changePage = this.changePage.bind(this);
@@ -46,10 +45,10 @@ class Footer extends Component {
     if (pageName === '' || pageName === ' ') {
       pageName = ' - ';
     }
-    pages[this.state.pageModifiedIndex].name = pageName;
+    pages[this.state.pageModifiedId].name = pageName;
     this.setState({
       pages,
-      pageModifiedIndex: -1,
+      pageModifiedId: '',
       pageName: '',
       showRenameModal: false,
     });
@@ -59,29 +58,24 @@ class Footer extends Component {
     // TODO Delete page on backend
     const pages = this.state.pages.slice();
 
-    pages.splice(this.state.pageModifiedIndex, 1);
-    let activePage = this.state.activePage;
-    if (activePage === this.state.pageModifiedIndex) {
-      activePage = 0;
-    }
+    pages.splice(this.state.pageModifiedId, 1);
     this.setState({
       pages,
-      activePage,
       showDeleteModal: false,
-      pageModifiedIndex: -1,
+      pageModifiedId: '',
     });
   }
 
-  showRenameModal(index) {
+  showRenameModal(id) {
     this.setState({
       showRenameModal: true,
-      pageModifiedIndex: index,
+      pageModifiedId: id,
       pageName: '',
     });
   }
 
-  showDeleteModal(index) {
-    if (this.state.pages.length <= 1) {
+  showDeleteModal(id) {
+    if (Object.keys(this.props.pages).length <= 1) {
       this.setState({
         showOnePageWarningModal: true,
         showDeleteModal: false,
@@ -90,7 +84,7 @@ class Footer extends Component {
     }
     this.setState({
       showDeleteModal: true,
-      pageModifiedIndex: index,
+      pageModifiedId: id,
     });
   }
 
@@ -99,7 +93,7 @@ class Footer extends Component {
       showRenameModal: false,
       showDeleteModal: false,
       showOnePageWarningModal: false,
-      pageModifiedIndex: -1,
+      pageModifiedId: '',
     });
   }
 
@@ -113,7 +107,6 @@ class Footer extends Component {
     });
     this.setState({
       pages,
-      activePage: pages.length - 1,
       isAddPageMenuVisible: false,
     });
   }
@@ -122,6 +115,7 @@ class Footer extends Component {
     if (this.props.application.currentPage === id) {
       return;
     }
+    this.props.actions.selectPage(id);
   }
 
   renderRenameModal() {
@@ -288,8 +282,7 @@ export default connect(
   ({ application, api }) => ({ application, api }),
   dispatch => ({
     actions: bindActionCreators({
-      updateWorkspace,
-      getPage,
+      selectPage,
     }, dispatch),
   })
 )(Footer);

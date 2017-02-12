@@ -1,6 +1,6 @@
 import * as constants from '../actions/constants';
 import createReducer from '../utils/create-reducer';
-import { isEmpty, omit } from 'lodash';
+import { isEmpty, omit, merge } from 'lodash';
 
 const initialState = {
   token: null,
@@ -72,7 +72,7 @@ function onGetPages(state, action) {
 
   const currentPages = prototype.pages || {};
 
-  return {
+  merge(state, {
     prototypes: {
       [state.selectedPrototype]: {
         pages: {
@@ -81,7 +81,9 @@ function onGetPages(state, action) {
         },
       },
     },
-  };
+  });
+
+  return state;
 }
 
 function onGetShapes(state, action) {
@@ -101,7 +103,7 @@ function onGetShapes(state, action) {
 
   const currentShapes = page.shapes || {};
 
-  return {
+  merge(state, {
     prototypes: {
       [state.selectedPrototype]: {
         pages: {
@@ -114,7 +116,9 @@ function onGetShapes(state, action) {
         },
       },
     },
-  };
+  });
+
+  return state;
 }
 
 function onGetTexts(state, action) {
@@ -134,7 +138,7 @@ function onGetTexts(state, action) {
 
   const currentTexts = page.texts || {};
 
-  return {
+  merge(state, {
     prototypes: {
       [state.selectedPrototype]: {
         pages: {
@@ -147,7 +151,9 @@ function onGetTexts(state, action) {
         },
       },
     },
-  };
+  });
+
+  return state;
 }
 
 const actionHandlers = {
