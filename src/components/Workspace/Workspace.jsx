@@ -279,7 +279,6 @@ class Workspace extends Component {
   }
 
   render() {
-    console.log("--------------------", this.state);
     if (this.state.shapes && this.state.texts) {
       return (
         <div>
