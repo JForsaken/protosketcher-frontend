@@ -1,10 +1,16 @@
 footer#footer {
+  @include transition(transform .3s cubic-bezier(0.0, 0.0, 0.2, 1));
   background-color: color('foreground', 'dark');
   height: $footer-height;
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
+
+  &.footer-hidden {
+    opacity: 0;
+    transform: translateY($footer-height);
+  }
 
   .btn.page-tab {
     @include rounded-indiv(0px, 0px, 2px, 2px);

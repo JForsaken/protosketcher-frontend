@@ -8,6 +8,7 @@ import forEach from 'lodash/forEach';
 import classNames from 'classnames';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
+import { isEmpty } from 'lodash';
 
 // Components
 import AddPageMenu from './AddPageMenu';
@@ -279,9 +280,8 @@ class Footer extends Component {
         </ContextMenu>
       );
     });
-
     return (
-      <footer id="footer">
+      <footer id="footer" className={isEmpty(this.props.pages) ? 'footer-hidden' : ''}>
         <div className="container">
           {this.renderModal()}
           {pages}

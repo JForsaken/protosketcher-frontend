@@ -71,6 +71,7 @@ class Workspace extends Component {
     // If you just cached the pages, select the first one
     else if (newProps.api.lastAction === actions.GET_PAGES && !newProps.application.selectedPage) {
       this.props.actions.selectPage(Object.keys(prototype.pages)[0]);
+      this.setState({ pages: prototype.pages });
     }
 
     // If you just cached the shapes, copy them in the state
@@ -278,39 +279,36 @@ class Workspace extends Component {
     }
   }
 
-  render() {
+  renderWorkspace() {
     if (this.state.shapes && this.state.texts) {
       return (
-        <div>
-          <div
-            id="workspace"
-            className="workspace-container"
-            onMouseDown={this.onStartingEvent}
-            onMouseMove={this.onMovingEvent}
-            onMouseUp={this.onEndingEvent}
-            onMouseLeave={this.onEndingEvent}
-            onTouchStart={this.onStartingEvent}
-            onTouchMove={this.onMovingEvent}
-            onTouchEnd={this.onEndingEvent}
-            onContextMenu={this.onStartingEvent}
-          >
-            {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
-            <svg height="100%" width="100%">
-              {
-                Object.entries(this.state.shapes).map((item, i) =>
-                  <Shape
-                    {...item[1]}
-                    key={i}
-                  />)
-              }
-              <path
-                className="workspace-line"
-                d={this.state.currentPath}
-                stroke={this.props.application.workspace.drawColor}
-              />
-            </svg>
-          </div>
-          <Footer pages={this.state.pages} selectedPage={this.state.currentPageId} />
+        <div
+          id="workspace"
+          className="workspace-container"
+          onMouseDown={this.onStartingEvent}
+          onMouseMove={this.onMovingEvent}
+          onMouseUp={this.onEndingEvent}
+          onMouseLeave={this.onEndingEvent}
+          onTouchStart={this.onStartingEvent}
+          onTouchMove={this.onMovingEvent}
+          onTouchEnd={this.onEndingEvent}
+          onContextMenu={this.onStartingEvent}
+        >
+          {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
+          <svg height="100%" width="100%">
+            {
+              Object.entries(this.state.shapes).map((item, i) =>
+                <Shape
+                  {...item[1]}
+                  key={i}
+                />)
+            }
+            <path
+              className="workspace-line"
+              d={this.state.currentPath}
+              stroke={this.props.application.workspace.drawColor}
+            />
+          </svg>
         </div>
       );
     }
@@ -322,6 +320,15 @@ class Workspace extends Component {
           <span>Loading workspace</span>
           <div className="spinner" />
         </div>
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        {this.renderWorkspace()}
+        <Footer pages={this.state.pages || {}} selectedPage={this.state.currentPageId || ''} />
       </div>
     );
   }
