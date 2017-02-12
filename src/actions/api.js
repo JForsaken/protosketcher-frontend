@@ -13,7 +13,7 @@ export function login(loginAttempt) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/authenticate`, {
-      method: 'post',
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export function fetchMe(token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/users/me`, {
-      method: 'get',
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ export function createUser(userCredentials) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/users`, {
-      method: 'post',
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ export function getPrototypes(token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes`, {
-      method: 'get',
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -172,7 +172,7 @@ export function createPrototype(prototype, token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes`, {
-      method: 'post',
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ export function patchPrototype(prototype, token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototype.id}`, {
-      method: 'patch',
+      method: 'PATCH',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
