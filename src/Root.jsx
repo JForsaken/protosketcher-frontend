@@ -46,9 +46,10 @@ const initialState = {
       menuHidden: true,
       action: null,
       actionValue: null,
-      selectedPage: null,
       selectedItems: null,
     },
+    selectedPrototype: null,
+    selectedPage: null,
   },
 };
 

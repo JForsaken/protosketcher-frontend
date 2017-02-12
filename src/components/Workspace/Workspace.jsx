@@ -14,8 +14,8 @@ import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
 
 /* Actions */
-import { getPages } from '../../actions/api';
-import { updateWorkspace } from '../../actions/application';
+import { getPages, getShapes } from '../../actions/api';
+import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
 import { changeColor } from './helpers';
@@ -48,7 +48,6 @@ class Workspace extends Component {
       isDrawing: false,
       currentPath: '',
       previousPoint: null,
-      currentPageId: null,
       pages: null,
       shapes: null,
       texts: null,
@@ -58,18 +57,31 @@ class Workspace extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    const { prototypes } = newProps.application;
+    const { prototypes, selectedPrototype, selectedPage } = newProps.application;
     if (!prototypes) return;
-    if (!prototypes[newProps.application.selectedPrototype].pages) {
-      newProps.actions.getPages(newProps.application.selectedPrototype,
+
+    const prototype = prototypes[selectedPrototype];
+
+    // If the selected prototype's pages are not cached, get them
+    if (!prototype.pages) {
+      newProps.actions.getPages(selectedPrototype,
         newProps.application.user.token);
     }
-    if (newProps.api.getPages.lastAction === actions.GET_PAGES) {
-      const pageId = Object.keys(prototypes)[0];
-      // Set first page as current
-      this.setState({ pages: prototypes[pageId].pages,
-        currentPageId: pageId,
-      });
+
+    // If you just cached the pages, select the first one
+    else if (newProps.api.lastAction === actions.GET_PAGES && !newProps.application.selectedPage) {
+      this.props.actions.selectPage(Object.keys(prototype.pages)[0]);
+    }
+
+    // If you just cached the shapes, copy them in the state
+    else if (newProps.api.lastAction === actions.GET_SHAPES) {
+      this.setState({ shapes: prototype.pages[selectedPage].shapes });
+    }
+
+    // If you have a selected page but its elements are not in cache, get them
+    else if (newProps.application.selectedPage && !this.state.shapes) {
+      this.props.actions.getShapes(selectedPrototype, selectedPage,
+        newProps.application.user.token);
     }
   }
 
@@ -314,6 +326,8 @@ export default connect(
     actions: bindActionCreators({
       updateWorkspace,
       getPages,
+      selectPage,
+      getShapes,
     }, dispatch),
   })
 )(Workspace);

@@ -84,6 +84,39 @@ function onGetPages(state, action) {
   };
 }
 
+function onGetShapes(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const page = state.prototypes[state.selectedPrototype].pages[state.selectedPage];
+
+  const dict = action.shapes.reduce((acc, current) => {
+    const copy = acc;
+    if (!page.shapes || !page[current.id]) {
+      copy[current.id] = omit(current, ['id', 'pageId']);
+    }
+    return copy;
+  }, {});
+
+  const currentShapes = page.shapes || {};
+
+  return {
+    prototypes: {
+      [state.selectedPrototype]: {
+        pages: {
+          [state.selectedPage]: {
+            shapes: {
+              ...currentShapes,
+              ...dict,
+            },
+          },
+        },
+      },
+    },
+  };
+}
+
 const actionHandlers = {
   /* --- Locale switcher --- */
   [constants.LOCALE_SWITCHED]: (_, action) => ({ locale: action.payload }),
@@ -114,6 +147,9 @@ const actionHandlers = {
   [constants.SELECT_PROTOTYPE]: (state, action) => ({
     selectedPrototype: action.id,
   }),
+  [constants.SELECT_PAGE]: (state, action) => ({
+    selectedPage: action.id,
+  }),
   [constants.UPDATE_WORKSPACE]: (state, action) => ({
     workspace: {
       ...state.workspace,
@@ -123,6 +159,7 @@ const actionHandlers = {
   [constants.GET_PROTOTYPES]: (state, action) => onGetPrototypes(state, action),
   [constants.CREATE_PROTOTYPE]: (state, action) => onCreatePrototype(state, action),
   [constants.GET_PAGES]: (state, action) => onGetPages(state, action),
+  [constants.GET_SHAPES]: (state, action) => onGetShapes(state, action),
 };
 
 export default createReducer(initialState, actionHandlers);

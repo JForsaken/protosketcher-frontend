@@ -264,3 +264,47 @@ export function getPages(prototypeId, token) {
       });
   };
 }
+
+/* --- Shapes ---*/
+export function getShapes(prototypeId, pageId, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/shapes`, {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        // rename _id to id
+        data.body.forEach((d) => {
+          const cur = d;
+          cur.id = cur._id;
+          delete cur._id;
+          delete cur.__v;
+        });
+
+        dispatch({
+          type: constants.GET_SHAPES,
+          shapes: data.body,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_SHAPES,
+          shapes: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}

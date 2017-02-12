@@ -24,6 +24,12 @@ export const GET_PAGE_TYPES = 'GET_PAGE_TYPES';
 export const CREATE_PAGE = 'CREATE_PAGE';
 export const SELECT_PAGE = 'SELECT_PAGE';
 
+// Shapes
+export const GET_SHAPES = 'GET_SHAPES';
+export const GET_SHAPE_TYPES = 'GET_SHAPE_TYPES';
+export const CREATE_SHAPE = 'CREATE_SHAPE';
+export const SELECT_SHAPE = 'SELECT_SHAPE';
+
 // API
 export const SAVE = 'SAVE';
 
