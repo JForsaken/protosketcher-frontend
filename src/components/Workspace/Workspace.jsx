@@ -14,7 +14,7 @@ import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
 
 /* Actions */
-import { getPages, getShapes } from '../../actions/api';
+import { getPages, getShapes, getTexts } from '../../actions/api';
 import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
@@ -78,9 +78,16 @@ class Workspace extends Component {
       this.setState({ shapes: prototype.pages[selectedPage].shapes });
     }
 
+    // If you just cached the texts, copy them in the state
+    else if (newProps.api.lastAction === actions.GET_TEXTS) {
+      this.setState({ texts: prototype.pages[selectedPage].texts });
+    }
+
     // If you have a selected page but its elements are not in cache, get them
     else if (newProps.application.selectedPage && !this.state.shapes) {
       this.props.actions.getShapes(selectedPrototype, selectedPage,
+        newProps.application.user.token);
+      this.props.actions.getTexts(selectedPrototype, selectedPage,
         newProps.application.user.token);
     }
   }
@@ -272,7 +279,8 @@ class Workspace extends Component {
   }
 
   render() {
-    if (this.state.currentPageId && this.state.shapes && this.state.texts) {
+    console.log("--------------------", this.state);
+    if (this.state.shapes && this.state.texts) {
       return (
         <div>
           <div
@@ -328,6 +336,7 @@ export default connect(
       getPages,
       selectPage,
       getShapes,
+      getTexts,
     }, dispatch),
   })
 )(Workspace);

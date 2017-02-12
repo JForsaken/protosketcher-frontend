@@ -117,6 +117,39 @@ function onGetShapes(state, action) {
   };
 }
 
+function onGetTexts(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const page = state.prototypes[state.selectedPrototype].pages[state.selectedPage];
+
+  const dict = action.texts.reduce((acc, current) => {
+    const copy = acc;
+    if (!page.texts || !page[current.id]) {
+      copy[current.id] = omit(current, ['id', 'pageId']);
+    }
+    return copy;
+  }, {});
+
+  const currentTexts = page.texts || {};
+
+  return {
+    prototypes: {
+      [state.selectedPrototype]: {
+        pages: {
+          [state.selectedPage]: {
+            texts: {
+              ...currentTexts,
+              ...dict,
+            },
+          },
+        },
+      },
+    },
+  };
+}
+
 const actionHandlers = {
   /* --- Locale switcher --- */
   [constants.LOCALE_SWITCHED]: (_, action) => ({ locale: action.payload }),
@@ -160,6 +193,7 @@ const actionHandlers = {
   [constants.CREATE_PROTOTYPE]: (state, action) => onCreatePrototype(state, action),
   [constants.GET_PAGES]: (state, action) => onGetPages(state, action),
   [constants.GET_SHAPES]: (state, action) => onGetShapes(state, action),
+  [constants.GET_TEXTS]: (state, action) => onGetTexts(state, action),
 };
 
 export default createReducer(initialState, actionHandlers);

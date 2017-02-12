@@ -118,6 +118,18 @@ const actionHandlers = {
       error: action.error,
     },
   }),
+
+/* --- Texts ---*/
+  [constants.GET_TEXTS]: (state, action) => ({
+    lastAction: action.type,
+    getTexts: {
+      texts: action.texts,
+      lastAction: action.type,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+
 };
 
 export default createReducer(initialState, actionHandlers);

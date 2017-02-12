@@ -28,7 +28,11 @@ export const SELECT_PAGE = 'SELECT_PAGE';
 export const GET_SHAPES = 'GET_SHAPES';
 export const GET_SHAPE_TYPES = 'GET_SHAPE_TYPES';
 export const CREATE_SHAPE = 'CREATE_SHAPE';
-export const SELECT_SHAPE = 'SELECT_SHAPE';
+
+// Texts
+export const GET_TEXTS = 'GET_TEXTS';
+export const CREATE_TEXT = 'CREATE_TEXT';
+
 
 // API
 export const SAVE = 'SAVE';
