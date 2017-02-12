@@ -6,6 +6,28 @@
   top: $top-menu-height;
 }
 
+.backdrop {
+  background: color(background, backdrop);
+  bottom: 0;
+}
+
+.loading {
+  color: color(text, grey);
+  font-size: 24px;
+  font-weight: bold;
+  position: absolute;
+  text-align: center;
+  text-transform: uppercase;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+
+  .spinner {
+    margin-left: 16px;
+    top: 6px;
+  }
+}
+
 .workspace-line {
   fill: none;
   stroke-width: 3;

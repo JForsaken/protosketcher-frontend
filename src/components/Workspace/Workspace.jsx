@@ -9,6 +9,7 @@ import * as constants from '../constants';
 import * as actions from '../../actions/constants';
 
 /* Components */
+import Footer from '../common/Footer/Footer';
 import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
 
@@ -48,6 +49,7 @@ class Workspace extends Component {
       currentPath: '',
       previousPoint: null,
       currentPageId: null,
+      pages: null,
       shapes: null,
       texts: null,
     };
@@ -63,8 +65,11 @@ class Workspace extends Component {
         newProps.application.user.token);
     }
     if (newProps.api.getPages.lastAction === actions.GET_PAGES) {
+      const pageId = Object.keys(prototypes)[0];
       // Set first page as current
-      this.setState({ currentPage: Object.keys(prototypes)[0] });
+      this.setState({ pages: prototypes[pageId].pages,
+        currentPageId: pageId,
+      });
     }
   }
 
@@ -255,9 +260,9 @@ class Workspace extends Component {
   }
 
   render() {
-    return (
-      <div>
-        {this.state.currentPageId && this.state.shapes && this.state.texts &&
+    if (this.state.currentPageId && this.state.shapes && this.state.texts) {
+      return (
+        <div>
           <div
             id="workspace"
             className="workspace-container"
@@ -283,10 +288,21 @@ class Workspace extends Component {
                 className="workspace-line"
                 d={this.state.currentPath}
                 stroke={this.props.application.workspace.drawColor}
-              />)
+              />
             </svg>
           </div>
-        }
+          <Footer pages={this.state.pages} selectedPage={this.state.currentPageId} />
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <div className="workspace-container backdrop"></div>
+        <div className="loading">
+          <span>Loading workspace</span>
+          <div className="spinner" />
+        </div>
       </div>
     );
   }

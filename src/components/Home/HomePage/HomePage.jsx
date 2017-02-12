@@ -5,7 +5,6 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 /* Components */
 import Menu from '../../common/Menu/Menu';
-import Footer from '../../common/Footer/Footer';
 import PrototypeDashboard from '../PrototypeDashboard/PrototypeDashboard';
 import Workspace from '../../Workspace/Workspace';
 
@@ -26,7 +25,6 @@ class HomePage extends Component {
           <div className="page-container" key="homepage-anim">
             <Menu />
             <Workspace />
-            <Footer />
           </div> :
           <div key="dashboard-anim">
             <PrototypeDashboard />

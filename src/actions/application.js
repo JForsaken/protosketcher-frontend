@@ -14,6 +14,10 @@ export function selectPrototype(id) {
   return { type: constants.SELECT_PROTOTYPE, id };
 }
 
+export function selectPage(id) {
+  return { type: constants.SELECT_PAGE, id };
+}
+
 export function updateWorkspace(data) {
   return { type: constants.UPDATE_WORKSPACE, data };
 }

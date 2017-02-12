@@ -1,5 +1,7 @@
 /* Node modules */
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { FormGroup, FormControl, Modal, Button } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import forEach from 'lodash/forEach';
@@ -10,29 +12,25 @@ import FontAwesome from 'react-fontawesome';
 // Components
 import AddPageMenu from './AddPageMenu';
 
+/* Actions */
+import { getPage } from '../../../actions/api';
+import { updateWorkspace } from '../../../actions/application';
+
 @injectIntl
 
-export default class Footer extends Component {
+class Footer extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.state = {
-      pages: [{
-        id: 0,
-        name: 'Page 1',
-        type: 'normal',
-      }, {
-        id: 1,
-        name: 'Page 2',
-        type: 'modal',
-      }],
-      activePage: 0,
       showRenameModal: false,
       showDeleteModal: false,
       showOnePageWarning: false,
       pageName: '',
       pageModifiedIndex: -1,
     };
+
+    this.changePage = this.changePage.bind(this);
   }
 
   onPageNameChanged(e) {
@@ -42,6 +40,7 @@ export default class Footer extends Component {
   }
 
   renamePage() {
+    // TODO Patch page on backend
     const pages = this.state.pages.slice();
     let pageName = this.state.pageName;
     if (pageName === '' || pageName === ' ') {
@@ -57,6 +56,7 @@ export default class Footer extends Component {
   }
 
   removePage() {
+    // TODO Delete page on backend
     const pages = this.state.pages.slice();
 
     pages.splice(this.state.pageModifiedIndex, 1);
@@ -104,6 +104,7 @@ export default class Footer extends Component {
   }
 
   addPage(type) {
+    // TODO add page on backend
     const pages = this.state.pages;
     pages.push({
       id: pages.length,
@@ -117,11 +118,10 @@ export default class Footer extends Component {
     });
   }
 
-  changePage(index) {
-    if (this.state.activePage === index) {
+  changePage(id) {
+    if (this.props.application.currentPage === id) {
       return;
     }
-    this.setState({ activePage: index });
   }
 
   renderRenameModal() {
@@ -295,3 +295,13 @@ export default class Footer extends Component {
     );
   }
 }
+
+export default connect(
+  ({ application, api }) => ({ application, api }),
+  dispatch => ({
+    actions: bindActionCreators({
+      updateWorkspace,
+      getPage,
+    }, dispatch),
+  })
+)(Footer);

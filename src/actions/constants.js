@@ -20,6 +20,9 @@ export const SELECT_PROTOTYPE = 'SELECT_PROTOTYPE';
 
 // Pages
 export const GET_PAGES = 'GET_PAGES';
+export const GET_PAGE_TYPES = 'GET_PAGE_TYPES';
+export const CREATE_PAGE = 'CREATE_PAGE';
+export const SELECT_PAGE = 'SELECT_PAGE';
 
 // API
 export const SAVE = 'SAVE';
