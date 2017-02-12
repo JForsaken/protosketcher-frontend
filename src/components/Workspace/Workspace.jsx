@@ -62,6 +62,11 @@ class Workspace extends Component {
 
     const prototype = prototypes[selectedPrototype];
 
+    // If the selected page has changed, set the state to reflect the new page
+    if (this.state.currentPageId !== newProps.application.selectedPage) {
+      this.setState({ currentPageId: newProps.application.selectedPage });
+    }
+
     // If the selected prototype's pages are not cached, get them
     if (!prototype.pages) {
       newProps.actions.getPages(selectedPrototype,

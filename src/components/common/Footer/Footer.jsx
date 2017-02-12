@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { FormGroup, FormControl, Modal, Button } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import forEach from 'lodash/forEach';
 import classNames from 'classnames';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
@@ -237,59 +236,48 @@ class Footer extends Component {
   }
 
   render() {
-    const pages = [];
-    const contextMenus = [];
-    let pageIndex;
-    let menuIndex;
+    const pages = this.props.pages;
     const icons = {
       modal: <FontAwesome name="window-maximize" />,
       normal: <FontAwesome name="desktop" />,
     };
 
-    // Add components for each page
-    forEach(this.state.pages, (page) => {
-      pageIndex = `page-${page.id}`;
-      menuIndex = `menu-${page.id}`;
-      const className = classNames({
-        'page-tab': true,
-        'page-tab--active': this.state.activePage === page.id,
-      });
-
-      pages.push(
-        <ContextMenuTrigger id={pageIndex} key={`trigger${page.id}`}>
-          <Button
-            key={pageIndex}
-            className={className}
-            onDoubleClick={() => this.showRenameModal(page.id)}
-            onClick={() => this.changePage(page.id)}
-          >
-            {page.name}
-            {icons[page.type]}
-          </Button>
-        </ContextMenuTrigger>
-      );
-
-      contextMenus.push(
-        <ContextMenu key={menuIndex} id={pageIndex}>
-          <MenuItem key={`rename${menuIndex}`} onClick={() => this.showRenameModal(page.id)}>
-            {this.props.intl.messages['footer.renamePage']}
-          </MenuItem>
-          <MenuItem key={`remove-${menuIndex}`} onClick={() => this.showDeleteModal(page.id)}>
-            {this.props.intl.messages['footer.deletePage']}
-          </MenuItem>
-        </ContextMenu>
-      );
-    });
     return (
-      <footer id="footer" className={isEmpty(this.props.pages) ? 'footer-hidden' : ''}>
+      <footer id="footer" className={isEmpty(pages) ? 'footer-hidden' : ''}>
         <div className="container">
           {this.renderModal()}
-          {pages}
+          {
+            Object.keys(pages).map((key, index) =>
+              <div key={index}>
+                <ContextMenuTrigger id={`page-${key}`} key={`trigger${key}`}>
+                  <Button
+                    key={`page-${key}`}
+                    className={classNames({
+                      'page-tab': true,
+                      'page-tab--active': this.props.selectedPage === key,
+                    })}
+                    onDoubleClick={() => this.showRenameModal(key)}
+                    onClick={() => this.changePage(key)}
+                  >
+                    {pages[key].name}
+                    {icons[pages[key].type]}
+                  </Button>
+                </ContextMenuTrigger>
+
+                <ContextMenu key={`menu-${key}`} id={`page-${key}`}>
+                  <MenuItem key={`rename-${key}`} onClick={() => this.showRenameModal(key)}>
+                    {this.props.intl.messages['footer.renamePage']}
+                  </MenuItem>
+                  <MenuItem key={`remove-${key}`} onClick={() => this.showDeleteModal(key)}>
+                    {this.props.intl.messages['footer.deletePage']}
+                  </MenuItem>
+                </ContextMenu>
+              </div>)
+          }
           <AddPageMenu
             addNormalPage={() => this.addPage('normal')}
             addModalPage={() => this.addPage('modal')}
           />
-          {contextMenus}
         </div>
       </footer>
     );
