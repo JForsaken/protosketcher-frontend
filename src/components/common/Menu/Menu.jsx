@@ -138,7 +138,11 @@ class Menu extends Component {
         onClick: () => this.redirectToDashboard(),
       },
     ];
+
     const prototypeId = this.props.application.selectedPrototype;
+    if (!prototypeId) {
+      return false;
+    }
     const prototypeName = this.props.application.prototypes[prototypeId].name;
 
     return (
