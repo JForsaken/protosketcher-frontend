@@ -106,7 +106,7 @@ const actionHandlers = {
   }),
 
   [constants.RENAME_PROTOTYPE]: (state, action) => {
-    const prototypeName = action.name;
+    const prototypeName = action.prototype.name;
     const prototypes = state.prototypes;
     prototypes[state.selectedPrototype].name = prototypeName;
     return Object.assign({}, state, {

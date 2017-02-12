@@ -36,6 +36,7 @@ class Menu extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // LOGOUT
     if (!isEqual(this.props.application.user, nextProps.application.user) &&
       nextProps.application.user == null) {
       this.props.router.push('/login');
@@ -79,7 +80,7 @@ class Menu extends Component {
     this.props.actions.patchPrototype({
       name: this.state.prototypeName,
       id: this.props.application.selectedPrototype,
-    });
+    }, this.props.application.user.token);
     this.closeModal();
   }
 
