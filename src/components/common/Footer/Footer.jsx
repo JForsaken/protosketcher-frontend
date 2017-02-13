@@ -13,7 +13,7 @@ import { isEmpty } from 'lodash';
 import AddPageMenu from './AddPageMenu';
 
 /* Actions */
-import { createPage, patchPage } from '../../../actions/api';
+import { createPage, patchPage, deletePage } from '../../../actions/api';
 import { selectPage } from '../../../actions/application';
 
 @injectIntl
@@ -61,10 +61,9 @@ class Footer extends Component {
   }
 
   removePage() {
-    // TODO Delete page on backend
-    const pages = this.state.pages.slice();
+    this.props.actions.deletePage(this.props.application.selectedPrototype,
+      this.state.pageModifiedId, this.props.application.user.token);
 
-    pages.splice(this.state.pageModifiedId, 1);
     this.setState({
       showDeleteModal: false,
       pageModifiedId: '',
@@ -290,6 +289,7 @@ export default connect(
       selectPage,
       createPage,
       patchPage,
+      deletePage,
     }, dispatch),
   })
 )(Footer);

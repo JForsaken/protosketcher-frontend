@@ -23,6 +23,7 @@ export const GET_PAGES = 'GET_PAGES';
 export const GET_PAGE_TYPES = 'GET_PAGE_TYPES';
 export const CREATE_PAGE = 'CREATE_PAGE';
 export const PATCH_PAGE = 'PATCH_PAGE';
+export const DELETE_PAGE = 'DELETE_PAGE';
 export const SELECT_PAGE = 'SELECT_PAGE';
 
 // Shapes

@@ -143,7 +143,7 @@ export function getPrototypes(token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes?attributes=name,isMobile`, {
-      method: 'get',
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ export function createPrototype(prototype, token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes`, {
-      method: 'post',
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -228,7 +228,7 @@ export function getPages(prototypeId, token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages?attributes=name,pageTypeId`, {
-      method: 'get',
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -270,7 +270,7 @@ export function getPageTypes(token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/pagetypes?attributes=type`, {
-      method: 'get',
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -312,7 +312,7 @@ export function createPage(prototypeId, page, token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages?attributes=name,pageTypeId`, {
-      method: 'post',
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -389,13 +389,53 @@ export function patchPage(prototypeId, pageId, page, token) {
   };
 }
 
+export function deletePage(prototypeId, pageId, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then((data) => {
+        const el = data.body;
+        el.id = el._id;
+        delete el._id;
+        delete el.__v;
+
+        dispatch({
+          type: constants.DELETE_PAGE,
+          page: el,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.DELETE_PAGE,
+          page: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
 /* --- Shapes ---*/
 export function getShapes(prototypeId, pageId, token) {
   const date = new Date();
 
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/shapes`, {
-      method: 'get',
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -439,7 +479,7 @@ export function getTexts(prototypeId, pageId, token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/texts`, {
-      method: 'get',
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

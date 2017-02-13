@@ -116,6 +116,17 @@ function onPatchPage(state, action) {
   return state;
 }
 
+function onDeletePage(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const data = state;
+  delete data.prototypes[state.selectedPrototype].pages[action.page.id];
+
+  return data;
+}
+
 function onGetShapes(state, action) {
   if (!isEmpty(action.error)) {
     return { ...state };
@@ -224,6 +235,7 @@ const actionHandlers = {
   [constants.GET_PAGES]: (state, action) => onGetPages(state, action),
   [constants.CREATE_PAGE]: (state, action) => onCreatePage(state, action),
   [constants.PATCH_PAGE]: (state, action) => onPatchPage(state, action),
+  [constants.DELETE_PAGE]: (state, action) => onDeletePage(state, action),
   [constants.GET_SHAPES]: (state, action) => onGetShapes(state, action),
   [constants.GET_TEXTS]: (state, action) => onGetTexts(state, action),
 };
