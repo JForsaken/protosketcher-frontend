@@ -348,6 +348,47 @@ export function createPage(prototypeId, page, token) {
   };
 }
 
+export function patchPage(prototypeId, pageId, page, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}?attributes=name,pageTypeId`, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(page),
+    })
+      .then(processResponse)
+      .then((data) => {
+        const el = data.body;
+        el.id = el._id;
+        delete el._id;
+        delete el.__v;
+
+        dispatch({
+          type: constants.PATCH_PAGE,
+          page: el,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.PATCH_PAGE,
+          page: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
 /* --- Shapes ---*/
 export function getShapes(prototypeId, pageId, token) {
   const date = new Date();

@@ -13,7 +13,7 @@ import { isEmpty } from 'lodash';
 import AddPageMenu from './AddPageMenu';
 
 /* Actions */
-import { createPage } from '../../../actions/api';
+import { createPage, patchPage } from '../../../actions/api';
 import { selectPage } from '../../../actions/application';
 
 @injectIntl
@@ -32,6 +32,7 @@ class Footer extends Component {
 
     this.changePage = this.changePage.bind(this);
     this.addPage = this.addPage.bind(this);
+    this.renamePage = this.renamePage.bind(this);
   }
 
   onPageNameChanged(e) {
@@ -41,15 +42,18 @@ class Footer extends Component {
   }
 
   renamePage() {
-    // TODO Patch page on backend
-    const pages = this.state.pages.slice();
     let pageName = this.state.pageName;
     if (pageName === '' || pageName === ' ') {
       pageName = ' - ';
     }
-    pages[this.state.pageModifiedId].name = pageName;
+
+    this.props.actions.patchPage(this.props.application.selectedPrototype,
+      this.state.pageModifiedId,
+      {
+        name: pageName,
+      }, this.props.application.user.token);
+
     this.setState({
-      pages,
       pageModifiedId: '',
       pageName: '',
       showRenameModal: false,
@@ -62,7 +66,6 @@ class Footer extends Component {
 
     pages.splice(this.state.pageModifiedId, 1);
     this.setState({
-      pages,
       showDeleteModal: false,
       pageModifiedId: '',
     });
@@ -286,6 +289,7 @@ export default connect(
     actions: bindActionCreators({
       selectPage,
       createPage,
+      patchPage,
     }, dispatch),
   })
 )(Footer);

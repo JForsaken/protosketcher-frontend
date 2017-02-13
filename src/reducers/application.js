@@ -98,6 +98,24 @@ function onCreatePage(state, action) {
   return state;
 }
 
+function onPatchPage(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  merge(state, {
+    prototypes: {
+      [state.selectedPrototype]: {
+        pages: {
+          [action.page.id]: omit(action.page, ['id']),
+        },
+      },
+    },
+  });
+
+  return state;
+}
+
 function onGetShapes(state, action) {
   if (!isEmpty(action.error)) {
     return { ...state };
@@ -205,6 +223,7 @@ const actionHandlers = {
   [constants.CREATE_PROTOTYPE]: (state, action) => onCreatePrototype(state, action),
   [constants.GET_PAGES]: (state, action) => onGetPages(state, action),
   [constants.CREATE_PAGE]: (state, action) => onCreatePage(state, action),
+  [constants.PATCH_PAGE]: (state, action) => onPatchPage(state, action),
   [constants.GET_SHAPES]: (state, action) => onGetShapes(state, action),
   [constants.GET_TEXTS]: (state, action) => onGetTexts(state, action),
 };
