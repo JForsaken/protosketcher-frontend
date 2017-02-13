@@ -1,14 +1,27 @@
 .workspace-container {
-  bottom: $footer-height;
+  bottom: 0;
   left: 0;
+  overflow: hidden;
   position: absolute;
   right: 0;
   top: $top-menu-height;
 }
 
+#workspace {
+  bottom: $footer-height;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
 .backdrop {
   background: color(background, backdrop);
   bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
 }
 
 .loading {

@@ -14,7 +14,7 @@ import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
 
 /* Actions */
-import { getPages, getShapes, getTexts } from '../../actions/api';
+import { getPages, getPageTypes, getShapes, getTexts } from '../../actions/api';
 import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
@@ -55,6 +55,7 @@ class Workspace extends Component {
     };
 
     this.touchTimer = 0;
+    this.componentWillReceiveProps(this.props);
   }
 
   componentWillReceiveProps(newProps) {
@@ -83,8 +84,13 @@ class Workspace extends Component {
       }
     }
 
+    // If the page types are not cached, get them
+    if (!newProps.api.getPageTypes) {
+      this.props.actions.getPageTypes(newProps.application.user.token);
+    }
+
     // If the selected prototype's pages are not cached, get them
-    if (!prototype.pages) {
+    else if (!prototype.pages) {
       newProps.actions.getPages(selectedPrototype,
         newProps.application.user.token);
     }
@@ -297,7 +303,6 @@ class Workspace extends Component {
       return (
         <div
           id="workspace"
-          className="workspace-container"
           onMouseDown={this.onStartingEvent}
           onMouseMove={this.onMovingEvent}
           onMouseUp={this.onEndingEvent}
@@ -328,7 +333,7 @@ class Workspace extends Component {
 
     return (
       <div>
-        <div className="workspace-container backdrop"></div>
+        <div className="backdrop"></div>
         <div className="loading">
           <span>Loading workspace</span>
           <div className="spinner" />
@@ -339,7 +344,7 @@ class Workspace extends Component {
 
   render() {
     return (
-      <div>
+      <div className="workspace-container">
         {this.renderWorkspace()}
         <Footer pages={this.state.pages || {}} selectedPage={this.state.currentPageId || ''} />
       </div>
@@ -353,6 +358,7 @@ export default connect(
     actions: bindActionCreators({
       updateWorkspace,
       getPages,
+      getPageTypes,
       selectPage,
       getShapes,
       getTexts,

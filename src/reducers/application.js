@@ -29,14 +29,13 @@ function onGetPrototypes(state, action) {
     return copy;
   }, {});
 
-  const currentPrototypes = state.prototypes || {};
-
-  return {
+  merge(state, {
     prototypes: {
-      ...currentPrototypes,
       ...dict,
     },
-  };
+  });
+
+  return state;
 }
 
 function onCreatePrototype(state, action) {
@@ -44,15 +43,13 @@ function onCreatePrototype(state, action) {
     return { ...state };
   }
 
-  const newProto = {};
-  newProto[action.prototype.id] = omit(action.prototype, ['user', 'id']);
-
-  return {
+  merge(state, {
     prototypes: {
-      ...state.prototypes,
-      ...newProto,
+      [action.prototype.id]: omit(action.prototype, ['user', 'id']),
     },
-  };
+  });
+
+  return state;
 }
 
 function onGetPages(state, action) {
@@ -70,14 +67,29 @@ function onGetPages(state, action) {
     return copy;
   }, {});
 
-  const currentPages = prototype.pages || {};
+  merge(state, {
+    prototypes: {
+      [state.selectedPrototype]: {
+        pages: {
+          ...dict,
+        },
+      },
+    },
+  });
+
+  return state;
+}
+
+function onCreatePage(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
 
   merge(state, {
     prototypes: {
       [state.selectedPrototype]: {
         pages: {
-          ...currentPages,
-          ...dict,
+          [action.page.id]: omit(action.page, ['id']),
         },
       },
     },
@@ -101,15 +113,12 @@ function onGetShapes(state, action) {
     return copy;
   }, {});
 
-  const currentShapes = page.shapes || {};
-
   merge(state, {
     prototypes: {
       [state.selectedPrototype]: {
         pages: {
           [state.selectedPage]: {
             shapes: {
-              ...currentShapes,
               ...dict,
             },
           },
@@ -136,15 +145,12 @@ function onGetTexts(state, action) {
     return copy;
   }, {});
 
-  const currentTexts = page.texts || {};
-
   merge(state, {
     prototypes: {
       [state.selectedPrototype]: {
         pages: {
           [state.selectedPage]: {
             texts: {
-              ...currentTexts,
               ...dict,
             },
           },
@@ -198,6 +204,7 @@ const actionHandlers = {
   [constants.GET_PROTOTYPES]: (state, action) => onGetPrototypes(state, action),
   [constants.CREATE_PROTOTYPE]: (state, action) => onCreatePrototype(state, action),
   [constants.GET_PAGES]: (state, action) => onGetPages(state, action),
+  [constants.CREATE_PAGE]: (state, action) => onCreatePage(state, action),
   [constants.GET_SHAPES]: (state, action) => onGetShapes(state, action),
   [constants.GET_TEXTS]: (state, action) => onGetTexts(state, action),
 };

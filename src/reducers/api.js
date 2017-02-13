@@ -107,6 +107,27 @@ const actionHandlers = {
       error: action.error,
     },
   }),
+  [constants.GET_PAGE_TYPES]: (state, action) => ({
+    lastAction: action.type,
+    getPageTypes: {
+      pageTypes: action.pageTypes.reduce((acc, curr) => ({
+        ...acc,
+        [curr.type]: curr.id,
+      }), {}),
+      lastAction: action.type,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.CREATE_PAGE]: (state, action) => ({
+    lastAction: action.type,
+    createPage: {
+      page: action.page,
+      lastAction: action.type,
+      time: action.time,
+      error: action.error,
+    },
+  }),
 
 /* --- Shapes ---*/
   [constants.GET_SHAPES]: (state, action) => ({

@@ -13,6 +13,7 @@ import { isEmpty } from 'lodash';
 import AddPageMenu from './AddPageMenu';
 
 /* Actions */
+import { createPage } from '../../../actions/api';
 import { selectPage } from '../../../actions/application';
 
 @injectIntl
@@ -98,15 +99,13 @@ class Footer extends Component {
   }
 
   addPage(type) {
-    // TODO add page on backend
-    const pages = this.state.pages;
-    pages.push({
-      id: pages.length,
-      name: this.props.intl.messages['footer.newPage'],
-      type,
-    });
+    this.actions.createPage(this.props.application.selectedPrototype,
+      {
+        name: this.props.intl.messages['footer.newPage'],
+        type,
+      }, this.props.application.user.token);
+
     this.setState({
-      pages,
       isAddPageMenuVisible: false,
     });
   }
@@ -231,10 +230,12 @@ class Footer extends Component {
 
   render() {
     const pages = this.props.pages;
-    const icons = {
-      modal: <FontAwesome name="window-maximize" />,
-      normal: <FontAwesome name="desktop" />,
-    };
+    const { pageTypes } = this.props.api.getPageTypes || {};
+
+    const icons = pageTypes ? {
+      [pageTypes.modal]: <FontAwesome name="window-maximize" />,
+      [pageTypes.page]: <FontAwesome name="desktop" />,
+    } : {};
 
     return (
       <footer id="footer" className={isEmpty(pages) ? 'footer-hidden' : ''}>
@@ -254,7 +255,7 @@ class Footer extends Component {
                     onClick={() => this.changePage(key)}
                   >
                     {pages[key].name}
-                    {icons[pages[key].type]}
+                    {icons[pages[key].pageTypeId]}
                   </Button>
                 </ContextMenuTrigger>
 
@@ -283,6 +284,7 @@ export default connect(
   dispatch => ({
     actions: bindActionCreators({
       selectPage,
+      createPage,
     }, dispatch),
   })
 )(Footer);
