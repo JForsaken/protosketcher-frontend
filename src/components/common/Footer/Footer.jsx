@@ -31,6 +31,7 @@ class Footer extends Component {
     };
 
     this.changePage = this.changePage.bind(this);
+    this.addPage = this.addPage.bind(this);
   }
 
   onPageNameChanged(e) {
@@ -99,10 +100,10 @@ class Footer extends Component {
   }
 
   addPage(type) {
-    this.actions.createPage(this.props.application.selectedPrototype,
+    this.props.actions.createPage(this.props.application.selectedPrototype,
       {
         name: this.props.intl.messages['footer.newPage'],
-        type,
+        pageTypeId: this.props.api.getPageTypes.pageTypes[type],
       }, this.props.application.user.token);
 
     this.setState({
@@ -270,7 +271,7 @@ class Footer extends Component {
               </div>)
           }
           <AddPageMenu
-            addNormalPage={() => this.addPage('normal')}
+            addNormalPage={() => this.addPage('page')}
             addModalPage={() => this.addPage('modal')}
           />
         </div>
