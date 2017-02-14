@@ -16,7 +16,7 @@ class PrototypeDashboard extends Component {
     super(props);
 
     this.state = {
-      prototypes: [],
+      prototypes: map(props.application.prototypes, ((o, k) => ({ id: k, name: o.name }))),
       showModal: false,
       desktopRadio: true,
       mobileRadio: false,

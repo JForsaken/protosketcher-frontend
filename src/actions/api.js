@@ -13,7 +13,7 @@ export function login(loginAttempt) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/authenticate`, {
-      method: 'post',
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export function fetchMe(token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/users/me`, {
-      method: 'get',
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -86,27 +86,13 @@ export function fetchMe(token) {
   };
 }
 
-export function logout() {
-  const date = new Date();
-
-  remove('token');
-
-  return dispatch => dispatch({
-    type: constants.LOGOUT,
-    user: {},
-    time: date.toUTCString(),
-    error: {},
-  });
-}
-
-
 /* --- Create User --- */
 export function createUser(userCredentials) {
   const date = new Date();
 
   return dispatch => {
     fetch(`${BACKEND_API}/users`, {
-      method: 'post',
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -198,6 +184,47 @@ export function createPrototype(prototype, token) {
       .catch((data) => {
         dispatch({
           type: constants.CREATE_PROTOTYPE,
+          prototype: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+export function patchPrototype(prototype, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototype.id}`, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(prototype),
+    })
+      .then(processResponse)
+      .then((data) => {
+        const proto = data.body;
+        proto.id = proto._id;
+        delete proto._id;
+        delete proto.__v;
+
+        dispatch({
+          type: constants.RENAME_PROTOTYPE,
+          prototype: proto,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.RENAME_PROTOTYPE,
           prototype: {},
           time: date.toUTCString(),
           error: {

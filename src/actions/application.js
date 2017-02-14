@@ -1,5 +1,5 @@
 import * as constants from './constants';
-import { put } from '../persistence/storage';
+import { put, remove } from '../persistence/storage';
 
 export function switchLocale(locale) {
   return { type: constants.LOCALE_SWITCHED, payload: locale };
@@ -20,4 +20,17 @@ export function selectPage(id) {
 
 export function updateWorkspace(data) {
   return { type: constants.UPDATE_WORKSPACE, data };
+}
+
+export function logout() {
+  remove('token');
+  remove('selectedPrototype');
+  remove('selectedPage');
+  return { type: constants.LOGOUT };
+}
+
+export function backToDashboard() {
+  remove('selectedPrototype');
+  remove('selectedPage');
+  return { type: constants.REDIRECT_DASHBOARD };
 }

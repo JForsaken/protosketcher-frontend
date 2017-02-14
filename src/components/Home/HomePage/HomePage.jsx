@@ -1,5 +1,5 @@
 /* Node modules */
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
@@ -11,10 +11,14 @@ import Workspace from '../../Workspace/Workspace';
 const animationTime = 300;
 
 class HomePage extends Component {
+  static propTypes = {
+    router: PropTypes.object.isRequired,
+  };
   render() {
     /* if no prototype is currently selected,
      * we show the prototype dashboard
     */
+    const router = this.props.router;
     return (
       <ReactCSSTransitionGroup
         transitionName="homepage-dashboard"
@@ -23,7 +27,7 @@ class HomePage extends Component {
       >
         {this.props.application.selectedPrototype ?
           <div className="page-container" key="homepage-anim">
-            <Menu />
+            <Menu router={router} />
             <Workspace />
           </div> :
           <div key="dashboard-anim">

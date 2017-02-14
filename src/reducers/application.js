@@ -3,7 +3,6 @@ import createReducer from '../utils/create-reducer';
 import { isEmpty, omit, merge } from 'lodash';
 
 const initialState = {
-  token: null,
   locale: 'en',
   locales: [
     'en',
@@ -238,6 +237,27 @@ const actionHandlers = {
   [constants.DELETE_PAGE]: (state, action) => onDeletePage(state, action),
   [constants.GET_SHAPES]: (state, action) => onGetShapes(state, action),
   [constants.GET_TEXTS]: (state, action) => onGetTexts(state, action),
+
+  [constants.LOGOUT]: () => ({
+    user: null,
+    selectedPrototype: null,
+    selectedPage: null,
+    prototypes: {},
+  }),
+
+  [constants.REDIRECT_DASHBOARD]: () => ({
+    selectedPrototype: null,
+    selectedPage: null,
+  }),
+
+  [constants.RENAME_PROTOTYPE]: (state, action) => {
+    const prototypeName = action.prototype.name;
+    const prototypes = state.prototypes;
+    prototypes[state.selectedPrototype].name = prototypeName;
+    return Object.assign({}, state, {
+      prototypes,
+    });
+  },
 };
 
 export default createReducer(initialState, actionHandlers);
