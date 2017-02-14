@@ -35,12 +35,13 @@ class Application extends Component {
   }
 
   render() {
+    const { user } = this.props.api.login;
     return (
       <div id="layout">
         <div id="main">
           <DisplayError />
 
-          {!this.props.api.login.user.id && this.props.location.pathname === '/'
+          {user && !user.id && this.props.location.pathname === '/'
            // TODO: replace with with loading or spinner or whatever
            ? <p>LOADING FETCH ME</p>
            : null
