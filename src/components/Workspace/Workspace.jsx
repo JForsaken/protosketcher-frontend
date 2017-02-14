@@ -42,19 +42,25 @@ class Workspace extends Component {
 
     this.changeColor = changeColor.bind(this);
 
+    const { prototypes, selectedPrototype } = this.props.application;
+    const prototype = prototypes[selectedPrototype];
+
     this.state = {
       showMenu: false,
       menuPending: false,
       isDrawing: false,
       currentPath: '',
       previousPoint: null,
-      pages: null,
+      pages: prototype.pages || null,
       currentPageId: null,
       shapes: null,
       texts: null,
     };
 
     this.touchTimer = 0;
+  }
+
+  componentDidMount() {
     this.componentWillReceiveProps(this.props);
   }
 
@@ -63,6 +69,7 @@ class Workspace extends Component {
     if (!prototypes) return;
 
     const prototype = prototypes[selectedPrototype];
+    if (!prototype) return;
 
     // If the selected page has changed, set the state to reflect the new page
     if (this.state.currentPageId !== newProps.application.selectedPage) {
@@ -96,7 +103,7 @@ class Workspace extends Component {
     }
 
     // If you just cached the pages, select the first one
-    else if (newProps.api.lastAction === actions.GET_PAGES && !newProps.application.selectedPage) {
+    else if (!newProps.application.selectedPage) {
       this.props.actions.selectPage(Object.keys(prototype.pages)[0]);
       this.setState({ pages: prototype.pages });
     }
