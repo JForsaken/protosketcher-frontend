@@ -217,7 +217,6 @@ export function patchPrototype(prototype, token) {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Access-Control-Request-Methods': 'GET,PUT,POST,PATCH,DELETE',
         'x-access-token': token,
       },
       body: JSON.stringify(prototype),
