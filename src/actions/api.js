@@ -62,7 +62,7 @@ export function fetchMe(token) {
         dispatch({
           type: constants.FETCH_ME,
           user: {
-            id: data.body._id,
+            id: data.body.id,
             email: data.body.email,
             token,
           },
@@ -152,14 +152,6 @@ export function getPrototypes(token) {
     })
       .then(processResponse)
       .then(data => {
-        // rename _id to id
-        data.body.forEach((d) => {
-          const cur = d;
-          cur.id = cur._id;
-          delete cur._id;
-          delete cur.__v;
-        });
-
         dispatch({
           type: constants.GET_PROTOTYPES,
           prototypes: data.body,
@@ -196,14 +188,9 @@ export function createPrototype(prototype, token) {
     })
       .then(processResponse)
       .then((data) => {
-        const proto = data.body;
-        proto.id = proto._id;
-        delete proto._id;
-        delete proto.__v;
-
         dispatch({
           type: constants.CREATE_PROTOTYPE,
-          prototype: proto,
+          prototype: data.body,
           time: date.toUTCString(),
           error: {},
         });
