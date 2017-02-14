@@ -25,8 +25,7 @@ class PrototypeDashboard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { prototypes } = this.props.application;
-    if (!isEqual(prototypes, nextProps.application.prototypes)) {
+    if (!isEqual(this.state.prototypes, nextProps.application.prototypes)) {
       this.setState({
         prototypes: map(nextProps.application.prototypes, ((o, k) => ({ id: k, name: o.name }))),
       });
@@ -81,61 +80,63 @@ class PrototypeDashboard extends Component {
         show={this.state.showModal}
         onHide={() => this.closeModal()}
       >
-        <Modal.Header closeButton>
-          <FontAwesome name="plus-circle" />
-        </Modal.Header>
-        <Modal.Body>
-          <FormGroup controlId="prototype-name">
-            <FormControl
-              type="text"
-              placeholder="Prototype name"
-              onChange={(e) => this.onPrototypeNameChanged(e)}
-            />
-          </FormGroup>
-          <hr />
-          <FormGroup controlId="prototype-type">
-            <ul>
-              <li>
-                <input
-                  checked={this.state.desktopRadio}
-                  onChange={() => this.onDesktopChange()}
-                  type="radio"
-                  id="f-option"
-                  name="selector"
-                />
-                <label htmlFor="f-option">
-                  <FormattedMessage id="dashboard.modal.desktop" />
-                </label>
+        <form onSubmit={() => this.createPrototype()}>
+          <Modal.Header closeButton>
+            <FontAwesome name="plus-circle" />
+          </Modal.Header>
+          <Modal.Body>
+            <FormGroup controlId="prototype-name">
+              <FormControl
+                type="text"
+                placeholder="Prototype name"
+                onChange={(e) => this.onPrototypeNameChanged(e)}
+              />
+            </FormGroup>
+            <hr />
+            <FormGroup controlId="prototype-type">
+              <ul>
+                <li>
+                  <input
+                    checked={this.state.desktopRadio}
+                    onChange={() => this.onDesktopChange()}
+                    type="radio"
+                    id="f-option"
+                    name="selector"
+                  />
+                  <label htmlFor="f-option">
+                    <FormattedMessage id="dashboard.modal.desktop" />
+                  </label>
 
-                <div className="check"></div>
-              </li>
-              <li>
-                <input
-                  checked={this.state.mobileRadio}
-                  onChange={() => this.onMobileChange()}
-                  type="radio"
-                  id="s-option"
-                  name="selector"
-                />
-                <label htmlFor="s-option">
-                  <FormattedMessage id="dashboard.modal.mobile" />
-                </label>
-                <div className="check">
-                  <div className="inside"></div>
-                </div>
-              </li>
-            </ul>
-          </FormGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            bsStyle="primary"
-            disabled={!this.state.prototypeName}
-            onClick={() => this.createPrototype()}
-          >
-            <FormattedMessage id="dashboard.modal.create" />
-          </Button>
-        </Modal.Footer>
+                  <div className="check"></div>
+                </li>
+                <li>
+                  <input
+                    checked={this.state.mobileRadio}
+                    onChange={() => this.onMobileChange()}
+                    type="radio"
+                    id="s-option"
+                    name="selector"
+                  />
+                  <label htmlFor="s-option">
+                    <FormattedMessage id="dashboard.modal.mobile" />
+                  </label>
+                  <div className="check">
+                    <div className="inside"></div>
+                  </div>
+                </li>
+              </ul>
+            </FormGroup>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              bsStyle="primary"
+              disabled={!this.state.prototypeName}
+              onClick={() => this.createPrototype()}
+            >
+              <FormattedMessage id="dashboard.modal.create" />
+            </Button>
+          </Modal.Footer>
+        </form>
       </Modal>
     );
   }
