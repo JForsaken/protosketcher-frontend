@@ -6,13 +6,16 @@ import { bindActionCreators } from 'redux';
 import uuidV1 from 'uuid/v1';
 
 import * as constants from '../constants';
+import * as actions from '../../actions/constants';
 
 /* Components */
+import Footer from '../common/Footer/Footer';
 import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
 
 /* Actions */
-import { updateWorkspace } from '../../actions/application';
+import { getPages, getPageTypes, getShapes, getTexts } from '../../actions/api';
+import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
 import { changeColor } from './helpers';
@@ -45,9 +48,68 @@ class Workspace extends Component {
       isDrawing: false,
       currentPath: '',
       previousPoint: null,
+      pages: null,
+      currentPageId: null,
+      shapes: null,
+      texts: null,
     };
 
     this.touchTimer = 0;
+    this.componentWillReceiveProps(this.props);
+  }
+
+  componentWillReceiveProps(newProps) {
+    const { prototypes, selectedPrototype, selectedPage } = newProps.application;
+    if (!prototypes) return;
+
+    const prototype = prototypes[selectedPrototype];
+
+    // If the selected page has changed, set the state to reflect the new page
+    if (this.state.currentPageId !== newProps.application.selectedPage) {
+      const { shapes, texts } = this.state.pages[newProps.application.selectedPage];
+      this.setState({
+        currentPageId: newProps.application.selectedPage,
+        shapes: shapes || null,
+        texts: texts || null,
+      });
+
+      // Get shapes and texts if they are not cached
+      if (!shapes) {
+        this.props.actions.getShapes(selectedPrototype, selectedPage,
+        newProps.application.user.token);
+      }
+      if (!texts) {
+        this.props.actions.getTexts(selectedPrototype, selectedPage,
+        newProps.application.user.token);
+      }
+    }
+
+    // If the page types are not cached, get them
+    if (!newProps.api.getPageTypes) {
+      this.props.actions.getPageTypes(newProps.application.user.token);
+    }
+
+    // If the selected prototype's pages are not cached, get them
+    else if (!prototype.pages) {
+      newProps.actions.getPages(selectedPrototype,
+        newProps.application.user.token);
+    }
+
+    // If you just cached the pages, select the first one
+    else if (newProps.api.lastAction === actions.GET_PAGES && !newProps.application.selectedPage) {
+      this.props.actions.selectPage(Object.keys(prototype.pages)[0]);
+      this.setState({ pages: prototype.pages });
+    }
+
+    // If you just cached the shapes, copy them in the state
+    else if (newProps.api.lastAction === actions.GET_SHAPES && !this.state.shapes) {
+      this.setState({ shapes: prototype.pages[selectedPage].shapes });
+    }
+
+    // If you just cached the texts, copy them in the state
+    else if (newProps.api.lastAction === actions.GET_TEXTS && !this.state.texts) {
+      this.setState({ texts: prototype.pages[selectedPage].texts });
+    }
   }
 
   onStartingEvent(e) {
@@ -201,9 +263,9 @@ class Workspace extends Component {
 
   createShape(point) {
     const uuid = uuidV1();
-    this.props.actions.updateWorkspace({
+    this.setState({
       shapes: {
-        ...this.props.application.workspace.shapes,
+        ...this.state.shapes,
         [uuid]: {
           path: this.state.currentPath += `L${point.x} ${point.y}`,
           color: this.props.application.workspace.drawColor,
@@ -236,45 +298,70 @@ class Workspace extends Component {
     }
   }
 
+  renderWorkspace() {
+    if (this.state.shapes && this.state.texts) {
+      return (
+        <div
+          id="workspace"
+          onMouseDown={this.onStartingEvent}
+          onMouseMove={this.onMovingEvent}
+          onMouseUp={this.onEndingEvent}
+          onMouseLeave={this.onEndingEvent}
+          onTouchStart={this.onStartingEvent}
+          onTouchMove={this.onMovingEvent}
+          onTouchEnd={this.onEndingEvent}
+          onContextMenu={this.onStartingEvent}
+        >
+          {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
+          <svg height="100%" width="100%">
+            {
+              Object.entries(this.state.shapes).map((item, i) =>
+                <Shape
+                  {...item[1]}
+                  key={i}
+                />)
+            }
+            <path
+              className="workspace-line"
+              d={this.state.currentPath}
+              stroke={this.props.application.workspace.drawColor}
+            />
+          </svg>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <div className="backdrop"></div>
+        <div className="loading">
+          <span>Loading workspace</span>
+          <div className="spinner" />
+        </div>
+      </div>
+    );
+  }
+
   render() {
     return (
-      <div
-        id="workspace"
-        className="workspace-container"
-        onMouseDown={this.onStartingEvent}
-        onMouseMove={this.onMovingEvent}
-        onMouseUp={this.onEndingEvent}
-        onMouseLeave={this.onEndingEvent}
-        onTouchStart={this.onStartingEvent}
-        onTouchMove={this.onMovingEvent}
-        onTouchEnd={this.onEndingEvent}
-        onContextMenu={this.onStartingEvent}
-      >
-        {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
-        <svg height="100%" width="100%">
-          {
-            Object.entries(this.props.application.workspace.shapes).map((item, i) =>
-              <Shape
-                {...item[1]}
-                key={i}
-              />)
-          }
-          <path
-            className="workspace-line"
-            d={this.state.currentPath}
-            stroke={this.props.application.workspace.drawColor}
-          />)
-        </svg>
+      <div className="workspace-container">
+        {this.renderWorkspace()}
+        <Footer pages={this.state.pages || {}} selectedPage={this.state.currentPageId || ''} />
       </div>
     );
   }
 }
 
 export default connect(
-  ({ application }) => ({ application }),
+  ({ application, api }) => ({ application, api }),
   dispatch => ({
     actions: bindActionCreators({
       updateWorkspace,
+      getPages,
+      getPageTypes,
+      selectPage,
+      getShapes,
+      getTexts,
     }, dispatch),
   })
 )(Workspace);

@@ -142,8 +142,8 @@ export function getPrototypes(token) {
   const date = new Date();
 
   return dispatch => {
-    fetch(`${BACKEND_API}/prototypes`, {
-      method: 'get',
+    fetch(`${BACKEND_API}/prototypes?attributes=name,isMobile`, {
+      method: 'GET',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ export function createPrototype(prototype, token) {
 
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes`, {
-      method: 'post',
+      method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -221,3 +221,299 @@ export function createPrototype(prototype, token) {
       });
   };
 }
+
+/* --- Pages --- */
+export function getPages(prototypeId, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages?attributes=name,pageTypeId`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        // rename _id to id
+        data.body.forEach((d) => {
+          const cur = d;
+          cur.id = cur._id;
+          delete cur._id;
+        });
+
+        dispatch({
+          type: constants.GET_PAGES,
+          pages: data.body,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_PAGES,
+          pages: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+export function getPageTypes(token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/pagetypes?attributes=type`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        // rename _id to id
+        data.body.forEach((d) => {
+          const cur = d;
+          cur.id = cur._id;
+          delete cur._id;
+        });
+
+        dispatch({
+          type: constants.GET_PAGE_TYPES,
+          pageTypes: data.body,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_PAGE_TYPES,
+          pageTypes: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+export function createPage(prototypeId, page, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages?attributes=name,pageTypeId`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(page),
+    })
+      .then(processResponse)
+      .then((data) => {
+        const el = data.body;
+        el.id = el._id;
+        delete el._id;
+        delete el.__v;
+
+        dispatch({
+          type: constants.CREATE_PAGE,
+          page: el,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.CREATE_PAGE,
+          page: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+export function patchPage(prototypeId, pageId, page, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}?attributes=name,pageTypeId`, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(page),
+    })
+      .then(processResponse)
+      .then((data) => {
+        const el = data.body;
+        el.id = el._id;
+        delete el._id;
+        delete el.__v;
+
+        dispatch({
+          type: constants.PATCH_PAGE,
+          page: el,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.PATCH_PAGE,
+          page: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+export function deletePage(prototypeId, pageId, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then((data) => {
+        const el = data.body;
+        el.id = el._id;
+        delete el._id;
+        delete el.__v;
+
+        dispatch({
+          type: constants.DELETE_PAGE,
+          page: el,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.DELETE_PAGE,
+          page: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+/* --- Shapes ---*/
+export function getShapes(prototypeId, pageId, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/shapes`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        // rename _id to id
+        data.body.forEach((d) => {
+          const cur = d;
+          cur.id = cur._id;
+          delete cur._id;
+          delete cur.__v;
+        });
+
+        dispatch({
+          type: constants.GET_SHAPES,
+          shapes: data.body,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_SHAPES,
+          shapes: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+/* --- Texts ---*/
+export function getTexts(prototypeId, pageId, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/texts`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        // rename _id to id
+        data.body.forEach((d) => {
+          const cur = d;
+          cur.id = cur._id;
+          delete cur._id;
+          delete cur.__v;
+        });
+
+        dispatch({
+          type: constants.GET_TEXTS,
+          texts: data.body,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_TEXTS,
+          texts: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+

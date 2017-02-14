@@ -1,9 +1,44 @@
 .workspace-container {
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: $top-menu-height;
+}
+
+#workspace {
   bottom: $footer-height;
   left: 0;
   position: absolute;
   right: 0;
-  top: $top-menu-height;
+  top: 0;
+}
+
+.backdrop {
+  background: color(background, backdrop);
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+.loading {
+  color: color(text, grey);
+  font-size: 24px;
+  font-weight: bold;
+  position: absolute;
+  text-align: center;
+  text-transform: uppercase;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+
+  .spinner {
+    margin-left: 16px;
+    top: 6px;
+  }
 }
 
 .workspace-line {

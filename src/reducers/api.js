@@ -2,6 +2,7 @@ import * as constants from '../actions/constants';
 import createReducer from '../utils/create-reducer';
 
 const initialState = {
+  lastAction: null,
   login: {
     user: {},
     lastAction: null,
@@ -26,12 +27,19 @@ const initialState = {
     time: null,
     error: {},
   },
+  getPages: {
+    pages: {},
+    lastAction: null,
+    time: null,
+    error: {},
+  },
 };
 
 const actionHandlers = {
 
   /* --- User Login --- */
   [constants.LOGIN]: (state, action) => ({
+    lastAction: action.type,
     login: {
       user: action.user,
       lastAction: action.type,
@@ -40,6 +48,7 @@ const actionHandlers = {
     },
   }),
   [constants.LOGOUT]: (state, action) => ({
+    lastAction: action.type,
     login: {
       user: action.user,
       lastAction: action.type,
@@ -48,6 +57,7 @@ const actionHandlers = {
     },
   }),
   [constants.FETCH_ME]: (state, action) => ({
+    lastAction: action.type,
     login: {
       user: action.user,
       lastAction: action.type,
@@ -58,6 +68,7 @@ const actionHandlers = {
 
   /* --- Create User --- */
   [constants.CREATE_USER]: (state, action) => ({
+    lastAction: action.type,
     createUser: {
       user: action.user,
       lastAction: action.type,
@@ -68,6 +79,7 @@ const actionHandlers = {
 
   /* --- Prototypes */
   [constants.GET_PROTOTYPES]: (state, action) => ({
+    lastAction: action.type,
     getPrototypes: {
       prototypes: action.prototypes,
       lastAction: action.type,
@@ -76,6 +88,7 @@ const actionHandlers = {
     },
   }),
   [constants.CREATE_PROTOTYPE]: (state, action) => ({
+    lastAction: action.type,
     createPrototype: {
       prototypes: action.prototype,
       lastAction: action.type,
@@ -83,6 +96,61 @@ const actionHandlers = {
       error: action.error,
     },
   }),
+
+  /* --- Pages --- */
+  [constants.GET_PAGES]: (state, action) => ({
+    lastAction: action.type,
+    getPages: {
+      pages: action.pages,
+      lastAction: action.type,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.GET_PAGE_TYPES]: (state, action) => ({
+    lastAction: action.type,
+    getPageTypes: {
+      pageTypes: action.pageTypes.reduce((acc, curr) => ({
+        ...acc,
+        [curr.type]: curr.id,
+      }), {}),
+      lastAction: action.type,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.CREATE_PAGE]: (state, action) => ({
+    lastAction: action.type,
+    createPage: {
+      page: action.page,
+      lastAction: action.type,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+
+/* --- Shapes ---*/
+  [constants.GET_SHAPES]: (state, action) => ({
+    lastAction: action.type,
+    getShapes: {
+      shapes: action.shapes,
+      lastAction: action.type,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+
+/* --- Texts ---*/
+  [constants.GET_TEXTS]: (state, action) => ({
+    lastAction: action.type,
+    getTexts: {
+      texts: action.texts,
+      lastAction: action.type,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+
 };
 
 export default createReducer(initialState, actionHandlers);

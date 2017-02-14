@@ -18,6 +18,24 @@ export const GET_PROTOTYPES = 'GET_PROTOTYPES';
 export const CREATE_PROTOTYPE = 'CREATE_PROTOTYPE';
 export const SELECT_PROTOTYPE = 'SELECT_PROTOTYPE';
 
+// Pages
+export const GET_PAGES = 'GET_PAGES';
+export const GET_PAGE_TYPES = 'GET_PAGE_TYPES';
+export const CREATE_PAGE = 'CREATE_PAGE';
+export const PATCH_PAGE = 'PATCH_PAGE';
+export const DELETE_PAGE = 'DELETE_PAGE';
+export const SELECT_PAGE = 'SELECT_PAGE';
+
+// Shapes
+export const GET_SHAPES = 'GET_SHAPES';
+export const GET_SHAPE_TYPES = 'GET_SHAPE_TYPES';
+export const CREATE_SHAPE = 'CREATE_SHAPE';
+
+// Texts
+export const GET_TEXTS = 'GET_TEXTS';
+export const CREATE_TEXT = 'CREATE_TEXT';
+
+
 // API
 export const SAVE = 'SAVE';
 

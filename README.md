@@ -9,9 +9,13 @@ Follow the installation steps in the backend repository, except for the database
 ## Development
 
 ```bash
-$ npm start
+$ npm run dev
 ```
-**Protosketch** will then run at [http://localhost:3001](http://localhost:3001).
+**Protosketcher** will then run at [http://localhost:3001](http://localhost:3001).
+
+You will see the react-redux state inspector on your right.
+To move it around, use `Ctrl+F2`.
+To toggle it, use `Ctrl+H`.
 
 ## Deployment
 

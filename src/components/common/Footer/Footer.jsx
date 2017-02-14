@@ -1,38 +1,38 @@
 /* Node modules */
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { FormGroup, FormControl, Modal, Button } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import forEach from 'lodash/forEach';
 import classNames from 'classnames';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
+import { isEmpty } from 'lodash';
 
 // Components
 import AddPageMenu from './AddPageMenu';
 
+/* Actions */
+import { createPage, patchPage, deletePage } from '../../../actions/api';
+import { selectPage } from '../../../actions/application';
+
 @injectIntl
 
-export default class Footer extends Component {
+class Footer extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.state = {
-      pages: [{
-        id: 0,
-        name: 'Page 1',
-        type: 'normal',
-      }, {
-        id: 1,
-        name: 'Page 2',
-        type: 'modal',
-      }],
-      activePage: 0,
       showRenameModal: false,
       showDeleteModal: false,
       showOnePageWarning: false,
       pageName: '',
-      pageModifiedIndex: -1,
+      pageModifiedId: '',
     };
+
+    this.changePage = this.changePage.bind(this);
+    this.addPage = this.addPage.bind(this);
+    this.renamePage = this.renamePage.bind(this);
   }
 
   onPageNameChanged(e) {
@@ -42,46 +42,44 @@ export default class Footer extends Component {
   }
 
   renamePage() {
-    const pages = this.state.pages.slice();
     let pageName = this.state.pageName;
     if (pageName === '' || pageName === ' ') {
       pageName = ' - ';
     }
-    pages[this.state.pageModifiedIndex].name = pageName;
+
+    this.props.actions.patchPage(this.props.application.selectedPrototype,
+      this.state.pageModifiedId,
+      {
+        name: pageName,
+      }, this.props.application.user.token);
+
     this.setState({
-      pages,
-      pageModifiedIndex: -1,
+      pageModifiedId: '',
       pageName: '',
       showRenameModal: false,
     });
   }
 
   removePage() {
-    const pages = this.state.pages.slice();
+    this.props.actions.deletePage(this.props.application.selectedPrototype,
+      this.state.pageModifiedId, this.props.application.user.token);
 
-    pages.splice(this.state.pageModifiedIndex, 1);
-    let activePage = this.state.activePage;
-    if (activePage === this.state.pageModifiedIndex) {
-      activePage = 0;
-    }
     this.setState({
-      pages,
-      activePage,
       showDeleteModal: false,
-      pageModifiedIndex: -1,
+      pageModifiedId: '',
     });
   }
 
-  showRenameModal(index) {
+  showRenameModal(id) {
     this.setState({
       showRenameModal: true,
-      pageModifiedIndex: index,
+      pageModifiedId: id,
       pageName: '',
     });
   }
 
-  showDeleteModal(index) {
-    if (this.state.pages.length <= 1) {
+  showDeleteModal(id) {
+    if (Object.keys(this.props.pages).length <= 1) {
       this.setState({
         showOnePageWarningModal: true,
         showDeleteModal: false,
@@ -90,7 +88,7 @@ export default class Footer extends Component {
     }
     this.setState({
       showDeleteModal: true,
-      pageModifiedIndex: index,
+      pageModifiedId: id,
     });
   }
 
@@ -99,29 +97,27 @@ export default class Footer extends Component {
       showRenameModal: false,
       showDeleteModal: false,
       showOnePageWarningModal: false,
-      pageModifiedIndex: -1,
+      pageModifiedId: '',
     });
   }
 
   addPage(type) {
-    const pages = this.state.pages;
-    pages.push({
-      id: pages.length,
-      name: this.props.intl.messages['footer.newPage'],
-      type,
-    });
+    this.props.actions.createPage(this.props.application.selectedPrototype,
+      {
+        name: this.props.intl.messages['footer.newPage'],
+        pageTypeId: this.props.api.getPageTypes.pageTypes[type],
+      }, this.props.application.user.token);
+
     this.setState({
-      pages,
-      activePage: pages.length - 1,
       isAddPageMenuVisible: false,
     });
   }
 
-  changePage(index) {
-    if (this.state.activePage === index) {
+  changePage(id) {
+    if (this.props.application.currentPage === id) {
       return;
     }
-    this.setState({ activePage: index });
+    this.props.actions.selectPage(id);
   }
 
   renderRenameModal() {
@@ -236,62 +232,64 @@ export default class Footer extends Component {
   }
 
   render() {
-    const pages = [];
-    const contextMenus = [];
-    let pageIndex;
-    let menuIndex;
-    const icons = {
-      modal: <FontAwesome name="window-maximize" />,
-      normal: <FontAwesome name="desktop" />,
-    };
+    const pages = this.props.pages;
+    const { pageTypes } = this.props.api.getPageTypes || {};
 
-    // Add components for each page
-    forEach(this.state.pages, (page) => {
-      pageIndex = `page-${page.id}`;
-      menuIndex = `menu-${page.id}`;
-      const className = classNames({
-        'page-tab': true,
-        'page-tab--active': this.state.activePage === page.id,
-      });
-
-      pages.push(
-        <ContextMenuTrigger id={pageIndex} key={`trigger${page.id}`}>
-          <Button
-            key={pageIndex}
-            className={className}
-            onDoubleClick={() => this.showRenameModal(page.id)}
-            onClick={() => this.changePage(page.id)}
-          >
-            {page.name}
-            {icons[page.type]}
-          </Button>
-        </ContextMenuTrigger>
-      );
-
-      contextMenus.push(
-        <ContextMenu key={menuIndex} id={pageIndex}>
-          <MenuItem key={`rename${menuIndex}`} onClick={() => this.showRenameModal(page.id)}>
-            {this.props.intl.messages['footer.renamePage']}
-          </MenuItem>
-          <MenuItem key={`remove-${menuIndex}`} onClick={() => this.showDeleteModal(page.id)}>
-            {this.props.intl.messages['footer.deletePage']}
-          </MenuItem>
-        </ContextMenu>
-      );
-    });
+    const icons = pageTypes ? {
+      [pageTypes.modal]: <FontAwesome name="window-maximize" />,
+      [pageTypes.page]: <FontAwesome name="desktop" />,
+    } : {};
 
     return (
-      <footer id="footer">
+      <footer id="footer" className={isEmpty(pages) ? 'footer-hidden' : ''}>
         <div className="container">
           {this.renderModal()}
-          {pages}
+          {
+            Object.keys(pages).map((key, index) =>
+              <div key={index}>
+                <ContextMenuTrigger id={`page-${key}`} key={`trigger${key}`}>
+                  <Button
+                    key={`page-${key}`}
+                    className={classNames({
+                      'page-tab': true,
+                      'page-tab--active': this.props.selectedPage === key,
+                    })}
+                    onDoubleClick={() => this.showRenameModal(key)}
+                    onClick={() => this.changePage(key)}
+                  >
+                    {pages[key].name}
+                    {icons[pages[key].pageTypeId]}
+                  </Button>
+                </ContextMenuTrigger>
+
+                <ContextMenu key={`menu-${key}`} id={`page-${key}`}>
+                  <MenuItem key={`rename-${key}`} onClick={() => this.showRenameModal(key)}>
+                    {this.props.intl.messages['footer.renamePage']}
+                  </MenuItem>
+                  <MenuItem key={`remove-${key}`} onClick={() => this.showDeleteModal(key)}>
+                    {this.props.intl.messages['footer.deletePage']}
+                  </MenuItem>
+                </ContextMenu>
+              </div>)
+          }
           <AddPageMenu
-            addNormalPage={() => this.addPage('normal')}
+            addNormalPage={() => this.addPage('page')}
             addModalPage={() => this.addPage('modal')}
           />
-          {contextMenus}
         </div>
       </footer>
     );
   }
 }
+
+export default connect(
+  ({ application, api }) => ({ application, api }),
+  dispatch => ({
+    actions: bindActionCreators({
+      selectPage,
+      createPage,
+      patchPage,
+      deletePage,
+    }, dispatch),
+  })
+)(Footer);
