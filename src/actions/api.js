@@ -224,13 +224,6 @@ export function getPages(prototypeId, token) {
     })
       .then(processResponse)
       .then(data => {
-        // rename _id to id
-        data.body.forEach((d) => {
-          const cur = d;
-          cur.id = cur._id;
-          delete cur._id;
-        });
-
         dispatch({
           type: constants.GET_PAGES,
           pages: data.body,
@@ -266,13 +259,6 @@ export function getPageTypes(token) {
     })
       .then(processResponse)
       .then(data => {
-        // rename _id to id
-        data.body.forEach((d) => {
-          const cur = d;
-          cur.id = cur._id;
-          delete cur._id;
-        });
-
         dispatch({
           type: constants.GET_PAGE_TYPES,
           pageTypes: data.body,
@@ -309,14 +295,9 @@ export function createPage(prototypeId, page, token) {
     })
       .then(processResponse)
       .then((data) => {
-        const el = data.body;
-        el.id = el._id;
-        delete el._id;
-        delete el.__v;
-
         dispatch({
           type: constants.CREATE_PAGE,
-          page: el,
+          page: data.body,
           time: date.toUTCString(),
           error: {},
         });
@@ -350,14 +331,9 @@ export function patchPage(prototypeId, pageId, page, token) {
     })
       .then(processResponse)
       .then((data) => {
-        const el = data.body;
-        el.id = el._id;
-        delete el._id;
-        delete el.__v;
-
         dispatch({
           type: constants.PATCH_PAGE,
-          page: el,
+          page: data.body,
           time: date.toUTCString(),
           error: {},
         });
@@ -390,14 +366,9 @@ export function deletePage(prototypeId, pageId, token) {
     })
       .then(processResponse)
       .then((data) => {
-        const el = data.body;
-        el.id = el._id;
-        delete el._id;
-        delete el.__v;
-
         dispatch({
           type: constants.DELETE_PAGE,
-          page: el,
+          page: data.body,
           time: date.toUTCString(),
           error: {},
         });
@@ -431,14 +402,6 @@ export function getShapes(prototypeId, pageId, token) {
     })
       .then(processResponse)
       .then(data => {
-        // rename _id to id
-        data.body.forEach((d) => {
-          const cur = d;
-          cur.id = cur._id;
-          delete cur._id;
-          delete cur.__v;
-        });
-
         dispatch({
           type: constants.GET_SHAPES,
           shapes: data.body,
@@ -475,14 +438,6 @@ export function getTexts(prototypeId, pageId, token) {
     })
       .then(processResponse)
       .then(data => {
-        // rename _id to id
-        data.body.forEach((d) => {
-          const cur = d;
-          cur.id = cur._id;
-          delete cur._id;
-          delete cur.__v;
-        });
-
         dispatch({
           type: constants.GET_TEXTS,
           texts: data.body,

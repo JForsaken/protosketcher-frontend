@@ -12,7 +12,7 @@
   "rules": {
     "react/prefer-stateless-function": 0,
     "react/prop-types": 0,
-    "linebreak-style": 0
+    "linebreak-style": 0,
     "brace-style": 0
   },
   "parser": "babel-eslint"
