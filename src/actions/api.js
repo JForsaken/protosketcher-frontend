@@ -210,14 +210,9 @@ export function patchPrototype(prototype, token) {
     })
       .then(processResponse)
       .then((data) => {
-        const proto = data.body;
-        proto.id = proto._id;
-        delete proto._id;
-        delete proto.__v;
-
         dispatch({
           type: constants.RENAME_PROTOTYPE,
-          prototype: proto,
+          prototype: data.body,
           time: date.toUTCString(),
           error: {},
         });
