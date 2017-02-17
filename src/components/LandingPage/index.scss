@@ -1,3 +1,16 @@
 .landing-page {
 
+  .page-container {
+
+    .slick-slider {
+      height: 200px;
+
+      h3 {
+        background: color('foreground', 'light');
+        color: color('text', 'light');
+        line-height: 174px;
+        text-align: center;
+      }
+    }
+  }
 }
