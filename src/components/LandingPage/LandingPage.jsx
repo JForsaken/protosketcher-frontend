@@ -11,9 +11,6 @@ export default class LandingPage extends Component {
       <div className="landing-page">
         <LandingMenu />
         <div className="container page-container">
-          <div className="slideshow">
-            <h1>Protosketcher</h1>
-          </div>
           <Slideshow />
         </div>
       </div>

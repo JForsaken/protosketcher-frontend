@@ -15,14 +15,17 @@
   }
 
   .page-container {
+    padding-left: 0;
+    padding-right: 0;
 
     .slick-slider {
-      height: 200px;
+      // I don't know why but there is a 20px margin between the menu and the content... weird
+      margin-top: -20px;
 
       h3 {
         background: color('foreground', 'light');
         color: color('text', 'light');
-        line-height: 174px;
+        line-height: 350px;
         text-align: center;
       }
     }
