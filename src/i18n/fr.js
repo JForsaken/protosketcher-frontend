@@ -9,6 +9,10 @@ export default {
   'save': 'Sauvegarder',
   'OK': 'OK',
 
+  // LANDING PAGE
+  'landing.useForFree': 'Utilisation Gratuite',
+  'landing.features': 'Fonctionnalités',
+
   // LOGIN FORM
   'login.form.title': 'Bon Retour!',
   'signup.form.title': 'Vous enregistrer Gratuitement',
