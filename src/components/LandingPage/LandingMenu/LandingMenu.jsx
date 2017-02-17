@@ -36,7 +36,13 @@ export default class LandingMenu extends Component {
       {
         text: 'Login',
         link: '/',
-        icon: 'list-alt',
+        icon: 'sign-in',
+      },
+      {
+        text: 'Use for Free',
+        link: '/',
+        icon: 'hand-o-right',
+        className: 'use-for-free-btn',
       },
     ];
 

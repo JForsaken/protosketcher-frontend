@@ -1,5 +1,19 @@
 .landing-page {
 
+  .navbar {
+
+    .use-for-free-btn {
+      font-weight:600;
+      color: color('text', 'base');
+      background-color: color('accent');
+
+      &:hover {
+        color: color('text', 'light');
+        background-color: color('accent', dark);
+      }
+    }
+  }
+
   .page-container {
 
     .slick-slider {

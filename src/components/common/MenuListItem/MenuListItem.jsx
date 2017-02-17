@@ -10,20 +10,21 @@ export default class MenuListItem extends Component {
     isExternal: PropTypes.bool,
     link: PropTypes.string.isRequired,
     text: PropTypes.any.isRequired,
+    className: PropTypes.any,
     onClick: PropTypes.any,
   };
 
   renderLink() {
-    const { link, onClick, icon, text, isExternal } = this.props;
+    const { link, onClick, icon, text, isExternal, className } = this.props;
     let generatedlink = (
-      <Link to={link} onClick={onClick}>
+      <Link to={link} onClick={onClick} className={className}>
         <FontAwesome name={icon} /> {text}
       </Link>
     );
 
     if (isExternal) {
       generatedlink = (
-        <a href={link} target="_blank">
+        <a href={link} target="_blank" className={className}>
           <FontAwesome name={icon} /> {text}
         </a>
       );
