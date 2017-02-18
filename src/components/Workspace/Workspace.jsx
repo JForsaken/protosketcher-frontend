@@ -70,9 +70,6 @@ class Workspace extends Component {
 
   componentDidMount() {
     this.componentWillReceiveProps(this.props);
-
-    // Focus workspace for key events
-    document.getElementById('workspace-container').focus();
   }
 
   componentWillReceiveProps(newProps) {
@@ -553,6 +550,7 @@ class Workspace extends Component {
     return (
       <div
         id="workspace-container"
+        ref={div => div && div.focus()}
         className="workspace-container"
         tabIndex="0"
         onKeyDown={this.onKeyDownEvent}

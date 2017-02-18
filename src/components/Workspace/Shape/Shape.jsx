@@ -1,9 +1,6 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
-import { updateWorkspace } from '../../../actions/application';
 
 class Shape extends Component {
 
@@ -22,10 +19,5 @@ class Shape extends Component {
 }
 
 export default connect(
-  ({ application }) => ({ application }),
-    dispatch => ({
-      actions: bindActionCreators({
-        updateWorkspace,
-      }, dispatch),
-    })
+  ({ application }) => ({ application })
 )(Shape);
