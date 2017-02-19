@@ -45,3 +45,9 @@
   fill: none;
   stroke-width: 3;
 }
+
+.workspace-line-selected {
+  fill: none;
+  stroke-width: 3;
+  filter: url(#dropshadow);
+}
