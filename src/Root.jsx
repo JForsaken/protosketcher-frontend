@@ -58,7 +58,7 @@ export const store = configureStore(initialState);
 
 function logout(nextState, replaceState) {
   store.dispatch({ type: constants.LOGOUT });
-  replaceState('/login');
+  replaceState('/landing');
 }
 
 class Root extends Component {

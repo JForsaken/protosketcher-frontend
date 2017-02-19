@@ -12,6 +12,7 @@ export default {
   // LANDING PAGE
   'landing.useForFree': 'Use for Free',
   'landing.features': 'Features',
+  'landing.goToPrototypes': 'Go to your prototypes',
 
   // LOGIN FORM
   'login.form.title': 'Welcome Back!',

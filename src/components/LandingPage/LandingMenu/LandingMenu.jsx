@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
 
 /* Components */
 import MenuListItem from '../../common/MenuListItem/MenuListItem';
@@ -25,6 +26,16 @@ class LandingMenu extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    // LOGOUT
+    // TODO fix the logout to go to landing page
+    // The problem comes from Application having priority or something
+    if (!isEqual(this.props.application.user, nextProps.application.user) &&
+      nextProps.application.user === null) {
+      this.props.router.push('/landing');
+    }
+  }
+
   toggleNav() {
     this.setState({
       expanded: !this.state.expanded,
@@ -40,13 +51,17 @@ class LandingMenu extends Component {
     this.props.actions.switchLocale(locales[nextLocale]);
   }
 
+  logout() {
+    this.props.actions.logout();
+  }
+
   render() {
     const { expanded } = this.state;
-    const locale = this.props.application.locale;
+    const { locale, user } = this.props.application;
     const menuItemsLeft = [
       {
         text: <FormattedMessage id="landing.features" />,
-        link: '/',
+        link: '#',
         icon: 'list',
       },
     ];
@@ -57,18 +72,39 @@ class LandingMenu extends Component {
         link: '/',
         onClick: () => this.handleSwitchLocale(),
       },
-      {
-        text: <FormattedMessage id="login.form.context" />,
-        link: '/',
-        icon: 'sign-in',
-      },
-      {
-        text: <FormattedMessage id="landing.useForFree" />,
-        link: '/',
-        icon: 'hand-o-right',
-        className: 'use-for-free-btn',
-      },
     ];
+
+    // Check if logged in to put Login button or Go to prototypes
+    if (user) {
+      menuItemsRight.push(
+        {
+          text: <FormattedMessage id="menu.logout" />,
+          link: '/',
+          icon: 'sign-out',
+          onClick: () => this.logout(),
+        },
+        {
+          text: <FormattedMessage id="landing.goToPrototypes" />,
+          link: '/',
+          icon: 'list-alt',
+          className: 'accent-btn',
+        },
+      );
+    } else {
+      menuItemsRight.push(
+        {
+          text: <FormattedMessage id="login.form.context" />,
+          link: '/login',
+          icon: 'sign-in',
+        },
+        {
+          text: <FormattedMessage id="landing.useForFree" />,
+          link: '/login',
+          icon: 'hand-o-right',
+          className: 'accent-btn',
+        },
+      );
+    }
 
     return (
       <Navbar inverse fixedTop expanded={expanded} onToggle={() => this.toggleNav()}>
