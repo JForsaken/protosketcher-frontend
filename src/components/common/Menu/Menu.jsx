@@ -40,6 +40,7 @@ class Menu extends Component {
     if (!isEqual(this.props.application.user, nextProps.application.user) &&
       nextProps.application.user === null) {
       this.props.router.push('/landing');
+      return;
     }
   }
 
@@ -64,6 +65,10 @@ class Menu extends Component {
 
   redirectToDashboard() {
     this.props.actions.backToDashboard();
+  }
+
+  redirectToLanding() {
+    this.props.actions.backToLanding();
   }
 
   toggleNav() {
@@ -150,7 +155,7 @@ class Menu extends Component {
         {this.renderRenameModal()}
         <Navbar.Header>
           <Navbar.Brand>
-            <Link className="brand__title" to="/">
+            <Link className="brand__title" to="/landing" onClick={() => this.redirectToLanding()}>
               <div className="brand__logo" />
               <div className="brand__spacer" />
               <FormattedMessage id="website.title" />

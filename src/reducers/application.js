@@ -250,6 +250,11 @@ const actionHandlers = {
     selectedPage: null,
   }),
 
+  [constants.REDIRECT_LANDING]: () => ({
+    selectedPrototype: null,
+    selectedPage: null,
+  }),
+
   [constants.RENAME_PROTOTYPE]: (state, action) => {
     const prototypeName = action.prototype.name;
     const prototypes = state.prototypes;

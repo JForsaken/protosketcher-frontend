@@ -34,3 +34,9 @@ export function backToDashboard() {
   remove('selectedPage');
   return { type: constants.REDIRECT_DASHBOARD };
 }
+
+export function backToLanding() {
+  remove('selectedPrototype');
+  remove('selectedPage');
+  return { type: constants.REDIRECT_LANDING };
+}
