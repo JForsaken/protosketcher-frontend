@@ -214,7 +214,7 @@ class Workspace extends Component {
     };
 
     // Finish drawing by adding last point
-    if (this.state.currentPath !== null && this.state.onDraging === false) {
+    if (this.state.currentPath && this.state.onDraging === false) {
       this.createShape(point);
     }
 
@@ -301,7 +301,7 @@ class Workspace extends Component {
           height: point.y - currentPos.y,
         },
       });
-    } else if (this.state.currentPath !== null && this.state.onDraging === false) {
+    } else if (this.state.currentPath && this.state.onDraging === false) {
       if (this.arePointsFeedable(point)) {
         this.computeSvgPath(point, 'L');
         this.setState({
@@ -426,7 +426,7 @@ class Workspace extends Component {
   }
 
   toggleMenu(state) {
-    if (this.state.currentPath !== null) {
+    if (this.state.currentPath) {
       this.setState({
         menuPending: false,
         showMenu: state,
@@ -504,7 +504,7 @@ class Workspace extends Component {
                   key={i}
                 />)
             }
-            {this.state.currentPath !== null &&
+            {this.state.currentPath &&
               <path
                 className="workspace-line"
                 d={this.state.currentPath.pathString}
