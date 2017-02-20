@@ -43,6 +43,12 @@ class Menu extends Component {
       nextProps.application.user === null) {
       this.props.router.push('/login');
     }
+
+    if (!isEqual(this.props.application.prototypes, nextProps.application.propTypes) &&
+        nextProps.application.selectedPrototype) {
+      const { prototypes, selectedPrototype } = nextProps.application;
+      this.setState({ prototypeName: prototypes[selectedPrototype].name });
+    }
   }
 
   onPrototypeNameChanged(e) {
