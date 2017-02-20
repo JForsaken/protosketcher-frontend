@@ -14,26 +14,44 @@ class HomePage extends Component {
   static propTypes = {
     router: PropTypes.object.isRequired,
   };
+
+  renderSwitch() {
+    const router = this.props.router;
+
+    // render prototype dashboard
+    if (!this.props.application.selectedPrototype) {
+      return (
+        <div key="dashboard-anim">
+          <PrototypeDashboard />
+        </div>
+      );
+    }
+
+    // render workspace
+    if (this.props.application.prototypes) {
+      return (
+        <div className="page-container" key="homepage-anim">
+          <Menu router={router} />
+          <Workspace />
+        </div>
+      );
+    }
+
+    // TODO: show loading maybe instead of nothing
+    return null;
+  }
+
   render() {
     /* if no prototype is currently selected,
      * we show the prototype dashboard
-    */
-    const router = this.props.router;
+     */
     return (
       <ReactCSSTransitionGroup
         transitionName="homepage-dashboard"
         transitionEnterTimeout={animationTime}
         transitionLeaveTimeout={animationTime}
       >
-        {this.props.application.selectedPrototype ?
-          <div className="page-container" key="homepage-anim">
-            <Menu router={router} />
-            <Workspace />
-          </div> :
-          <div key="dashboard-anim">
-            <PrototypeDashboard />
-          </div>
-        }
+        {this.renderSwitch()}
       </ReactCSSTransitionGroup>
     );
   }
