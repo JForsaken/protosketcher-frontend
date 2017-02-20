@@ -1,4 +1,4 @@
-/* eslint no-underscore-dangle: "off" */
+/* eslint-disable no-underscore-dangle, no-param-reassign */
 
 import * as constants from '../actions/constants';
 import createReducer from '../utils/create-reducer';
@@ -24,7 +24,6 @@ const initialState = {
     menuHidden: true,
     action: null,
     actionValue: null,
-    selectedItems: [],
   },
   simulation: {
     isSimulating: false,
@@ -227,6 +226,7 @@ function onCreateShape(state, action) {
 
   const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
   const shapes = omit(page.shapes, action.shape.uuid);
+  action.shape.controls = {};
 
   merge(state, {
     prototypes: {
@@ -235,7 +235,7 @@ function onCreateShape(state, action) {
           [action.requestedPage]: {
             shapes: {
               ...shapes,
-              [action.shape.id]: action.shape,
+              [action.shape.id]: omit(action.shape, ['id', 'uuid', 'pageId']),
             },
           },
         },
