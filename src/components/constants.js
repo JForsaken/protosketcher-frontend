@@ -61,3 +61,12 @@ export const menuItems = {
     items: [],
   },
 };
+
+
+/* Keycodes */
+export const keys = {
+  DELETE: 'Delete',
+  BACKSPACE: 'Backspace',
+  C: 'c',
+  D: 'd',
+};

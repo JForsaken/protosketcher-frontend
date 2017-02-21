@@ -480,4 +480,3 @@ export function getTexts(prototypeId, pageId, token) {
       });
   };
 }
-

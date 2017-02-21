@@ -28,10 +28,13 @@ class Menu extends Component {
     super(props, context);
     this.handleSwitchLocale = this.handleSwitchLocale.bind(this);
     this.toggleNav = this.toggleNav.bind(this);
+
+    const { prototypes, selectedPrototype } = this.props.application;
+
     this.state = {
       expanded: false,
       showRenameModal: false,
-      prototypeName: '',
+      prototypeName: prototypes[selectedPrototype].name,
     };
   }
 
@@ -148,7 +151,6 @@ class Menu extends Component {
     if (!prototypeId) {
       return false;
     }
-    const prototypeName = this.props.application.prototypes[prototypeId].name;
 
     return (
       <Navbar inverse fixedTop expanded={expanded} onToggle={this.toggleNav}>
@@ -181,7 +183,7 @@ class Menu extends Component {
             onDoubleClick={() => this.changePrototypeName()}
             title={this.props.intl.messages['menu.dblClickRename']}
           >
-            {prototypeName}
+            {this.state.prototypeName}
           </h2>
           <Nav pullRight>
             <NavItem onClick={this.handleSwitchLocale}>
