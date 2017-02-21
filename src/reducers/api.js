@@ -11,25 +11,51 @@ const initialState = {
   },
   createUser: {
     user: {},
-    lastAction: null,
     time: null,
     error: {},
   },
   getPrototypes: {
     prototypes: {},
-    lastAction: null,
     time: null,
     error: {},
   },
   createPrototype: {
     prototype: {},
-    lastAction: null,
     time: null,
     error: {},
   },
   getPages: {
     pages: {},
-    lastAction: null,
+    time: null,
+    error: {},
+  },
+  getPageTypes: {
+    pages: {},
+    time: null,
+    error: {},
+  },
+  createPage: {
+    pages: {},
+    time: null,
+    error: {},
+  },
+  getShapes: {
+    pages: {},
+    time: null,
+    error: {},
+  },
+  getShapeTypes: {
+    pages: {},
+    time: null,
+    error: {},
+  },
+  createShape: {
+    pages: {},
+    time: null,
+    error: {},
+  },
+  getTexts: {
+    pages: {},
     time: null,
     error: {},
   },
@@ -71,7 +97,6 @@ const actionHandlers = {
     lastAction: action.type,
     createUser: {
       user: action.user,
-      lastAction: action.type,
       time: action.time,
       error: action.error,
     },
@@ -82,7 +107,6 @@ const actionHandlers = {
     lastAction: action.type,
     getPrototypes: {
       prototypes: action.prototypes,
-      lastAction: action.type,
       time: action.time,
       error: action.error,
     },
@@ -91,7 +115,6 @@ const actionHandlers = {
     lastAction: action.type,
     createPrototype: {
       prototypes: action.prototype,
-      lastAction: action.type,
       time: action.time,
       error: action.error,
     },
@@ -102,7 +125,6 @@ const actionHandlers = {
     lastAction: action.type,
     getPages: {
       pages: action.pages,
-      lastAction: action.type,
       time: action.time,
       error: action.error,
     },
@@ -114,7 +136,6 @@ const actionHandlers = {
         ...acc,
         [curr.type]: curr.id,
       }), {}),
-      lastAction: action.type,
       time: action.time,
       error: action.error,
     },
@@ -123,7 +144,6 @@ const actionHandlers = {
     lastAction: action.type,
     createPage: {
       page: action.page,
-      lastAction: action.type,
       time: action.time,
       error: action.error,
     },
@@ -134,7 +154,25 @@ const actionHandlers = {
     lastAction: action.type,
     getShapes: {
       shapes: action.shapes,
-      lastAction: action.type,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.GET_SHAPE_TYPES]: (state, action) => ({
+    lastAction: action.type,
+    getShapeTypes: {
+      shapeTypes: action.shapeTypes.reduce((acc, curr) => ({
+        ...acc,
+        [curr.type]: curr.id,
+      }), {}),
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.CREATE_SHAPE]: (state, action) => ({
+    lastAction: action.type,
+    createShape: {
+      shape: action.shape,
       time: action.time,
       error: action.error,
     },
@@ -145,7 +183,6 @@ const actionHandlers = {
     lastAction: action.type,
     getTexts: {
       texts: action.texts,
-      lastAction: action.type,
       time: action.time,
       error: action.error,
     },

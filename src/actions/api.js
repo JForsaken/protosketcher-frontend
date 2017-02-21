@@ -445,6 +445,78 @@ export function getShapes(prototypeId, pageId, token) {
   };
 }
 
+export function getShapeTypes(token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/shapetypes`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.GET_SHAPE_TYPES,
+          shapeTypes: data.body,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_SHAPE_TYPES,
+          shapeTypes: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+
+export function createShape(prototypeId, pageId, shape, token) {
+  const date = new Date();
+
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/shapes`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(shape),
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.CREATE_SHAPE,
+          shape: data.body,
+          time: date.toUTCString(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.CREATE_SHAPE,
+          shape: {},
+          time: date.toUTCString(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
 /* --- Texts ---*/
 export function getTexts(prototypeId, pageId, token) {
   const date = new Date();
