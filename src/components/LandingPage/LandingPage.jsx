@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 /* Components */
 import LandingMenu from './LandingMenu/LandingMenu';
 import Slideshow from './Slideshow/Slideshow';
+import Content from './Content/Content';
+
 
 export default class LandingPage extends Component {
   render() {
@@ -12,6 +14,7 @@ export default class LandingPage extends Component {
         <LandingMenu />
         <div className="container page-container">
           <Slideshow />
+          <Content />
         </div>
       </div>
     );

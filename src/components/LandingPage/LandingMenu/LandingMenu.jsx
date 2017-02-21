@@ -61,7 +61,7 @@ class LandingMenu extends Component {
     const menuItemsLeft = [
       {
         text: <FormattedMessage id="landing.features" />,
-        link: '#',
+        link: '#features', // TODO fix this to go to features
         icon: 'list',
       },
     ];
