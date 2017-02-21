@@ -5,7 +5,6 @@ import { Link } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { isEqual } from 'lodash';
 
 /* Components */
 import MenuListItem from '../../common/MenuListItem/MenuListItem';
@@ -24,16 +23,6 @@ class LandingMenu extends Component {
     this.state = {
       expanded: false,
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // LOGOUT
-    // TODO fix the logout to go to landing page
-    // The problem comes from Application having priority or something
-    if (!isEqual(this.props.application.user, nextProps.application.user) &&
-      nextProps.application.user === null) {
-      this.props.router.push('/landing');
-    }
   }
 
   toggleNav() {
@@ -69,7 +58,7 @@ class LandingMenu extends Component {
     const menuItemsRight = [
       {
         text: locale.toUpperCase(),
-        link: '/',
+        link: '/landing',
         onClick: () => this.handleSwitchLocale(),
       },
     ];
@@ -79,7 +68,7 @@ class LandingMenu extends Component {
       menuItemsRight.push(
         {
           text: <FormattedMessage id="menu.logout" />,
-          link: '/',
+          link: '/landing',
           icon: 'sign-out',
           onClick: () => this.logout(),
         },
