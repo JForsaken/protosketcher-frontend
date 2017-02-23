@@ -50,12 +50,22 @@ const initialState = {
     error: {},
   },
   createShape: {
-    pages: {},
+    shape: {},
+    time: null,
+    error: {},
+  },
+  patchShape: {
+    shape: {},
+    time: null,
+    error: {},
+  },
+  deleteShape: {
+    shape: {},
     time: null,
     error: {},
   },
   getTexts: {
-    pages: {},
+    texts: {},
     time: null,
     error: {},
   },
@@ -172,6 +182,22 @@ const actionHandlers = {
   [constants.CREATE_SHAPE]: (state, action) => ({
     lastAction: action.type,
     createShape: {
+      shape: action.shape,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.PATCH_SHAPE]: (state, action) => ({
+    lastAction: action.type,
+    patchShape: {
+      shape: action.shape,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.DELETE_SHAPE]: (state, action) => ({
+    lastAction: action.type,
+    deleteShape: {
       shape: action.shape,
       time: action.time,
       error: action.error,

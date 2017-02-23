@@ -1,9 +1,9 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import { bindActionCreators } from 'redux';
 import uuidV1 from 'uuid/v1';
+import { omit } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -14,7 +14,7 @@ import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
 
 /* Actions */
-import { getPages, getPageTypes, getShapes, getShapeTypes, createShape,
+import { getPages, getPageTypes, getShapes, getShapeTypes, createShape, patchShape, deleteShape,
   getTexts } from '../../actions/api';
 import { updateWorkspace, selectPage } from '../../actions/application';
 
@@ -130,6 +130,17 @@ class Workspace extends Component {
     // If you just cached the texts, copy them in the state
     else if (newProps.api.lastAction === actions.GET_TEXTS && !this.state.texts) {
       this.setState({ texts: prototype.pages[selectedPage].texts });
+    }
+
+    // Replace the uuid of the created shape with th uui of the DB
+    else if (newProps.api.lastAction === actions.CREATE_SHAPE) {
+      const { shape } = newProps.api.createShape;
+      this.setState({
+        shapes: {
+          ...omit(this.state.shapes, shape.uuid),
+          [shape.id]: omit(shape, ['uuid', 'id', 'pageId']),
+        },
+      });
     }
   }
 
@@ -318,10 +329,11 @@ class Workspace extends Component {
   }
 
   onKeyDownEvent(e) {
-    if (e.key === constants.keys.DELETE ||
-        e.key === constants.keys.BACKSPACE) {
+    if (e.key === constants.keys.DELETE || e.key === constants.keys.BACKSPACE) {
       for (const uuid of this.props.application.workspace.selectedItems) {
         this.deleteSvgPath(uuid);
+        this.props.actions.deleteShape(this.props.application.selectedPrototype,
+          this.state.currentPageId, uuid, this.props.application.user.token);
       }
     } else if (e.key === constants.keys.C) {
       for (const uuid of this.props.application.workspace.selectedItems) {
@@ -579,6 +591,8 @@ export default connect(
       getShapes,
       getShapeTypes,
       createShape,
+      patchShape,
+      deleteShape,
       getTexts,
     }, dispatch),
   })
