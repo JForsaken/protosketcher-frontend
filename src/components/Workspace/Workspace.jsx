@@ -13,6 +13,7 @@ import * as actions from '../../actions/constants';
 import Footer from '../common/Footer/Footer';
 import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
+import Text from './Text/Text';
 
 /* Actions */
 import { getPages, getPageTypes, getShapes, getShapeTypes, createShape, patchShape, deleteShape,
@@ -38,6 +39,7 @@ class Workspace extends Component {
     this.onEndingEvent = this.onEndingEvent.bind(this);
     this.onMovingEvent = this.onMovingEvent.bind(this);
     this.createShape = this.createShape.bind(this);
+    this.createText = this.createText.bind(this);
     this.doAction = this.doAction.bind(this);
     this.computeSvgPath = this.computeSvgPath.bind(this);
     this.arePointsFeedable = this.arePointsFeedable.bind(this);
@@ -74,6 +76,7 @@ class Workspace extends Component {
       currentPageId: null,
       shapes,
       texts,
+      currentMode: null,
     };
 
     this.touchTimer = 0;
@@ -158,6 +161,11 @@ class Workspace extends Component {
     e.preventDefault();
     e.stopPropagation();
 
+    // Add text if there was one being created
+    if (this.state.currentMode === constants.modes.TEXT) {
+      this.createText();
+    }
+
     // Set the initial position
     let pointer = e;
     if (e.type === constants.events.TOUCH_START) {
@@ -228,6 +236,11 @@ class Workspace extends Component {
   onEndingEvent(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    // Add text if there was one being created
+    if (this.state.currentMode === constants.modes.TEXT) {
+      this.createText();
+    }
 
     // Get event position
     let pointer = e;
@@ -351,6 +364,8 @@ class Workspace extends Component {
       }
     } else if (e.key === constants.keys.D) {
       this.toggleDraging();
+    } else if (e.key === constants.keys.ENTER) {
+      this.createText();
     }
   }
 
@@ -385,6 +400,26 @@ class Workspace extends Component {
 
     this.props.actions.createShape(this.props.application.selectedPrototype,
       this.state.currentPageId, shape, this.props.application.user.token);
+  }
+
+  createText() {
+    const uuid = uuidV1();
+    const { currentPos } = this.props.application.workspace;
+    this.setState({
+      texts: {
+        ...this.state.texts,
+        [uuid]: {
+          pageId: this.state.currentPageId,
+          content: document.getElementById('textEdit').value,
+          x: currentPos.x,
+          y: currentPos.y + 27,
+          fontSize: 24,
+        },
+      },
+      currentPath: null,
+      previousPoint: null,
+      currentMode: null,
+    });
   }
 
   computeSvgPath(point, prefix) {
@@ -479,6 +514,13 @@ class Workspace extends Component {
       this.setState({
         selectingRect: null,
       });
+    } else if (this.props.application.workspace.action === constants.menuItems.ADD_TEXT.action) {
+      this.setState({
+        currentMode: constants.modes.TEXT,
+      });
+      setTimeout(() => {
+        document.getElementById('textEdit').focus();
+      }, 100);
     }
   }
 
@@ -501,6 +543,7 @@ class Workspace extends Component {
   }
 
   renderWorkspace() {
+    const { workspace } = this.props.application;
     if (this.state.shapes && this.state.texts) {
       return (
         <div
@@ -525,6 +568,15 @@ class Workspace extends Component {
               </feMerge>
             </filter>
             {
+              this.state.currentMode === constants.modes.TEXT &&
+                <foreignObject
+                  x={workspace.currentPos.x}
+                  y={workspace.currentPos.y}
+                >
+                  <input id="textEdit" key="textEdit"></input>
+                </foreignObject>
+            }
+            {
               Object.entries(this.state.shapes).map((item, i) =>
                 <Shape
                   id={item[0]}
@@ -532,6 +584,17 @@ class Workspace extends Component {
                   path={item[1].path}
                   posX={item[1].x}
                   posY={item[1].y}
+                  key={i}
+                />)
+            }
+            {
+              Object.entries(this.state.texts).map((item, i) =>
+                <Text
+                  id={item[0]}
+                  posx={item[1].x}
+                  posy={item[1].y}
+                  size={item[1].fontSize}
+                  content={item[1].content}
                   key={i}
                 />)
             }

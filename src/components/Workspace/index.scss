@@ -51,3 +51,16 @@
   stroke-width: 3;
   filter: url(#dropshadow);
 }
+
+#textEdit {
+  background: transparent;
+  border: 0;
+  font-family: 'Permanent Marker';
+  font-size: 24px;
+
+  &:focus {
+    outline: none;
+    }
+}
+
+@import './Text/index';
