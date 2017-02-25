@@ -13,6 +13,17 @@ const initialState = {
   selectedPrototype: null,
   selectedPage: null,
   prototypes: {},
+  workspace: {
+    currentPos: {
+      x: 0,
+      y: 0,
+    },
+    drawColor: '#000000',
+    menuHidden: true,
+    action: null,
+    actionValue: null,
+    selectedItems: [],
+  },
 };
 
 function onGetPrototypes(state, action) {
@@ -158,6 +169,65 @@ function onGetShapes(state, action) {
   return state;
 }
 
+function onCreateShape(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const page = state.prototypes[state.selectedPrototype].pages[state.selectedPage];
+  const shapes = omit(page.shapes, action.shape.uuid);
+
+  merge(state, {
+    prototypes: {
+      [state.selectedPrototype]: {
+        pages: {
+          [state.selectedPage]: {
+            shapes: {
+              ...shapes,
+              [action.shape.id]: action.shape,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return state;
+}
+
+function onPatchShape(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  merge(state, {
+    prototypes: {
+      [state.selectedPrototype]: {
+        pages: {
+          [state.selectedPage]: {
+            shapes: {
+              [action.shape.id]: action.shape,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return state;
+}
+
+function onDeleteShape(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const data = state;
+  delete data.prototypes[state.selectedPrototype].pages[state.selectedPage].shapes[action.shape.id];
+
+  return data;
+}
+
 function onGetTexts(state, action) {
   if (!isEmpty(action.error)) {
     return { ...state };
@@ -236,6 +306,9 @@ const actionHandlers = {
   [constants.PATCH_PAGE]: (state, action) => onPatchPage(state, action),
   [constants.DELETE_PAGE]: (state, action) => onDeletePage(state, action),
   [constants.GET_SHAPES]: (state, action) => onGetShapes(state, action),
+  [constants.CREATE_SHAPE]: (state, action) => onCreateShape(state, action),
+  [constants.PATCH_SHAPE]: (state, action) => onPatchShape(state, action),
+  [constants.DELETE_SHAPE]: (state, action) => onDeleteShape(state, action),
   [constants.GET_TEXTS]: (state, action) => onGetTexts(state, action),
 
   [constants.LOGOUT]: () => ({
