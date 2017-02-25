@@ -10,6 +10,7 @@ const initialState = {
   ],
   error: null,
   user: null,
+  simulating: false,
   selectedPrototype: null,
   selectedPage: null,
   prototypes: {},
@@ -318,11 +319,6 @@ const actionHandlers = {
     prototypes: {},
   }),
 
-  [constants.REDIRECT_DASHBOARD]: () => ({
-    selectedPrototype: null,
-    selectedPage: null,
-  }),
-
   [constants.RENAME_PROTOTYPE]: (state, action) => {
     const prototypeName = action.prototype.name;
     const prototypes = state.prototypes;
@@ -331,6 +327,17 @@ const actionHandlers = {
       prototypes,
     });
   },
+
+  /* --- Menu --- */
+  [constants.REDIRECT_DASHBOARD]: () => ({
+    selectedPrototype: null,
+    selectedPage: null,
+  }),
+
+  [constants.TOGGLE_SIMULATION]: (state) => ({
+    simulating: !state.simulating,
+  }),
+
 };
 
 export default createReducer(initialState, actionHandlers);

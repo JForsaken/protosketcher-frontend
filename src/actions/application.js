@@ -29,8 +29,12 @@ export function logout() {
   return { type: constants.LOGOUT };
 }
 
-export function backToDashboard() {
+export function redirectToDashboard() {
   remove('selectedPrototype');
   remove('selectedPage');
   return { type: constants.REDIRECT_DASHBOARD };
+}
+
+export function toggleSimulation() {
+  return { type: constants.TOGGLE_SIMULATION };
 }

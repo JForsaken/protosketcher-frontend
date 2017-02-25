@@ -50,8 +50,17 @@ class Workspace extends Component {
 
     this.changeColor = changeColor.bind(this);
 
-    const { prototypes, selectedPrototype } = this.props.application;
+    const { prototypes, selectedPrototype, selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
+
+    let shapes = null;
+    let texts = null;
+
+    // if the pages, shapes and texts already cached upon load
+    if (prototype.pages && prototype.pages[selectedPage]) {
+      shapes = prototype.pages[selectedPage].shapes || null;
+      texts = prototype.pages[selectedPage].texts || null;
+    }
 
     this.state = {
       showMenu: false,
@@ -62,8 +71,8 @@ class Workspace extends Component {
       previousPoint: null,
       pages: prototype.pages || null,
       currentPageId: null,
-      shapes: null,
-      texts: null,
+      shapes,
+      texts,
     };
 
     this.touchTimer = 0;

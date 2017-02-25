@@ -71,7 +71,11 @@ class Menu extends Component {
   }
 
   redirectToDashboard() {
-    this.props.actions.backToDashboard();
+    this.props.actions.redirectToDashboard();
+  }
+
+  toggleSimulation() {
+    this.props.actions.toggleSimulation();
   }
 
   toggleNav() {
@@ -144,6 +148,12 @@ class Menu extends Component {
         link: '/',
         icon: 'list-alt',
         onClick: () => this.redirectToDashboard(),
+      },
+      {
+        text: <FormattedMessage id="menu.simulation" />,
+        link: '',
+        icon: 'play',
+        onClick: () => this.toggleSimulation(),
       },
     ];
 

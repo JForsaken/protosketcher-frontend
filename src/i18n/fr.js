@@ -36,6 +36,7 @@ export default {
 
   // MENU
   'menu.backToPrototypes': 'Retour aux prototypes',
+  'menu.simulation': 'Simulation',
   'menu.save': 'Sauvegarder',
   'menu.logout': 'Déconnexion',
   'menu.renamePrototype': 'Renommer votre prototype',
