@@ -1,6 +1,8 @@
+/* eslint no-underscore-dangle: "off" */
+
 import * as constants from '../actions/constants';
 import createReducer from '../utils/create-reducer';
-import { isEmpty, omit, merge } from 'lodash';
+import { has, isEmpty, omit, merge } from 'lodash';
 
 const initialState = {
   locale: 'en',
@@ -148,6 +150,17 @@ function onGetShapes(state, action) {
   const dict = action.shapes.reduce((acc, current) => {
     const copy = acc;
     if (!page.shapes || !page[current.id]) {
+      // clean controls
+      current.controls.forEach((o) => {
+        const cur = o;
+        if (has(cur, '_id')) {
+          cur.id = cur._id;
+          delete cur._id;
+        }
+        if (has(cur, '__v')) {
+          delete cur.__v;
+        }
+      });
       copy[current.id] = omit(current, ['id', 'pageId']);
     }
     return copy;
