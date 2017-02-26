@@ -9,6 +9,7 @@ class Control extends Component {
     controls: PropTypes.array.isRequired,
     shapeTypeId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+    rect: PropTypes.object.isRequired,
     color: PropTypes.string.isRequired,
     posx: PropTypes.number.isRequired,
     posy: PropTypes.number.isRequired,
@@ -51,7 +52,7 @@ class Control extends Component {
               height: rect.height,
             }}
           >
-            Couille
+            Button control
           </Button>
         );
         break;

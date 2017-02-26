@@ -73,7 +73,7 @@ class Simulation extends Component {
       <div>
         <div className="backdrop"></div>
         <div className="loading">
-          <span>Loading workspace</span>
+          <span>Loading simulation</span>
           <div className="spinner" />
         </div>
       </div>

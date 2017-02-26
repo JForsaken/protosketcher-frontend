@@ -79,7 +79,6 @@ class Menu extends Component {
     this.props.actions.updateWorkspace({
       selectedItems: [],
     });
-
     this.props.actions.toggleSimulation();
   }
 
@@ -150,7 +149,7 @@ class Menu extends Component {
     const menuItems = [
       {
         text: <FormattedMessage id="menu.backToPrototypes" />,
-        link: '/',
+        link: '',
         icon: 'list-alt',
         onClick: () => this.redirectToDashboard(),
       },
