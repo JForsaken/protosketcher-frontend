@@ -83,7 +83,8 @@ class Menu extends Component {
     this.setState({ showRenameModal: true });
   }
 
-  renamePrototype() {
+  renamePrototype(e) {
+    e.preventDefault();
     this.props.actions.patchPrototype({
       name: this.state.prototypeName,
       id: this.props.application.selectedPrototype,
@@ -94,7 +95,6 @@ class Menu extends Component {
   closeModal() {
     this.setState({
       showRenameModal: false,
-      prototypeName: '',
     });
   }
 
@@ -103,6 +103,9 @@ class Menu extends Component {
       <Modal
         dialogClassName="add-modal"
         show={this.state.showRenameModal}
+        onEntering={() => {
+          this.inputName.focus();
+        }}
         onHide={() => this.closeModal()}
       >
         <form onSubmit={(e) => this.renamePrototype(e)}>
@@ -115,7 +118,8 @@ class Menu extends Component {
               <FormControl
                 type="text"
                 onChange={(e) => this.onPrototypeNameChanged(e)}
-                placeholder={this.props.intl.messages['menu.newName']}
+                value={this.state.prototypeName}
+                inputRef={ref => { this.inputName = ref; }}
               />
             </FormGroup>
             <hr />
