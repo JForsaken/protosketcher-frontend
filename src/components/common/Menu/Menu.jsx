@@ -119,6 +119,7 @@ class Menu extends Component {
                 type="text"
                 onChange={(e) => this.onPrototypeNameChanged(e)}
                 value={this.state.prototypeName}
+                placeholder={this.props.intl.messages['menu.newName']}
                 inputRef={ref => { this.inputName = ref; }}
               />
             </FormGroup>

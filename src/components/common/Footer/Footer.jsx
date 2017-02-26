@@ -125,6 +125,9 @@ class Footer extends Component {
       <Modal
         dialogClassName="add-modal"
         show={this.state.showRenameModal}
+        onEntering={() => {
+          this.inputName.focus();
+        }}
         onHide={() => this.closeModal()}
       >
         <form onSubmit={() => this.renamePage()}>
@@ -138,6 +141,7 @@ class Footer extends Component {
                 type="text"
                 onChange={(e) => this.onPageNameChanged(e)}
                 placeholder={this.props.intl.messages['footer.newName']}
+                inputRef={ref => { this.inputName = ref; }}
               />
             </FormGroup>
             <hr />
