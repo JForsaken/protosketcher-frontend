@@ -75,6 +75,11 @@ class Menu extends Component {
   }
 
   toggleSimulation() {
+    // deselect shapes if some are selected
+    this.props.actions.updateWorkspace({
+      selectedItems: [],
+    });
+
     this.props.actions.toggleSimulation();
   }
 

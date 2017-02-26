@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 
 /* Components */
 import Footer from '../common/Footer/Footer';
-import Shape from './Shape/Shape';
+import Shape from '../Workspace/Shape/Shape';
+import Control from './Control/Control';
 
 class Simulation extends Component {
 
@@ -24,7 +25,6 @@ class Simulation extends Component {
   }
 
   renderSimulation() {
-    console.log('my state', this.state);
     if (this.state.shapes && this.state.texts) {
       return (
         <div
@@ -43,7 +43,6 @@ class Simulation extends Component {
               Object.entries(this.state.shapes).map((item, i) =>
                 <Shape
                   id={item[0]}
-                  simulating
                   color={item[1].color}
                   path={item[1].path}
                   posx={item[1].x}
@@ -52,6 +51,19 @@ class Simulation extends Component {
                 />)
             }
           </svg>
+            {
+              Object.entries(this.state.shapes).map((item, i) =>
+                <Control
+                  id={item[0]}
+                  controls={item[1].controls || []}
+                  shapeTypeId={item[1].shapeTypeId}
+                  color={item[1].color}
+                  path={item[1].path}
+                  posx={item[1].x}
+                  posy={item[1].y}
+                  key={i}
+                />)
+            }
         </div>
       );
     }
