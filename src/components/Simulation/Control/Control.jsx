@@ -10,7 +10,6 @@ class Control extends Component {
     shapeTypeId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
     posx: PropTypes.number.isRequired,
     posy: PropTypes.number.isRequired,
   }
@@ -32,6 +31,12 @@ class Control extends Component {
   getControl() {
     let control = null;
 
+    const { posx, posy, rect } = this.props;
+
+    // the position where the control should be placed
+    const x = (Math.floor(rect.x + rect.width / 2.0) + posx) - rect.width / 2.0;
+    const y = (Math.floor(rect.y + rect.height / 2.0) + posy) - rect.height / 2.0;
+
     switch (this.state.shapeType) {
       case 'button':
         control = (
@@ -40,8 +45,10 @@ class Control extends Component {
             style={{
               zIndex: 10000,
               position: 'absolute',
-              left: this.props.posx,
-              top: this.props.posy,
+              left: x,
+              top: y,
+              width: rect.width,
+              height: rect.height,
             }}
           >
             Couille
@@ -56,10 +63,10 @@ class Control extends Component {
             style={{
               zIndex: 10000,
               position: 'absolute',
-              left: this.props.posx,
-              top: this.props.posy,
-              placeholder: 'write here',
-              width: 150,
+              left: x,
+              top: y,
+              width: rect.width,
+              height: rect.height,
             }}
           />
         );
@@ -84,3 +91,7 @@ class Control extends Component {
 export default connect(
   ({ application, api }) => ({ application, api })
 )(Control);
+
+/*
+   const bbox = p.getBBox();
+ */

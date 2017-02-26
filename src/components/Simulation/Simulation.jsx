@@ -25,6 +25,17 @@ class Simulation extends Component {
   }
 
   renderSimulation() {
+    const shapes = Object.entries(this.state.shapes).map((item, i) =>
+      <Shape
+        id={item[0]}
+        color={item[1].color}
+        path={item[1].path}
+        posx={item[1].x}
+        posy={item[1].y}
+        key={i}
+      />
+    );
+
     if (this.state.shapes && this.state.texts) {
       return (
         <div
@@ -39,17 +50,7 @@ class Simulation extends Component {
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
-            {
-              Object.entries(this.state.shapes).map((item, i) =>
-                <Shape
-                  id={item[0]}
-                  color={item[1].color}
-                  path={item[1].path}
-                  posx={item[1].x}
-                  posy={item[1].y}
-                  key={i}
-                />)
-            }
+            {shapes}
           </svg>
             {
               Object.entries(this.state.shapes).map((item, i) =>
@@ -58,7 +59,7 @@ class Simulation extends Component {
                   controls={item[1].controls || []}
                   shapeTypeId={item[1].shapeTypeId}
                   color={item[1].color}
-                  path={item[1].path}
+                  rect={document.getElementById(item[0]).getBBox()}
                   posx={item[1].x}
                   posy={item[1].y}
                   key={i}
