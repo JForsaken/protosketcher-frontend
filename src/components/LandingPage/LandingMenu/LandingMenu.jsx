@@ -5,12 +5,16 @@ import { Link } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Scroll from 'react-scroll';
 
 /* Components */
 import MenuListItem from '../../common/MenuListItem/MenuListItem';
 
 /* Actions */
 import * as applicationActions from '../../../actions/application';
+
+/* CONSTANTS */
+import { TOP_MENU_HEIGHT } from '../../constants';
 
 @injectIntl
 class LandingMenu extends Component {
@@ -44,14 +48,26 @@ class LandingMenu extends Component {
     this.props.actions.logout();
   }
 
+  scrollToElement(elementName) {
+    const scroller = Scroll.scroller;
+    const padding = 20;
+    scroller.scrollTo(elementName, {
+      duration: 250,
+      delay: 0,
+      smooth: true,
+      offset: - (TOP_MENU_HEIGHT + padding),
+    });
+  }
+
   render() {
     const { expanded } = this.state;
     const { locale, user } = this.props.application;
     const menuItemsLeft = [
       {
         text: <FormattedMessage id="landing.features" />,
-        link: '#features', // TODO fix this to go to features
+        link: '/landing',
         icon: 'list',
+        onClick: () => this.scrollToElement('features'),
       },
     ];
 

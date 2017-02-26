@@ -1,12 +1,17 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
+import Scroll from 'react-scroll';
+
+const Element = Scroll.Element;
 
 export default class Content extends Component {
   render() {
     return (
       <div className="content">
-        <h3 id="features"><FormattedMessage id="landing.features" /></h3>
+        <Element name="features">
+          <h3><FormattedMessage id="landing.features" /></h3>
+        </Element>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel nisl at mauris
           mollis tristique a nec sapien. Vivamus eget orci odio. Vestibulum dapibus arcu nisi.
