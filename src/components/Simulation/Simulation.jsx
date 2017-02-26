@@ -25,22 +25,9 @@ class Simulation extends Component {
   }
 
   renderSimulation() {
-    const shapes = Object.entries(this.state.shapes).map((item, i) =>
-      <Shape
-        id={item[0]}
-        color={item[1].color}
-        path={item[1].path}
-        posx={item[1].x}
-        posy={item[1].y}
-        key={i}
-      />
-    );
-
     if (this.state.shapes && this.state.texts) {
       return (
-        <div
-          id="workspace"
-        >
+        <div id="workspace">
           <svg height="100%" width="100%">
             <filter id="dropshadow" height="130%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
@@ -50,21 +37,32 @@ class Simulation extends Component {
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
-            {shapes}
-          </svg>
             {
               Object.entries(this.state.shapes).map((item, i) =>
-                <Control
+                <Shape
                   id={item[0]}
-                  controls={item[1].controls || []}
-                  shapeTypeId={item[1].shapeTypeId}
                   color={item[1].color}
-                  rect={document.getElementById(item[0]).getBBox()}
+                  path={item[1].path}
                   posx={item[1].x}
                   posy={item[1].y}
                   key={i}
                 />)
             }
+          </svg>
+          {
+            Object.entries(this.state.shapes).map((item, i) =>
+              <Control
+                id={item[0]}
+                controls={item[1].controls || []}
+                shapeTypeId={item[1].shapeTypeId}
+                color={item[1].color}
+                // TODO: must find a way to get ref instead of document.getElementById
+                rect={document.getElementById(item[0]).getBBox()}
+                posx={item[1].x}
+                posy={item[1].y}
+                key={i}
+              />)
+          }
         </div>
       );
     }

@@ -56,6 +56,7 @@ class Control extends Component {
           </Button>
         );
         break;
+
       case 'textbox':
         control = (
           <FormControl
@@ -72,7 +73,10 @@ class Control extends Component {
           />
         );
         break;
+
       case 'line':
+        break;
+
       default:
         break;
     }
