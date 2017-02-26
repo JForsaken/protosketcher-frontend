@@ -105,7 +105,7 @@ class Menu extends Component {
         show={this.state.showRenameModal}
         onHide={() => this.closeModal()}
       >
-        <form onSubmit={() => this.renamePage()}>
+        <form onSubmit={(e) => this.renamePrototype(e)}>
           <Modal.Header closeButton>
             <FontAwesome name="pencil-square" />
           </Modal.Header>
@@ -124,7 +124,7 @@ class Menu extends Component {
             <Button
               bsStyle="primary"
               disabled={!this.state.prototypeName}
-              onClick={() => this.renamePrototype()}
+              onClick={(e) => this.renamePrototype(e)}
             >
               <FormattedMessage id="save" />
             </Button>
