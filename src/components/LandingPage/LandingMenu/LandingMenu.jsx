@@ -65,7 +65,7 @@ class LandingMenu extends Component {
     const menuItemsLeft = [
       {
         text: <FormattedMessage id="landing.features" />,
-        link: '/landing',
+        link: '',
         icon: 'list',
         onClick: () => this.scrollToElement('features'),
       },
@@ -74,7 +74,7 @@ class LandingMenu extends Component {
     const menuItemsRight = [
       {
         text: locale.toUpperCase(),
-        link: '/landing',
+        link: '',
         onClick: () => this.handleSwitchLocale(),
       },
     ];
@@ -84,7 +84,7 @@ class LandingMenu extends Component {
       menuItemsRight.push(
         {
           text: <FormattedMessage id="menu.logout" />,
-          link: '/landing',
+          link: '',
           icon: 'sign-out',
           onClick: () => this.logout(),
         },
