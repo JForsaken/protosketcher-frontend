@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
-import { isEqual } from 'lodash';
+import { isEqual, forEach } from 'lodash';
 
 /* Components */
 import MenuListItem from '../MenuListItem/MenuListItem';
@@ -135,7 +135,16 @@ class Menu extends Component {
   }
 
   render() {
-    const { application: { locale } } = this.props;
+    const { application: { locale, locales } } = this.props;
+    let otherLocale;
+
+    // Get other locale
+    forEach(locales, (lang) => {
+      if (lang !== locale) {
+        otherLocale = lang;
+      }
+    });
+
     const { expanded } = this.state;
     const menuItems = [
       {
@@ -186,7 +195,7 @@ class Menu extends Component {
           </h2>
           <Nav pullRight>
             <NavItem onClick={this.handleSwitchLocale}>
-              {locale.toUpperCase()}
+              {otherLocale.toUpperCase()}
             </NavItem>
             <NavItem
               title={this.props.intl.messages['menu.logout']}
