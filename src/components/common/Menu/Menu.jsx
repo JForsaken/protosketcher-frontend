@@ -1,7 +1,7 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
-import { Nav, Navbar, NavItem, FormGroup, FormControl, Modal, Button } from 'react-bootstrap';
+import { Nav, Navbar, NavItem, FormGroup, FormControl } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
@@ -35,6 +35,12 @@ class Menu extends Component {
       showRenameModal: false,
       prototypeName: prototypes[selectedPrototype].name,
     };
+  }
+
+  componentDidMount() {
+    if (this.inputName) {
+      this.inputName.focus();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -98,50 +104,36 @@ class Menu extends Component {
     });
   }
 
-  renderRenameModal() {
-    return (
-      <Modal
-        dialogClassName="add-modal"
-        show={this.state.showRenameModal}
-        onEntering={() => {
-          this.inputName.focus();
-        }}
-        onHide={() => this.closeModal()}
+  renderPrototypeName() {
+    if (!this.state.showRenameModal) {
+      return (<h2
+        className="centered"
+        onDoubleClick={() => this.changePrototypeName()}
+        title={this.props.intl.messages['menu.dblClickRename']}
       >
-        <form onSubmit={(e) => this.renamePrototype(e)}>
-          <Modal.Header closeButton>
-            <FontAwesome name="pencil-square" />
-          </Modal.Header>
-          <Modal.Body>
-            <FormGroup controlId="prototype-name">
-              <label><FormattedMessage id="menu.renamePrototype" /></label>
-              <FormControl
-                type="text"
-                onChange={(e) => this.onPrototypeNameChanged(e)}
-                value={this.state.prototypeName}
-                placeholder={this.props.intl.messages['menu.newName']}
-                inputRef={ref => { this.inputName = ref; }}
-              />
-            </FormGroup>
-            <hr />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              bsStyle="primary"
-              disabled={!this.state.prototypeName}
-              onClick={(e) => this.renamePrototype(e)}
-            >
-              <FormattedMessage id="save" />
-            </Button>
-          </Modal.Footer>
-        </form>
-      </Modal>
+        {this.state.prototypeName}
+      </h2>);
+    }
+    return (
+      <form onSubmit={(e) => this.renamePrototype(e)}>
+        <FormGroup controlId="prototype-name">
+          <FormControl
+            type="text"
+            className="centered"
+            onChange={(e) => this.onPrototypeNameChanged(e)}
+            onBlur={(e) => this.renamePrototype(e)}
+            value={this.state.prototypeName}
+            placeholder={this.props.intl.messages['menu.newName']}
+            inputRef={ref => { this.inputName = ref; }}
+          />
+        </FormGroup>
+      </form>
     );
   }
 
   render() {
     const { application: { locale, locales } } = this.props;
-    let otherLocale;
+    let otherLocale = '';
 
     // Get other locale
     forEach(locales, (lang) => {
@@ -167,7 +159,6 @@ class Menu extends Component {
 
     return (
       <Navbar inverse fixedTop expanded={expanded} onToggle={this.toggleNav}>
-        {this.renderRenameModal()}
         <Navbar.Header>
           <Navbar.Brand>
             <Link className="brand__title" to="/landing" onClick={() => this.redirectToLanding()}>
@@ -191,13 +182,7 @@ class Menu extends Component {
                 />)
             }
           </Nav>
-          <h2
-            className="centered"
-            onDoubleClick={() => this.changePrototypeName()}
-            title={this.props.intl.messages['menu.dblClickRename']}
-          >
-            {this.state.prototypeName}
-          </h2>
+          {this.renderPrototypeName()}
           <Nav pullRight>
             <NavItem onClick={this.handleSwitchLocale}>
               {otherLocale.toUpperCase()}

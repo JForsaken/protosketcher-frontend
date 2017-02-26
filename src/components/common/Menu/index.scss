@@ -6,7 +6,7 @@ nav.navbar {
     z-index: 3;
   }
 
-  h2.centered {
+  .centered {
     position: absolute;
     top: 13px;
     left: 50%;
@@ -18,6 +18,12 @@ nav.navbar {
     font-size: 1.5em;
     z-index: 2;
     cursor: default;
+  }
+
+  input.centered {
+    top: 9px;
+    width: 20%;
+    color: color('text');
   }
 
   .brand {
