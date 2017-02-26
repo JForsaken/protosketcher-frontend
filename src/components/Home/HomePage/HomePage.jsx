@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { isEmpty } from 'lodash';
 
 /* Components */
 import Menu from '../../common/Menu/Menu';
@@ -28,7 +29,7 @@ class HomePage extends Component {
     }
 
     // render workspace
-    if (this.props.application.prototypes) {
+    if (!isEmpty(this.props.application.prototypes)) {
       return (
         <div className="page-container" key="homepage-anim">
           <Menu router={router} />

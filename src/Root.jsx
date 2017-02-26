@@ -31,35 +31,7 @@ import * as i18n from './i18n';
 
 const appHistory = useRouterHistory(createHashHistory)({ queryKey: true });
 
-const initialState = {
-  application: {
-    locale: storage.get('locale') || 'en',
-    locales: [
-      'en',
-      'fr',
-    ],
-    workspace: {
-      currentPos: {
-        x: 0,
-        y: 0,
-      },
-      drawColor: '#000000',
-      menuHidden: true,
-      action: null,
-      actionValue: null,
-      selectedItems: [],
-    },
-    selectedPrototype: null,
-    selectedPage: null,
-  },
-};
-
-export const store = configureStore(initialState);
-
-function logout(nextState, replaceState) {
-  store.dispatch({ type: constants.LOGOUT });
-  replaceState('/landing');
-}
+export const store = configureStore({});
 
 class Root extends Component {
   static propTypes = {
@@ -91,7 +63,6 @@ class Root extends Component {
       <Route path="/" component={Application}>
         <IndexRoute component={HomePage} onEnter={this.requireAuth(this.props)} />
         <Route path="login" component={LoginPage} />
-        <Route path="logout" onEnter={logout} />
         <Route path="landing" component={LandingPage} />
       </Route>
     );

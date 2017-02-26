@@ -1,9 +1,9 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import { bindActionCreators } from 'redux';
 import uuidV1 from 'uuid/v1';
+import { omit } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -14,7 +14,8 @@ import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
 
 /* Actions */
-import { getPages, getPageTypes, getShapes, getTexts } from '../../actions/api';
+import { getPages, getPageTypes, getShapes, getShapeTypes, createShape, patchShape, deleteShape,
+  getTexts } from '../../actions/api';
 import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
@@ -100,8 +101,13 @@ class Workspace extends Component {
     }
 
     // If the page types are not cached, get them
-    if (!newProps.api.getPageTypes) {
+    if (!newProps.api.getPageTypes.pageTypes) {
       this.props.actions.getPageTypes(newProps.application.user.token);
+    }
+
+    // If the shape types are not cached, get them
+    if (!newProps.api.getShapeTypes.shapeTypes) {
+      this.props.actions.getShapeTypes(newProps.application.user.token);
     }
 
     // If the selected prototype's pages are not cached, get them
@@ -124,6 +130,17 @@ class Workspace extends Component {
     // If you just cached the texts, copy them in the state
     else if (newProps.api.lastAction === actions.GET_TEXTS && !this.state.texts) {
       this.setState({ texts: prototype.pages[selectedPage].texts });
+    }
+
+    // Replace the uuid of the created shape with th uui of the DB
+    else if (newProps.api.lastAction === actions.CREATE_SHAPE) {
+      const { shape } = newProps.api.createShape;
+      this.setState({
+        shapes: {
+          ...omit(this.state.shapes, shape.uuid),
+          [shape.id]: omit(shape, ['uuid', 'id', 'pageId']),
+        },
+      });
     }
   }
 
@@ -312,10 +329,11 @@ class Workspace extends Component {
   }
 
   onKeyDownEvent(e) {
-    if (e.key === constants.keys.DELETE ||
-        e.key === constants.keys.BACKSPACE) {
+    if (e.key === constants.keys.DELETE || e.key === constants.keys.BACKSPACE) {
       for (const uuid of this.props.application.workspace.selectedItems) {
         this.deleteSvgPath(uuid);
+        this.props.actions.deleteShape(this.props.application.selectedPrototype,
+          this.state.currentPageId, uuid, this.props.application.user.token);
       }
     } else if (e.key === constants.keys.C) {
       for (const uuid of this.props.application.workspace.selectedItems) {
@@ -336,25 +354,27 @@ class Workspace extends Component {
 
   createShape(point) {
     const uuid = uuidV1();
-    this.setState({
-      shapes: {
-        ...this.state.shapes,
-        [uuid]: {
-          path: this.state.currentPath.pathString
-              += `L${point.x - this.state.currentPath.position.x}
-              ${point.y - this.state.currentPath.position.y} `,
-          color: this.props.application.workspace.drawColor,
-          position: {
-            x: this.state.currentPath.position.x,
-            y: this.state.currentPath.position.y,
-          },
-        },
-      },
-    });
+    const shape = {
+      path: this.state.currentPath.pathString
+      += `L${point.x - this.state.currentPath.position.x} ` +
+      `${point.y - this.state.currentPath.position.y}`,
+      color: this.props.application.workspace.drawColor,
+      x: this.state.currentPath.position.x,
+      y: this.state.currentPath.position.y,
+      shapeTypeId: this.props.api.getShapeTypes.shapeTypes.line,
+      uuid,
+    };
     this.setState({
       currentPath: null,
       previousPoint: null,
+      shapes: {
+        ...this.state.shapes,
+        [uuid]: shape,
+      },
     });
+
+    this.props.actions.createShape(this.props.application.selectedPrototype,
+      this.state.currentPageId, shape, this.props.application.user.token);
   }
 
   computeSvgPath(point, prefix) {
@@ -373,8 +393,8 @@ class Workspace extends Component {
       path: shape.path,
       color: shape.color,
       position: {
-        x: shape.position.x + 100,
-        y: shape.position.y + 100,
+        x: shape.x + 100,
+        y: shape.y + 100,
       },
     };
     this.setState({
@@ -392,8 +412,8 @@ class Workspace extends Component {
 
   dragSvgPath(uuid, translation) {
     const shapes = this.state.shapes;
-    shapes[uuid].position.x = shapes[uuid].originalPositionBeforeDrag.x + translation.x;
-    shapes[uuid].position.y = shapes[uuid].originalPositionBeforeDrag.y + translation.y;
+    shapes[uuid].x = shapes[uuid].originalPositionBeforeDrag.x + translation.x;
+    shapes[uuid].y = shapes[uuid].originalPositionBeforeDrag.y + translation.y;
     this.setState({
       shapes,
     });
@@ -462,8 +482,8 @@ class Workspace extends Component {
   saveOriginalPathPositionForDrag(uuid) {
     const shapes = this.state.shapes;
     shapes[uuid].originalPositionBeforeDrag = {
-      x: shapes[uuid].position.x,
-      y: shapes[uuid].position.y,
+      x: shapes[uuid].x,
+      y: shapes[uuid].y,
     };
     this.setState({
       shapes,
@@ -500,8 +520,8 @@ class Workspace extends Component {
                   id={item[0]}
                   color={item[1].color}
                   path={item[1].path}
-                  posx={item[1].position.x}
-                  posy={item[1].position.y}
+                  posx={item[1].x}
+                  posy={item[1].y}
                   key={i}
                 />)
             }
@@ -569,6 +589,10 @@ export default connect(
       getPageTypes,
       selectPage,
       getShapes,
+      getShapeTypes,
+      createShape,
+      patchShape,
+      deleteShape,
       getTexts,
     }, dispatch),
   })

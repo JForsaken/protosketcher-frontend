@@ -15,7 +15,7 @@ import ValidatedField from '../../common/ValidatedField/ValidatedField';
 import * as apiActions from '../../../actions/api';
 
 /* Constants */
-import { LOGIN, CREATE_USER } from '../../../actions/constants';
+import { LOGIN } from '../../../actions/constants';
 
 /* Utils */
 import { isRequired, isEmail } from '../../../utils/validation';
@@ -41,8 +41,7 @@ class SignupSection extends Component {
   componentWillReceiveProps(nextProps) {
     const { login, createUser } = nextProps.api;
 
-    if (!isEqual(this.props.api.createUser, createUser)
-        && createUser.lastAction === CREATE_USER) {
+    if (!isEqual(this.props.api.createUser, createUser)) {
       // if the user creation has errors
       if (!isEmpty(createUser.error)) {
         this.setState({ isShowingModal: true, pending: false });

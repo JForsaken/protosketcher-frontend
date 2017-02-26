@@ -30,7 +30,6 @@ class Menu extends Component {
     this.toggleNav = this.toggleNav.bind(this);
 
     const { prototypes, selectedPrototype } = this.props.application;
-
     this.state = {
       expanded: false,
       showRenameModal: false,
