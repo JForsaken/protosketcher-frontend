@@ -5,16 +5,12 @@ import { Link } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import scrollToComponent from 'react-scroll-to-component';
 
 /* Components */
 import MenuListItem from '../../common/MenuListItem/MenuListItem';
 
 /* Actions */
 import * as applicationActions from '../../../actions/application';
-
-/* CONSTANTS */
-import { TOP_MENU_HEIGHT } from '../../constants';
 
 @injectIntl
 class LandingMenu extends Component {
@@ -48,27 +44,14 @@ class LandingMenu extends Component {
     this.props.actions.logout();
   }
 
-  goToComponent(id) {
-    const margin = 30;
-    // TODO: find another way to do this
-    // If anyone has an idea to not use getElementById, please tell me
-    // Since the id is outside of the menu, I don't see how even a parent could handle this...
-    scrollToComponent(document.getElementById(id), {
-      offset: - (TOP_MENU_HEIGHT + margin),
-      align: 'top',
-      duration: 250,
-    });
-  }
-
   render() {
     const { expanded } = this.state;
     const { locale, user } = this.props.application;
     const menuItemsLeft = [
       {
         text: <FormattedMessage id="landing.features" />,
-        link: '',
+        link: '#features', // TODO fix this to go to features
         icon: 'list',
-        onClick: () => this.goToComponent('features'),
       },
     ];
 
