@@ -49,6 +49,12 @@ export default {
   // LANGUAGE
   'language.switcher': 'Langue',
 
+  // WORKSPACE
+  'workspace.loading': "Chargement de l'espace de travail",
+
+  // SIMULATION
+  'simulation.loading': 'Chargement de la simulation',
+
   // FOOTER
   'footer.page': 'Page',
   'footer.addPage': 'Ajouter une nouvelle page',

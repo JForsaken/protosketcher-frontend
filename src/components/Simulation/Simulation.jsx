@@ -1,5 +1,6 @@
 /* Node modules */
 import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { filter, has, isEqual } from 'lodash';
@@ -76,6 +77,21 @@ class Simulation extends Component {
     }
   }
 
+  renderShapes() {
+    return (
+      Object.entries(this.state.shapes).map((item, i) =>
+        <Shape
+          id={item[0]}
+          onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
+          color={item[1].color}
+          path={item[1].path}
+          posX={item[1].x}
+          posY={item[1].y}
+          key={i}
+        />)
+    );
+  }
+
   renderControls() {
     const { svgShapes, shapes } = this.state;
 
@@ -98,7 +114,6 @@ class Simulation extends Component {
 
   renderSimulation() {
     const {
-      shapes,
       pagesToFetch,
       pagesWithShapesFetched,
       pagesWithTextsFetched,
@@ -111,7 +126,7 @@ class Simulation extends Component {
         <div>
           <div className="backdrop"></div>
           <div className="loading">
-            <span>Loading simulation</span>
+            <FormattedMessage id="simulation.loading" />
             <div className="spinner" />
           </div>
         </div>
@@ -129,18 +144,7 @@ class Simulation extends Component {
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          {
-            Object.entries(shapes).map((item, i) =>
-              <Shape
-                id={item[0]}
-                onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
-                color={item[1].color}
-                path={item[1].path}
-                posX={item[1].x}
-                posY={item[1].y}
-                key={i}
-              />)
-          }
+          {this.renderShapes()}
         </svg>
         {this.renderControls()}
       </div>

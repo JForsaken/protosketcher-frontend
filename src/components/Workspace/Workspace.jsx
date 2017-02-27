@@ -1,5 +1,6 @@
 /* Node modules */
 import React, { Component } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import uuidV1 from 'uuid/v1';
@@ -566,7 +567,7 @@ class Workspace extends Component {
       <div>
         <div className="backdrop"></div>
         <div className="loading">
-          <span>Loading workspace</span>
+          <FormattedMessage id="workspace.loading" />
           <div className="spinner" />
         </div>
       </div>
