@@ -38,19 +38,20 @@ class Control extends Component {
     const x = (Math.floor(rect.x + rect.width / 2.0) + posX) - rect.width / 2.0;
     const y = (Math.floor(rect.y + rect.height / 2.0) + posY) - rect.height / 2.0;
 
+    const controlStyle = {
+      left: x,
+      top: y,
+      width: rect.width,
+      height: rect.height,
+    };
+
     switch (this.state.shapeType) {
       case 'button':
         control = (
           <Button
             onClick={() => this.onButtonClick()}
-            style={{
-              zIndex: 10000,
-              position: 'absolute',
-              left: x,
-              top: y,
-              width: rect.width,
-              height: rect.height,
-            }}
+            className="simulation-control"
+            style={controlStyle}
           >
             Button control
           </Button>
@@ -61,15 +62,8 @@ class Control extends Component {
         control = (
           <FormControl
             type="text"
-            placeholder="Enter text"
-            style={{
-              zIndex: 10000,
-              position: 'absolute',
-              left: x,
-              top: y,
-              width: rect.width,
-              height: rect.height,
-            }}
+            className="simulation-control"
+            style={controlStyle}
           />
         );
         break;
@@ -85,11 +79,7 @@ class Control extends Component {
   }
 
   render() {
-    return (
-      <div>
-        {this.getControl()}
-      </div>
-    );
+    return this.getControl();
   }
 }
 
