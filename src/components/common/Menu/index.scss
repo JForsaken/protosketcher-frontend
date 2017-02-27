@@ -20,10 +20,14 @@ nav.navbar {
     cursor: default;
   }
 
-  input.centered {
+  form.centered {
     top: 9px;
-    width: 20%;
+    width: 10%;
     color: color('text');
+
+    input {
+      width: 100%;
+    }
   }
 
   .brand {

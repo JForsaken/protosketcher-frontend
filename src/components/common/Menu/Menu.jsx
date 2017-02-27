@@ -37,18 +37,17 @@ class Menu extends Component {
     };
   }
 
-  componentDidMount() {
-    if (this.inputName) {
-      this.inputName.focus();
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
     // LOGOUT
     if (!isEqual(this.props.application.user, nextProps.application.user) &&
       nextProps.application.user === null) {
       this.props.router.push('/landing');
-      return;
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.inputName) {
+      this.inputName.focus();
     }
   }
 
@@ -115,16 +114,15 @@ class Menu extends Component {
       </h2>);
     }
     return (
-      <form onSubmit={(e) => this.renamePrototype(e)}>
+      <form onSubmit={(e) => this.renamePrototype(e)} className="centered">
         <FormGroup controlId="prototype-name">
-          <FormControl
+          <input
             type="text"
-            className="centered"
             onChange={(e) => this.onPrototypeNameChanged(e)}
             onBlur={(e) => this.renamePrototype(e)}
             value={this.state.prototypeName}
             placeholder={this.props.intl.messages['menu.newName']}
-            inputRef={ref => { this.inputName = ref; }}
+            ref={ref => { this.inputName = ref; }}
           />
         </FormGroup>
       </form>
