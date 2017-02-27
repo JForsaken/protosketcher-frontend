@@ -26,12 +26,17 @@ class Simulation extends Component {
                                 p => (!has(prototype.pages[p], 'shapes') &&
                                       !has(prototype.pages[p], 'texts')));
 
+    this.svgShapes = {};
+
     this.state = {
       pages: prototype.pages || null,
       currentPageId: selectedPage,
       shapes,
       texts,
+      svgShapes: {},
       pagesToFetch,
+      pagesWithShapesFetched: [],
+      pagesWithTextsFetched: [],
     };
   }
 
@@ -46,67 +51,98 @@ class Simulation extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { prototypes, selectedPrototype } = this.props.application;
-    const prototype = prototypes[selectedPrototype];
+    const { pagesWithShapesFetched, pagesWithTextsFetched } = this.state;
 
-    console.log('will receive', nextProps);
-    if (!isEqual(prototype.pages, nextProps.application.prototypes[selectedPrototype].pages)) {
-      console.log('changement', nextProps);
+    // when the shapes were fetched for a certain page
+    if (!isEqual(this.props.api.getShapes, nextProps.api.getShapes)) {
+      this.setState({
+        pagesWithShapesFetched: [...pagesWithShapesFetched, nextProps.api.getShapes.requestedPage],
+      });
+    // when the texts were fetched for a certain page
+    } else if (!isEqual(this.props.api.getTexts, nextProps.api.getTexts)) {
+      this.setState({
+        pagesWithTextsFetched: [...pagesWithTextsFetched, nextProps.api.getTexts.requestedPage],
+      });
     }
   }
 
+  shapeDidMount(id, shapeSvg) {
+    // intermediate container to prevent unnecessary renders
+    this.svgShapes = { ...this.svgShapes, [id]: shapeSvg };
+
+    // when all the svgs have been rendered
+    if (Object.keys(this.svgShapes).length === Object.keys(this.state.shapes).length) {
+      this.setState({ svgShapes: this.svgShapes });
+    }
+  }
+
+  renderControls() {
+    const { svgShapes, shapes } = this.state;
+
+    return (
+      // only show a control if its relative shape svg has been rendered
+      Object.entries(shapes).map((item, i) => svgShapes[item[0]] &&
+        <Control
+          id={`control-${item[0]}`}
+          controls={item[1].controls || []}
+          shapeTypeId={item[1].shapeTypeId}
+          color={item[1].color}
+          rect={svgShapes[item[0]].getBBox()}
+          posx={item[1].x}
+          posy={item[1].y}
+          key={`control-${i}`}
+        />
+      )
+    );
+  }
+
   renderSimulation() {
-    console.log(this.state.shapes, this.state.texts);
-    if (this.state.shapes && this.state.texts) {
-      console.log('size', Object.keys(this.state.shapes));
+    const {
+      shapes,
+      pagesToFetch,
+      pagesWithShapesFetched,
+      pagesWithTextsFetched,
+    } = this.state;
+
+    // the loading is over when the pages to fetch have their shapes and texts
+    if (!pagesToFetch.every(p => (pagesWithShapesFetched.includes(p) &&
+                                  pagesWithTextsFetched.includes(p)))) {
       return (
-        <div id="workspace">
-          <svg height="100%" width="100%">
-            <filter id="dropshadow" height="130%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-              <feOffset dx="0" dy="0" result="offsetblur" />
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            {
-              Object.entries(this.state.shapes).map((item, i) =>
-                <Shape
-                  id={item[0]}
-                  color={item[1].color}
-                  path={item[1].path}
-                  posx={item[1].x}
-                  posy={item[1].y}
-                  key={i}
-                />)
-            }
-          </svg>
-          {
-            Object.entries(this.state.shapes).map((item, i) =>
-              <Control
-                id={item[0]}
-                controls={item[1].controls || []}
-                shapeTypeId={item[1].shapeTypeId}
-                color={item[1].color}
-                // TODO: must find a way to get ref instead of document.getElementById
-                rect={document.getElementById(item[0]).getBBox()}
-                posx={item[1].x}
-                posy={item[1].y}
-                key={i}
-              />)
-        }
+        <div>
+          <div className="backdrop"></div>
+          <div className="loading">
+            <span>Loading simulation</span>
+            <div className="spinner" />
+          </div>
         </div>
       );
     }
 
     return (
-      <div>
-        <div className="backdrop"></div>
-        <div className="loading">
-          <span>Loading simulation</span>
-          <div className="spinner" />
-        </div>
+      <div id="workspace">
+        <svg height="100%" width="100%">
+          <filter id="dropshadow" height="130%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+            <feOffset dx="0" dy="0" result="offsetblur" />
+            <feMerge>
+              <feMergeNode />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          {
+            Object.entries(shapes).map((item, i) =>
+              <Shape
+                id={item[0]}
+                onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
+                color={item[1].color}
+                path={item[1].path}
+                posx={item[1].x}
+                posy={item[1].y}
+                key={i}
+              />)
+          }
+        </svg>
+        {this.renderControls()}
       </div>
     );
   }
@@ -128,7 +164,7 @@ class Simulation extends Component {
 }
 
 export default connect(
-  ({ application }) => ({ application }),
+  ({ application, api }) => ({ application, api }),
   dispatch => ({
     actions: bindActionCreators({
       getShapes,

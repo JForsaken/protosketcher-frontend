@@ -1,12 +1,28 @@
 /* Node modules */
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 class Shape extends Component {
+  static propTypes = {
+    id: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+    posx: PropTypes.number.isRequired,
+    posy: PropTypes.number.isRequired,
+    onLoad: PropTypes.func,
+  }
+  componentDidMount() {
+    const { onLoad, id } = this.props;
 
+    // if an onLoad callback has been provided
+    if (onLoad) {
+      onLoad(id, this.svgShape);
+    }
+  }
   render() {
     return (
       <path
+        ref={svgShape => (this.svgShape = svgShape)}
         className={this.props.application.workspace.selectedItems.some(e => e === this.props.id)
           ? 'workspace-line-selected' : 'workspace-line'}
         d={this.props.path}
