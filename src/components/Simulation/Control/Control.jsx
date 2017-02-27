@@ -11,8 +11,8 @@ class Control extends Component {
     id: PropTypes.string.isRequired,
     rect: PropTypes.object.isRequired,
     color: PropTypes.string.isRequired,
-    posx: PropTypes.number.isRequired,
-    posy: PropTypes.number.isRequired,
+    posX: PropTypes.number.isRequired,
+    posY: PropTypes.number.isRequired,
   }
   constructor(props) {
     super(props);
@@ -32,11 +32,11 @@ class Control extends Component {
   getControl() {
     let control = null;
 
-    const { posx, posy, rect } = this.props;
+    const { posX, posY, rect } = this.props;
 
     // the position where the control should be placed
-    const x = (Math.floor(rect.x + rect.width / 2.0) + posx) - rect.width / 2.0;
-    const y = (Math.floor(rect.y + rect.height / 2.0) + posy) - rect.height / 2.0;
+    const x = (Math.floor(rect.x + rect.width / 2.0) + posX) - rect.width / 2.0;
+    const y = (Math.floor(rect.y + rect.height / 2.0) + posY) - rect.height / 2.0;
 
     switch (this.state.shapeType) {
       case 'button':

@@ -529,8 +529,8 @@ class Workspace extends Component {
                   id={item[0]}
                   color={item[1].color}
                   path={item[1].path}
-                  posx={item[1].x}
-                  posy={item[1].y}
+                  posX={item[1].x}
+                  posY={item[1].y}
                   key={i}
                 />)
             }

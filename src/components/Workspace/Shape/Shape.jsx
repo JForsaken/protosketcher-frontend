@@ -7,8 +7,8 @@ class Shape extends Component {
     id: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
-    posx: PropTypes.number.isRequired,
-    posy: PropTypes.number.isRequired,
+    posX: PropTypes.number.isRequired,
+    posY: PropTypes.number.isRequired,
     onLoad: PropTypes.func,
   }
   componentDidMount() {
@@ -28,7 +28,7 @@ class Shape extends Component {
         d={this.props.path}
         stroke={this.props.color}
         id={this.props.id}
-        transform={`translate(${this.props.posx} ${this.props.posy})`}
+        transform={`translate(${this.props.posX} ${this.props.posY})`}
       />
     );
   }

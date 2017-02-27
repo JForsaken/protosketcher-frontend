@@ -88,8 +88,8 @@ class Simulation extends Component {
           shapeTypeId={item[1].shapeTypeId}
           color={item[1].color}
           rect={svgShapes[item[0]].getBBox()}
-          posx={item[1].x}
-          posy={item[1].y}
+          posX={item[1].x}
+          posY={item[1].y}
           key={`control-${i}`}
         />
       )
@@ -136,8 +136,8 @@ class Simulation extends Component {
                 onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
                 color={item[1].color}
                 path={item[1].path}
-                posx={item[1].x}
-                posy={item[1].y}
+                posX={item[1].x}
+                posY={item[1].y}
                 key={i}
               />)
           }
