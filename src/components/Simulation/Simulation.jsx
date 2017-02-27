@@ -1,11 +1,16 @@
 /* Node modules */
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { filter, has, isEqual } from 'lodash';
 
 /* Components */
 import Footer from '../common/Footer/Footer';
 import Shape from '../Workspace/Shape/Shape';
 import Control from './Control/Control';
+
+/* Actions */
+import { getShapes, getTexts } from '../../actions/api';
 
 class Simulation extends Component {
 
@@ -16,16 +21,44 @@ class Simulation extends Component {
     const prototype = prototypes[selectedPrototype];
     const { shapes, texts } = prototype.pages[selectedPage];
 
+    // the pages that still need to be fetched in order to be cached
+    const pagesToFetch = filter(Object.keys(prototype.pages),
+                                p => (!has(prototype.pages[p], 'shapes') &&
+                                      !has(prototype.pages[p], 'texts')));
+
     this.state = {
       pages: prototype.pages || null,
       currentPageId: selectedPage,
       shapes,
       texts,
+      pagesToFetch,
     };
   }
 
+  componentDidMount() {
+    const { selectedPrototype, user } = this.props.application;
+
+    // fetch all the needed info for the pages that aren't cached yet
+    this.state.pagesToFetch.forEach((p) => {
+      this.props.actions.getShapes(selectedPrototype, p, user.token);
+      this.props.actions.getTexts(selectedPrototype, p, user.token);
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { prototypes, selectedPrototype } = this.props.application;
+    const prototype = prototypes[selectedPrototype];
+
+    console.log('will receive', nextProps);
+    if (!isEqual(prototype.pages, nextProps.application.prototypes[selectedPrototype].pages)) {
+      console.log('changement', nextProps);
+    }
+  }
+
   renderSimulation() {
+    console.log(this.state.shapes, this.state.texts);
     if (this.state.shapes && this.state.texts) {
+      console.log('size', Object.keys(this.state.shapes));
       return (
         <div id="workspace">
           <svg height="100%" width="100%">
@@ -62,7 +95,7 @@ class Simulation extends Component {
                 posy={item[1].y}
                 key={i}
               />)
-          }
+        }
         </div>
       );
     }
@@ -96,4 +129,10 @@ class Simulation extends Component {
 
 export default connect(
   ({ application }) => ({ application }),
+  dispatch => ({
+    actions: bindActionCreators({
+      getShapes,
+      getTexts,
+    }, dispatch),
+  })
 )(Simulation);

@@ -96,7 +96,3 @@ class Control extends Component {
 export default connect(
   ({ application, api }) => ({ application, api })
 )(Control);
-
-/*
-   const bbox = p.getBBox();
- */

@@ -211,7 +211,7 @@ export function patchPrototype(prototype, token) {
       .then(processResponse)
       .then((data) => {
         dispatch({
-          type: constants.RENAME_PROTOTYPE,
+          type: constants.PATCH_PROTOTYPE,
           prototype: data.body,
           time: date.toUTCString(),
           error: {},
@@ -219,7 +219,7 @@ export function patchPrototype(prototype, token) {
       })
       .catch((data) => {
         dispatch({
-          type: constants.RENAME_PROTOTYPE,
+          type: constants.PATCH_PROTOTYPE,
           prototype: {},
           time: date.toUTCString(),
           error: {
@@ -249,6 +249,7 @@ export function getPages(prototypeId, token) {
         dispatch({
           type: constants.GET_PAGES,
           pages: data.body,
+          requestedPrototype: prototypeId,
           time: date.toUTCString(),
           error: {},
         });
@@ -257,6 +258,7 @@ export function getPages(prototypeId, token) {
         dispatch({
           type: constants.GET_PAGES,
           pages: {},
+          requestedPrototype: prototypeId,
           time: date.toUTCString(),
           error: {
             msg: data.msg,
@@ -320,6 +322,7 @@ export function createPage(prototypeId, page, token) {
         dispatch({
           type: constants.CREATE_PAGE,
           page: data.body,
+          requestedPrototype: prototypeId,
           time: date.toUTCString(),
           error: {},
         });
@@ -328,6 +331,7 @@ export function createPage(prototypeId, page, token) {
         dispatch({
           type: constants.CREATE_PAGE,
           page: {},
+          requestedPrototype: prototypeId,
           time: date.toUTCString(),
           error: {
             msg: data.msg,
@@ -356,6 +360,7 @@ export function patchPage(prototypeId, pageId, page, token) {
         dispatch({
           type: constants.PATCH_PAGE,
           page: data.body,
+          requestedPrototype: prototypeId,
           time: date.toUTCString(),
           error: {},
         });
@@ -364,6 +369,7 @@ export function patchPage(prototypeId, pageId, page, token) {
         dispatch({
           type: constants.PATCH_PAGE,
           page: {},
+          requestedPrototype: prototypeId,
           time: date.toUTCString(),
           error: {
             msg: data.msg,
@@ -391,6 +397,7 @@ export function deletePage(prototypeId, pageId, token) {
         dispatch({
           type: constants.DELETE_PAGE,
           page: data.body,
+          requestedPrototype: prototypeId,
           time: date.toUTCString(),
           error: {},
         });
@@ -399,6 +406,7 @@ export function deletePage(prototypeId, pageId, token) {
         dispatch({
           type: constants.DELETE_PAGE,
           page: {},
+          requestedPrototype: prototypeId,
           time: date.toUTCString(),
           error: {
             msg: data.msg,
@@ -427,6 +435,8 @@ export function getShapes(prototypeId, pageId, token) {
         dispatch({
           type: constants.GET_SHAPES,
           shapes: data.body,
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
           time: date.toUTCString(),
           error: {},
         });
@@ -435,6 +445,8 @@ export function getShapes(prototypeId, pageId, token) {
         dispatch({
           type: constants.GET_SHAPES,
           shapes: {},
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
           time: date.toUTCString(),
           error: {
             msg: data.msg,
@@ -499,6 +511,8 @@ export function createShape(prototypeId, pageId, shape, token) {
         dispatch({
           type: constants.CREATE_SHAPE,
           shape: data.body,
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
           time: date.toUTCString(),
           error: {},
         });
@@ -507,6 +521,8 @@ export function createShape(prototypeId, pageId, shape, token) {
         dispatch({
           type: constants.CREATE_SHAPE,
           shape: {},
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
           time: date.toUTCString(),
           error: {
             msg: data.msg,
@@ -535,6 +551,8 @@ export function patchShape(prototypeId, pageId, shapeId, shape, token) {
         dispatch({
           type: constants.PATCH_SHAPE,
           shape: data.body,
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
           time: date.toUTCString(),
           error: {},
         });
@@ -543,6 +561,8 @@ export function patchShape(prototypeId, pageId, shapeId, shape, token) {
         dispatch({
           type: constants.PATCH_SHAPE,
           shape: {},
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
           time: date.toUTCString(),
           error: {
             msg: data.msg,
@@ -570,6 +590,8 @@ export function deleteShape(prototypeId, pageId, shapeId, token) {
         dispatch({
           type: constants.DELETE_SHAPE,
           shape: data.body,
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
           time: date.toUTCString(),
           error: {},
         });
@@ -578,6 +600,8 @@ export function deleteShape(prototypeId, pageId, shapeId, token) {
         dispatch({
           type: constants.DELETE_SHAPE,
           shape: {},
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
           time: date.toUTCString(),
           error: {
             msg: data.msg,
@@ -606,6 +630,8 @@ export function getTexts(prototypeId, pageId, token) {
         dispatch({
           type: constants.GET_TEXTS,
           texts: data.body,
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
           time: date.toUTCString(),
           error: {},
         });
@@ -614,6 +640,8 @@ export function getTexts(prototypeId, pageId, token) {
         dispatch({
           type: constants.GET_TEXTS,
           texts: {},
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
           time: date.toUTCString(),
           error: {
             msg: data.msg,
