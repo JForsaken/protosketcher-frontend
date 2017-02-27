@@ -1,7 +1,7 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
-import { Nav, Navbar, NavItem, FormGroup, FormControl } from 'react-bootstrap';
+import { Nav, Navbar, NavItem, FormGroup } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
