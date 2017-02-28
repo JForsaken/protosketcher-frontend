@@ -41,6 +41,7 @@ const initialState = {
   },
   getShapes: {
     pages: {},
+    requestedPage: null,
     time: null,
     error: {},
   },
@@ -66,6 +67,7 @@ const initialState = {
   },
   getTexts: {
     texts: {},
+    requestedPage: null,
     time: null,
     error: {},
   },
@@ -164,6 +166,7 @@ const actionHandlers = {
     lastAction: action.type,
     getShapes: {
       shapes: action.shapes,
+      requestedPage: action.requestedPage,
       time: action.time,
       error: action.error,
     },
@@ -209,6 +212,7 @@ const actionHandlers = {
     lastAction: action.type,
     getTexts: {
       texts: action.texts,
+      requestedPage: action.requestedPage,
       time: action.time,
       error: action.error,
     },

@@ -9,8 +9,6 @@ const BACKEND_API = 'http://localhost:5000/api/v1';
 /* --- User Login --- */
 
 export function login(loginAttempt) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/authenticate`, {
       method: 'POST',
@@ -27,7 +25,7 @@ export function login(loginAttempt) {
         dispatch({
           type: constants.LOGIN,
           user: { token: data.body.token },
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {},
         });
       })
@@ -35,7 +33,7 @@ export function login(loginAttempt) {
         dispatch({
           type: constants.LOGIN,
           user: {},
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -46,8 +44,6 @@ export function login(loginAttempt) {
 }
 
 export function fetchMe(token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/users/me`, {
       method: 'GET',
@@ -66,7 +62,7 @@ export function fetchMe(token) {
             email: data.body.email,
             token,
           },
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {},
         });
       })
@@ -76,7 +72,7 @@ export function fetchMe(token) {
         dispatch({
           type: constants.FETCH_ME,
           user: {},
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -88,8 +84,6 @@ export function fetchMe(token) {
 
 /* --- Create User --- */
 export function createUser(userCredentials) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/users`, {
       method: 'POST',
@@ -104,7 +98,7 @@ export function createUser(userCredentials) {
         dispatch({
           type: constants.CREATE_USER,
           user: { email: userCredentials.email },
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {},
         });
       })
@@ -112,7 +106,7 @@ export function createUser(userCredentials) {
         dispatch({
           type: constants.CREATE_USER,
           user: {},
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -125,8 +119,6 @@ export function createUser(userCredentials) {
 
 /* --- Prototypes --- */
 export function getPrototypes(token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes?attributes=name,isMobile`, {
       method: 'GET',
@@ -141,7 +133,7 @@ export function getPrototypes(token) {
         dispatch({
           type: constants.GET_PROTOTYPES,
           prototypes: data.body,
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {},
         });
       })
@@ -149,7 +141,7 @@ export function getPrototypes(token) {
         dispatch({
           type: constants.GET_PROTOTYPES,
           prototypes: {},
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -160,8 +152,6 @@ export function getPrototypes(token) {
 }
 
 export function createPrototype(prototype, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes`, {
       method: 'POST',
@@ -177,7 +167,7 @@ export function createPrototype(prototype, token) {
         dispatch({
           type: constants.CREATE_PROTOTYPE,
           prototype: data.body,
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {},
         });
       })
@@ -185,7 +175,7 @@ export function createPrototype(prototype, token) {
         dispatch({
           type: constants.CREATE_PROTOTYPE,
           prototype: {},
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -196,8 +186,6 @@ export function createPrototype(prototype, token) {
 }
 
 export function patchPrototype(prototype, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototype.id}`, {
       method: 'PATCH',
@@ -211,17 +199,17 @@ export function patchPrototype(prototype, token) {
       .then(processResponse)
       .then((data) => {
         dispatch({
-          type: constants.RENAME_PROTOTYPE,
+          type: constants.PATCH_PROTOTYPE,
           prototype: data.body,
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {},
         });
       })
       .catch((data) => {
         dispatch({
-          type: constants.RENAME_PROTOTYPE,
+          type: constants.PATCH_PROTOTYPE,
           prototype: {},
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -233,8 +221,6 @@ export function patchPrototype(prototype, token) {
 
 /* --- Pages --- */
 export function getPages(prototypeId, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages?attributes=name,pageTypeId`, {
       method: 'GET',
@@ -249,7 +235,8 @@ export function getPages(prototypeId, token) {
         dispatch({
           type: constants.GET_PAGES,
           pages: data.body,
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          time: Date.now(),
           error: {},
         });
       })
@@ -257,7 +244,8 @@ export function getPages(prototypeId, token) {
         dispatch({
           type: constants.GET_PAGES,
           pages: {},
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -268,8 +256,6 @@ export function getPages(prototypeId, token) {
 }
 
 export function getPageTypes(token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/pagetypes?attributes=type`, {
       method: 'GET',
@@ -284,7 +270,7 @@ export function getPageTypes(token) {
         dispatch({
           type: constants.GET_PAGE_TYPES,
           pageTypes: data.body,
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {},
         });
       })
@@ -292,7 +278,7 @@ export function getPageTypes(token) {
         dispatch({
           type: constants.GET_PAGE_TYPES,
           pageTypes: {},
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -303,8 +289,6 @@ export function getPageTypes(token) {
 }
 
 export function createPage(prototypeId, page, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages?attributes=name,pageTypeId`, {
       method: 'POST',
@@ -320,7 +304,8 @@ export function createPage(prototypeId, page, token) {
         dispatch({
           type: constants.CREATE_PAGE,
           page: data.body,
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          time: Date.now(),
           error: {},
         });
       })
@@ -328,7 +313,8 @@ export function createPage(prototypeId, page, token) {
         dispatch({
           type: constants.CREATE_PAGE,
           page: {},
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -339,8 +325,6 @@ export function createPage(prototypeId, page, token) {
 }
 
 export function patchPage(prototypeId, pageId, page, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}?attributes=name,pageTypeId`, {
       method: 'PATCH',
@@ -356,7 +340,8 @@ export function patchPage(prototypeId, pageId, page, token) {
         dispatch({
           type: constants.PATCH_PAGE,
           page: data.body,
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          time: Date.now(),
           error: {},
         });
       })
@@ -364,7 +349,8 @@ export function patchPage(prototypeId, pageId, page, token) {
         dispatch({
           type: constants.PATCH_PAGE,
           page: {},
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -375,8 +361,6 @@ export function patchPage(prototypeId, pageId, page, token) {
 }
 
 export function deletePage(prototypeId, pageId, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}`, {
       method: 'DELETE',
@@ -391,7 +375,8 @@ export function deletePage(prototypeId, pageId, token) {
         dispatch({
           type: constants.DELETE_PAGE,
           page: data.body,
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          time: Date.now(),
           error: {},
         });
       })
@@ -399,7 +384,8 @@ export function deletePage(prototypeId, pageId, token) {
         dispatch({
           type: constants.DELETE_PAGE,
           page: {},
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -411,8 +397,6 @@ export function deletePage(prototypeId, pageId, token) {
 
 /* --- Shapes ---*/
 export function getShapes(prototypeId, pageId, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/shapes`, {
       method: 'GET',
@@ -427,7 +411,9 @@ export function getShapes(prototypeId, pageId, token) {
         dispatch({
           type: constants.GET_SHAPES,
           shapes: data.body,
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
           error: {},
         });
       })
@@ -435,7 +421,9 @@ export function getShapes(prototypeId, pageId, token) {
         dispatch({
           type: constants.GET_SHAPES,
           shapes: {},
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -446,8 +434,6 @@ export function getShapes(prototypeId, pageId, token) {
 }
 
 export function getShapeTypes(token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/shapetypes`, {
       method: 'GET',
@@ -462,7 +448,7 @@ export function getShapeTypes(token) {
         dispatch({
           type: constants.GET_SHAPE_TYPES,
           shapeTypes: data.body,
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {},
         });
       })
@@ -470,7 +456,7 @@ export function getShapeTypes(token) {
         dispatch({
           type: constants.GET_SHAPE_TYPES,
           shapeTypes: {},
-          time: date.toUTCString(),
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -482,8 +468,6 @@ export function getShapeTypes(token) {
 
 
 export function createShape(prototypeId, pageId, shape, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/shapes`, {
       method: 'POST',
@@ -499,7 +483,9 @@ export function createShape(prototypeId, pageId, shape, token) {
         dispatch({
           type: constants.CREATE_SHAPE,
           shape: data.body,
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
           error: {},
         });
       })
@@ -507,7 +493,9 @@ export function createShape(prototypeId, pageId, shape, token) {
         dispatch({
           type: constants.CREATE_SHAPE,
           shape: {},
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -518,8 +506,6 @@ export function createShape(prototypeId, pageId, shape, token) {
 }
 
 export function patchShape(prototypeId, pageId, shapeId, shape, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/shapes/${shapeId}`, {
       method: 'PATCH',
@@ -535,7 +521,9 @@ export function patchShape(prototypeId, pageId, shapeId, shape, token) {
         dispatch({
           type: constants.PATCH_SHAPE,
           shape: data.body,
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
           error: {},
         });
       })
@@ -543,7 +531,9 @@ export function patchShape(prototypeId, pageId, shapeId, shape, token) {
         dispatch({
           type: constants.PATCH_SHAPE,
           shape: {},
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -554,8 +544,6 @@ export function patchShape(prototypeId, pageId, shapeId, shape, token) {
 }
 
 export function deleteShape(prototypeId, pageId, shapeId, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/shapes/${shapeId}`, {
       method: 'DELETE',
@@ -570,7 +558,9 @@ export function deleteShape(prototypeId, pageId, shapeId, token) {
         dispatch({
           type: constants.DELETE_SHAPE,
           shape: data.body,
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
           error: {},
         });
       })
@@ -578,7 +568,9 @@ export function deleteShape(prototypeId, pageId, shapeId, token) {
         dispatch({
           type: constants.DELETE_SHAPE,
           shape: {},
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
@@ -590,8 +582,6 @@ export function deleteShape(prototypeId, pageId, shapeId, token) {
 
 /* --- Texts ---*/
 export function getTexts(prototypeId, pageId, token) {
-  const date = new Date();
-
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/texts`, {
       method: 'GET',
@@ -606,7 +596,9 @@ export function getTexts(prototypeId, pageId, token) {
         dispatch({
           type: constants.GET_TEXTS,
           texts: data.body,
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
           error: {},
         });
       })
@@ -614,7 +606,9 @@ export function getTexts(prototypeId, pageId, token) {
         dispatch({
           type: constants.GET_TEXTS,
           texts: {},
-          time: date.toUTCString(),
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
           error: {
             msg: data.msg,
             code: data.code,
