@@ -160,23 +160,32 @@ function onGetShapes(state, action) {
   } else {
     const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
 
-    const dict = action.shapes.reduce((acc, current) => {
-      const copy = acc;
-      if (!page.shapes || !page[current.id]) {
+    const dict = action.shapes.reduce((accShapes, curShape) => {
+      const accumulatedShapes = accShapes;
+      const currentShape = curShape;
+
+      if (!page.shapes || !page[currentShape.id]) {
         // clean controls
-        current.controls.forEach((o) => {
-          const cur = o;
-          if (has(cur, '_id')) {
-            cur.id = cur._id;
-            delete cur._id;
+        currentShape.controls = currentShape.controls.reduce((accCtrls, curCtrl) => {
+          const accumulatedCtrls = accCtrls;
+          const currentCtrl = curCtrl;
+
+          if (has(currentCtrl, '_id')) {
+            currentCtrl.id = currentCtrl._id;
+            delete currentCtrl._id;
           }
-          if (has(cur, '__v')) {
-            delete cur.__v;
+          if (has(currentCtrl, '__v')) {
+            delete currentCtrl.__v;
           }
-        });
-        copy[current.id] = omit(current, ['id', 'pageId']);
+
+          accumulatedCtrls[currentCtrl.id] = omit(currentCtrl, ['id', 'shapeId']);
+          return accumulatedCtrls;
+        }, {});
+
+        accumulatedShapes[currentShape.id] = omit(currentShape, ['id', 'pageId']);
       }
-      return copy;
+
+      return accumulatedShapes;
     }, {});
 
     merge(state, {
