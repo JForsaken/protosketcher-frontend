@@ -6,6 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Scroll from 'react-scroll';
+import { forEach } from 'lodash';
 
 /* Components */
 import MenuListItem from '../../common/MenuListItem/MenuListItem';
@@ -62,7 +63,16 @@ class LandingMenu extends Component {
 
   render() {
     const { expanded } = this.state;
-    const { locale, user } = this.props.application;
+    const { locale, locales, user } = this.props.application;
+    let otherLocale;
+
+    // Get other locale
+    forEach(locales, (lang) => {
+      if (lang !== locale) {
+        otherLocale = lang;
+      }
+    });
+
     const menuItemsLeft = [
       {
         text: <FormattedMessage id="landing.features" />,
@@ -74,7 +84,7 @@ class LandingMenu extends Component {
 
     const menuItemsRight = [
       {
-        text: locale.toUpperCase(),
+        text: otherLocale.toUpperCase(),
         link: '',
         onClick: () => this.handleSwitchLocale(),
       },

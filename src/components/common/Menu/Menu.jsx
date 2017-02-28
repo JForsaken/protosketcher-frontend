@@ -1,12 +1,12 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
-import { Nav, Navbar, NavItem, FormGroup, FormControl, Modal, Button } from 'react-bootstrap';
+import { Nav, Navbar, NavItem, FormGroup } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
-import { isEqual } from 'lodash';
+import { isEqual, forEach } from 'lodash';
 
 /* Components */
 import MenuListItem from '../MenuListItem/MenuListItem';
@@ -51,10 +51,10 @@ class Menu extends Component {
     }
   }
 
-  onPrototypeNameChanged(e) {
-    this.setState({
-      prototypeName: e.target.value,
-    });
+  componentDidUpdate() {
+    if (this.inputName) {
+      this.inputName.focus();
+    }
   }
 
   handleSwitchLocale() {
@@ -96,9 +96,10 @@ class Menu extends Component {
     this.setState({ showRenameModal: true });
   }
 
-  renamePrototype() {
+  renamePrototype(e) {
+    e.preventDefault();
     this.props.actions.patchPrototype({
-      name: this.state.prototypeName,
+      name: e.currentTarget.value,
       id: this.props.application.selectedPrototype,
     }, this.props.application.user.token);
     this.closeModal();
@@ -107,48 +108,48 @@ class Menu extends Component {
   closeModal() {
     this.setState({
       showRenameModal: false,
-      prototypeName: '',
     });
   }
 
-  renderRenameModal() {
+  renderPrototypeName() {
+    if (!this.state.showRenameModal) {
+      return (
+        <h2
+          className="centered"
+          onDoubleClick={() => this.changePrototypeName()}
+          title={this.props.intl.messages['menu.dblClickRename']}
+        >
+          {this.state.prototypeName}
+        </h2>
+      );
+    }
+
     return (
-      <Modal
-        dialogClassName="add-modal"
-        show={this.state.showRenameModal}
-        onHide={() => this.closeModal()}
-      >
-        <form onSubmit={() => this.renamePage()}>
-          <Modal.Header closeButton>
-            <FontAwesome name="pencil-square" />
-          </Modal.Header>
-          <Modal.Body>
-            <FormGroup controlId="prototype-name">
-              <label><FormattedMessage id="menu.renamePrototype" /></label>
-              <FormControl
-                type="text"
-                onChange={(e) => this.onPrototypeNameChanged(e)}
-                placeholder={this.props.intl.messages['menu.newName']}
-              />
-            </FormGroup>
-            <hr />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              bsStyle="primary"
-              disabled={!this.state.prototypeName}
-              onClick={() => this.renamePrototype()}
-            >
-              <FormattedMessage id="save" />
-            </Button>
-          </Modal.Footer>
-        </form>
-      </Modal>
+      <form onSubmit={(e) => this.renamePrototype(e)} className="centered">
+        <FormGroup controlId="prototype-name">
+          <input
+            type="text"
+            onBlur={(e) => this.renamePrototype(e)}
+            defaultValue={this.state.prototypeName}
+            placeholder={this.props.intl.messages['menu.newName']}
+            ref={ref => { this.inputName = ref; }}
+          />
+        </FormGroup>
+      </form>
     );
   }
 
   render() {
-    const { application: { locale } } = this.props;
+    const { application: { locale, locales } } = this.props;
+    let otherLocale = '';
+
+    // Get other locale
+    forEach(locales, (lang) => {
+      if (lang !== locale) {
+        otherLocale = lang;
+      }
+    });
+
     const { expanded } = this.state;
     const menuItems = [
       {
@@ -172,7 +173,6 @@ class Menu extends Component {
 
     return (
       <Navbar inverse fixedTop expanded={expanded} onToggle={this.toggleNav}>
-        {this.renderRenameModal()}
         <Navbar.Header>
           <Navbar.Brand>
             <Link className="brand__title" to="/landing" onClick={() => this.redirectToLanding()}>
@@ -196,16 +196,10 @@ class Menu extends Component {
                 />)
             }
           </Nav>
-          <h2
-            className="centered"
-            onDoubleClick={() => this.changePrototypeName()}
-            title={this.props.intl.messages['menu.dblClickRename']}
-          >
-            {this.state.prototypeName}
-          </h2>
+          {this.renderPrototypeName()}
           <Nav pullRight>
             <NavItem onClick={this.handleSwitchLocale}>
-              {locale.toUpperCase()}
+              {otherLocale.toUpperCase()}
             </NavItem>
             <NavItem
               title={this.props.intl.messages['menu.logout']}
