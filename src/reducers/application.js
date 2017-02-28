@@ -371,6 +371,11 @@ const actionHandlers = {
     });
   },
 
+  [constants.REDIRECT_LANDING]: () => ({
+    selectedPrototype: null,
+    selectedPage: null,
+  }),
+
   /* --- Menu --- */
   [constants.REDIRECT_DASHBOARD]: () => ({
     selectedPrototype: null,

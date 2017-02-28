@@ -38,3 +38,9 @@ export function redirectToDashboard() {
 export function toggleSimulation() {
   return { type: constants.TOGGLE_SIMULATION };
 }
+
+export function backToLanding() {
+  remove('selectedPrototype');
+  remove('selectedPage');
+  return { type: constants.REDIRECT_LANDING };
+}

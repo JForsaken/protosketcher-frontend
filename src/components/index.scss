@@ -45,9 +45,13 @@ body {
   background-color: color('background') !important;
   font-family: 'Roboto', 'Helvetica Light', sans-serif !important;
 
-  @import './bootstrap-override.scss';
+  @import './bootstrap-override';
   @import './popup';
   @import './react-context-menu';
+  // Carrousel Scss
+  @import '../../node_modules/slick-carousel/slick/slick.css';
+  @import '../../node_modules/slick-carousel/slick/slick-theme.css';
+
 }
 @import './Home/index.scss';
 
@@ -58,9 +62,9 @@ body {
   }
 
   /* Local CSS */
-
   @import './common/index';
   @import './Login/index';
   @import './Workspace/index';
+  @import './LandingPage/index';
   @import './Simulation/index';
 }

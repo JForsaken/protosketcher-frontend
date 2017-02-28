@@ -6,25 +6,26 @@ import FontAwesome from 'react-fontawesome';
 export default class MenuListItem extends Component {
   static defaultProps = { isExternal: false };
   static propTypes = {
-    icon: PropTypes.string.isRequired,
+    icon: PropTypes.string,
     isExternal: PropTypes.bool,
     link: PropTypes.string.isRequired,
     text: PropTypes.any.isRequired,
+    className: PropTypes.any,
     onClick: PropTypes.any,
   };
 
   renderLink() {
-    const { link, onClick, icon, text, isExternal } = this.props;
+    const { link, onClick, icon, text, isExternal, className } = this.props;
     let generatedlink = (
-      <Link to={link} onClick={onClick}>
-        <FontAwesome name={icon} /> {text}
+      <Link to={link} onClick={onClick} className={className}>
+        {icon ? <FontAwesome name={icon} /> : ''} {text}
       </Link>
     );
 
     if (isExternal) {
       generatedlink = (
-        <a href={link} target="_blank">
-          <FontAwesome name={icon} /> {text}
+        <a href={link} target="_blank" className={className}>
+          {icon ? <FontAwesome name={icon} /> : ''} {text}
         </a>
       );
     }

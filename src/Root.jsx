@@ -15,6 +15,7 @@ const {
   Application,
   HomePage,
   LoginPage,
+  LandingPage,
 } = components;
 
 /* Actions */
@@ -62,6 +63,7 @@ class Root extends Component {
       <Route path="/" component={Application}>
         <IndexRoute component={HomePage} onEnter={this.requireAuth(this.props)} />
         <Route path="login" component={LoginPage} />
+        <Route path="landing" component={LandingPage} />
       </Route>
     );
   }
