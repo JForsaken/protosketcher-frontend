@@ -43,7 +43,7 @@ class Menu extends Component {
       nextProps.application.user === null) {
       this.props.router.push('/landing');
     }
-    
+
     if (!isEqual(this.props.application.prototypes, nextProps.application.propTypes) &&
         nextProps.application.selectedPrototype) {
       const { prototypes, selectedPrototype } = nextProps.application;
@@ -55,12 +55,6 @@ class Menu extends Component {
     if (this.inputName) {
       this.inputName.focus();
     }
-  }
-
-  onPrototypeNameChanged(e) {
-    this.setState({
-      prototypeName: e.target.value,
-    });
   }
 
   handleSwitchLocale() {
@@ -92,10 +86,6 @@ class Menu extends Component {
     this.props.actions.backToLanding();
   }
 
-  redirectToLanding() {
-    this.props.actions.backToLanding();
-  }
-
   toggleNav() {
     this.setState({
       expanded: !this.state.expanded,
@@ -109,7 +99,7 @@ class Menu extends Component {
   renamePrototype(e) {
     e.preventDefault();
     this.props.actions.patchPrototype({
-      name: this.state.prototypeName,
+      name: e.currentTarget.value,
       id: this.props.application.selectedPrototype,
     }, this.props.application.user.token);
     this.closeModal();
@@ -123,22 +113,24 @@ class Menu extends Component {
 
   renderPrototypeName() {
     if (!this.state.showRenameModal) {
-      return (<h2
-        className="centered"
-        onDoubleClick={() => this.changePrototypeName()}
-        title={this.props.intl.messages['menu.dblClickRename']}
-      >
-        {this.state.prototypeName}
-      </h2>);
+      return (
+        <h2
+          className="centered"
+          onDoubleClick={() => this.changePrototypeName()}
+          title={this.props.intl.messages['menu.dblClickRename']}
+        >
+          {this.state.prototypeName}
+        </h2>
+      );
     }
+
     return (
       <form onSubmit={(e) => this.renamePrototype(e)} className="centered">
         <FormGroup controlId="prototype-name">
           <input
             type="text"
-            onChange={(e) => this.onPrototypeNameChanged(e)}
             onBlur={(e) => this.renamePrototype(e)}
-            value={this.state.prototypeName}
+            defaultValue={this.state.prototypeName}
             placeholder={this.props.intl.messages['menu.newName']}
             ref={ref => { this.inputName = ref; }}
           />

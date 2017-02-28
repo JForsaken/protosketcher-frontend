@@ -361,7 +361,6 @@ const actionHandlers = {
     prototypes: {},
   }),
 
-
   [constants.PATCH_PROTOTYPE]: (state, action) => {
     const { id, name } = action.prototype;
     const prototypes = state.prototypes;
@@ -382,7 +381,7 @@ const actionHandlers = {
     selectedPrototype: null,
     selectedPage: null,
   }),
-    
+
   [constants.TOGGLE_SIMULATION]: (state) => ({
     simulating: !state.simulating,
   }),
