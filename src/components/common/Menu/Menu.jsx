@@ -42,7 +42,6 @@ class Menu extends Component {
     if (!isEqual(this.props.application.user, nextProps.application.user) &&
       nextProps.application.user === null) {
       this.props.router.push('/landing');
-      return;
     }
   }
 
