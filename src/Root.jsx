@@ -63,6 +63,7 @@ class Root extends Component {
       <Route path="/" component={Application}>
         <IndexRoute component={HomePage} onEnter={this.requireAuth(this.props)} />
         <Route path="login" component={LoginPage} />
+        <Route path="signup" component={LoginPage} />
         <Route path="landing" component={LandingPage} />
       </Route>
     );
