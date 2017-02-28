@@ -1,6 +1,8 @@
+/* eslint no-underscore-dangle: "off" */
+
 import * as constants from '../actions/constants';
 import createReducer from '../utils/create-reducer';
-import { isEmpty, omit, merge } from 'lodash';
+import { has, isEmpty, omit, merge } from 'lodash';
 
 const initialState = {
   locale: 'en',
@@ -10,6 +12,7 @@ const initialState = {
   ],
   error: null,
   user: null,
+  simulating: false,
   selectedPrototype: null,
   selectedPage: null,
   prototypes: {},
@@ -67,7 +70,7 @@ function onGetPages(state, action) {
     return { ...state };
   }
 
-  const prototype = state.prototypes[state.selectedPrototype];
+  const prototype = state.prototypes[action.requestedPrototype];
 
   const dict = action.pages.reduce((acc, current) => {
     const copy = acc;
@@ -79,7 +82,7 @@ function onGetPages(state, action) {
 
   merge(state, {
     prototypes: {
-      [state.selectedPrototype]: {
+      [action.requestedPrototype]: {
         pages: {
           ...dict,
         },
@@ -97,7 +100,7 @@ function onCreatePage(state, action) {
 
   merge(state, {
     prototypes: {
-      [state.selectedPrototype]: {
+      [action.requestedPrototype]: {
         pages: {
           [action.page.id]: omit(action.page, ['id']),
         },
@@ -115,7 +118,7 @@ function onPatchPage(state, action) {
 
   merge(state, {
     prototypes: {
-      [state.selectedPrototype]: {
+      [action.requestedPrototype]: {
         pages: {
           [action.page.id]: omit(action.page, ['id']),
         },
@@ -132,7 +135,7 @@ function onDeletePage(state, action) {
   }
 
   const data = state;
-  delete data.prototypes[state.selectedPrototype].pages[action.page.id];
+  delete data.prototypes[action.requestedPrototype].pages[action.page.id];
 
   return data;
 }
@@ -142,29 +145,54 @@ function onGetShapes(state, action) {
     return { ...state };
   }
 
-  const page = state.prototypes[state.selectedPrototype].pages[state.selectedPage];
-
-  const dict = action.shapes.reduce((acc, current) => {
-    const copy = acc;
-    if (!page.shapes || !page[current.id]) {
-      copy[current.id] = omit(current, ['id', 'pageId']);
-    }
-    return copy;
-  }, {});
-
-  merge(state, {
-    prototypes: {
-      [state.selectedPrototype]: {
-        pages: {
-          [state.selectedPage]: {
-            shapes: {
-              ...dict,
+  if (isEmpty(action.shapes)) {
+    merge(state, {
+      prototypes: {
+        [action.requestedPrototype]: {
+          pages: {
+            [action.requestedPage]: {
+              shapes: {},
             },
           },
         },
       },
-    },
-  });
+    });
+  } else {
+    const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
+
+    const dict = action.shapes.reduce((acc, current) => {
+      const copy = acc;
+      if (!page.shapes || !page[current.id]) {
+        // clean controls
+        current.controls.forEach((o) => {
+          const cur = o;
+          if (has(cur, '_id')) {
+            cur.id = cur._id;
+            delete cur._id;
+          }
+          if (has(cur, '__v')) {
+            delete cur.__v;
+          }
+        });
+        copy[current.id] = omit(current, ['id', 'pageId']);
+      }
+      return copy;
+    }, {});
+
+    merge(state, {
+      prototypes: {
+        [action.requestedPrototype]: {
+          pages: {
+            [action.requestedPage]: {
+              shapes: {
+                ...dict,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 
   return state;
 }
@@ -174,14 +202,14 @@ function onCreateShape(state, action) {
     return { ...state };
   }
 
-  const page = state.prototypes[state.selectedPrototype].pages[state.selectedPage];
+  const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
   const shapes = omit(page.shapes, action.shape.uuid);
 
   merge(state, {
     prototypes: {
-      [state.selectedPrototype]: {
+      [action.requestedPrototype]: {
         pages: {
-          [state.selectedPage]: {
+          [action.requestedPage]: {
             shapes: {
               ...shapes,
               [action.shape.id]: action.shape,
@@ -202,9 +230,9 @@ function onPatchShape(state, action) {
 
   merge(state, {
     prototypes: {
-      [state.selectedPrototype]: {
+      [action.requestedPrototype]: {
         pages: {
-          [state.selectedPage]: {
+          [action.requestedPage]: {
             shapes: {
               [action.shape.id]: action.shape,
             },
@@ -223,7 +251,8 @@ function onDeleteShape(state, action) {
   }
 
   const data = state;
-  delete data.prototypes[state.selectedPrototype].pages[state.selectedPage].shapes[action.shape.id];
+  const { requestedPrototype, requestedPage, shape } = action;
+  delete data.prototypes[requestedPrototype].pages[requestedPage].shapes[shape.id];
 
   return data;
 }
@@ -233,29 +262,43 @@ function onGetTexts(state, action) {
     return { ...state };
   }
 
-  const page = state.prototypes[state.selectedPrototype].pages[state.selectedPage];
-
-  const dict = action.texts.reduce((acc, current) => {
-    const copy = acc;
-    if (!page.texts || !page[current.id]) {
-      copy[current.id] = omit(current, ['id', 'pageId']);
-    }
-    return copy;
-  }, {});
-
-  merge(state, {
-    prototypes: {
-      [state.selectedPrototype]: {
-        pages: {
-          [state.selectedPage]: {
-            texts: {
-              ...dict,
+  if (isEmpty(action.texts)) {
+    merge(state, {
+      prototypes: {
+        [action.requestedPrototype]: {
+          pages: {
+            [action.requestedPage]: {
+              texts: {},
             },
           },
         },
       },
-    },
-  });
+    });
+  } else {
+    const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
+
+    const dict = action.texts.reduce((acc, current) => {
+      const copy = acc;
+      if (!page.texts || !page[current.id]) {
+        copy[current.id] = omit(current, ['id', 'pageId']);
+      }
+      return copy;
+    }, {});
+
+    merge(state, {
+      prototypes: {
+        [action.requestedPrototype]: {
+          pages: {
+            [action.requestedPage]: {
+              texts: {
+                ...dict,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 
   return state;
 }
@@ -318,19 +361,26 @@ const actionHandlers = {
     prototypes: {},
   }),
 
+  [constants.PATCH_PROTOTYPE]: (state, action) => {
+    const { id, name } = action.prototype;
+    const prototypes = state.prototypes;
+    prototypes[id].name = name;
+
+    return Object.assign({}, state, {
+      prototypes,
+    });
+  },
+
+  /* --- Menu --- */
   [constants.REDIRECT_DASHBOARD]: () => ({
     selectedPrototype: null,
     selectedPage: null,
   }),
 
-  [constants.RENAME_PROTOTYPE]: (state, action) => {
-    const prototypeName = action.prototype.name;
-    const prototypes = state.prototypes;
-    prototypes[state.selectedPrototype].name = prototypeName;
-    return Object.assign({}, state, {
-      prototypes,
-    });
-  },
+  [constants.TOGGLE_SIMULATION]: (state) => ({
+    simulating: !state.simulating,
+  }),
+
 };
 
 export default createReducer(initialState, actionHandlers);

@@ -8,6 +8,7 @@ import { isEmpty } from 'lodash';
 import Menu from '../../common/Menu/Menu';
 import PrototypeDashboard from '../PrototypeDashboard/PrototypeDashboard';
 import Workspace from '../../Workspace/Workspace';
+import Simulation from '../../Simulation/Simulation';
 
 const animationTime = 300;
 
@@ -28,8 +29,18 @@ class HomePage extends Component {
       );
     }
 
-    // render workspace
     if (!isEmpty(this.props.application.prototypes)) {
+      // render simulation
+      if (this.props.application.simulating) {
+        return (
+          <div className="page-container" key="homepage-anim">
+            <Menu router={router} />
+            <Simulation />
+          </div>
+        );
+      }
+
+      // render workspace
       return (
         <div className="page-container" key="homepage-anim">
           <Menu router={router} />

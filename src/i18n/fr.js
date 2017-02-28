@@ -36,6 +36,7 @@ export default {
 
   // MENU
   'menu.backToPrototypes': 'Retour aux prototypes',
+  'menu.simulation': 'Simulation',
   'menu.save': 'Sauvegarder',
   'menu.logout': 'Déconnexion',
   'menu.renamePrototype': 'Renommer votre prototype',
@@ -47,6 +48,12 @@ export default {
 
   // LANGUAGE
   'language.switcher': 'Langue',
+
+  // WORKSPACE
+  'workspace.loading': "Chargement de l'espace de travail",
+
+  // SIMULATION
+  'simulation.loading': 'Chargement de la simulation',
 
   // FOOTER
   'footer.page': 'Page',
