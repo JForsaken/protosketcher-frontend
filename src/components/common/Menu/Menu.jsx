@@ -43,6 +43,12 @@ class Menu extends Component {
       nextProps.application.user === null) {
       this.props.router.push('/landing');
     }
+    
+    if (!isEqual(this.props.application.prototypes, nextProps.application.propTypes) &&
+        nextProps.application.selectedPrototype) {
+      const { prototypes, selectedPrototype } = nextProps.application;
+      this.setState({ prototypeName: prototypes[selectedPrototype].name });
+    }
   }
 
   componentDidUpdate() {
@@ -71,7 +77,19 @@ class Menu extends Component {
   }
 
   redirectToDashboard() {
-    this.props.actions.backToDashboard();
+    this.props.actions.redirectToDashboard();
+  }
+
+  toggleSimulation() {
+    // deselect shapes if some are selected
+    this.props.actions.updateWorkspace({
+      selectedItems: [],
+    });
+    this.props.actions.toggleSimulation();
+  }
+
+  redirectToLanding() {
+    this.props.actions.backToLanding();
   }
 
   redirectToLanding() {
@@ -144,9 +162,15 @@ class Menu extends Component {
     const menuItems = [
       {
         text: <FormattedMessage id="menu.backToPrototypes" />,
-        link: '/',
+        link: '',
         icon: 'list-alt',
         onClick: () => this.redirectToDashboard(),
+      },
+      {
+        text: <FormattedMessage id="menu.simulation" />,
+        link: '',
+        icon: 'play',
+        onClick: () => this.toggleSimulation(),
       },
     ];
 

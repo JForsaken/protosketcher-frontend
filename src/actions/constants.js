@@ -5,6 +5,10 @@ export const LOCALE_SWITCHED = 'LOCALE_SWITCHED';
 export const SHOW_ERROR = 'SHOW_ERROR';
 export const HIDE_ERROR = 'HIDE_ERROR';
 
+// Menu
+export const TOGGLE_SIMULATION = 'TOGGLE_SIMULATION';
+export const REDIRECT_DASHBOARD = 'REDIRECT_DASHBOARD';
+
 // Login
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
@@ -18,8 +22,8 @@ export const GET_PROTOTYPES = 'GET_PROTOTYPES';
 export const CREATE_PROTOTYPE = 'CREATE_PROTOTYPE';
 export const SELECT_PROTOTYPE = 'SELECT_PROTOTYPE';
 export const REDIRECT_DASHBOARD = 'REDIRECT_DASHBOARD';
+export const PATCH_PROTOTYPE = 'PATCH_PROTOTYPE';
 export const REDIRECT_LANDING = 'REDIRECT_LANDING';
-export const RENAME_PROTOTYPE = 'RENAME_PROTOTYPE';
 
 // Pages
 export const GET_PAGES = 'GET_PAGES';
