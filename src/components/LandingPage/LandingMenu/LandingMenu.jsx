@@ -44,7 +44,8 @@ class LandingMenu extends Component {
     this.props.actions.switchLocale(locales[nextLocale]);
   }
 
-  logout() {
+  logout(e) {
+    e.preventDefault();
     this.props.actions.logout();
   }
 
@@ -86,7 +87,7 @@ class LandingMenu extends Component {
           text: <FormattedMessage id="menu.logout" />,
           link: '',
           icon: 'sign-out',
-          onClick: () => this.logout(),
+          onClick: (e) => this.logout(e),
         },
         {
           text: <FormattedMessage id="landing.goToPrototypes" />,
