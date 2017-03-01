@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import uuidV1 from 'uuid/v1';
-import { has, omit } from 'lodash';
+import { isEmpty, has, omit } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -26,7 +26,8 @@ import {
   deleteShape,
   getTexts,
   createText,
-  patchText } from '../../actions/api';
+  patchText,
+  deleteText } from '../../actions/api';
 import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
@@ -65,13 +66,13 @@ class Workspace extends Component {
     const { prototypes, selectedPrototype, selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
 
-    let shapes = null;
-    let texts = null;
+    let shapes = {};
+    let texts = {};
 
     // if the pages, shapes and texts already cached upon load
     if (prototype.pages && prototype.pages[selectedPage]) {
-      shapes = prototype.pages[selectedPage].shapes || null;
-      texts = prototype.pages[selectedPage].texts || null;
+      shapes = prototype.pages[selectedPage].shapes || {};
+      texts = prototype.pages[selectedPage].texts || {};
     }
 
     this.state = {
@@ -105,18 +106,19 @@ class Workspace extends Component {
     // If the selected page has changed, set the state to reflect the new page
     if (selectedPage && this.state.currentPageId !== selectedPage) {
       const { shapes, texts } = this.state.pages[newProps.application.selectedPage];
+
       this.setState({
         currentPageId: newProps.application.selectedPage,
-        shapes: shapes || null,
-        texts: texts || null,
+        shapes: shapes || {},
+        texts: texts || {},
       });
 
       // Get shapes and texts if they are not cached
-      if (!shapes) {
+      if (isEmpty(shapes)) {
         this.props.actions.getShapes(selectedPrototype, selectedPage,
         newProps.application.user.token);
       }
-      if (!texts) {
+      if (isEmpty(texts)) {
         this.props.actions.getTexts(selectedPrototype, selectedPage,
         newProps.application.user.token);
       }
@@ -126,6 +128,7 @@ class Workspace extends Component {
     if (!newProps.api.getPageTypes.pageTypes) {
       this.props.actions.getPageTypes(newProps.application.user.token);
     }
+
 
     // If the shape types are not cached, get them
     if (!newProps.api.getShapeTypes.shapeTypes) {
@@ -145,22 +148,35 @@ class Workspace extends Component {
     }
 
     // If you just cached the shapes, copy them in the state
-    else if (newProps.api.lastAction === actions.GET_SHAPES && !this.state.shapes) {
+    else if (newProps.api.lastAction === actions.GET_SHAPES && isEmpty(this.state.shapes)) {
       this.setState({ shapes: prototype.pages[selectedPage].shapes });
     }
 
     // If you just cached the texts, copy them in the state
-    else if (newProps.api.lastAction === actions.GET_TEXTS && !this.state.texts) {
+    else if (newProps.api.lastAction === actions.GET_TEXTS && isEmpty(this.state.texts)) {
       this.setState({ texts: prototype.pages[selectedPage].texts });
     }
 
     // Replace the uuid of the created shape with th uui of the DB
-    else if (newProps.api.lastAction === actions.CREATE_SHAPE) {
+    else if (newProps.api.lastAction === actions.CREATE_SHAPE &&
+             !has(this.state.shapes, newProps.api.createShape.shape.id)) {
       const { shape } = newProps.api.createShape;
       this.setState({
         shapes: {
           ...omit(this.state.shapes, shape.uuid),
           [shape.id]: omit(shape, ['uuid', 'id', 'pageId']),
+        },
+      });
+    }
+
+    // Replace the uuid of the created text with th uui of the DB
+    else if (newProps.api.lastAction === actions.CREATE_TEXT &&
+             !has(this.state.texts, newProps.api.createText.text.id)) {
+      const { text } = newProps.api.createText;
+      this.setState({
+        texts: {
+          ...omit(this.state.texts, text.uuid),
+          [text.id]: omit(text, ['uuid', 'id', 'pageId']),
         },
       });
     }
@@ -207,7 +223,7 @@ class Workspace extends Component {
             position: point,
           },
         }, () => {
-          if (this.state.currentPath) {
+          if (isEmpty(this.props.application.workspace.selectedItems) && this.state.currentPath) {
             this.computeSvgPath(point, 'M');
           }
         });
@@ -223,26 +239,26 @@ class Workspace extends Component {
       const elementMouseIsOver = document.elementFromPoint(
           point.x + constants.LEFT_MENU_WIDTH, point.y + constants.TOP_MENU_HEIGHT);
 
-      if (elementMouseIsOver.nodeName === 'path') {
+      if (elementMouseIsOver.nodeName === 'path' ||
+          elementMouseIsOver.nodeName === 'text') {
         const selectedPaths = [];
         selectedPaths.push(elementMouseIsOver.id);
         this.props.actions.updateWorkspace({
           selectedItems: selectedPaths,
+          currentPath: null,
         });
       } else {
         this.props.actions.updateWorkspace({
           selectedItems: [],
+          currentPath: null,
         });
       }
-
-      this.setState({ currentPath: null });
     }
 
     // Save original path position before dragging
     if (this.state.onDragging === true) {
-      for (const id of this.props.application.workspace.selectedItems) {
-        this.saveOriginalPathPositionForDrag(id);
-      }
+      this.props.application.workspace.selectedItems.forEach(o =>
+        this.saveOriginalPathPositionForDrag(o));
     }
   }
 
@@ -267,7 +283,10 @@ class Workspace extends Component {
     };
 
     // Finish drawing by adding last point
-    if (this.state.currentPath && this.state.onDragging === false) {
+    if (this.state.currentPath &&
+        isEmpty(this.props.application.workspace.selectedItems) &&
+        this.state.currentPath.pathString.split(' ').length > 3 &&
+        this.state.onDragging === false) {
       this.createShape(point);
     }
 
@@ -337,9 +356,16 @@ class Workspace extends Component {
               x: point.x - currentPos.x,
               y: point.y - currentPos.y,
             };
-            for (const uuid of this.props.application.workspace.selectedItems) {
-              this.dragSvgPath(uuid, translation);
-            }
+
+            this.props.application.workspace.selectedItems.forEach((o) => {
+              const { shapes, texts } = this.state;
+
+              if ((has(shapes, o) && shapes[o].originalPositionBeforeDrag) ||
+                  (has(texts, o) && texts[o].originalPositionBeforeDrag))
+                {
+                this.dragSvgPath(o, translation);
+              }
+            });
           }
         }
       }
@@ -368,8 +394,6 @@ class Workspace extends Component {
     if (e.key === constants.keys.DELETE || e.key === constants.keys.BACKSPACE) {
       for (const uuid of this.props.application.workspace.selectedItems) {
         this.deleteSvgPath(uuid);
-        this.props.actions.deleteShape(this.props.application.selectedPrototype,
-          this.state.currentPageId, uuid, this.props.application.user.token);
       }
     } else if (e.key === constants.keys.C) {
       for (const uuid of this.props.application.workspace.selectedItems) {
@@ -471,8 +495,17 @@ class Workspace extends Component {
   }
 
   deleteSvgPath(uuid) {
-    const shapes = this.state.shapes;
-    delete shapes[uuid];
+    const { shapes, texts, currentPageId } = this.state;
+    const { selectedPrototype, user } = this.props.application;
+
+    if (has(shapes, uuid)) {
+      delete shapes[uuid];
+      this.props.actions.deleteShape(selectedPrototype, currentPageId, uuid, user.token);
+    } else if (has(texts, uuid)) {
+      delete texts[uuid];
+      this.props.actions.deleteText(selectedPrototype, currentPageId, uuid, user.token);
+    }
+
     this.setState({
       shapes,
     });
@@ -731,6 +764,7 @@ export default connect(
       getTexts,
       createText,
       patchText,
+      deleteText,
     }, dispatch),
   })
 )(Workspace);

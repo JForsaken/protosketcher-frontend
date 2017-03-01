@@ -43,6 +43,7 @@ export const DELETE_SHAPE = 'DELETE_SHAPE';
 export const GET_TEXTS = 'GET_TEXTS';
 export const CREATE_TEXT = 'CREATE_TEXT';
 export const PATCH_TEXT = 'PATCH_TEXT';
+export const DELETE_TEXT = 'DELETE_TEXT';
 
 
 // API

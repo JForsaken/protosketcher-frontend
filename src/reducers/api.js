@@ -81,6 +81,11 @@ const initialState = {
     time: null,
     error: {},
   },
+  deleteText: {
+    text: {},
+    time: null,
+    error: {},
+  },
 };
 
 const actionHandlers = {
@@ -238,6 +243,14 @@ const actionHandlers = {
   [constants.PATCH_TEXT]: (state, action) => ({
     lastAction: action.type,
     patchText: {
+      text: action.text,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.DELETE_TEXT]: (state, action) => ({
+    lastAction: action.type,
+    deleteText: {
       text: action.text,
       time: action.time,
       error: action.error,

@@ -360,6 +360,18 @@ function onPatchText(state, action) {
   return state;
 }
 
+function onDeleteText(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const data = state;
+  const { requestedPrototype, requestedPage, text } = action;
+  delete data.prototypes[requestedPrototype].pages[requestedPage].texts[text.id];
+
+  return data;
+}
+
 const actionHandlers = {
   /* --- Locale switcher --- */
   [constants.LOCALE_SWITCHED]: (_, action) => ({ locale: action.payload }),
@@ -412,6 +424,7 @@ const actionHandlers = {
   [constants.GET_TEXTS]: (state, action) => onGetTexts(state, action),
   [constants.CREATE_TEXT]: (state, action) => onCreateText(state, action),
   [constants.PATCH_TEXT]: (state, action) => onPatchText(state, action),
+  [constants.DELETE_TEXT]: (state, action) => onDeleteText(state, action),
 
   [constants.LOGOUT]: () => ({
     user: null,

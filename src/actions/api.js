@@ -693,3 +693,40 @@ export function patchText(prototypeId, pageId, textId, text, token) {
       });
   };
 }
+
+export function deleteText(prototypeId, pageId, textId, token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/texts/${textId}`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.DELETE_TEXT,
+          text: data.body,
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.DELETE_TEXT,
+          text: {},
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}

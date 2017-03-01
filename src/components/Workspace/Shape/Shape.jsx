@@ -1,6 +1,10 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+/* Actions */
+import { updateWorkspace } from '../../../actions/application';
 
 class Shape extends Component {
   static propTypes = {
@@ -11,6 +15,7 @@ class Shape extends Component {
     posY: PropTypes.number.isRequired,
     onLoad: PropTypes.func,
   }
+
   componentDidMount() {
     const { onLoad, id } = this.props;
 
@@ -19,9 +24,17 @@ class Shape extends Component {
       onLoad(id, this.svgShape);
     }
   }
+
+  onClick() {
+    this.props.actions.updateWorkspace({
+      selectedItems: [this.props.id],
+    });
+  }
+
   render() {
     return (
       <path
+        onClick={() => this.onClick()}
         ref={svgShape => (this.svgShape = svgShape)}
         className={this.props.application.workspace.selectedItems.some(e => e === this.props.id)
           ? 'workspace-line-selected' : 'workspace-line'}
@@ -35,5 +48,10 @@ class Shape extends Component {
 }
 
 export default connect(
-  ({ application }) => ({ application })
+  ({ application }) => ({ application }),
+  dispatch => ({
+    actions: bindActionCreators({
+      updateWorkspace,
+    }, dispatch),
+  })
 )(Shape);
