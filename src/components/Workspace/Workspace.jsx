@@ -16,8 +16,16 @@ import Shape from './Shape/Shape';
 import Text from './Text/Text';
 
 /* Actions */
-import { getPages, getPageTypes, getShapes, getShapeTypes, createShape, patchShape, deleteShape,
-  getTexts } from '../../actions/api';
+import {
+  getPages,
+  getPageTypes,
+  getShapes,
+  getShapeTypes,
+  createShape,
+  patchShape,
+  deleteShape,
+  getTexts,
+  createText } from '../../actions/api';
 import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
@@ -410,21 +418,29 @@ class Workspace extends Component {
   createText() {
     const uuid = uuidV1();
     const { currentPos } = this.props.application.workspace;
+
+    const text = {
+      content: this.textEdit.value,
+      x: currentPos.x,
+      y: currentPos.y + 27,
+      /* TODO: this should come from a default workspace font size,
+       * that can be changed with the radial menu */
+      fontSize: 24,
+      uuid,
+    };
+
     this.setState({
       texts: {
         ...this.state.texts,
-        [uuid]: {
-          pageId: this.state.currentPageId,
-          content: this.textEdit.value,
-          x: currentPos.x,
-          y: currentPos.y + 27,
-          fontSize: 24,
-        },
+        [uuid]: text,
       },
       currentPath: null,
       previousPoint: null,
       currentMode: null,
     });
+
+    this.props.actions.createText(this.props.application.selectedPrototype,
+      this.state.currentPageId, text, this.props.application.user.token);
   }
 
   computeSvgPath(point, prefix) {
@@ -696,6 +712,7 @@ export default connect(
       patchShape,
       deleteShape,
       getTexts,
+      createText,
     }, dispatch),
   })
 )(Workspace);
