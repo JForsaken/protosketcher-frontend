@@ -505,7 +505,7 @@ class Workspace extends Component {
     const selectRectTop = pointerPos.y > currentPos.y ? currentPos.y : pointerPos.y;
     const selectRectBottom = pointerPos.y < currentPos.y ? currentPos.y : pointerPos.y;
 
-    Object.keys(this.state.shapes).forEach((key) => {
+    Object.keys({ ...this.state.shapes, ...this.state.texts }).forEach((key) => {
       const pathRect = document.getElementById(key).getBoundingClientRect();
       const pathRectRight = pathRect.right - constants.LEFT_MENU_WIDTH;
       const pathRectLeft = pathRect.left - constants.LEFT_MENU_WIDTH;
