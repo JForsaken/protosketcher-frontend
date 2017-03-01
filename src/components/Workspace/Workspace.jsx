@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import uuidV1 from 'uuid/v1';
-import { omit } from 'lodash';
+import { has, omit } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -198,7 +198,9 @@ class Workspace extends Component {
             position: point,
           },
         }, () => {
-          this.computeSvgPath(point, 'M');
+          if (this.state.currentPath) {
+            this.computeSvgPath(point, 'M');
+          }
         });
       }
     }
@@ -223,6 +225,8 @@ class Workspace extends Component {
           selectedItems: [],
         });
       }
+
+      this.setState({ currentPath: null });
     }
 
     // Save original path position before draging
@@ -374,6 +378,7 @@ class Workspace extends Component {
     const a = this.state.previousPoint.x - currentPoint.x;
     const b = this.state.previousPoint.y - currentPoint.y;
     const c = Math.sqrt(a * a + b * b);
+
     return c > minDistance;
   }
 
@@ -424,6 +429,7 @@ class Workspace extends Component {
 
   computeSvgPath(point, prefix) {
     const path = this.state.currentPath;
+
     path.pathString += `${prefix}${point.x - path.position.x} ${point.y - path.position.y} `;
     this.setState({
       currentPath: path,
@@ -457,10 +463,19 @@ class Workspace extends Component {
 
   dragSvgPath(uuid, translation) {
     const shapes = this.state.shapes;
-    shapes[uuid].x = shapes[uuid].originalPositionBeforeDrag.x + translation.x;
-    shapes[uuid].y = shapes[uuid].originalPositionBeforeDrag.y + translation.y;
+    const texts = this.state.texts;
+
+    if (has(shapes, uuid)) {
+      shapes[uuid].x = shapes[uuid].originalPositionBeforeDrag.x + translation.x;
+      shapes[uuid].y = shapes[uuid].originalPositionBeforeDrag.y + translation.y;
+    } else if (has(texts, uuid)) {
+      texts[uuid].x = texts[uuid].originalPositionBeforeDrag.x + translation.x;
+      texts[uuid].y = texts[uuid].originalPositionBeforeDrag.y + translation.y;
+    }
+
     this.setState({
       shapes,
+      texts,
     });
   }
 
@@ -533,12 +548,23 @@ class Workspace extends Component {
 
   saveOriginalPathPositionForDrag(uuid) {
     const shapes = this.state.shapes;
-    shapes[uuid].originalPositionBeforeDrag = {
-      x: shapes[uuid].x,
-      y: shapes[uuid].y,
-    };
+    const texts = this.state.texts;
+
+    if (has(shapes, uuid)) {
+      shapes[uuid].originalPositionBeforeDrag = {
+        x: shapes[uuid].x,
+        y: shapes[uuid].y,
+      };
+    } else if (has(texts, uuid)) {
+      texts[uuid].originalPositionBeforeDrag = {
+        x: texts[uuid].x,
+        y: texts[uuid].y,
+      };
+    }
+
     this.setState({
       shapes,
+      texts,
     });
   }
 
