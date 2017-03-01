@@ -415,7 +415,7 @@ class Workspace extends Component {
         ...this.state.texts,
         [uuid]: {
           pageId: this.state.currentPageId,
-          content: document.getElementById('textEdit').value,
+          content: this.textEdit.value,
           x: currentPos.x,
           y: currentPos.y + 27,
           fontSize: 24,
@@ -534,7 +534,7 @@ class Workspace extends Component {
         currentMode: constants.modes.TEXT,
       });
       setTimeout(() => {
-        document.getElementById('textEdit').focus();
+        this.textEdit.focus();
       }, 100);
     }
   }
@@ -599,7 +599,10 @@ class Workspace extends Component {
                   x={workspace.currentPos.x}
                   y={workspace.currentPos.y}
                 >
-                  <input id="textEdit" key="textEdit"></input>
+                  <input
+                    id="textEdit"
+                    ref={textEdit => (this.textEdit = textEdit)}
+                  />
                 </foreignObject>
             }
             {
