@@ -655,3 +655,41 @@ export function createText(prototypeId, pageId, text, token) {
       });
   };
 }
+
+export function patchText(prototypeId, pageId, textId, text, token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/texts/${textId}`, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(text),
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.PATCH_TEXT,
+          text: data.body,
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.PATCH_TEXT,
+          text: {},
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          time: Date.now(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}

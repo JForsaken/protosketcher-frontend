@@ -71,6 +71,16 @@ const initialState = {
     time: null,
     error: {},
   },
+  createText: {
+    text: {},
+    time: null,
+    error: {},
+  },
+  patchText: {
+    text: {},
+    time: null,
+    error: {},
+  },
 };
 
 const actionHandlers = {
@@ -217,7 +227,22 @@ const actionHandlers = {
       error: action.error,
     },
   }),
-
+  [constants.CREATE_TEXT]: (state, action) => ({
+    lastAction: action.type,
+    createText: {
+      text: action.text,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.PATCH_TEXT]: (state, action) => ({
+    lastAction: action.type,
+    patchText: {
+      text: action.text,
+      time: action.time,
+      error: action.error,
+    },
+  }),
 };
 
 export default createReducer(initialState, actionHandlers);

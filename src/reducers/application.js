@@ -338,6 +338,28 @@ function onCreateText(state, action) {
   return state;
 }
 
+function onPatchText(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  merge(state, {
+    prototypes: {
+      [action.requestedPrototype]: {
+        pages: {
+          [action.requestedPage]: {
+            texts: {
+              [action.text.id]: action.text,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return state;
+}
+
 const actionHandlers = {
   /* --- Locale switcher --- */
   [constants.LOCALE_SWITCHED]: (_, action) => ({ locale: action.payload }),
@@ -389,6 +411,7 @@ const actionHandlers = {
   [constants.DELETE_SHAPE]: (state, action) => onDeleteShape(state, action),
   [constants.GET_TEXTS]: (state, action) => onGetTexts(state, action),
   [constants.CREATE_TEXT]: (state, action) => onCreateText(state, action),
+  [constants.PATCH_TEXT]: (state, action) => onPatchText(state, action),
 
   [constants.LOGOUT]: () => ({
     user: null,

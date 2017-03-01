@@ -25,7 +25,8 @@ import {
   patchShape,
   deleteShape,
   getTexts,
-  createText } from '../../actions/api';
+  createText,
+  patchText } from '../../actions/api';
 import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
@@ -56,7 +57,7 @@ class Workspace extends Component {
     this.copySvgPath = this.copySvgPath.bind(this);
     this.onKeyDownEvent = this.onKeyDownEvent.bind(this);
     this.multiSelect = this.multiSelect.bind(this);
-    this.toggleDraging = this.toggleDraging.bind(this);
+    this.toggleDragging = this.toggleDragging.bind(this);
     this.saveOriginalPathPositionForDrag = this.saveOriginalPathPositionForDrag.bind(this);
 
     this.changeColor = changeColor.bind(this);
@@ -77,7 +78,7 @@ class Workspace extends Component {
       showMenu: false,
       menuPending: false,
       currentPath: null,
-      onDraging: false,
+      onDragging: false,
       selectingRect: null,
       previousPoint: null,
       pages: prototype.pages || null,
@@ -196,7 +197,7 @@ class Workspace extends Component {
       // Set timer for menu
       this.touchTimer = setTimeout(() => this.toggleMenu(true), 500);
 
-      if (this.state.onDraging === false) {
+      if (this.state.onDragging === false) {
         // Start drawing
         this.setState({
           menuPending: true,
@@ -217,7 +218,7 @@ class Workspace extends Component {
       menuPending: true,
     });
 
-    if (this.state.onDraging === false) {
+    if (this.state.onDragging === false) {
       // Monoselection
       const elementMouseIsOver = document.elementFromPoint(
           point.x + constants.LEFT_MENU_WIDTH, point.y + constants.TOP_MENU_HEIGHT);
@@ -237,8 +238,8 @@ class Workspace extends Component {
       this.setState({ currentPath: null });
     }
 
-    // Save original path position before draging
-    if (this.state.onDraging === true) {
+    // Save original path position before dragging
+    if (this.state.onDragging === true) {
       for (const id of this.props.application.workspace.selectedItems) {
         this.saveOriginalPathPositionForDrag(id);
       }
@@ -266,7 +267,7 @@ class Workspace extends Component {
     };
 
     // Finish drawing by adding last point
-    if (this.state.currentPath && this.state.onDraging === false) {
+    if (this.state.currentPath && this.state.onDragging === false) {
       this.createShape(point);
     }
 
@@ -330,8 +331,8 @@ class Workspace extends Component {
         if (this.touchTimer) {
           clearTimeout(this.touchTimer);
 
-          if (this.state.onDraging === true) {
-            // Start Draging
+          if (this.state.onDragging === true) {
+            // Start Dragging
             const translation = {
               x: point.x - currentPos.x,
               y: point.y - currentPos.y,
@@ -353,7 +354,7 @@ class Workspace extends Component {
           height: point.y - currentPos.y,
         },
       });
-    } else if (this.state.currentPath && this.state.onDraging === false) {
+    } else if (this.state.currentPath && this.state.onDragging === false) {
       if (this.arePointsFeedable(point)) {
         this.computeSvgPath(point, 'L');
         this.setState({
@@ -375,7 +376,7 @@ class Workspace extends Component {
         this.copySvgPath(uuid);
       }
     } else if (e.key === constants.keys.D) {
-      this.toggleDraging();
+      this.toggleDragging();
     } else if (e.key === constants.keys.ENTER) {
       this.createText();
     }
@@ -478,8 +479,7 @@ class Workspace extends Component {
   }
 
   dragSvgPath(uuid, translation) {
-    const shapes = this.state.shapes;
-    const texts = this.state.texts;
+    const { shapes, texts } = this.state;
 
     if (has(shapes, uuid)) {
       shapes[uuid].x = shapes[uuid].originalPositionBeforeDrag.x + translation.x;
@@ -555,16 +555,32 @@ class Workspace extends Component {
     }
   }
 
-  toggleDraging() {
-    const draging = !this.state.onDraging;
+  toggleDragging() {
+    const dragging = !this.state.onDragging;
     this.setState({
-      onDraging: draging,
+      onDragging: dragging,
     });
+
+
+    // when done dragging, path all dragged items
+    if (!dragging) {
+      const { shapes, texts, currentPageId } = this.state;
+      this.props.application.workspace.selectedItems.forEach((o) => {
+        const { selectedPrototype, user } = this.props.application;
+
+        if (has(shapes, o)) {
+          const patch = { x: shapes[o].x, y: shapes[o].y };
+          this.props.actions.patchShape(selectedPrototype, currentPageId, o, patch, user.token);
+        } else if (has(texts, o)) {
+          const patch = { x: texts[o].x, y: texts[o].y };
+          this.props.actions.patchText(selectedPrototype, currentPageId, o, patch, user.token);
+        }
+      });
+    }
   }
 
   saveOriginalPathPositionForDrag(uuid) {
-    const shapes = this.state.shapes;
-    const texts = this.state.texts;
+    const { shapes, texts } = this.state;
 
     if (has(shapes, uuid)) {
       shapes[uuid].originalPositionBeforeDrag = {
@@ -713,6 +729,7 @@ export default connect(
       deleteShape,
       getTexts,
       createText,
+      patchText,
     }, dispatch),
   })
 )(Workspace);
