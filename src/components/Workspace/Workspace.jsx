@@ -498,27 +498,28 @@ class Workspace extends Component {
   multiSelect(pointerPos) {
     const { currentPos } = this.props.application.workspace;
 
-    const selectedPaths = [];
-
     const selectRectRight = pointerPos.x < currentPos.x ? currentPos.x : pointerPos.x;
     const selectRectLeft = pointerPos.x > currentPos.x ? currentPos.x : pointerPos.x;
     const selectRectTop = pointerPos.y > currentPos.y ? currentPos.y : pointerPos.y;
     const selectRectBottom = pointerPos.y < currentPos.y ? currentPos.y : pointerPos.y;
 
-    Object.keys({ ...this.state.shapes, ...this.state.texts }).forEach((key) => {
+
+    const selectedItems = Object.keys({
+      ...this.state.shapes,
+      ...this.state.texts,
+    }).filter((key) => {
       const pathRect = document.getElementById(key).getBoundingClientRect();
       const pathRectRight = pathRect.right - constants.LEFT_MENU_WIDTH;
       const pathRectLeft = pathRect.left - constants.LEFT_MENU_WIDTH;
       const pathRectTop = pathRect.top - constants.TOP_MENU_HEIGHT;
       const pathRectBottom = pathRect.bottom - constants.TOP_MENU_HEIGHT;
 
-      if (pathRectRight <= selectRectRight && pathRectLeft >= selectRectLeft
-          && pathRectTop >= selectRectTop && pathRectBottom <= selectRectBottom) {
-        selectedPaths.push(key);
-        this.props.actions.updateWorkspace({
-          selectedItems: selectedPaths,
-        });
-      }
+      return pathRectRight <= selectRectRight && pathRectLeft >= selectRectLeft
+          && pathRectTop >= selectRectTop && pathRectBottom <= selectRectBottom;
+    });
+
+    this.props.actions.updateWorkspace({
+      selectedItems,
     });
   }
 
