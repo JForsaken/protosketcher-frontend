@@ -392,13 +392,9 @@ class Workspace extends Component {
 
   onKeyDownEvent(e) {
     if (e.key === constants.keys.DELETE || e.key === constants.keys.BACKSPACE) {
-      for (const uuid of this.props.application.workspace.selectedItems) {
-        this.deleteSvgPath(uuid);
-      }
+      this.props.application.workspace.selectedItems.forEach(o => this.deleteSvgPath(o));
     } else if (e.key === constants.keys.C) {
-      for (const uuid of this.props.application.workspace.selectedItems) {
-        this.copySvgPath(uuid);
-      }
+      this.props.application.workspace.selectedItems.forEach(o => this.copySvgPath(o));
     } else if (e.key === constants.keys.D) {
       this.toggleDragging();
     } else if (e.key === constants.keys.ENTER) {
