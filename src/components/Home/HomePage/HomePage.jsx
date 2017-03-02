@@ -44,8 +44,13 @@ class HomePage extends Component {
       // render simulation
       if (this.props.application.simulating) {
         return (
-          <div className="page-container" key="homepage-anim">
-            <Menu router={router} />
+          <div className="page-container in-simulation" key="homepage-anim">
+            <div className="back-to-edit-container">
+              <Link to="" className="back-to-edit" onClick={() => this.toggleSimulation()}>
+                <FontAwesome name="stop" />
+                <FormattedMessage id="menu.backToEdit" />
+              </Link>
+            </div>
             <Simulation />
           </div>
         );
@@ -53,13 +58,8 @@ class HomePage extends Component {
 
       // render workspace
       return (
-        <div className="page-container in-simulation" key="homepage-anim">
-          <div className="back-to-edit-container">
-            <Link to="" className="back-to-edit" onClick={() => this.toggleSimulation()}>
-              <FontAwesome name="stop" />
-              <FormattedMessage id="menu.backToEdit" />
-            </Link>
-          </div>
+        <div className="page-container" key="homepage-anim">
+          <Menu router={router} />
           <Workspace />
         </div>
       );
