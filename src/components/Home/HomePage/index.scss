@@ -16,25 +16,41 @@
   transition: opacity 300ms ease-in;
 }
 
-.back-to-edit {
-  color: color('text', 'light');
-  font-weight: 600;
-  position: absolute;
+.back-to-edit-container {
+  $button-height: 31px;
+  position: fixed;
   top: 0;
-  left: 10%;
-  padding: 5px 10px;
-  background-color: color('foreground');
+  left: 0;
+  right: 0;
+  height: $button-height;
   z-index: 1001;
-  @include rounded-indiv(0, 0, 2px, 2px);
 
-  &:hover {
-    cursor: pointer;
-    text-decoration: none;
-    color: color('text', 'medium');
-    background-color: color('foreground', 'light');
+  .back-to-edit {
+    color: color('text', 'light');
+    font-weight: 600;
+    position: absolute;
+    top: -$button-height;
+    left: 10%;
+    padding: 5px 10px;
+    background-color: color('foreground');
+    @include rounded-indiv(0, 0, 2px, 2px);
+    @include transition(top 0.2s ease);
+
+    &:hover {
+      cursor: pointer;
+      text-decoration: none;
+      color: color('text', 'medium');
+      background-color: color('foreground', 'light');
+    }
+
+    .fa {
+      margin-right: 10px;
+    }
   }
 
-  .fa {
-    margin-right: 10px;
+  &:hover {
+    .back-to-edit {
+      top: 0;
+    }
   }
 }

@@ -54,10 +54,12 @@ class HomePage extends Component {
       // render workspace
       return (
         <div className="page-container in-simulation" key="homepage-anim">
-          <Link to="" className="back-to-edit" onClick={() => this.toggleSimulation()}>
-            <FontAwesome name="stop" />
-            <FormattedMessage id="menu.backToEdit" />
-          </Link>
+          <div className="back-to-edit-container">
+            <Link to="" className="back-to-edit" onClick={() => this.toggleSimulation()}>
+              <FontAwesome name="stop" />
+              <FormattedMessage id="menu.backToEdit" />
+            </Link>
+          </div>
           <Workspace />
         </div>
       );
