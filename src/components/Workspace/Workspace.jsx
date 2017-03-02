@@ -183,6 +183,12 @@ class Workspace extends Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.state.currentMode === constants.modes.TEXT && this.textEdit) {
+      this.textEdit.focus();
+    }
+  }
+
   onStartingEvent(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -573,9 +579,6 @@ class Workspace extends Component {
       this.setState({
         currentMode: constants.modes.TEXT,
       });
-      setTimeout(() => {
-        this.textEdit.focus();
-      }, 100);
     }
   }
 
