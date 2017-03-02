@@ -21,6 +21,19 @@ export const events = {
   CONTEXT_MENU: 'contextmenu',
 };
 
+/* Workspace Modes */
+export const modes = {
+  TEXT: 'text',
+};
+
+/* Workspace paths */
+export const paths = {
+  SEGMENT_LENGTH: 10,
+  MIN_PATH_LENGTH: 3,
+  TEXT_OFFSET_Y: 27,
+  TEXT_DEFAULT_SIZE: 24,
+};
+
 
 /* Menu Items */
 export const menuItems = {
@@ -67,6 +80,7 @@ export const menuItems = {
 export const keys = {
   DELETE: 'Delete',
   BACKSPACE: 'Backspace',
+  ENTER: 'Enter',
   C: 'c',
   D: 'd',
 };

@@ -312,6 +312,66 @@ function onGetTexts(state, action) {
   return state;
 }
 
+function onCreateText(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
+  const texts = omit(page.texts, action.text.uuid);
+
+  merge(state, {
+    prototypes: {
+      [action.requestedPrototype]: {
+        pages: {
+          [action.requestedPage]: {
+            texts: {
+              ...texts,
+              [action.text.id]: action.text,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return state;
+}
+
+function onPatchText(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  merge(state, {
+    prototypes: {
+      [action.requestedPrototype]: {
+        pages: {
+          [action.requestedPage]: {
+            texts: {
+              [action.text.id]: action.text,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return state;
+}
+
+function onDeleteText(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const data = state;
+  const { requestedPrototype, requestedPage, text } = action;
+  delete data.prototypes[requestedPrototype].pages[requestedPage].texts[text.id];
+
+  return data;
+}
+
 const actionHandlers = {
   /* --- Locale switcher --- */
   [constants.LOCALE_SWITCHED]: (_, action) => ({ locale: action.payload }),
@@ -362,6 +422,9 @@ const actionHandlers = {
   [constants.PATCH_SHAPE]: (state, action) => onPatchShape(state, action),
   [constants.DELETE_SHAPE]: (state, action) => onDeleteShape(state, action),
   [constants.GET_TEXTS]: (state, action) => onGetTexts(state, action),
+  [constants.CREATE_TEXT]: (state, action) => onCreateText(state, action),
+  [constants.PATCH_TEXT]: (state, action) => onPatchText(state, action),
+  [constants.DELETE_TEXT]: (state, action) => onDeleteText(state, action),
 
   [constants.LOGOUT]: () => ({
     user: null,
