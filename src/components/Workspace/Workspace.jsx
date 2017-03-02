@@ -525,7 +525,13 @@ class Workspace extends Component {
       ...this.state.shapes,
       ...this.state.texts,
     }).filter((key) => {
-      const pathRect = document.getElementById(key).getBoundingClientRect();
+      const svgPool = { ...this.svgShapes, ...this.svgTexts };
+
+      if (!has(svgPool, key)) {
+        return false;
+      }
+
+      const pathRect = svgPool[key].getBoundingClientRect();
       const pathRectRight = pathRect.right - constants.LEFT_MENU_WIDTH;
       const pathRectLeft = pathRect.left - constants.LEFT_MENU_WIDTH;
       const pathRectTop = pathRect.top - constants.TOP_MENU_HEIGHT;
@@ -618,6 +624,26 @@ class Workspace extends Component {
     });
   }
 
+  shapeDidMount(id, shapeSvg) {
+    // intermediate container to prevent unnecessary renders
+    this.svgShapes = { ...this.svgShapes, [id]: shapeSvg };
+
+    // when all the svgs have been rendered
+    if (Object.keys(this.svgShapes).length === Object.keys(this.state.shapes).length) {
+      this.setState({ svgShapes: this.svgShapes });
+    }
+  }
+
+  textDidMount(id, textSvg) {
+    // intermediate container to prevent unnecessary renders
+    this.svgTexts = { ...this.svgTexts, [id]: textSvg };
+
+    // when all the svgs have been rendered
+    if (Object.keys(this.svgTexts).length === Object.keys(this.state.texts).length) {
+      this.setState({ svgTexts: this.svgTexts });
+    }
+  }
+
   renderWorkspace() {
     const { workspace } = this.props.application;
     if (this.state.shapes && this.state.texts) {
@@ -664,6 +690,7 @@ class Workspace extends Component {
                   path={item[1].path}
                   posX={item[1].x}
                   posY={item[1].y}
+                  onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
                   key={i}
                 />)
             }
@@ -671,10 +698,11 @@ class Workspace extends Component {
               Object.entries(this.state.texts).map((item, i) =>
                 <Text
                   id={item[0]}
-                  posx={item[1].x}
-                  posy={item[1].y}
+                  posX={item[1].x}
+                  posY={item[1].y}
                   size={item[1].fontSize}
                   content={item[1].content}
+                  onLoad={(id, svgText) => this.textDidMount(id, svgText)}
                   key={i}
                 />)
             }
