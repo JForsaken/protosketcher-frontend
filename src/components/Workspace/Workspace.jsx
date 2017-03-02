@@ -628,23 +628,11 @@ class Workspace extends Component {
   }
 
   shapeDidMount(id, shapeSvg) {
-    // intermediate container to prevent unnecessary renders
     this.svgShapes = { ...this.svgShapes, [id]: shapeSvg };
-
-    // when all the svgs have been rendered
-    if (Object.keys(this.svgShapes).length === Object.keys(this.state.shapes).length) {
-      this.setState({ svgShapes: this.svgShapes });
-    }
   }
 
   textDidMount(id, textSvg) {
-    // intermediate container to prevent unnecessary renders
     this.svgTexts = { ...this.svgTexts, [id]: textSvg };
-
-    // when all the svgs have been rendered
-    if (Object.keys(this.svgTexts).length === Object.keys(this.state.texts).length) {
-      this.setState({ svgTexts: this.svgTexts });
-    }
   }
 
   renderWorkspace() {
