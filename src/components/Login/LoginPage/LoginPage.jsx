@@ -15,7 +15,7 @@ export default class LoginPage extends Component {
     super(props);
 
     this.state = {
-      isLoginButtonActive: true,
+      isLoginButtonActive: (props.route.path === 'login'),
       canToggle: true,
     };
   }
