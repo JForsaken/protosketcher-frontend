@@ -162,6 +162,14 @@ class Workspace extends Component {
     else if (newProps.api.lastAction === actions.CREATE_SHAPE &&
              !has(this.state.shapes, newProps.api.createShape.shape.id)) {
       const { shape } = newProps.api.createShape;
+
+      // update the ref that shape
+      this.svgShapes = {
+        ...omit(this.svgShapes, shape.uuid),
+        [shape.id]: this.svgShapes[shape.uuid],
+      };
+
+      // update the shape list with that shape
       this.setState({
         shapes: {
           ...omit(this.state.shapes, shape.uuid),
@@ -174,6 +182,14 @@ class Workspace extends Component {
     else if (newProps.api.lastAction === actions.CREATE_TEXT &&
              !has(this.state.texts, newProps.api.createText.text.id)) {
       const { text } = newProps.api.createText;
+
+      // update the ref that text
+      this.svgTexts = {
+        ...omit(this.svgTexts, text.uuid),
+        [text.id]: this.svgTexts[text.uuid],
+      };
+
+      // update the text list with that text
       this.setState({
         texts: {
           ...omit(this.state.texts, text.uuid),
