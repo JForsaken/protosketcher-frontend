@@ -26,6 +26,12 @@ export const modes = {
   TEXT: 'text',
 };
 
+/* Paths */
+export const paths = {
+  SEGMENT_LENGTH: 10,
+  MIN_PATH_LENGTH: 3,
+};
+
 
 /* Menu Items */
 export const menuItems = {

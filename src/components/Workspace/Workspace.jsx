@@ -285,7 +285,7 @@ class Workspace extends Component {
     // Finish drawing by adding last point
     if (this.state.currentPath &&
         isEmpty(this.props.application.workspace.selectedItems) &&
-        this.state.currentPath.pathString.split(' ').length > 3 &&
+        this.isPathLongEnough(this.state.currentPath.pathString) &&
         this.state.onDragging === false) {
       this.createShape(point);
     }
@@ -407,12 +407,15 @@ class Workspace extends Component {
   }
 
   arePointsFeedable(currentPoint) {
-    const minDistance = 10;
     const a = this.state.previousPoint.x - currentPoint.x;
     const b = this.state.previousPoint.y - currentPoint.y;
     const c = Math.sqrt(a * a + b * b);
 
-    return c > minDistance;
+    return c > constants.paths.SEGMENT_LENGTH;
+  }
+
+  isPathLongEnough(pathString) {
+    return pathString.split(' ').length > constants.paths.MIN_PATH_LENGTH;
   }
 
   createShape(point) {
