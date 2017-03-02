@@ -8,6 +8,7 @@ import { isEmpty, has, omit } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
+import absorbEvent from '../../utils/events';
 
 /* Components */
 import Footer from '../common/Footer/Footer';
@@ -206,8 +207,7 @@ class Workspace extends Component {
   }
 
   onStartingEvent(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    absorbEvent(e);
 
     // Add text if there was one being created
     if (this.state.currentMode === constants.modes.TEXT) {
@@ -272,8 +272,7 @@ class Workspace extends Component {
   }
 
   onEndingEvent(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    absorbEvent(e);
 
     // Add text if there was one being created
     if (this.state.currentMode === constants.modes.TEXT) {
@@ -314,8 +313,7 @@ class Workspace extends Component {
   }
 
   onMovingEvent(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    absorbEvent(e);
 
     // Get event position
     let pointer = e;
@@ -449,29 +447,39 @@ class Workspace extends Component {
   }
 
   createText() {
-    const uuid = uuidV1();
-    const { currentPos } = this.props.application.workspace;
+    const value = this.textEdit.value;
 
-    const text = {
-      content: this.textEdit.value,
-      x: currentPos.x,
-      y: currentPos.y + constants.paths.TEXT_OFFSET_Y,
-      fontSize: this.state.fontSize,
-      uuid,
-    };
+    if (!value) {
+      this.setState({
+        currentPath: null,
+        previousPoint: null,
+        currentMode: null,
+      });
+    } else {
+      const uuid = uuidV1();
+      const { currentPos } = this.props.application.workspace;
 
-    this.setState({
-      texts: {
-        ...this.state.texts,
-        [uuid]: text,
-      },
-      currentPath: null,
-      previousPoint: null,
-      currentMode: null,
-    });
+      const text = {
+        content: value,
+        x: currentPos.x,
+        y: currentPos.y + constants.paths.TEXT_OFFSET_Y,
+        fontSize: this.state.fontSize,
+        uuid,
+      };
 
-    this.props.actions.createText(this.props.application.selectedPrototype,
-      this.state.currentPageId, text, this.props.application.user.token);
+      this.setState({
+        texts: {
+          ...this.state.texts,
+          [uuid]: text,
+        },
+        currentPath: null,
+        previousPoint: null,
+        currentMode: null,
+      });
+
+      this.props.actions.createText(this.props.application.selectedPrototype,
+        this.state.currentPageId, text, this.props.application.user.token);
+    }
   }
 
   computeSvgPath(point, prefix) {
@@ -664,6 +672,7 @@ class Workspace extends Component {
           onTouchStart={this.onStartingEvent}
           onTouchMove={this.onMovingEvent}
           onTouchEnd={this.onEndingEvent}
+          onTouchCancel={absorbEvent}
           onContextMenu={this.onStartingEvent}
         >
           {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}

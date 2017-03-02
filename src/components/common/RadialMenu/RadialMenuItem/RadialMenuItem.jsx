@@ -149,7 +149,7 @@ class RadialMenuItem extends Component {
           d={this.createSvgArc(150, 150, 101, this.props.startAngle, this.props.endAngle)}
         />
         <path
-          className={this.state.selected ? 'hover' : { baseClassName }}
+          className={this.state.selected ? 'hover' : baseClassName}
           d={this.createSvgArc(150, 150, 100, this.props.startAngle, this.props.endAngle)}
           fill={this.props.color}
           onMouseMove={this.onMovingEvent}
