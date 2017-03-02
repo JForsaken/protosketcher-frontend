@@ -44,6 +44,7 @@ export default {
 
   // MENU
   'menu.backToPrototypes': 'Back to prototypes',
+  'menu.simulation': 'Simulation',
   'menu.save': 'Save',
   'menu.logout': 'Logout',
   'menu.renamePrototype': 'Rename your prototype',
@@ -52,6 +53,12 @@ export default {
 
   // LANGUAGE
   'language.switcher': 'Language',
+
+  // WORKSPACE
+  'workspace.loading': 'Loading workspace',
+
+  // SIMULATION
+  'simulation.loading': 'Loading simulation',
 
   // FOOTER
   'footer.page': 'Page',

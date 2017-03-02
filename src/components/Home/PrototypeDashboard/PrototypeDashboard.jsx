@@ -78,6 +78,9 @@ class PrototypeDashboard extends Component {
       <Modal
         dialogClassName="add-modal"
         show={this.state.showModal}
+        onEntering={() => {
+          this.inputName.focus();
+        }}
         onHide={() => this.closeModal()}
       >
         <form onSubmit={() => this.createPrototype()}>
@@ -90,6 +93,7 @@ class PrototypeDashboard extends Component {
                 type="text"
                 placeholder="Prototype name"
                 onChange={(e) => this.onPrototypeNameChanged(e)}
+                inputRef={ref => { this.inputName = ref; }}
               />
             </FormGroup>
             <hr />

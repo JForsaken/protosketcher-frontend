@@ -54,7 +54,7 @@ class Root extends Component {
           myProps.actions.selectPrototype(selectedPrototype);
         }
       } else {
-        replaceState('/login');
+        replaceState('/landing');
       }
     };
 
