@@ -18,6 +18,7 @@ export const events = {
   TOUCH_START: 'touchstart',
   TOUCH_END: 'touchend',
   TOUCH_MOVE: 'touchmove',
+  TOUCH_CANCEL: 'touchcancel',
   CONTEXT_MENU: 'contextmenu',
 };
 

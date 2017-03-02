@@ -324,16 +324,33 @@ class Workspace extends Component {
       const el = document.elementFromPoint(pointer.clientX, pointer.clientY);
       if (el.nodeName === 'path' && el.className) {
         const classes = el.className.baseVal.split('-');
-        if (classes[0] === 'action' && classes[1] !== this.props.application.workspace.action) {
-          if (classes.length > 2 && classes[2] !== this.props.application.workspace.actionValue) {
+        if (classes[0] === 'action') {
+          // Move on a menu item
+          if (classes.length === 2 && classes[1] !== this.props.application.workspace.action) {
+            this.props.actions.updateWorkspace({
+              action: classes[1],
+              actionValue: null,
+            });
+          }
+
+          // Move on a sub-menu item
+          else if (classes.length > 2
+            && classes[2] !== this.props.application.workspace.actionValue) {
             this.props.actions.updateWorkspace({
               action: classes[1],
               actionValue: classes[2],
             });
-          } else {
-            this.props.actions.updateWorkspace({ action: classes[1] });
           }
+        } else if (classes[0] === 'hover') {
+          this.props.actions.updateWorkspace({
+            actionValue: null,
+          });
         }
+      }
+
+      // Move in the center of the menu
+      else if (el.nodeName === 'circle' && this.props.application.workspace.action) {
+        this.props.actions.updateWorkspace({ action: null });
       }
     }
 
