@@ -115,7 +115,7 @@ class LandingMenu extends Component {
         },
         {
           text: <FormattedMessage id="landing.useForFree" />,
-          link: '/login',
+          link: '/signup',
           icon: 'hand-o-right',
           className: 'accent-btn',
         },
