@@ -64,12 +64,15 @@ class PrototypeDashboard extends Component {
     this.setState({ showModal: false });
   }
 
-  createPrototype() {
+  createPrototype(e) {
     const { actions, application } = this.props;
+    e.preventDefault();
+
     actions.createPrototype({
       name: this.state.prototypeName,
       isMobile: this.state.mobileRadio === true,
     }, application.user.token);
+
     this.setState({ showModal: false });
   }
 
@@ -83,7 +86,7 @@ class PrototypeDashboard extends Component {
         }}
         onHide={() => this.closeModal()}
       >
-        <form onSubmit={() => this.createPrototype()}>
+        <form onSubmit={(e) => this.createPrototype(e)}>
           <Modal.Header closeButton>
             <FontAwesome name="plus-circle" />
           </Modal.Header>

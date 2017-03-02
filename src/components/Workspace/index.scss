@@ -51,3 +51,19 @@
   stroke-width: 3;
   filter: url(#dropshadow);
 }
+
+.workspace-text-selected {
+  filter: url(#dropshadow);
+}
+
+#textEdit {
+  background: transparent;
+  border: 0;
+  font-family: 'Permanent Marker';
+
+  &:focus {
+    outline: none;
+    }
+}
+
+@import './Text/index';

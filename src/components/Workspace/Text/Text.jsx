@@ -7,11 +7,10 @@ import { isEmpty } from 'lodash';
 /* Actions */
 import { updateWorkspace } from '../../../actions/application';
 
-class Shape extends Component {
+class Text extends Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
     posX: PropTypes.number.isRequired,
     posY: PropTypes.number.isRequired,
     onLoad: PropTypes.func,
@@ -22,7 +21,7 @@ class Shape extends Component {
 
     // if an onLoad callback has been provided
     if (onLoad) {
-      onLoad(id, this.svgShape);
+      onLoad(id, this.svgText);
     }
   }
 
@@ -37,16 +36,17 @@ class Shape extends Component {
 
   render() {
     return (
-      <path
+      <text
         id={this.props.id}
-        ref={svgShape => (this.svgShape = svgShape)}
+        ref={svgText => (this.svgText = svgText)}
         onClick={() => this.onClick()}
         className={this.props.application.workspace.selectedItems.some(e => e === this.props.id)
-          ? 'workspace-line-selected' : 'workspace-line'}
-        d={this.props.path}
-        stroke={this.props.color}
+          ? 'workspace-text-selected' : null}
         transform={`translate(${this.props.posX} ${this.props.posY})`}
-      />
+        style={{ fontSize: this.props.size }}
+      >
+      {this.props.content}
+      </text>
     );
   }
 }
@@ -58,4 +58,4 @@ export default connect(
       updateWorkspace,
     }, dispatch),
   })
-)(Shape);
+)(Text);
