@@ -97,13 +97,12 @@ class Menu extends Component {
   }
 
   renamePrototype(e) {
-    e.preventDefault();
-
     this.props.actions.patchPrototype({
-      name: e.currentTarget.value,
+      name: this.inputName.value,
       id: this.props.application.selectedPrototype,
     }, this.props.application.user.token);
 
+    e.preventDefault();
     this.closeModal();
   }
 
