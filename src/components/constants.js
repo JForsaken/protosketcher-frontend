@@ -84,4 +84,6 @@ export const keys = {
   ENTER: 'Enter',
   C: 'c',
   D: 'd',
+  MOUSE_LEFT: 1,
+  MOUSE_RIGHT: 3,
 };

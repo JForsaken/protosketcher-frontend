@@ -40,6 +40,8 @@ const menuItems = [
   constants.menuItems.SELECT_AREA,
 ];
 
+// TODO : Keep menu rendered but invisible so mouseup/mousedown is not fired on menu render
+
 class Workspace extends Component {
 
   constructor(props, context) {
@@ -230,7 +232,8 @@ class Workspace extends Component {
       },
     });
 
-    if (e.type === constants.events.CONTEXT_MENU) {
+    if (e.type === constants.events.MOUSE_DOWN
+      && e.nativeEvent.which === constants.keys.MOUSE_RIGHT) {
       this.toggleMenu(true);
     } else {
       // Set timer for menu
@@ -298,10 +301,16 @@ class Workspace extends Component {
       this.createShape(point);
     }
 
-    if (!(e.type === constants.events.MOUSE_LEAVE
-      && e.target.classList.contains('workspace-container'))) {
-      this.toggleMenu(false);
-      this.props.actions.updateWorkspace({ action: null });
+    if (this.state.showMenu || this.state.currentPath) {
+      if (e.type === constants.events.MOUSE_LEAVE) {
+        if (!e.target.classList.contains('workspace-container')) {
+          this.toggleMenu(false);
+          this.props.actions.updateWorkspace({ action: null });
+        }
+      } else {
+        this.toggleMenu(false);
+        this.props.actions.updateWorkspace({ action: null });
+      }
     }
 
     // stops short touches from firing the event
@@ -369,7 +378,7 @@ class Workspace extends Component {
       deltaY = Math.abs(point.y - currentPos.y);
 
       // Add error margin for small moves
-      if (deltaX > 25 || deltaY > 25) {
+      if (deltaX > 15 || deltaY > 15) {
         // stops move (draw action) from firing the event
         if (this.touchTimer) {
           clearTimeout(this.touchTimer);
@@ -690,7 +699,7 @@ class Workspace extends Component {
           onTouchMove={this.onMovingEvent}
           onTouchEnd={this.onEndingEvent}
           onTouchCancel={absorbEvent}
-          onContextMenu={this.onStartingEvent}
+          onContextMenu={absorbEvent}
         >
           {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
           <svg height="100%" width="100%">
