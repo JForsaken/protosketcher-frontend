@@ -1,8 +1,12 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { isEmpty } from 'lodash';
+import { Link } from 'react-router';
+import { FormattedMessage } from 'react-intl';
+import FontAwesome from 'react-fontawesome';
 
 /* Components */
 import Menu from '../../common/Menu/Menu';
@@ -10,12 +14,19 @@ import PrototypeDashboard from '../PrototypeDashboard/PrototypeDashboard';
 import Workspace from '../../Workspace/Workspace';
 import Simulation from '../../Simulation/Simulation';
 
+/* Actions */
+import { toggleSimulation } from '../../../actions/application';
+
 const animationTime = 300;
 
 class HomePage extends Component {
   static propTypes = {
     router: PropTypes.object.isRequired,
   };
+
+  toggleSimulation() {
+    this.props.actions.toggleSimulation();
+  }
 
   renderSwitch() {
     const router = this.props.router;
@@ -43,6 +54,10 @@ class HomePage extends Component {
       // render workspace
       return (
         <div className="page-container in-simulation" key="homepage-anim">
+          <Link to="" className="back-to-edit" onClick={() => this.toggleSimulation()}>
+            <FontAwesome name="stop" />
+            <FormattedMessage id="menu.backToEdit" />
+          </Link>
           <Workspace />
         </div>
       );
@@ -69,4 +84,9 @@ class HomePage extends Component {
 }
 export default (connect(
   ({ application }) => ({ application }),
+  dispatch => ({
+    actions: bindActionCreators({
+      toggleSimulation,
+    }, dispatch),
+  })
 )(HomePage));
