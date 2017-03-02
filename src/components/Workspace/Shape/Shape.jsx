@@ -1,10 +1,6 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
-/* Actions */
-import { updateWorkspace } from '../../../actions/application';
 
 class Shape extends Component {
   static propTypes = {
@@ -25,12 +21,6 @@ class Shape extends Component {
     }
   }
 
-  onClick() {
-    this.props.actions.updateWorkspace({
-      selectedItems: [this.props.id],
-    });
-  }
-
   render() {
     return (
       <path
@@ -49,9 +39,4 @@ class Shape extends Component {
 
 export default connect(
   ({ application }) => ({ application }),
-  dispatch => ({
-    actions: bindActionCreators({
-      updateWorkspace,
-    }, dispatch),
-  })
 )(Shape);
