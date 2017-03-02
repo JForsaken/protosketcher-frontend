@@ -42,8 +42,7 @@ class HomePage extends Component {
 
       // render workspace
       return (
-        <div className="page-container" key="homepage-anim">
-          <Menu router={router} />
+        <div className="page-container in-simulation" key="homepage-anim">
           <Workspace />
         </div>
       );
