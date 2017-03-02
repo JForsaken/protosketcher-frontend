@@ -26,10 +26,12 @@ export const modes = {
   TEXT: 'text',
 };
 
-/* Paths */
+/* Workspace paths */
 export const paths = {
   SEGMENT_LENGTH: 10,
   MIN_PATH_LENGTH: 3,
+  TEXT_OFFSET_Y: 27,
+  TEXT_DEFAULT_SIZE: 24,
 };
 
 

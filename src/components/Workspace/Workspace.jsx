@@ -87,6 +87,7 @@ class Workspace extends Component {
       shapes,
       texts,
       currentMode: null,
+      fontSize: constants.paths.TEXT_DEFAULT_SIZE,
     };
 
     this.touchTimer = 0;
@@ -230,29 +231,11 @@ class Workspace extends Component {
       }
     }
 
-    this.setState({
-      menuPending: true,
-    });
-
     if (this.state.onDragging === false) {
-      // Monoselection
-      const elementMouseIsOver = document.elementFromPoint(
-          point.x + constants.LEFT_MENU_WIDTH, point.y + constants.TOP_MENU_HEIGHT);
-
-      if (elementMouseIsOver.nodeName === 'path' ||
-          elementMouseIsOver.nodeName === 'text') {
-        const selectedPaths = [];
-        selectedPaths.push(elementMouseIsOver.id);
-        this.props.actions.updateWorkspace({
-          selectedItems: selectedPaths,
-          currentPath: null,
-        });
-      } else {
-        this.props.actions.updateWorkspace({
-          selectedItems: [],
-          currentPath: null,
-        });
-      }
+      this.props.actions.updateWorkspace({
+        selectedItems: [],
+        currentPath: null,
+      });
     }
 
     // Save original path position before dragging
@@ -260,6 +243,10 @@ class Workspace extends Component {
       this.props.application.workspace.selectedItems.forEach(o =>
         this.saveOriginalPathPositionForDrag(o));
     }
+
+    this.setState({
+      menuPending: true,
+    });
   }
 
   onEndingEvent(e) {
@@ -446,10 +433,8 @@ class Workspace extends Component {
     const text = {
       content: this.textEdit.value,
       x: currentPos.x,
-      y: currentPos.y + 27,
-      /* TODO: this should come from a default workspace font size,
-       * that can be changed with the radial menu */
-      fontSize: 24,
+      y: currentPos.y + constants.paths.TEXT_OFFSET_Y,
+      fontSize: this.state.fontSize,
       uuid,
     };
 
@@ -667,6 +652,7 @@ class Workspace extends Component {
                   <input
                     id="textEdit"
                     ref={textEdit => (this.textEdit = textEdit)}
+                    style={{ fontSize: this.state.fontSize }}
                   />
                 </foreignObject>
             }
