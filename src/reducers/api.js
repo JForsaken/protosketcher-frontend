@@ -24,6 +24,11 @@ const initialState = {
     time: null,
     error: {},
   },
+  deletePrototype: {
+    prototypes: {},
+    time: null,
+    error: {},
+  },
   getPages: {
     pages: {},
     time: null,
@@ -142,6 +147,14 @@ const actionHandlers = {
     lastAction: action.type,
     createPrototype: {
       prototypes: action.prototype,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.DELETE_PROTOTYPE]: (state, action) => ({
+    lastAction: action.type,
+    deletePrototype: {
+      prototypes: action.prototypes,
       time: action.time,
       error: action.error,
     },
