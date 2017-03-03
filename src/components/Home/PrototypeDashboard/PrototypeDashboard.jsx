@@ -17,7 +17,7 @@ class PrototypeDashboard extends Component {
 
     this.state = {
       prototypes: map(props.application.prototypes, ((o, k) => ({ id: k, name: o.name }))),
-      showModal: false,
+      showAddModal: false,
       desktopRadio: true,
       mobileRadio: false,
       prototypeName: '',
@@ -59,7 +59,7 @@ class PrototypeDashboard extends Component {
   }
 
   onAddClick() {
-    this.setState({ showModal: true });
+    this.setState({ showAddModal: true });
   }
 
   showDeleteModal(e, id) {
@@ -81,7 +81,7 @@ class PrototypeDashboard extends Component {
 
   closeModal() {
     this.setState({
-      showModal: false,
+      showAddModal: false,
       showDeleteModal: false,
       prototypeModifiedId: -1,
     });
@@ -96,14 +96,14 @@ class PrototypeDashboard extends Component {
       isMobile: this.state.mobileRadio === true,
     }, application.user.token);
 
-    this.setState({ showModal: false });
+    this.setState({ showAddModal: false });
   }
 
-  renderModal() {
+  renderAddModal() {
     return (
       <Modal
         dialogClassName="add-modal"
-        show={this.state.showModal}
+        show={this.state.showAddModal}
         onEntering={() => {
           this.inputName.focus();
         }}
@@ -241,7 +241,7 @@ class PrototypeDashboard extends Component {
   render() {
     return (
       <div>
-        {this.renderModal()}
+        {this.renderAddModal()}
         {this.renderDeleteModal()}
         <div className="prototype-dashboard">
           <h1 className="title">
