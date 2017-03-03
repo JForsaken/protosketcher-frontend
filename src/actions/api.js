@@ -219,6 +219,38 @@ export function patchPrototype(prototype, token) {
   };
 }
 
+export function deletePrototype(prototypeId, token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(() => {
+        dispatch({
+          type: constants.DELETE_PROTOTYPE,
+          prototypeId,
+          time: Date.now(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.DELETE_PROTOTYPE,
+          prototypeId,
+          time: Date.now(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
 /* --- Pages --- */
 export function getPages(prototypeId, token) {
   return dispatch => {

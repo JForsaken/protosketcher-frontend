@@ -21,6 +21,8 @@ class PrototypeDashboard extends Component {
       desktopRadio: true,
       mobileRadio: false,
       prototypeName: '',
+      showDeleteModal: false,
+      prototypeModifiedId: -1,
     };
   }
 
@@ -60,8 +62,29 @@ class PrototypeDashboard extends Component {
     this.setState({ showModal: true });
   }
 
+  showDeleteModal(e, id) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      showDeleteModal: true,
+      prototypeModifiedId: id,
+    });
+    return false;
+  }
+
+  removePrototype() {
+    this.props.actions.deletePrototype(this.state.prototypeModifiedId,
+      this.props.application.user.token);
+
+    this.closeModal();
+  }
+
   closeModal() {
-    this.setState({ showModal: false });
+    this.setState({
+      showModal: false,
+      showDeleteModal: false,
+      prototypeModifiedId: -1,
+    });
   }
 
   createPrototype(e) {
@@ -138,12 +161,48 @@ class PrototypeDashboard extends Component {
             <Button
               bsStyle="primary"
               disabled={!this.state.prototypeName}
-              onClick={() => this.createPrototype()}
+              onClick={(e) => this.createPrototype(e)}
             >
               <FormattedMessage id="dashboard.modal.create" />
             </Button>
           </Modal.Footer>
         </form>
+      </Modal>
+    );
+  }
+
+  renderDeleteModal() {
+    return (
+      <Modal
+        dialogClassName="add-modal"
+        show={this.state.showDeleteModal}
+        onHide={() => this.closeModal()}
+      >
+        <Modal.Header closeButton>
+          <FontAwesome name="trash" />
+        </Modal.Header>
+        <Modal.Body>
+          <FormGroup controlId="prototype-name">
+            <label><FormattedMessage id="dashboard.modal.deleteConfirm" /></label>
+          </FormGroup>
+          <hr />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            bsStyle="primary"
+            onClick={() => this.closeModal()}
+            className="doubleButton"
+          >
+            <FormattedMessage id="cancel" />
+          </Button>
+          <Button
+            bsStyle="warning"
+            onClick={() => this.removePrototype()}
+            className="doubleButton"
+          >
+            <FormattedMessage id="footer.delete" />
+          </Button>
+        </Modal.Footer>
       </Modal>
     );
   }
@@ -170,7 +229,9 @@ class PrototypeDashboard extends Component {
           className="prototype-container__prototype"
           onClick={() => this.onPrototypeClick(p.id)}
         >
-          <span className="remove-prototype"><FontAwesome name="times" /></span>
+          <span className="remove-prototype" onClick={(e) => this.showDeleteModal(e, p.id)}>
+            <FontAwesome name="times" />
+          </span>
           <div className="prototype-container__prototype__title">{p.name}</div>
         </div>
       </Col>
@@ -181,6 +242,7 @@ class PrototypeDashboard extends Component {
     return (
       <div>
         {this.renderModal()}
+        {this.renderDeleteModal()}
         <div className="prototype-dashboard">
           <h1 className="title">
             <FormattedMessage id="dashboard.title" />
