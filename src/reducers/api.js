@@ -25,7 +25,7 @@ const initialState = {
     error: {},
   },
   deletePrototype: {
-    prototypes: {},
+    prototypeId: {},
     time: null,
     error: {},
   },
@@ -154,7 +154,7 @@ const actionHandlers = {
   [constants.DELETE_PROTOTYPE]: (state, action) => ({
     lastAction: action.type,
     deletePrototype: {
-      prototypes: action.prototypes,
+      prototypeId: action.prototypeId,
       time: action.time,
       error: action.error,
     },
