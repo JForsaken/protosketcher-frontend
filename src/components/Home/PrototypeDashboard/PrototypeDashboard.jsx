@@ -149,6 +149,7 @@ class PrototypeDashboard extends Component {
   }
 
   renderPrototypes() {
+    // Add prototype Button
     const prototypes = [(
       <Col sm={4} md={3} key="add-prototype" className="prototype-container">
         <div
@@ -162,12 +163,14 @@ class PrototypeDashboard extends Component {
       </Col>
     )];
 
+    // Prototype list
     return prototypes.concat(this.state.prototypes.map((p, i) => (
       <Col sm={4} md={3} key={`prototype-${i}`} className="prototype-container">
         <div
           className="prototype-container__prototype"
           onClick={() => this.onPrototypeClick(p.id)}
         >
+          <span className="remove-prototype"><FontAwesome name="times" /></span>
           <div className="prototype-container__prototype__title">{p.name}</div>
         </div>
       </Col>
