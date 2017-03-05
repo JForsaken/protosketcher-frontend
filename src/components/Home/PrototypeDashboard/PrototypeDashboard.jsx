@@ -17,10 +17,12 @@ class PrototypeDashboard extends Component {
 
     this.state = {
       prototypes: map(props.application.prototypes, ((o, k) => ({ id: k, name: o.name }))),
-      showModal: false,
+      showAddModal: false,
       desktopRadio: true,
       mobileRadio: false,
       prototypeName: '',
+      showDeleteModal: false,
+      prototypeModifiedId: -1,
     };
   }
 
@@ -57,11 +59,32 @@ class PrototypeDashboard extends Component {
   }
 
   onAddClick() {
-    this.setState({ showModal: true });
+    this.setState({ showAddModal: true });
+  }
+
+  showDeleteModal(e, id) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      showDeleteModal: true,
+      prototypeModifiedId: id,
+    });
+    return false;
+  }
+
+  removePrototype() {
+    this.props.actions.deletePrototype(this.state.prototypeModifiedId,
+      this.props.application.user.token);
+
+    this.closeModal();
   }
 
   closeModal() {
-    this.setState({ showModal: false });
+    this.setState({
+      showAddModal: false,
+      showDeleteModal: false,
+      prototypeModifiedId: -1,
+    });
   }
 
   createPrototype(e) {
@@ -73,14 +96,14 @@ class PrototypeDashboard extends Component {
       isMobile: this.state.mobileRadio === true,
     }, application.user.token);
 
-    this.setState({ showModal: false });
+    this.setState({ showAddModal: false });
   }
 
-  renderModal() {
+  renderAddModal() {
     return (
       <Modal
         dialogClassName="add-modal"
-        show={this.state.showModal}
+        show={this.state.showAddModal}
         onEntering={() => {
           this.inputName.focus();
         }}
@@ -138,7 +161,7 @@ class PrototypeDashboard extends Component {
             <Button
               bsStyle="primary"
               disabled={!this.state.prototypeName}
-              onClick={() => this.createPrototype()}
+              onClick={(e) => this.createPrototype(e)}
             >
               <FormattedMessage id="dashboard.modal.create" />
             </Button>
@@ -148,7 +171,44 @@ class PrototypeDashboard extends Component {
     );
   }
 
+  renderDeleteModal() {
+    return (
+      <Modal
+        dialogClassName="add-modal"
+        show={this.state.showDeleteModal}
+        onHide={() => this.closeModal()}
+      >
+        <Modal.Header closeButton>
+          <FontAwesome name="trash" />
+        </Modal.Header>
+        <Modal.Body>
+          <FormGroup controlId="prototype-name">
+            <label><FormattedMessage id="dashboard.modal.deleteConfirm" /></label>
+          </FormGroup>
+          <hr />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            bsStyle="primary"
+            onClick={() => this.closeModal()}
+            className="doubleButton"
+          >
+            <FormattedMessage id="cancel" />
+          </Button>
+          <Button
+            bsStyle="warning"
+            onClick={() => this.removePrototype()}
+            className="doubleButton"
+          >
+            <FormattedMessage id="footer.delete" />
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
   renderPrototypes() {
+    // Add prototype Button
     const prototypes = [(
       <Col sm={4} md={3} key="add-prototype" className="prototype-container">
         <div
@@ -162,12 +222,16 @@ class PrototypeDashboard extends Component {
       </Col>
     )];
 
+    // Prototype list
     return prototypes.concat(this.state.prototypes.map((p, i) => (
       <Col sm={4} md={3} key={`prototype-${i}`} className="prototype-container">
         <div
           className="prototype-container__prototype"
           onClick={() => this.onPrototypeClick(p.id)}
         >
+          <span className="remove-prototype" onClick={(e) => this.showDeleteModal(e, p.id)}>
+            <FontAwesome name="times" />
+          </span>
           <div className="prototype-container__prototype__title">{p.name}</div>
         </div>
       </Col>
@@ -177,7 +241,8 @@ class PrototypeDashboard extends Component {
   render() {
     return (
       <div>
-        {this.renderModal()}
+        {this.renderAddModal()}
+        {this.renderDeleteModal()}
         <div className="prototype-dashboard">
           <h1 className="title">
             <FormattedMessage id="dashboard.title" />

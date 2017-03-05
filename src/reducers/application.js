@@ -65,6 +65,17 @@ function onCreatePrototype(state, action) {
   return state;
 }
 
+function onDeletePrototype(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const data = state;
+  delete data.prototypes[action.prototypeId];
+
+  return data;
+}
+
 function onGetPages(state, action) {
   if (!isEmpty(action.error)) {
     return { ...state };
@@ -413,6 +424,7 @@ const actionHandlers = {
   }),
   [constants.GET_PROTOTYPES]: (state, action) => onGetPrototypes(state, action),
   [constants.CREATE_PROTOTYPE]: (state, action) => onCreatePrototype(state, action),
+  [constants.DELETE_PROTOTYPE]: (state, action) => onDeletePrototype(state, action),
   [constants.GET_PAGES]: (state, action) => onGetPages(state, action),
   [constants.CREATE_PAGE]: (state, action) => onCreatePage(state, action),
   [constants.PATCH_PAGE]: (state, action) => onPatchPage(state, action),

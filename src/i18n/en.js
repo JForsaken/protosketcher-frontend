@@ -34,6 +34,7 @@ export default {
   'dashboard.modal.desktop': 'Desktop',
   'dashboard.modal.mobile': 'Mobile',
   'dashboard.modal.create': 'Create',
+  'dashboard.modal.deleteConfirm': 'Are you sure you want to delete this prototype?',
 
   // FORM ERRORS
   'form.errors.required': 'Required',

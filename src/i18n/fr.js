@@ -34,6 +34,7 @@ export default {
   'dashboard.modal.desktop': 'Bureau',
   'dashboard.modal.mobile': 'Mobile',
   'dashboard.modal.create': 'Créer',
+  'dashboard.modal.deleteConfirm': 'Êtes-vous sûr de vouloir supprimer ce prototype?',
 
   // FORM ERRORS
   'form.errors.required': 'Champs requis',
