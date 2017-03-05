@@ -59,6 +59,10 @@ body {
 
   .page-container {
     padding-top: $top-menu-height;
+
+    &.in-simulation {
+      padding-top: 0;
+    }
   }
 
   /* Local CSS */

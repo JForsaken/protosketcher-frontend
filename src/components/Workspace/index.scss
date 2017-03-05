@@ -7,6 +7,12 @@
   top: $top-menu-height;
 }
 
+.in-simulation {
+  .workspace-container {
+    top: 0;
+  }
+}
+
 #workspace {
   bottom: $footer-height;
   left: 0;

@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { filter, has, isEqual } from 'lodash';
 
 /* Components */
-import Footer from '../common/Footer/Footer';
 import Shape from '../Workspace/Shape/Shape';
 import Control from './Control/Control';
 
@@ -161,7 +160,6 @@ class Simulation extends Component {
         onKeyDown={this.onKeyDownEvent}
       >
         {this.renderSimulation()}
-        <Footer pages={this.state.pages || {}} selectedPage={this.state.currentPageId || ''} />
       </div>
     );
   }
