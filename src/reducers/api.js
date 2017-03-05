@@ -25,7 +25,7 @@ const initialState = {
     error: {},
   },
   deletePrototype: {
-    prototypeId: {},
+    prototypeId: null,
     time: null,
     error: {},
   },
