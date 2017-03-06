@@ -105,6 +105,7 @@ class Simulation extends Component {
           rect={svgShapes[item[0]].getBBox()}
           posX={item[1].x}
           posY={item[1].y}
+          path={item[1].path}
           key={`control-${i}`}
         />
       )
@@ -144,8 +145,8 @@ class Simulation extends Component {
             </feMerge>
           </filter>
           {this.renderShapes()}
+          {this.renderControls()}
         </svg>
-        {this.renderControls()}
       </div>
     );
   }

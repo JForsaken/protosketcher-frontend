@@ -1,19 +1,20 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
-import { Button, FormControl } from 'react-bootstrap';
+import { FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { invert } from 'lodash';
 
 class Control extends Component {
   static propTypes = {
-    controls: PropTypes.array.isRequired,
+    controls: PropTypes.object.isRequired,
     shapeTypeId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     rect: PropTypes.object.isRequired,
     color: PropTypes.string.isRequired,
     posX: PropTypes.number.isRequired,
     posY: PropTypes.number.isRequired,
-  }
+    path: PropTypes.string.isRequired,
+  };
   constructor(props) {
     super(props);
     const { shapeTypes } = this.props.api.getShapeTypes;
@@ -48,13 +49,16 @@ class Control extends Component {
     switch (this.state.shapeType) {
       case 'button':
         control = (
-          <Button
+          <path
+            id={this.props.id}
+            className="simulation-control simulation-btn"
+            ref={svgShape => (this.svgShape = svgShape)}
             onClick={() => this.onButtonClick()}
-            className="simulation-control"
-            style={controlStyle}
-          >
-            Button control
-          </Button>
+            d={this.props.path}
+            stroke="transparent"
+            fill="transparent"
+            transform={`translate(${this.props.posX} ${this.props.posY})`}
+          />
         );
         break;
 
