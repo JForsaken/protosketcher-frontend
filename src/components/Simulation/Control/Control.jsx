@@ -6,7 +6,7 @@ import { invert } from 'lodash';
 
 class Control extends Component {
   static propTypes = {
-    controls: PropTypes.array.isRequired,
+    controls: PropTypes.object.isRequired,
     shapeTypeId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     rect: PropTypes.object.isRequired,
