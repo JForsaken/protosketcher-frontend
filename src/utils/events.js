@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-unused-expressions, no-param-reassign */
 
 import * as constants from '../components/constants';
 

@@ -1,6 +1,5 @@
 /* Node modules */
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -40,6 +39,8 @@ const menuItems = [
   constants.menuItems.ADD_TEXT,
   constants.menuItems.SELECT_AREA,
 ];
+
+const MAX_TOUCH_DISTANCE = 15;
 
 class Workspace extends Component {
 
@@ -97,7 +98,6 @@ class Workspace extends Component {
 
   componentDidMount() {
     this.componentWillReceiveProps(this.props);
-    this.radialMenuEl = ReactDOM.findDOMNode(this.radialMenu);
   }
 
   componentWillReceiveProps(newProps) {
@@ -378,7 +378,7 @@ class Workspace extends Component {
       deltaY = Math.abs(point.y - currentPos.y);
 
       // Add error margin for small moves
-      if (deltaX > 15 || deltaY > 15) {
+      if (deltaX > MAX_TOUCH_DISTANCE || deltaY > MAX_TOUCH_DISTANCE) {
         // stops move (draw action) from firing the event
         if (this.touchTimer) {
           clearTimeout(this.touchTimer);
@@ -614,8 +614,8 @@ class Workspace extends Component {
     }
 
     if (state) {
-      this.radialMenuEl.style.left = point.x - 150;
-      this.radialMenuEl.style.top = point.y - 150;
+      this.radialMenuEl.style.left = point.x - constants.RADIAL_MENU_SIZE;
+      this.radialMenuEl.style.top = point.y - constants.RADIAL_MENU_SIZE;
     } else {
       this.radialMenuEl.style.left = -9999;
     }
@@ -701,6 +701,10 @@ class Workspace extends Component {
     this.svgTexts = { ...this.svgTexts, [id]: textSvg };
   }
 
+  radialMenuDidMount(el) {
+    this.radialMenuEl = el;
+  }
+
   renderWorkspace() {
     const { workspace } = this.props.application;
     if (this.state.shapes && this.state.texts) {
@@ -721,6 +725,7 @@ class Workspace extends Component {
             ref={radialMenu => (this.radialMenu = radialMenu)}
             items={menuItems}
             offset={Math.PI / 4}
+            onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
           />
           <svg height="100%" width="100%">
             <filter id="dropshadow" height="130%">
