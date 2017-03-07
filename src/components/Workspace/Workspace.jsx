@@ -1,5 +1,6 @@
 /* Node modules */
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -98,6 +99,7 @@ class Workspace extends Component {
 
   componentDidMount() {
     this.componentWillReceiveProps(this.props);
+    this.radialMenuEl = ReactDOM.findDOMNode(this.radialMenu);
   }
 
   componentWillReceiveProps(newProps) {
@@ -234,7 +236,7 @@ class Workspace extends Component {
 
     if (e.type === constants.events.MOUSE_DOWN
       && e.nativeEvent.which === constants.keys.MOUSE_RIGHT) {
-      this.toggleMenu(true);
+      this.toggleMenu(true, point);
     } else {
       // Set timer for menu
       this.touchTimer = setTimeout(() => this.toggleMenu(true), 500);
@@ -602,7 +604,23 @@ class Workspace extends Component {
     });
   }
 
-  toggleMenu(state) {
+  toggleMenu(state, ...params) {
+    let point;
+    if (params.length) {
+      point = params[0];
+    } else {
+      point = {
+        x: this.props.application.workspace.currentPos.x,
+        y: this.props.application.workspace.currentPos.y,
+      };
+    }
+
+    if (state) {
+      this.radialMenuEl.style.left = point.x - 150;
+      this.radialMenuEl.style.top = point.y - 150;
+    } else {
+      this.radialMenuEl.style.left = -9999;
+    }
     if (this.state.currentPath) {
       this.setState({
         menuPending: false,
@@ -701,7 +719,11 @@ class Workspace extends Component {
           onTouchCancel={absorbEvent}
           onContextMenu={absorbEvent}
         >
-          {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
+          <RadialMenu
+            ref={radialMenu => (this.radialMenu = radialMenu)}
+            items={menuItems}
+            offset={Math.PI / 4}
+          />
           <svg height="100%" width="100%">
             <filter id="dropshadow" height="130%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />

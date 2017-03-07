@@ -59,13 +59,8 @@ class RadialMenu extends Component {
   }
 
   render() {
-    const menuStyle = {
-      left: this.props.application.workspace.currentPos.x - MENU_SIZE,
-      top: this.props.application.workspace.currentPos.y - MENU_SIZE,
-    };
-
     return (
-      <svg className="radial-menu" style={menuStyle}>
+      <svg className="radial-menu">
         {
           this.props.items.map((item, i) =>
             <RadialMenuItem
