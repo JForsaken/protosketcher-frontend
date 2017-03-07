@@ -41,8 +41,6 @@ const menuItems = [
   constants.menuItems.SELECT_AREA,
 ];
 
-// TODO : Keep menu rendered but invisible so mouseup/mousedown is not fired on menu render
-
 class Workspace extends Component {
 
   constructor(props, context) {
