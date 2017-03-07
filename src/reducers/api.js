@@ -3,6 +3,7 @@ import createReducer from '../utils/create-reducer';
 
 const initialState = {
   lastAction: null,
+  lastCallError: null,
   login: {
     user: {},
     lastAction: null,
@@ -98,6 +99,7 @@ const actionHandlers = {
   /* --- User Login --- */
   [constants.LOGIN]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     login: {
       user: action.user,
       lastAction: action.type,
@@ -107,6 +109,7 @@ const actionHandlers = {
   }),
   [constants.LOGOUT]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     login: {
       user: action.user,
       lastAction: action.type,
@@ -116,6 +119,7 @@ const actionHandlers = {
   }),
   [constants.FETCH_ME]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     login: {
       user: action.user,
       lastAction: action.type,
@@ -127,6 +131,7 @@ const actionHandlers = {
   /* --- Create User --- */
   [constants.CREATE_USER]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     createUser: {
       user: action.user,
       time: action.time,
@@ -137,6 +142,7 @@ const actionHandlers = {
   /* --- Prototypes */
   [constants.GET_PROTOTYPES]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     getPrototypes: {
       prototypes: action.prototypes,
       time: action.time,
@@ -145,6 +151,7 @@ const actionHandlers = {
   }),
   [constants.CREATE_PROTOTYPE]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     createPrototype: {
       prototypes: action.prototype,
       time: action.time,
@@ -153,6 +160,7 @@ const actionHandlers = {
   }),
   [constants.DELETE_PROTOTYPE]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     deletePrototype: {
       prototypeId: action.prototypeId,
       time: action.time,
@@ -163,6 +171,7 @@ const actionHandlers = {
   /* --- Pages --- */
   [constants.GET_PAGES]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     getPages: {
       pages: action.pages,
       time: action.time,
@@ -171,6 +180,7 @@ const actionHandlers = {
   }),
   [constants.GET_PAGE_TYPES]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     getPageTypes: {
       pageTypes: action.pageTypes.reduce((acc, curr) => ({
         ...acc,
@@ -182,6 +192,7 @@ const actionHandlers = {
   }),
   [constants.CREATE_PAGE]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     createPage: {
       page: action.page,
       time: action.time,
@@ -192,6 +203,7 @@ const actionHandlers = {
 /* --- Shapes ---*/
   [constants.GET_SHAPES]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     getShapes: {
       shapes: action.shapes,
       requestedPage: action.requestedPage,
@@ -201,6 +213,7 @@ const actionHandlers = {
   }),
   [constants.GET_SHAPE_TYPES]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     getShapeTypes: {
       shapeTypes: action.shapeTypes.reduce((acc, curr) => ({
         ...acc,
@@ -212,6 +225,7 @@ const actionHandlers = {
   }),
   [constants.CREATE_SHAPE]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     createShape: {
       shape: action.shape,
       time: action.time,
@@ -220,6 +234,7 @@ const actionHandlers = {
   }),
   [constants.PATCH_SHAPE]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     patchShape: {
       shape: action.shape,
       time: action.time,
@@ -228,6 +243,7 @@ const actionHandlers = {
   }),
   [constants.DELETE_SHAPE]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     deleteShape: {
       shape: action.shape,
       time: action.time,
@@ -238,6 +254,7 @@ const actionHandlers = {
 /* --- Texts ---*/
   [constants.GET_TEXTS]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     getTexts: {
       texts: action.texts,
       requestedPage: action.requestedPage,
@@ -247,6 +264,7 @@ const actionHandlers = {
   }),
   [constants.CREATE_TEXT]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     createText: {
       text: action.text,
       time: action.time,
@@ -255,6 +273,7 @@ const actionHandlers = {
   }),
   [constants.PATCH_TEXT]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     patchText: {
       text: action.text,
       time: action.time,
@@ -263,6 +282,7 @@ const actionHandlers = {
   }),
   [constants.DELETE_TEXT]: (state, action) => ({
     lastAction: action.type,
+    lastCallError: action.error,
     deleteText: {
       text: action.text,
       time: action.time,
