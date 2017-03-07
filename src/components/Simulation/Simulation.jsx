@@ -63,6 +63,16 @@ class Simulation extends Component {
       this.setState({
         pagesWithTextsFetched: [...pagesWithTextsFetched, nextProps.api.getTexts.requestedPage],
       });
+    } else if (!isEqual(nextProps.application.selectedPage, this.props.application.selectedPage)) {
+      const { prototypes, selectedPrototype, selectedPage } = nextProps.application;
+      const prototype = prototypes[selectedPrototype];
+      const { shapes, texts } = prototype.pages[selectedPage];
+
+      this.svgShapes = {};
+      this.setState({
+        shapes,
+        texts,
+      });
     }
   }
 

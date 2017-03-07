@@ -2,7 +2,14 @@
 import React, { Component, PropTypes } from 'react';
 import { FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { invert } from 'lodash';
+import { invert, forEach } from 'lodash';
+import { bindActionCreators } from 'redux';
+
+/* Actions */
+import { selectPage } from '../../../actions/application';
+
+/* CONSTANTS */
+import { actionTypes } from '../../constants';
 
 class Control extends Component {
   static propTypes = {
@@ -18,6 +25,8 @@ class Control extends Component {
   constructor(props) {
     super(props);
     const { shapeTypes } = this.props.api.getShapeTypes;
+    const { actionTypes: types } = this.props.api.getActionTypes;
+    this.actionTypes = types;
 
     this.state = {
       shapeType: invert(shapeTypes)[this.props.shapeTypeId],
@@ -28,6 +37,20 @@ class Control extends Component {
     /* TODO: hide/show other the shapes of the affectedShape,
      *  or change page to the affectedPageId
      */
+    // Change affected page
+    forEach(this.props.controls, (control) => {
+      switch (this.actionTypes[control.actionTypeId]) {
+        case actionTypes.CHANGE_PAGE:
+          this.props.actions.selectPage(control.affectedPageId);
+          return false;
+        case actionTypes.SHOW:
+          break;
+        case actionTypes.HIDE:
+          break;
+        default: break;
+      }
+      return true;
+    });
   }
 
   getControl() {
@@ -88,5 +111,10 @@ class Control extends Component {
 }
 
 export default connect(
-  ({ application, api }) => ({ application, api })
+  ({ application, api }) => ({ application, api }),
+  dispatch => ({
+    actions: bindActionCreators({
+      selectPage,
+    }, dispatch),
+  })
 )(Control);

@@ -84,3 +84,10 @@ export const keys = {
   C: 'c',
   D: 'd',
 };
+
+/* Action Types */
+export const actionTypes = {
+  CHANGE_PAGE: 'changePage',
+  SHOW: 'show',
+  HIDE: 'hide',
+};
