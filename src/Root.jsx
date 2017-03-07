@@ -42,7 +42,7 @@ class Root extends Component {
     super(props);
 
     // Route authentication middleware
-    this.requireAuth = (myProps) => (nextState, replaceState) => {
+    this.reqAuth = (myProps) => (nextState, replaceState) => {
       const token = storage.get('token');
       const selectedPrototype = storage.get('selectedPrototype');
 
@@ -58,12 +58,18 @@ class Root extends Component {
       }
     };
 
+    this.reqCleanSession = () => (nextState, replaceState) => {
+      if (storage.get('token')) {
+        replaceState('/');
+      }
+    };
+
     // Route definitions
     this.routes = (
       <Route path="/" component={Application}>
-        <IndexRoute component={HomePage} onEnter={this.requireAuth(this.props)} />
-        <Route path="login" component={LoginPage} />
-        <Route path="signup" component={LoginPage} />
+        <IndexRoute component={HomePage} onEnter={this.reqAuth(this.props)} />
+        <Route path="login" component={LoginPage} onEnter={this.reqCleanSession()} />
+        <Route path="signup" component={LoginPage} onEnter={this.reqCleanSession()} />
         <Route path="landing" component={LandingPage} />
       </Route>
     );
