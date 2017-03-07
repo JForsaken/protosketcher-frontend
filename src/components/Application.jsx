@@ -33,11 +33,7 @@ class Application extends Component {
   }
 
   redirectToLoginPage() {
-    const { location } = this.props;
-    const nextPath = location.state && location.state.nextPathname ?
-                   location.state.nextPathname : '/login';
-
-    this.props.router.push(nextPath);
+    this.props.router.push('/login');
   }
 
   render() {
