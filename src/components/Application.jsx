@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { isEqual } from 'lodash';
 import DisplayError from './common/DisplayErrors/DisplayError';
+import { FormattedMessage } from 'react-intl';
 
 /* Constants */
 import { FETCH_ME } from '../actions/constants';
@@ -41,9 +42,14 @@ class Application extends Component {
         <div id="main">
           <DisplayError />
 
-          {user && !user.id && this.props.location.pathname === '/'
-           // TODO: replace with with loading or spinner or whatever
-           ? <p>LOADING FETCH ME</p>
+          {user && !user.id && this.props.location.pathname === '/' ?
+            <div>
+              <div className="backdrop"></div>
+              <div className="loading">
+                <FormattedMessage id="website.userInfo" />
+                <div className="spinner" />
+              </div>
+            </div>
            : null
           }
 

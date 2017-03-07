@@ -3,6 +3,7 @@
 export default {
   // WEBSITE
   'website.title': 'Protosketcher',
+  'website.userInfo': 'Retrieving user',
 
   // COMMON
   'cancel': 'Cancel',
