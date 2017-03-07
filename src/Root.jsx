@@ -59,9 +59,7 @@ class Root extends Component {
     };
 
     this.reqCleanSession = () => (nextState, replaceState) => {
-      const token = storage.get('token');
-
-      if (token) {
+      if (storage.get('token')) {
         replaceState('/');
       }
     };
