@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { isEmpty, isEqual } from 'lodash';
 import DisplayError from './common/DisplayErrors/DisplayError';
+import { FormattedMessage } from 'react-intl';
 
 /* Actions */
 import { logout } from '../actions/application';
@@ -43,9 +44,14 @@ class Application extends Component {
         <div id="main">
           <DisplayError />
 
-          {user && !user.id && this.props.location.pathname === '/'
-           // TODO: replace with with loading or spinner or whatever
-           ? <p>LOADING FETCH ME</p>
+          {user && !user.id && this.props.location.pathname === '/' ?
+            <div>
+              <div className="backdrop"></div>
+              <div className="loading">
+                <FormattedMessage id="website.userInfo" />
+                <div className="spinner" />
+              </div>
+            </div>
            : null
           }
 

@@ -3,6 +3,7 @@
 export default {
   // WEBSITE
   'website.title': 'Protosketcher',
+  'website.userInfo': 'Récupération de l\'utilisateur',
 
   // COMMON
   'cancel': 'Annuler',
