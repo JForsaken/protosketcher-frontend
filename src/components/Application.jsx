@@ -1,7 +1,11 @@
 import React, { Component, PropTypes } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { isEqual } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import DisplayError from './common/DisplayErrors/DisplayError';
+
+/* Actions */
+import { logout } from '../actions/application';
 
 /* Constants */
 import { FETCH_ME } from '../actions/constants';
@@ -9,6 +13,7 @@ import { FETCH_ME } from '../actions/constants';
 class Application extends Component {
   static propTypes = {
     children: PropTypes.any,
+    router: PropTypes.object.isRequired,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -20,18 +25,19 @@ class Application extends Component {
       if (!login.user.id) {
         this.redirectToLoginPage();
       }
+    } else if (!isEqual(this.props.api.lastCallError, nextProps.api.lastCallError) &&
+               !isEmpty(nextProps.api.lastCallError) &&
+               nextProps.api.lastCallError.code === 403) {
+      this.props.actions.logout();
     }
   }
 
   redirectToLoginPage() {
-    const { history, location } = this.props;
-    let nextPath = '/login';
+    const { location } = this.props;
+    const nextPath = location.state && location.state.nextPathname ?
+                   location.state.nextPathname : '/login';
 
-    if (location.state && location.state.nextPathname) {
-      nextPath = location.state.nextPathname;
-    }
-
-    history.pushState({}, nextPath);
+    this.props.router.push(nextPath);
   }
 
   render() {
@@ -56,5 +62,10 @@ class Application extends Component {
 }
 
 export default (connect(
-  ({ api, router }) => ({ api, router }),
+  ({ api }) => ({ api }),
+  dispatch => ({
+    actions: bindActionCreators({
+      logout,
+    }, dispatch),
+  })
   )(Application));
