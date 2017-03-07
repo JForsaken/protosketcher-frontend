@@ -27,7 +27,8 @@ import {
   getTexts,
   createText,
   patchText,
-  deleteText } from '../../actions/api';
+  deleteText,
+  getActionTypes } from '../../actions/api';
 import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
@@ -126,14 +127,19 @@ class Workspace extends Component {
     }
 
     // If the page types are not cached, get them
-    if (!newProps.api.getPageTypes.pageTypes) {
+    if (isEmpty(newProps.api.getPageTypes.pageTypes)) {
       this.props.actions.getPageTypes(newProps.application.user.token);
     }
 
 
     // If the shape types are not cached, get them
-    if (!newProps.api.getShapeTypes.shapeTypes) {
+    if (isEmpty(newProps.api.getShapeTypes.shapeTypes)) {
       this.props.actions.getShapeTypes(newProps.application.user.token);
+    }
+
+    // If the action types are not cached, get them
+    if (isEmpty(newProps.api.getActionTypes.actionTypes)) {
+      this.props.actions.getActionTypes(newProps.application.user.token);
     }
 
     // If the selected prototype's pages are not cached, get them
@@ -785,6 +791,7 @@ export default connect(
       createText,
       patchText,
       deleteText,
+      getActionTypes,
     }, dispatch),
   })
 )(Workspace);

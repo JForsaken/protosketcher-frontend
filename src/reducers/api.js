@@ -36,7 +36,7 @@ const initialState = {
     error: {},
   },
   getPageTypes: {
-    pages: {},
+    pageTypes: {},
     time: null,
     error: {},
   },
@@ -52,7 +52,7 @@ const initialState = {
     error: {},
   },
   getShapeTypes: {
-    pages: {},
+    shapeTypes: {},
     time: null,
     error: {},
   },
@@ -89,6 +89,11 @@ const initialState = {
   },
   deleteText: {
     text: {},
+    time: null,
+    error: {},
+  },
+  getActionTypes: {
+    actionTypes: {},
     time: null,
     error: {},
   },
@@ -285,6 +290,20 @@ const actionHandlers = {
     lastCallError: action.error,
     deleteText: {
       text: action.text,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+
+  /* CONTROLS */
+  [constants.GET_ACTION_TYPES]: (state, action) => ({
+    lastAction: action.type,
+    lastCallError: action.error,
+    getActionTypes: {
+      actionTypes: action.actionTypes.reduce((acc, curr) => ({
+        ...acc,
+        [curr.id]: curr.type,
+      }), {}),
       time: action.time,
       error: action.error,
     },

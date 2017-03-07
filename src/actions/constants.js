@@ -46,6 +46,8 @@ export const CREATE_TEXT = 'CREATE_TEXT';
 export const PATCH_TEXT = 'PATCH_TEXT';
 export const DELETE_TEXT = 'DELETE_TEXT';
 
+// Controls
+export const GET_ACTION_TYPES = 'GET_ACTION_TYPES';
 
 // API
 export const SAVE = 'SAVE';
