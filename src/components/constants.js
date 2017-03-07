@@ -7,6 +7,7 @@ import { red500, blue500, green500, black } from 'material-ui/styles/colors';
 /* Sizes */
 export const TOP_MENU_HEIGHT = 50;
 export const LEFT_MENU_WIDTH = 0;
+export const RADIAL_MENU_SIZE = 150;
 
 /* Events */
 export const events = {
@@ -18,6 +19,7 @@ export const events = {
   TOUCH_START: 'touchstart',
   TOUCH_END: 'touchend',
   TOUCH_MOVE: 'touchmove',
+  TOUCH_CANCEL: 'touchcancel',
   CONTEXT_MENU: 'contextmenu',
 };
 
@@ -83,4 +85,6 @@ export const keys = {
   ENTER: 'Enter',
   C: 'c',
   D: 'd',
+  MOUSE_LEFT: 1,
+  MOUSE_RIGHT: 3,
 };

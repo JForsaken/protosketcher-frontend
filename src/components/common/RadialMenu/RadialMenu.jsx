@@ -19,7 +19,7 @@ import RadialMenuItem from './RadialMenuItem/RadialMenuItem';
 import { updateWorkspace } from '../../../actions/application';
 
 /* Constants */
-const MENU_SIZE = 150;
+import RADIAL_MENU_SIZE from '../../constants';
 
 class RadialMenu extends Component {
 
@@ -32,6 +32,15 @@ class RadialMenu extends Component {
     this.onMovingEvent = this.onMovingEvent.bind(this);
 
     this.initElements();
+  }
+
+  componentDidMount() {
+    const { onLoad } = this.props;
+
+    // if an onLoad callback has been provided
+    if (onLoad) {
+      onLoad(this.svgEl);
+    }
   }
 
   onMovingEvent() {
@@ -59,13 +68,8 @@ class RadialMenu extends Component {
   }
 
   render() {
-    const menuStyle = {
-      left: this.props.application.workspace.currentPos.x - MENU_SIZE,
-      top: this.props.application.workspace.currentPos.y - MENU_SIZE,
-    };
-
     return (
-      <svg className="radial-menu" style={menuStyle}>
+      <svg ref={svgEl => (this.svgEl = svgEl)} className="radial-menu">
         {
           this.props.items.map((item, i) =>
             <RadialMenuItem
@@ -74,8 +78,8 @@ class RadialMenu extends Component {
             />)
         }
         <circle
-          cx={MENU_SIZE}
-          cy={MENU_SIZE}
+          cx={RADIAL_MENU_SIZE}
+          cy={RADIAL_MENU_SIZE}
           r="35"
           onMouseMove={this.onMovingEvent}
           onTouchMove={this.onMovingEvent}

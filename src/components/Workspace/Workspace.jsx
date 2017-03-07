@@ -8,6 +8,7 @@ import { isEmpty, has, omit } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
+import absorbEvent from '../../utils/events';
 
 /* Components */
 import Footer from '../common/Footer/Footer';
@@ -38,6 +39,8 @@ const menuItems = [
   constants.menuItems.ADD_TEXT,
   constants.menuItems.SELECT_AREA,
 ];
+
+const MAX_TOUCH_DISTANCE = 15;
 
 class Workspace extends Component {
 
@@ -206,8 +209,7 @@ class Workspace extends Component {
   }
 
   onStartingEvent(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    absorbEvent(e);
 
     // Add text if there was one being created
     if (this.state.currentMode === constants.modes.TEXT) {
@@ -230,8 +232,9 @@ class Workspace extends Component {
       },
     });
 
-    if (e.type === constants.events.CONTEXT_MENU) {
-      this.toggleMenu(true);
+    if (e.type === constants.events.MOUSE_DOWN
+      && e.nativeEvent.which === constants.keys.MOUSE_RIGHT) {
+      this.toggleMenu(true, point);
     } else {
       // Set timer for menu
       this.touchTimer = setTimeout(() => this.toggleMenu(true), 500);
@@ -272,8 +275,7 @@ class Workspace extends Component {
   }
 
   onEndingEvent(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    absorbEvent(e);
 
     // Add text if there was one being created
     if (this.state.currentMode === constants.modes.TEXT) {
@@ -299,10 +301,16 @@ class Workspace extends Component {
       this.createShape(point);
     }
 
-    if (!(e.type === constants.events.MOUSE_LEAVE
-      && e.target.classList.contains('workspace-container'))) {
-      this.toggleMenu(false);
-      this.props.actions.updateWorkspace({ action: null });
+    if (this.state.showMenu || this.state.currentPath) {
+      if (e.type === constants.events.MOUSE_LEAVE) {
+        if (!e.target.classList.contains('workspace-container')) {
+          this.toggleMenu(false);
+          this.props.actions.updateWorkspace({ action: null });
+        }
+      } else {
+        this.toggleMenu(false);
+        this.props.actions.updateWorkspace({ action: null });
+      }
     }
 
     // stops short touches from firing the event
@@ -314,8 +322,7 @@ class Workspace extends Component {
   }
 
   onMovingEvent(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    absorbEvent(e);
 
     // Get event position
     let pointer = e;
@@ -326,16 +333,33 @@ class Workspace extends Component {
       const el = document.elementFromPoint(pointer.clientX, pointer.clientY);
       if (el.nodeName === 'path' && el.className) {
         const classes = el.className.baseVal.split('-');
-        if (classes[0] === 'action' && classes[1] !== this.props.application.workspace.action) {
-          if (classes.length > 2 && classes[2] !== this.props.application.workspace.actionValue) {
+        if (classes[0] === 'action') {
+          // Move on a menu item
+          if (classes.length === 2 && classes[1] !== this.props.application.workspace.action) {
+            this.props.actions.updateWorkspace({
+              action: classes[1],
+              actionValue: null,
+            });
+          }
+
+          // Move on a sub-menu item
+          else if (classes.length > 2
+            && classes[2] !== this.props.application.workspace.actionValue) {
             this.props.actions.updateWorkspace({
               action: classes[1],
               actionValue: classes[2],
             });
-          } else {
-            this.props.actions.updateWorkspace({ action: classes[1] });
           }
+        } else if (classes[0] === 'hover') {
+          this.props.actions.updateWorkspace({
+            actionValue: null,
+          });
         }
+      }
+
+      // Move in the center of the menu
+      else if (el.nodeName === 'circle' && this.props.application.workspace.action) {
+        this.props.actions.updateWorkspace({ action: null });
       }
     }
 
@@ -354,7 +378,7 @@ class Workspace extends Component {
       deltaY = Math.abs(point.y - currentPos.y);
 
       // Add error margin for small moves
-      if (deltaX > 25 || deltaY > 25) {
+      if (deltaX > MAX_TOUCH_DISTANCE || deltaY > MAX_TOUCH_DISTANCE) {
         // stops move (draw action) from firing the event
         if (this.touchTimer) {
           clearTimeout(this.touchTimer);
@@ -449,29 +473,39 @@ class Workspace extends Component {
   }
 
   createText() {
-    const uuid = uuidV1();
-    const { currentPos } = this.props.application.workspace;
+    const value = this.textEdit.value;
 
-    const text = {
-      content: this.textEdit.value,
-      x: currentPos.x,
-      y: currentPos.y + constants.paths.TEXT_OFFSET_Y,
-      fontSize: this.state.fontSize,
-      uuid,
-    };
+    if (!value) {
+      this.setState({
+        currentPath: null,
+        previousPoint: null,
+        currentMode: null,
+      });
+    } else {
+      const uuid = uuidV1();
+      const { currentPos } = this.props.application.workspace;
 
-    this.setState({
-      texts: {
-        ...this.state.texts,
-        [uuid]: text,
-      },
-      currentPath: null,
-      previousPoint: null,
-      currentMode: null,
-    });
+      const text = {
+        content: value,
+        x: currentPos.x,
+        y: currentPos.y + constants.paths.TEXT_OFFSET_Y,
+        fontSize: this.state.fontSize,
+        uuid,
+      };
 
-    this.props.actions.createText(this.props.application.selectedPrototype,
-      this.state.currentPageId, text, this.props.application.user.token);
+      this.setState({
+        texts: {
+          ...this.state.texts,
+          [uuid]: text,
+        },
+        currentPath: null,
+        previousPoint: null,
+        currentMode: null,
+      });
+
+      this.props.actions.createText(this.props.application.selectedPrototype,
+        this.state.currentPageId, text, this.props.application.user.token);
+    }
   }
 
   computeSvgPath(point, prefix) {
@@ -568,7 +602,23 @@ class Workspace extends Component {
     });
   }
 
-  toggleMenu(state) {
+  toggleMenu(state, ...params) {
+    let point;
+    if (params.length) {
+      point = params[0];
+    } else {
+      point = {
+        x: this.props.application.workspace.currentPos.x,
+        y: this.props.application.workspace.currentPos.y,
+      };
+    }
+
+    if (state) {
+      this.radialMenuEl.style.left = point.x - constants.RADIAL_MENU_SIZE;
+      this.radialMenuEl.style.top = point.y - constants.RADIAL_MENU_SIZE;
+    } else {
+      this.radialMenuEl.style.left = -9999;
+    }
     if (this.state.currentPath) {
       this.setState({
         menuPending: false,
@@ -651,6 +701,10 @@ class Workspace extends Component {
     this.svgTexts = { ...this.svgTexts, [id]: textSvg };
   }
 
+  radialMenuDidMount(el) {
+    this.radialMenuEl = el;
+  }
+
   renderWorkspace() {
     const { workspace } = this.props.application;
     if (this.state.shapes && this.state.texts) {
@@ -664,9 +718,15 @@ class Workspace extends Component {
           onTouchStart={this.onStartingEvent}
           onTouchMove={this.onMovingEvent}
           onTouchEnd={this.onEndingEvent}
-          onContextMenu={this.onStartingEvent}
+          onTouchCancel={absorbEvent}
+          onContextMenu={absorbEvent}
         >
-          {this.state.showMenu && <RadialMenu items={menuItems} offset={Math.PI / 4} />}
+          <RadialMenu
+            ref={radialMenu => (this.radialMenu = radialMenu)}
+            items={menuItems}
+            offset={Math.PI / 4}
+            onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
+          />
           <svg height="100%" width="100%">
             <filter id="dropshadow" height="130%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
