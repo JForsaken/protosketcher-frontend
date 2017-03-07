@@ -15,7 +15,7 @@ class Shape extends Component {
     posX: PropTypes.number.isRequired,
     posY: PropTypes.number.isRequired,
     onLoad: PropTypes.func,
-  }
+  };
 
   componentDidMount() {
     const { onLoad, id } = this.props;
@@ -27,7 +27,8 @@ class Shape extends Component {
   }
 
   onClick() {
-    if (isEmpty(this.props.application.workspace.selectedItems)) {
+    if (isEmpty(this.props.application.workspace.selectedItems)
+      && !this.props.application.isSimulation) {
       this.props.actions.updateWorkspace({
         selectedItems: [this.props.id],
         currentPath: null,
