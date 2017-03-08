@@ -33,6 +33,8 @@ For automatic deployment, you can run this command :
 $ npm run deploy
 ```
 
+:information_source: This will only deploy the app.js file. Assets files mut be deployed manually.
+
 :warning: You must edit the variables in the secrets.yml file. To avoid pushing the secret config, run this line :
 
 ```bash
