@@ -27,6 +27,18 @@ $ npm run build
 
 Then the website will be built in the **/dist** folder. Simply copy that folder and paste it to where you where to host the site.
 
+For automatic deployment, you can run this command :
+
+```bash
+$ npm run deploy
+```
+
+:warning: You must edit the variables in the secrets.yml file. To avoid pushing the secret config, run this line :
+
+```bash
+$ git update-index --assume-unchanged secrets.yml
+```
+
 ## I18n support
 
 All messages in this website are localized and rendered using `react-intl@2.0`.
