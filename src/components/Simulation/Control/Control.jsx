@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { isEmpty, invert, forEach, intersection } from 'lodash';
+import { isEmpty, forEach, intersection } from 'lodash';
 import { bindActionCreators } from 'redux';
 
 /* Actions */
@@ -128,7 +128,7 @@ class Control extends Component {
 
     // extracted data
     this.affectedPages = pages;
-    this.shapeType = invert(shapeTypes)[this.props.shapeTypeId];
+    this.shapeType = shapeTypes[this.props.shapeTypeId];
     this.elementsToShow = toShow.filter(o => !intersect.includes(o));
     this.elementsToHide = toHide.filter(o => !intersect.includes(o));
   }

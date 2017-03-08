@@ -222,7 +222,7 @@ const actionHandlers = {
     getShapeTypes: {
       shapeTypes: action.shapeTypes.reduce((acc, curr) => ({
         ...acc,
-        [curr.type]: curr.id,
+        [curr.id]: curr.type,
       }), {}),
       time: action.time,
       error: action.error,
