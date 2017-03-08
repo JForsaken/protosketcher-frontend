@@ -136,7 +136,7 @@ class Simulation extends Component {
       Object.entries(shapes).map((item, i) => svgShapes[item[0]] &&
         <Control
           id={`control-${item[0]}`}
-          controls={item[1].controls || []}
+          controls={item[1].controls || {}}
           shapeTypeId={item[1].shapeTypeId}
           color={item[1].color}
           rect={svgShapes[item[0]].getBBox()}

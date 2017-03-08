@@ -29,7 +29,7 @@ const initialState = {
   simulation: {
     isSimulating: false,
     hiddenElements: [],
-  }
+  },
 };
 
 function onGetPrototypes(state, action) {
@@ -481,14 +481,14 @@ const actionHandlers = {
     simulation: {
       ...state.simulation,
       hiddenElements: state.simulation.hiddenElements.filter(e => !action.elements.includes(e)),
-    }
+    },
   }),
 
   [constants.HIDE_ELEMENTS]: (state, action) => ({
     simulation: {
       ...state.simulation,
       hiddenElements: state.simulation.hiddenElements.concat(action.elements),
-    }
+    },
   }),
 };
 
