@@ -19,7 +19,7 @@ import RadialMenuItem from './RadialMenuItem/RadialMenuItem';
 import { updateWorkspace } from '../../../actions/application';
 
 /* Constants */
-import RADIAL_MENU_SIZE from '../../constants';
+import { RADIAL_MENU_SIZE } from '../../constants';
 
 class RadialMenu extends Component {
 
