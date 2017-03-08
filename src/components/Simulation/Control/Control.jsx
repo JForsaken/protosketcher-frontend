@@ -2,11 +2,14 @@
 import React, { Component, PropTypes } from 'react';
 import { FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { invert, forEach } from 'lodash';
+import { isEmpty, invert, forEach, intersection } from 'lodash';
 import { bindActionCreators } from 'redux';
 
 /* Actions */
-import { selectPage } from '../../../actions/application';
+import {
+  selectPage,
+  showElements,
+  hideElements } from '../../../actions/application';
 
 /* CONSTANTS */
 import { actionTypes } from '../../constants';
@@ -22,40 +25,31 @@ class Control extends Component {
     posY: PropTypes.number.isRequired,
     path: PropTypes.string.isRequired,
   };
-  constructor(props) {
-    super(props);
-    const { shapeTypes } = this.props.api.getShapeTypes;
-    const { actionTypes: types } = this.props.api.getActionTypes;
-    this.actionTypes = types;
 
-    this.state = {
-      shapeType: invert(shapeTypes)[this.props.shapeTypeId],
-    };
+  componentWillMount() {
+    this.extractControlData();
   }
 
   onButtonClick() {
-    /* TODO: hide/show other the shapes of the affectedShape,
-     *  or change page to the affectedPageId
-     */
-    // Change affected page
-    forEach(this.props.controls, (control) => {
-      switch (this.actionTypes[control.actionTypeId]) {
-        case actionTypes.CHANGE_PAGE:
-          this.props.actions.selectPage(control.affectedPageId);
-          return false;
-        case actionTypes.SHOW:
-          break;
-        case actionTypes.HIDE:
-          break;
-        default: break;
-      }
-      return true;
-    });
+    // select the page
+    if (!isEmpty(this.affectedPages)) {
+      // TODO: how should we handle multiple controls having an affected page?
+      this.props.actions.selectPage(this.affectedPages[0]);
+    }
+
+    // show the elements
+    if (!isEmpty(this.elementsToShow)) {
+      this.props.actions.showElements(this.elementsToShow);
+    }
+
+    // hide the elements
+    if (!isEmpty(this.elementsToHide)) {
+      this.props.actions.hideElements(this.elementsToHide);
+    }
   }
 
   getControl() {
     let control = null;
-
     const { posX, posY, rect } = this.props;
 
     // the position where the control should be placed
@@ -69,7 +63,7 @@ class Control extends Component {
       height: rect.height,
     };
 
-    switch (this.state.shapeType) {
+    switch (this.shapeType) {
       case 'button':
         control = (
           <path
@@ -105,6 +99,40 @@ class Control extends Component {
     return control;
   }
 
+  extractControlData() {
+    const { shapeTypes } = this.props.api.getShapeTypes;
+    const { actionTypes: types } = this.props.api.getActionTypes;
+
+    const pages = [];
+    let toShow = [];
+    let toHide = [];
+
+    forEach(this.props.controls, (control) => {
+      switch (types[control.actionTypeId]) {
+        case actionTypes.CHANGE_PAGE:
+          pages.push(control.affectedPageId);
+          break;
+        case actionTypes.SHOW:
+          toShow = toShow.concat(control.affectedShapeIds, control.affectedTextIds);
+          break;
+        case actionTypes.HIDE:
+          toHide = toHide.concat(control.affectedShapeIds, control.affectedTextIds);
+          break;
+        default: break;
+      }
+      return true;
+    });
+
+    // ids found in both toShow and toHide
+    const intersect = intersection(toShow, toHide);
+
+    // extracted data
+    this.affectedPages = pages;
+    this.shapeType = invert(shapeTypes)[this.props.shapeTypeId];
+    this.elementsToShow = toShow.filter(o => !intersect.includes(o));
+    this.elementsToHide = toHide.filter(o => !intersect.includes(o));
+  }
+
   render() {
     return this.getControl();
   }
@@ -115,6 +143,8 @@ export default connect(
   dispatch => ({
     actions: bindActionCreators({
       selectPage,
+      showElements,
+      hideElements,
     }, dispatch),
   })
 )(Control);

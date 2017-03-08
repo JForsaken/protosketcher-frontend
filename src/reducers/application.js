@@ -12,7 +12,6 @@ const initialState = {
   ],
   error: null,
   user: null,
-  simulating: false,
   selectedPrototype: null,
   selectedPage: null,
   prototypes: {},
@@ -27,6 +26,10 @@ const initialState = {
     actionValue: null,
     selectedItems: [],
   },
+  simulation: {
+    isSimulating: false,
+    hiddenElements: [],
+  }
 };
 
 function onGetPrototypes(state, action) {
@@ -467,9 +470,26 @@ const actionHandlers = {
   }),
 
   [constants.TOGGLE_SIMULATION]: (state) => ({
-    simulating: !state.simulating,
+    simulation: {
+      ...state.simulation,
+      isSimulating: !state.simulation.isSimulating,
+    },
   }),
 
+  /* --- Simulation --- */
+  [constants.SHOW_ELEMENTS]: (state, action) => ({
+    simulation: {
+      ...state.simulation,
+      hiddenElements: state.simulation.hiddenElements.filter(e => !action.elements.includes(e)),
+    }
+  }),
+
+  [constants.HIDE_ELEMENTS]: (state, action) => ({
+    simulation: {
+      ...state.simulation,
+      hiddenElements: state.simulation.hiddenElements.concat(action.elements),
+    }
+  }),
 };
 
 export default createReducer(initialState, actionHandlers);

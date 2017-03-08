@@ -28,7 +28,7 @@ class Shape extends Component {
 
   onClick() {
     if (isEmpty(this.props.application.workspace.selectedItems)
-      && !this.props.application.isSimulation) {
+        && !this.props.application.simulation.isSimulating) {
       this.props.actions.updateWorkspace({
         selectedItems: [this.props.id],
         currentPath: null,

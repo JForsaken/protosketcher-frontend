@@ -42,7 +42,7 @@ class HomePage extends Component {
 
     if (!isEmpty(this.props.application.prototypes)) {
       // render simulation
-      if (this.props.application.simulating) {
+      if (this.props.application.simulation.isSimulating) {
         return (
           <div className="page-container in-simulation" key="homepage-anim">
             <div className="back-to-edit-container">

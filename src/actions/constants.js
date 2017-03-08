@@ -54,3 +54,7 @@ export const SAVE = 'SAVE';
 
 // Workspace
 export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE';
+
+// Simulation
+export const SHOW_ELEMENTS = 'SHOW_ELEMENTS';
+export const HIDE_ELEMENTS = 'HIDE_ELEMENTS';
