@@ -35,7 +35,7 @@ $ npm run deploy
 
 :information_source: This will only deploy the app.js file. Assets files mut be deployed manually.
 
-:warning: You must edit the variables in the secrets.yml file. To avoid pushing the secret config, run this line :
+:warning: You must copy **secrets.template.yml** to **secrets.yml** and fill in the parameters for the script to work.
 
 ```bash
 $ git update-index --assume-unchanged secrets.yml
