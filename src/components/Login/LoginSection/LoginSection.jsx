@@ -90,7 +90,7 @@ class LoginSection extends Component {
       intl,
     } = this.props;
 
-    const { pending } = this.state;
+    const { pending, isShowingModal } = this.state;
 
     const submitButtonContent = pending ?
       <div className="spinner" /> :
@@ -98,7 +98,7 @@ class LoginSection extends Component {
 
     return (
       <div>
-        {this.state.isShowingModal && this.renderModal()}
+        {isShowingModal && this.renderModal()}
         <h1 className="login-form__title"><FormattedMessage id="login.form.title" /></h1>
         <Form onSubmit={handleSubmit(this.handleSubmit)}>
           <Field
@@ -125,7 +125,7 @@ class LoginSection extends Component {
           <Button
             className="login-section__login-button"
             type="submit"
-            disabled={pending}
+            disabled={pending || isShowingModal}
           >
             {submitButtonContent}
           </Button>
