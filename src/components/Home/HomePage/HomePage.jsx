@@ -54,7 +54,7 @@ class HomePage extends Component {
                 className={`back-to-edit ${(isTouchDevice()) ? 'mobile' : ''}`}
                 onClick={() => this.toggleSimulation()}
               >
-                <FontAwesome name="stop" />
+                <FontAwesome name="pencil-square-o" />
                 <FormattedMessage id="menu.backToEdit" />
               </Link>
             </div>

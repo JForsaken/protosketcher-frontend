@@ -162,7 +162,7 @@ class Menu extends Component {
       {
         text: <FormattedMessage id="menu.simulation" />,
         link: '',
-        icon: 'play',
+        icon: 'eye',
         onClick: () => this.toggleSimulation(),
       },
     ];
