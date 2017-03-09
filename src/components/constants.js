@@ -88,3 +88,10 @@ export const keys = {
   MOUSE_LEFT: 1,
   MOUSE_RIGHT: 3,
 };
+
+/* Action Types */
+export const actionTypes = {
+  CHANGE_PAGE: 'changePage',
+  SHOW: 'show',
+  HIDE: 'hide',
+};

@@ -7,10 +7,12 @@ import { filter, has, isEqual } from 'lodash';
 
 /* Components */
 import Shape from '../Workspace/Shape/Shape';
+import Text from '../Workspace/Text/Text';
 import Control from './Control/Control';
 
 /* Actions */
 import { getShapes, getTexts } from '../../actions/api';
+import { showElements } from '../../actions/application';
 
 class Simulation extends Component {
 
@@ -48,6 +50,9 @@ class Simulation extends Component {
       this.props.actions.getShapes(selectedPrototype, p, user.token);
       this.props.actions.getTexts(selectedPrototype, p, user.token);
     });
+
+    // reset all hidden elements when the simulation first starts
+    this.props.actions.showElements(this.props.application.simulation.hiddenElements);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -63,6 +68,16 @@ class Simulation extends Component {
       this.setState({
         pagesWithTextsFetched: [...pagesWithTextsFetched, nextProps.api.getTexts.requestedPage],
       });
+    } else if (!isEqual(nextProps.application.selectedPage, this.props.application.selectedPage)) {
+      const { prototypes, selectedPrototype, selectedPage } = nextProps.application;
+      const prototype = prototypes[selectedPrototype];
+      const { shapes, texts } = prototype.pages[selectedPage];
+
+      this.svgShapes = {};
+      this.setState({
+        shapes,
+        texts,
+      });
     }
   }
 
@@ -77,17 +92,39 @@ class Simulation extends Component {
   }
 
   renderShapes() {
+    const { hiddenElements } = this.props.application.simulation;
+
     return (
-      Object.entries(this.state.shapes).map((item, i) =>
-        <Shape
-          id={item[0]}
-          onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
-          color={item[1].color}
-          path={item[1].path}
-          posX={item[1].x}
-          posY={item[1].y}
-          key={i}
-        />)
+      Object.entries(this.state.shapes)
+            .filter(item => !hiddenElements.includes(item[0]))
+            .map((item, i) =>
+              <Shape
+                id={item[0]}
+                onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
+                color={item[1].color}
+                path={item[1].path}
+                posX={item[1].x}
+                posY={item[1].y}
+                key={i}
+              />)
+    );
+  }
+
+  renderTexts() {
+    const { hiddenElements } = this.props.application.simulation;
+
+    return (
+      Object.entries(this.state.texts)
+            .filter(item => !hiddenElements.includes(item[0]))
+            .map((item, i) =>
+              <Text
+                id={item[0]}
+                posX={item[1].x}
+                posY={item[1].y}
+                size={item[1].fontSize}
+                content={item[1].content}
+                key={i}
+              />)
     );
   }
 
@@ -99,7 +136,7 @@ class Simulation extends Component {
       Object.entries(shapes).map((item, i) => svgShapes[item[0]] &&
         <Control
           id={`control-${item[0]}`}
-          controls={item[1].controls || []}
+          controls={item[1].controls || {}}
           shapeTypeId={item[1].shapeTypeId}
           color={item[1].color}
           rect={svgShapes[item[0]].getBBox()}
@@ -145,6 +182,7 @@ class Simulation extends Component {
             </feMerge>
           </filter>
           {this.renderShapes()}
+          {this.renderTexts()}
           {this.renderControls()}
         </svg>
       </div>
@@ -172,6 +210,7 @@ export default connect(
     actions: bindActionCreators({
       getShapes,
       getTexts,
+      showElements,
     }, dispatch),
   })
 )(Simulation);

@@ -26,7 +26,8 @@ class Text extends Component {
   }
 
   onClick() {
-    if (isEmpty(this.props.application.workspace.selectedItems)) {
+    if (isEmpty(this.props.application.workspace.selectedItems)
+        && !this.props.application.simulating) {
       this.props.actions.updateWorkspace({
         selectedItems: [this.props.id],
         currentPath: null,

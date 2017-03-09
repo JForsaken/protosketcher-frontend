@@ -22,6 +22,14 @@ export function updateWorkspace(data) {
   return { type: constants.UPDATE_WORKSPACE, data };
 }
 
+export function showElements(list) {
+  return { type: constants.SHOW_ELEMENTS, elements: list };
+}
+
+export function hideElements(list) {
+  return { type: constants.HIDE_ELEMENTS, elements: list };
+}
+
 export function logout() {
   remove('token');
   remove('selectedPrototype');

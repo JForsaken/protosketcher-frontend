@@ -499,6 +499,39 @@ export function getShapeTypes(token) {
   };
 }
 
+export function getActionTypes(token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/actiontypes`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.GET_ACTION_TYPES,
+          actionTypes: data.body,
+          time: Date.now(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_ACTION_TYPES,
+          actionTypes: {},
+          time: Date.now(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
 
 export function createShape(prototypeId, pageId, shape, token) {
   return dispatch => {
