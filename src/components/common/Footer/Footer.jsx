@@ -7,7 +7,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
-import { isEmpty, forEach } from 'lodash';
+import { isEmpty, find } from 'lodash';
 
 // Components
 import AddPageMenu from './AddPageMenu';
@@ -69,13 +69,12 @@ class Footer extends Component {
       let newPageId = '';
       const { pages } = prototypes[selectedPrototype];
 
-      // Loop pages and grab the first ID that isn't the one being deleted
-      forEach(pages, (page, pageId) => {
+      find(pages, (page, pageId) => {
         if (pageId !== pageModifiedId) {
           newPageId = pageId;
-          return false;
+          return true;
         }
-        return true;
+        return false;
       });
 
       this.changePage(newPageId);
