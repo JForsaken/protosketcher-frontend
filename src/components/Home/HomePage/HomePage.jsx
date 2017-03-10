@@ -17,6 +17,9 @@ import Simulation from '../../Simulation/Simulation';
 /* Actions */
 import { toggleSimulation } from '../../../actions/application';
 
+// Helper functions
+import { isTouchDevice } from '../../helper';
+
 const animationTime = 300;
 
 class HomePage extends Component {
@@ -46,8 +49,12 @@ class HomePage extends Component {
         return (
           <div className="page-container in-simulation" key="homepage-anim">
             <div className="back-to-edit-container">
-              <Link to="" className="back-to-edit" onClick={() => this.toggleSimulation()}>
-                <FontAwesome name="stop" />
+              <Link
+                to=""
+                className={`back-to-edit ${(isTouchDevice()) ? 'mobile' : ''}`}
+                onClick={() => this.toggleSimulation()}
+              >
+                <FontAwesome name="pencil-square-o" />
                 <FormattedMessage id="menu.backToEdit" />
               </Link>
             </div>
