@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { filter, has, isEqual } from 'lodash';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 /* Components */
 import Shape from '../Workspace/Shape/Shape';
@@ -252,7 +253,12 @@ class Simulation extends Component {
         onKeyDown={this.onKeyDownEvent}
         onClick={(this.isModal) ? (e) => this.checkClickBackdrop(e) : ''}
       >
-        {this.renderSimulation()}
+        <ReactCSSTransitionGroup
+          transitionName="simulation"
+          transitionAppear
+        >
+          {this.renderSimulation()}
+        </ReactCSSTransitionGroup>
       </div>
     );
   }

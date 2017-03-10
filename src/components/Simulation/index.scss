@@ -29,3 +29,31 @@
     }
   }
 }
+
+// React transition group properties
+.simulation-enter {
+  opacity: 0.01;
+}
+
+.simulation-enter.simulation-enter-active {
+  opacity: 1;
+  @include transition(opacity 0.2s ease);
+}
+
+.simulation-leave {
+  opacity: 1;
+}
+
+.simulation-leave.simulation-leave-active {
+  opacity: 0.01;
+  @include transition(opacity 0.2s ease-in);
+}
+
+.simulation-appear {
+  opacity: 0.01;
+  @include transition(opacity 0.2s ease-in);
+}
+
+.simulation-appear.simulation-appear-active {
+  opacity: 1;
+}
