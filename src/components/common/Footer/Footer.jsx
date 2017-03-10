@@ -7,7 +7,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
-import { isEmpty, find } from 'lodash';
+import { isEmpty, find, keys } from 'lodash';
 
 // Components
 import AddPageMenu from './AddPageMenu';
@@ -66,16 +66,10 @@ class Footer extends Component {
 
     // If deleting current page, change page
     if (pageModifiedId === selectedPage) {
-      let newPageId = '';
       const { pages } = prototypes[selectedPrototype];
 
-      find(pages, (page, pageId) => {
-        if (pageId !== pageModifiedId) {
-          newPageId = pageId;
-          return true;
-        }
-        return false;
-      });
+      const newPageId = find(keys(pages), (pageId) => (pageId !== pageModifiedId));
+
 
       this.changePage(newPageId);
     }
