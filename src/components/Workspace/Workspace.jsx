@@ -4,7 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import uuidV1 from 'uuid/v1';
-import { isEmpty, has, omit } from 'lodash';
+import { isEmpty, has, omit, invert } from 'lodash';
+
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -462,7 +463,7 @@ class Workspace extends Component {
       color: this.props.application.workspace.drawColor,
       x: this.state.currentPath.position.x,
       y: this.state.currentPath.position.y,
-      shapeTypeId: this.props.api.getShapeTypes.shapeTypes.line,
+      shapeTypeId: invert(this.props.api.getShapeTypes.shapeTypes).line,
       uuid,
     };
     this.setState({
