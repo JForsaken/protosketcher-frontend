@@ -70,7 +70,6 @@ class Footer extends Component {
 
       const newPageId = find(keys(pages), (pageId) => (pageId !== pageModifiedId));
 
-
       this.changePage(newPageId);
     }
 
