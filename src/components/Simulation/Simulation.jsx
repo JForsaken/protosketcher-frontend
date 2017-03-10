@@ -25,7 +25,6 @@ class Simulation extends Component {
     const { prototypes, selectedPrototype } = this.props.application;
     let { selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
-    const { shapes, texts } = prototype.pages[selectedPage];
 
     // the pages that still need to be fetched in order to be cached
     const pagesToFetch = filter(Object.keys(prototype.pages),
@@ -38,6 +37,7 @@ class Simulation extends Component {
     if (this.isModal) {
       selectedPage = props.pageId;
     }
+    const { shapes, texts } = prototype.pages[selectedPage];
 
     this.state = {
       pages: prototype.pages || null,
