@@ -194,7 +194,7 @@ class Simulation extends Component {
       <div
         id="workspace-container"
         ref={div => div && div.focus()}
-        className="workspace-container"
+        className="workspace-container simulation-container"
         tabIndex="0"
         onKeyDown={this.onKeyDownEvent}
       >
