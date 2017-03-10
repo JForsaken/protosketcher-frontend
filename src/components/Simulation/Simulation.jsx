@@ -105,6 +105,18 @@ class Simulation extends Component {
     this.setState({ modalId: pageId });
   }
 
+  checkClickBackdrop(e) {
+    // If we did click the backdrop, close the modal
+    if (e.target === this.container) {
+      this.props.closeModal();
+      delete this;
+    }
+  }
+
+  closeModal() {
+    this.setState({ modalId: '' });
+  }
+
   renderShapes() {
     const { hiddenElements } = this.props.application.simulation;
     let posX;
@@ -185,6 +197,7 @@ class Simulation extends Component {
         application={this.props.application}
         api={this.props.api}
         actions={this.props.actions}
+        closeModal={() => this.closeModal()}
       />
     );
   }
@@ -233,10 +246,11 @@ class Simulation extends Component {
   render() {
     return (
       <div
-        ref={div => div && div.focus()}
+        ref={div => { this.container = div; }}
         className={`simulation-container${(this.isModal) ? ' modalSimulation' : ''}`}
         tabIndex="0"
         onKeyDown={this.onKeyDownEvent}
+        onClick={(this.isModal) ? (e) => this.checkClickBackdrop(e) : ''}
       >
         {this.renderSimulation()}
       </div>
