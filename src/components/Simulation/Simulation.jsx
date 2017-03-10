@@ -19,7 +19,8 @@ class Simulation extends Component {
   constructor(props, context) {
     super(props, context);
 
-    const { prototypes, selectedPrototype, selectedPage } = this.props.application;
+    const { prototypes, selectedPrototype } = this.props.application;
+    let { selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
     const { shapes, texts } = prototype.pages[selectedPage];
 
@@ -29,6 +30,11 @@ class Simulation extends Component {
                                       !has(prototype.pages[p], 'texts')));
 
     this.svgShapes = {};
+    this.isModal = props.isModal;
+    // If this Simulation is a Modal, hard assign the Page
+    if (this.isModal) {
+      selectedPage = props.pageId;
+    }
 
     this.state = {
       pages: prototype.pages || null,
@@ -39,6 +45,7 @@ class Simulation extends Component {
       pagesToFetch,
       pagesWithShapesFetched: [],
       pagesWithTextsFetched: [],
+      modalId: '',
     };
   }
 
@@ -89,6 +96,10 @@ class Simulation extends Component {
     if (Object.keys(this.svgShapes).length === Object.keys(this.state.shapes).length) {
       this.setState({ svgShapes: this.svgShapes });
     }
+  }
+
+  showModal(pageId) {
+    this.setState({ modalId: pageId });
   }
 
   renderShapes() {
@@ -144,8 +155,21 @@ class Simulation extends Component {
           posY={item[1].y}
           path={item[1].path}
           key={`control-${i}`}
+          onClickModal={(pageId) => this.showModal(pageId)}
         />
       )
+    );
+  }
+
+  renderModal() {
+    return (
+      <Simulation
+        isModal="true"
+        pageId={this.state.modalId}
+        application={this.props.application}
+        api={this.props.api}
+        actions={this.props.actions}
+      />
     );
   }
 
@@ -171,9 +195,10 @@ class Simulation extends Component {
     }
 
     return (
-      <div id="workspace">
+      <div className="workspace">
+        {this.state.modalId && this.renderModal()}
         <svg height="100%" width="100%">
-          <filter id="dropshadow" height="130%">
+          <filter className="dropshadow" height="130%">
             <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
             <feOffset dx="0" dy="0" result="offsetblur" />
             <feMerge>
@@ -192,9 +217,8 @@ class Simulation extends Component {
   render() {
     return (
       <div
-        id="workspace-container"
         ref={div => div && div.focus()}
-        className="workspace-container simulation-container"
+        className={`simulation-container${(this.isModal) ? ' modalSimulation' : ''}`}
         tabIndex="0"
         onKeyDown={this.onKeyDownEvent}
       >

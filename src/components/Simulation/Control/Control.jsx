@@ -34,7 +34,11 @@ class Control extends Component {
     // select the page
     if (!isEmpty(this.affectedPages)) {
       // TODO: how should we handle multiple controls having an affected page?
-      this.props.actions.selectPage(this.affectedPages[0].pageId);
+      if (this.affectedPages[0].type === pageTypes.MODAL) {
+        this.props.onClickModal(this.affectedPages[0].pageId);
+      } else {
+        this.props.actions.selectPage(this.affectedPages[0].pageId);
+      }
     }
 
     // show the elements

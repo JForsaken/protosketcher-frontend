@@ -2,4 +2,30 @@
 
 .simulation-container {
   background-color: color('background', 'light');
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 5;
+
+  .workspace {
+    bottom: 0;
+  }
+
+  &.modalSimulation {
+    z-index: 10;
+    background-color: color('background', 'backdrop');
+
+    .workspace {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      margin-left: -$modal-width/2;
+      margin-top: -$modal-height/2;
+      background-color: color('background', 'light');
+      width: $modal-width;
+      height: $modal-height;
+    }
+  }
 }
