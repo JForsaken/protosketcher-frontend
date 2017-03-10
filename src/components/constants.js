@@ -8,8 +8,10 @@ import { red500, blue500, green500, black } from 'material-ui/styles/colors';
 export const TOP_MENU_HEIGHT = 50;
 export const LEFT_MENU_WIDTH = 0;
 export const RADIAL_MENU_SIZE = 150;
-export const MODAL_WIDTH = 800;
-export const MODAL_HEIGHT = 600;
+export const PAGE_WIDTH = 1024;
+export const PAGE_HEIGHT = 768;
+export const MODAL_WIDTH = 768;
+export const MODAL_HEIGHT = 576;
 
 
 /* Events */

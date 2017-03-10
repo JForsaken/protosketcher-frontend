@@ -14,6 +14,9 @@ import Control from './Control/Control';
 import { getShapes, getTexts } from '../../actions/api';
 import { showElements } from '../../actions/application';
 
+/* CONSTANTS */
+import { MODAL_WIDTH, MODAL_HEIGHT, PAGE_WIDTH, PAGE_HEIGHT } from '../constants';
+
 class Simulation extends Component {
 
   constructor(props, context) {
@@ -104,20 +107,33 @@ class Simulation extends Component {
 
   renderShapes() {
     const { hiddenElements } = this.props.application.simulation;
+    let posX;
+    let posY;
 
     return (
       Object.entries(this.state.shapes)
             .filter(item => !hiddenElements.includes(item[0]))
-            .map((item, i) =>
-              <Shape
-                id={item[0]}
-                onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
-                color={item[1].color}
-                path={item[1].path}
-                posX={item[1].x}
-                posY={item[1].y}
-                key={i}
-              />)
+            .map((item, i) => {
+              if (this.isModal) {
+                posX = (item[1].x / PAGE_WIDTH) * MODAL_WIDTH;
+                posY = (item[1].y / PAGE_HEIGHT) * MODAL_HEIGHT;
+              } else {
+                posX = item[1].x;
+                posY = item[1].y;
+              }
+
+              return (
+                <Shape
+                  id={item[0]}
+                  onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
+                  color={item[1].color}
+                  path={item[1].path}
+                  posX={posX}
+                  posY={posY}
+                  key={i}
+                />
+              );
+            })
     );
   }
 
