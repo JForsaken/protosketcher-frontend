@@ -95,3 +95,9 @@ export const actionTypes = {
   SHOW: 'show',
   HIDE: 'hide',
 };
+
+/* Action Types */
+export const pageTypes = {
+  MODAL: 'modal',
+  PAGE: 'page',
+};

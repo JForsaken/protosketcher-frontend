@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { isEmpty, forEach, intersection } from 'lodash';
+import { isEmpty, forEach, intersection, invert } from 'lodash';
 import { bindActionCreators } from 'redux';
 
 /* Actions */
@@ -12,7 +12,7 @@ import {
   hideElements } from '../../../actions/application';
 
 /* CONSTANTS */
-import { actionTypes } from '../../constants';
+import { actionTypes, pageTypes } from '../../constants';
 
 class Control extends Component {
   static propTypes = {
@@ -34,7 +34,7 @@ class Control extends Component {
     // select the page
     if (!isEmpty(this.affectedPages)) {
       // TODO: how should we handle multiple controls having an affected page?
-      this.props.actions.selectPage(this.affectedPages[0]);
+      this.props.actions.selectPage(this.affectedPages[0].pageId);
     }
 
     // show the elements
@@ -101,16 +101,26 @@ class Control extends Component {
 
   extractControlData() {
     const { shapeTypes } = this.props.api.getShapeTypes;
+    const { pageTypes: allPageTypes } = this.props.api.getPageTypes;
     const { actionTypes: types } = this.props.api.getActionTypes;
+    const { pages } = this.props.application.prototypes[this.props.application.selectedPrototype];
 
-    const pages = [];
+    const affectedPages = [];
     let toShow = [];
     let toHide = [];
+
+    let pageTypeId;
 
     forEach(this.props.controls, (control) => {
       switch (types[control.actionTypeId]) {
         case actionTypes.CHANGE_PAGE:
-          pages.push(control.affectedPageId);
+          // Check which type of page
+          pageTypeId = pages[control.affectedPageId].pageTypeId;
+          if (invert(allPageTypes)[pageTypeId] === pageTypes.MODAL) {
+            affectedPages.push({ pageId: control.affectedPageId, type: pageTypes.MODAL });
+          } else {
+            affectedPages.push({ pageId: control.affectedPageId, type: pageTypes.PAGE });
+          }
           break;
         case actionTypes.SHOW:
           toShow = toShow.concat(control.affectedShapeIds, control.affectedTextIds);
@@ -127,7 +137,7 @@ class Control extends Component {
     const intersect = intersection(toShow, toHide);
 
     // extracted data
-    this.affectedPages = pages;
+    this.affectedPages = affectedPages;
     this.shapeType = shapeTypes[this.props.shapeTypeId];
     this.elementsToShow = toShow.filter(o => !intersect.includes(o));
     this.elementsToHide = toHide.filter(o => !intersect.includes(o));
