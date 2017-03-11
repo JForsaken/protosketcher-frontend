@@ -721,7 +721,7 @@ class Workspace extends Component {
       return (
         <div
           className="workspace"
-          ref={div => {this.workspace = div;}}
+          ref={div => { this.workspace = div; }}
           onMouseDown={this.onStartingEvent}
           onMouseMove={this.onMovingEvent}
           onMouseUp={this.onEndingEvent}
