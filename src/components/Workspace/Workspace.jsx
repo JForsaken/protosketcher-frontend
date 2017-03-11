@@ -227,9 +227,11 @@ class Workspace extends Component {
     if (e.type === constants.events.TOUCH_START) {
       pointer = e.changedTouches.item(0);
     }
+
+    const workspacePos = this.workspace.getBoundingClientRect();
     const point = {
-      x: pointer.clientX - constants.LEFT_MENU_WIDTH,
-      y: pointer.clientY - constants.TOP_MENU_HEIGHT,
+      x: pointer.clientX - workspacePos.left,
+      y: pointer.clientY - workspacePos.top,
     };
     this.props.actions.updateWorkspace({
       currentPos: {
@@ -294,9 +296,10 @@ class Workspace extends Component {
       pointer = e.changedTouches.item(0);
     }
 
+    const workspacePos = this.workspace.getBoundingClientRect();
     const point = {
-      x: pointer.clientX - constants.LEFT_MENU_WIDTH,
-      y: pointer.clientY - constants.TOP_MENU_HEIGHT,
+      x: pointer.clientX - workspacePos.left,
+      y: pointer.clientY - workspacePos.top,
     };
 
     // Finish drawing by adding last point
@@ -369,9 +372,10 @@ class Workspace extends Component {
       }
     }
 
+    const workspacePos = this.workspace.getBoundingClientRect();
     const point = {
-      x: pointer.clientX - constants.LEFT_MENU_WIDTH,
-      y: pointer.clientY - constants.TOP_MENU_HEIGHT,
+      x: pointer.clientX - workspacePos.left,
+      y: pointer.clientY - workspacePos.top,
     };
 
     const { currentPos } = this.props.application.workspace;
@@ -717,6 +721,7 @@ class Workspace extends Component {
       return (
         <div
           className="workspace"
+          ref={div => {this.workspace = div;}}
           onMouseDown={this.onStartingEvent}
           onMouseMove={this.onMovingEvent}
           onMouseUp={this.onEndingEvent}
