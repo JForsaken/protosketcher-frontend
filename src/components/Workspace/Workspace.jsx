@@ -49,6 +49,7 @@ import {
 
 import {
   copySvgItem,
+  computeSvgPath,
   deleteSvgItem } from './helpers/svg';
 
 import {
@@ -77,7 +78,6 @@ class Workspace extends Component {
 
     this.toggleMenu = this.toggleMenu.bind(this);
     this.doAction = this.doAction.bind(this);
-    this.computeSvgPath = this.computeSvgPath.bind(this);
     this.arePointsFeedable = this.arePointsFeedable.bind(this);
     this.dragItems = this.dragItems.bind(this);
 
@@ -95,6 +95,7 @@ class Workspace extends Component {
     // svg
     this.deleteSvgItem = deleteSvgItem.bind(this);
     this.copySvgItem = copySvgItem.bind(this);
+    this.computeSvgPath = computeSvgPath.bind(this);
 
     // selection
     this.updateSelectionOriginalPosition = updateSelectionOriginalPosition.bind(this);
@@ -289,14 +290,6 @@ class Workspace extends Component {
     const c = Math.sqrt(a * a + b * b);
 
     return c > constants.paths.SEGMENT_LENGTH;
-  }
-
-  computeSvgPath(point, prefix) {
-    const path = this.state.currentPath;
-    path.pathString += `${prefix}${point.x - path.position.x} ${point.y - path.position.y} `;
-    this.setState({
-      currentPath: path,
-    });
   }
 
   dragItems(translation) {

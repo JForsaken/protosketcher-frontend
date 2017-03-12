@@ -63,3 +63,17 @@ export function deleteSvgItem(uuid) {
     texts,
   });
 }
+
+
+/**
+ * Builds an SVG path string
+ * @param {Object} point the position of the path
+ * @param {String} prefix the SVG prefix
+ */
+export function computeSvgPath(point, prefix) {
+  const path = this.state.currentPath;
+  path.pathString += `${prefix}${point.x - path.position.x} ${point.y - path.position.y} `;
+  this.setState({
+    currentPath: path,
+  });
+}
