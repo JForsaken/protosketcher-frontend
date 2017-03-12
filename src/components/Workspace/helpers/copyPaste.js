@@ -112,11 +112,9 @@ export function pasteClipboard() {
  * @param {Array} selectedItems The ids of the elements that will be copied
  */
 export function copySelectedItems(selectedItems = this.state.selectedItems) {
-  const selectedItemsClone = selectedItems.slice(0);
   const newSelectedItems = [];
-  selectedItemsClone.forEach(o => newSelectedItems.push(this.copySvgPath(o)));
+  selectedItems.forEach(o => newSelectedItems.push(this.copySvgItem(o)));
 
-  this.copiedInClipboard = true;
-  this.centralSelectionPoint = this.getCentralPointOfSelection();
+  this.selectedItemsCopied = true;
   this.setState({ selectedItems: newSelectedItems });
 }

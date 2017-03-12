@@ -1,5 +1,5 @@
 /* Node modules */
-import { isEmpty, clone } from 'lodash';
+import { isEmpty, clone, has } from 'lodash';
 
 /* Utils */
 import absorbEvent from '../../../utils/events.js';
@@ -125,7 +125,7 @@ export function onMovingEvent(e) {
 
         // Move on a sub-menu item
         else if (classes.length > 2
-                 && classes[2] !== this.props.application.workspace.actionValue) {
+          && classes[2] !== this.props.application.workspace.actionValue) {
           this.props.actions.updateWorkspace({
             action: classes[1],
             actionValue: classes[2],
@@ -202,8 +202,28 @@ export function onMovingEvent(e) {
 
   // If we are dragging a copy
   else if (action === constants.menuItems.COPY_SELECTION.action) {
-    if (this.copiedInClipboard === false) {
+    if (this.selectedItemsCopied === false) {
       this.copySelectedItems();
+    } else if (this.copiedItesmsInit === false) {
+      this.copiedItesmsInit = this.state.selectedItems.every(id => {
+        const svgPool = {
+          ...this.svgShapes,
+          ...this.svgTexts,
+        };
+        const itemsPool = {
+          ...this.state.shapes,
+          ...this.state.texts,
+        };
+        return has(svgPool, id) && has(itemsPool, id);
+      });
+      if (this.copiedItesmsInit) {
+        const items = this.updateSelectionOriginalPosition(this.state.selectedItems);
+        this.setState({
+          shapes: items.shapes,
+          texts: items.texts,
+        });
+        this.centralSelectionPoint = this.getCentralPointOfSelection();
+      }
     } else {
       const translation = {
         x: point.x - this.centralSelectionPoint.x,

@@ -11,8 +11,7 @@ import { cloneElement } from './copyPaste.js';
  * @returns {string} The id of the newly copied element
  */
 export function copySvgItem(uuid) {
-  const shapes = this.state.shapes;
-  const texts = this.state.texts;
+  const { shapes, texts } = this.state;
   let newUuid;
 
   if (has(shapes, uuid)) {
@@ -21,7 +20,7 @@ export function copySvgItem(uuid) {
     newUuid = newShape.uuid;
 
     this.setState({
-      shapes: this.updateSelectionOriginalPosition([uuid], { ...shapes, newShape }),
+      shapes: this.updateSelectionOriginalPosition([uuid], { ...shapes, newShape }).shapes,
     });
   } else if (has(texts, uuid)) {
     const text = shapes[uuid];
@@ -29,13 +28,12 @@ export function copySvgItem(uuid) {
     newUuid = newText.uuid;
 
     this.setState({
-      texts: this.updateSelectionOriginalPosition([uuid], shapes, { ...texts, newText }),
+      texts: this.updateSelectionOriginalPosition([uuid], shapes, { ...texts, newText }).texts,
     });
   }
 
   return newUuid;
 }
-
 
 /**
  * Delete the svg element

@@ -45,7 +45,7 @@ export function getCentralPointOfSelection(selectedItems = this.state.selectedIt
  * @param {Object} _texts All the texts of the current page
  * @returns {Object} An object containing the shapes and texts containing the updated information
  */
-export function updateSelectionOriginalPosition(uuids,
+export function updateSelectionOriginalPosition(uuids = this.state.selectedItems,
                                                 _shapes = this.state.shapes,
                                                 _texts = this.state.texts) {
   const shapes = _shapes;
