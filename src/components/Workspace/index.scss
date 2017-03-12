@@ -20,6 +20,8 @@
   margin: 0 auto;
   border: 1px solid color('foreground');
   @include rounded-equal(2px);
+  width: 0;
+  height: 0;
 
   &.desktop {
     width: $page-width;

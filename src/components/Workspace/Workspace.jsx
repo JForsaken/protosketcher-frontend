@@ -719,7 +719,7 @@ class Workspace extends Component {
     const { workspace, prototypes, selectedPrototype, selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
     let prototypeType = '';
-    if (prototype.pages && selectedPage) {
+    if (prototype && prototype.pages && selectedPage) {
       const { pageTypeId } = prototype.pages[selectedPage];
       const { pageTypes: allPageTypes } = this.props.api.getPageTypes;
 
