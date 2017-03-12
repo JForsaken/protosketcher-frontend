@@ -65,7 +65,7 @@ export function doAction(point) {
       break;
     case constants.menuItems.DELETE_SELECTION.action:
       for (const uuid of this.state.selectedItems) {
-        this.deleteSvgPath(uuid);
+        this.deleteSvgItem(uuid);
       }
       this.setState({
         selectedItems: [],
