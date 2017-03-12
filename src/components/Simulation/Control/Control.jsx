@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { isEmpty, forEach, intersection, invert } from 'lodash';
+import { isEmpty, forEach, intersection } from 'lodash';
 import { bindActionCreators } from 'redux';
 
 /* Actions */
@@ -120,7 +120,7 @@ class Control extends Component {
         case actionTypes.CHANGE_PAGE:
           // Check which type of page
           pageTypeId = pages[control.affectedPageId].pageTypeId;
-          if (invert(allPageTypes)[pageTypeId] === pageTypes.MODAL) {
+          if (allPageTypes[pageTypeId] === pageTypes.MODAL) {
             affectedPages.push({ pageId: control.affectedPageId, type: pageTypes.MODAL });
           } else {
             affectedPages.push({ pageId: control.affectedPageId, type: pageTypes.PAGE });

@@ -7,7 +7,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
-import { isEmpty } from 'lodash';
+import { isEmpty, invert } from 'lodash';
 
 // Components
 import AddPageMenu from './AddPageMenu';
@@ -105,7 +105,7 @@ class Footer extends Component {
     this.props.actions.createPage(this.props.application.selectedPrototype,
       {
         name: this.props.intl.messages['footer.newPage'],
-        pageTypeId: this.props.api.getPageTypes.pageTypes[type],
+        pageTypeId: invert(this.props.api.getPageTypes.pageTypes)[type],
       }, this.props.application.user.token);
 
     this.setState({
@@ -237,7 +237,9 @@ class Footer extends Component {
 
   render() {
     const pages = this.props.pages;
-    const { pageTypes } = this.props.api.getPageTypes || {};
+    let { pageTypes } = this.props.api.getPageTypes || {};
+
+    pageTypes = invert(pageTypes);
 
     const icons = pageTypes ? {
       [pageTypes.modal]: <FontAwesome name="window-maximize" />,
