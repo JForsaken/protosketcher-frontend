@@ -38,6 +38,7 @@ import { createText as addText } from './helpers/createText';
 import { createShape as addShape } from './helpers/createShape';
 import {
   cloneElement,
+  copySelectedItems,
   pasteClipboard } from './helpers/copyPaste';
 import {
   getCentralPointOfSelection,
@@ -75,7 +76,9 @@ class Workspace extends Component {
     this.dragItems = this.dragItems.bind(this);
     this.deleteSvgPath = this.deleteSvgPath.bind(this);
     this.copySvgPath = this.copySvgPath.bind(this);
-    this.copySelectedItems = this.copySelectedItems.bind(this);
+
+    // copy paste
+    this.copySelectedItems = copySelectedItems.bind(this);
     this.pasteClipboard = pasteClipboard.bind(this);
 
     // selection
@@ -262,10 +265,8 @@ class Workspace extends Component {
     }
   }
 
-/**
- * Focus the text edit section if it is displayed
- */
   componentDidUpdate() {
+    // focus the text edit section if it is displayed
     if (this.state.currentMode === constants.modes.TEXT && this.textEdit) {
       this.textEdit.focus();
     }
@@ -287,17 +288,6 @@ class Workspace extends Component {
       currentPath: path,
     });
   }
-
-  copySelectedItems(selectedItems = this.state.selectedItems) {
-    const selectedItemsClone = selectedItems.slice(0);
-    const newSelectedItems = [];
-    selectedItemsClone.forEach(o => newSelectedItems.push(this.copySvgPath(o)));
-
-    this.copiedInClipboard = true;
-    this.centralSelectionPoint = this.getCentralPointOfSelection();
-    this.setState({ selectedItems: newSelectedItems });
-  }
-
 
   copySvgPath(uuid) {
     const newUuid = uuidV1();
@@ -483,6 +473,8 @@ class Workspace extends Component {
     }
   }
 
+
+  /* Referencing of the refs */
   shapeDidMount(id, shapeSvg) {
     this.svgShapes = { ...this.svgShapes, [id]: shapeSvg };
   }
@@ -499,6 +491,8 @@ class Workspace extends Component {
     this.selectionRadialMenuEl = el;
   }
 
+
+  /* Rendering */
   renderWorkspace() {
     const { workspace } = this.props.application;
     if (this.state.shapes && this.state.texts) {

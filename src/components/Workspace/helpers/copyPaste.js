@@ -105,3 +105,18 @@ export function pasteClipboard() {
     });
   });
 }
+
+
+/**
+ * Copy the elements to the clipboard
+ * @param {Array} selectedItems The ids of the elements that will be copied
+ */
+export function copySelectedItems(selectedItems = this.state.selectedItems) {
+  const selectedItemsClone = selectedItems.slice(0);
+  const newSelectedItems = [];
+  selectedItemsClone.forEach(o => newSelectedItems.push(this.copySvgPath(o)));
+
+  this.copiedInClipboard = true;
+  this.centralSelectionPoint = this.getCentralPointOfSelection();
+  this.setState({ selectedItems: newSelectedItems });
+}
