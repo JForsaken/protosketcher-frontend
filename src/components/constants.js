@@ -10,8 +10,12 @@ export const LEFT_MENU_WIDTH = 0;
 export const RADIAL_MENU_SIZE = 150;
 export const PAGE_WIDTH = 1024;
 export const PAGE_HEIGHT = 768;
-export const MODAL_WIDTH = 768;
-export const MODAL_HEIGHT = 576;
+export const MODAL_WIDTH = 512;
+export const MODAL_HEIGHT = 256;
+export const PORTRAIT_WIDTH = 320;
+export const PORTRAIT_HEIGHT = 480;
+export const PORTRAIT_MODAL_WIDTH = 300;
+export const PORTRAIT_MODAL_HEIGHT = 200;
 
 
 /* Events */

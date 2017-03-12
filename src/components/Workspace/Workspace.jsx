@@ -716,11 +716,24 @@ class Workspace extends Component {
   }
 
   renderWorkspace() {
-    const { workspace } = this.props.application;
+    const { workspace, prototypes, selectedPrototype, selectedPage } = this.props.application;
+    const prototype = prototypes[selectedPrototype];
+    let prototypeType = '';
+    if (prototype.pages && selectedPage) {
+      const { pageTypeId } = prototype.pages[selectedPage];
+      const { pageTypes: allPageTypes } = this.props.api.getPageTypes;
+
+      if (allPageTypes) {
+        this.pageType = allPageTypes[pageTypeId];
+        this.isMobile = prototype.isMobile;
+      }
+      prototypeType = (this.isMobile) ? 'mobile' : 'desktop';
+    }
+
     if (this.state.shapes && this.state.texts) {
       return (
         <div
-          className="workspace"
+          className={`workspace workspace-${this.pageType} ${prototypeType}`}
           ref={div => { this.workspace = div; }}
           onMouseDown={this.onStartingEvent}
           onMouseMove={this.onMovingEvent}
