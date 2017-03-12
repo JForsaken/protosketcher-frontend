@@ -50,6 +50,8 @@ import {
 import {
   copySvgItem,
   computeSvgPath,
+  dragItems,
+  arePointsFeedable,
   deleteSvgItem } from './helpers/svg';
 
 import {
@@ -78,8 +80,8 @@ class Workspace extends Component {
 
     this.toggleMenu = this.toggleMenu.bind(this);
     this.doAction = this.doAction.bind(this);
-    this.arePointsFeedable = this.arePointsFeedable.bind(this);
-    this.dragItems = this.dragItems.bind(this);
+    this.arePointsFeedable = arePointsFeedable.bind(this);
+    this.dragItems = dragItems.bind(this);
 
     // events
     this.onStartingEvent = onStartingEvent.bind(this);
@@ -275,42 +277,12 @@ class Workspace extends Component {
     }
   }
 
-/**
- * Focus the text edit section if it is displayed
- */
   componentDidUpdate() {
+    // focus the text edit section if it is displayed
     if (this.state.currentMode === constants.modes.TEXT && this.textEdit) {
       this.textEdit.focus();
     }
   }
-
-  arePointsFeedable(currentPoint) {
-    const a = this.state.previousPoint.x - currentPoint.x;
-    const b = this.state.previousPoint.y - currentPoint.y;
-    const c = Math.sqrt(a * a + b * b);
-
-    return c > constants.paths.SEGMENT_LENGTH;
-  }
-
-  dragItems(translation) {
-    const { shapes, texts, selectedItems } = this.state;
-
-    selectedItems.forEach((uuid) => {
-      if (has(shapes, uuid)) {
-        shapes[uuid].x = shapes[uuid].originalPositionBeforeDrag.x + translation.x;
-        shapes[uuid].y = shapes[uuid].originalPositionBeforeDrag.y + translation.y;
-      } else if (has(texts, uuid)) {
-        texts[uuid].x = texts[uuid].originalPositionBeforeDrag.x + translation.x;
-        texts[uuid].y = texts[uuid].originalPositionBeforeDrag.y + translation.y;
-      }
-    });
-
-    this.setState({
-      shapes,
-      texts,
-    });
-  }
-
 
   toggleMenu(state, ...params) {
     let menu = null;
@@ -592,4 +564,3 @@ export default connect(
     }, dispatch),
   })
 )(Workspace);
-

@@ -4,6 +4,9 @@ import { has } from 'lodash';
 /* Helpers */
 import { cloneElement } from './copyPaste.js';
 
+/* Constants */
+import * as constants from '../../constants';
+
 
 /**
  * Copy the svg element and update its original position of selection
@@ -76,4 +79,42 @@ export function computeSvgPath(point, prefix) {
   this.setState({
     currentPath: path,
   });
+}
+
+
+/**
+ * Translate the whole SVG path
+ * @param {Object} translation The translation to be applied to the SVG path
+ */
+export function dragItems(translation) {
+  const { shapes, texts, selectedItems } = this.state;
+
+  selectedItems.forEach((uuid) => {
+    if (has(shapes, uuid)) {
+      shapes[uuid].x = shapes[uuid].originalPositionBeforeDrag.x + translation.x;
+      shapes[uuid].y = shapes[uuid].originalPositionBeforeDrag.y + translation.y;
+    } else if (has(texts, uuid)) {
+      texts[uuid].x = texts[uuid].originalPositionBeforeDrag.x + translation.x;
+      texts[uuid].y = texts[uuid].originalPositionBeforeDrag.y + translation.y;
+    }
+  });
+
+  this.setState({
+    shapes,
+    texts,
+  });
+}
+
+
+/**
+ * If of not the points are long enough to be fed and appended to the SVG path
+ * @param {Object} currentPoint the current position where the segment would continue to
+ * @returns {Boolean} Is true if the points are long enough to be fed and appended
+ */
+export function arePointsFeedable(currentPoint) {
+  const a = this.state.previousPoint.x - currentPoint.x;
+  const b = this.state.previousPoint.y - currentPoint.y;
+  const c = Math.sqrt(a * a + b * b);
+
+  return c > constants.paths.SEGMENT_LENGTH;
 }
