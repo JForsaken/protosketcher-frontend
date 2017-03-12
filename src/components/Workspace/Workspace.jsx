@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import uuidV1 from 'uuid/v1';
 import { isEmpty, has, omit } from 'lodash';
 
 import * as constants from '../constants';
@@ -41,6 +40,9 @@ import {
   copySelectedItems,
   pasteClipboard } from './helpers/copyPaste';
 import {
+  copySvgItem,
+  deleteSvgItem } from './helpers/svg';
+import {
   getCentralPointOfSelection,
   monoSelect,
   multiSelect,
@@ -74,8 +76,10 @@ class Workspace extends Component {
     this.computeSvgPath = this.computeSvgPath.bind(this);
     this.arePointsFeedable = this.arePointsFeedable.bind(this);
     this.dragItems = this.dragItems.bind(this);
-    this.deleteSvgPath = this.deleteSvgPath.bind(this);
-    this.copySvgPath = this.copySvgPath.bind(this);
+
+    // svg
+    this.deleteSvgItem = deleteSvgItem.bind(this);
+    this.copySvgItem = copySvgItem.bind(this);
 
     // copy paste
     this.copySelectedItems = copySelectedItems.bind(this);
@@ -289,59 +293,6 @@ class Workspace extends Component {
     });
   }
 
-  copySvgPath(uuid) {
-    const newUuid = uuidV1();
-    const shapes = this.state.shapes;
-    const texts = this.state.texts;
-
-    if (has(shapes, uuid)) {
-      const shape = shapes[uuid];
-      shapes[newUuid] = {
-        path: shape.path,
-        color: shape.color,
-        x: shape.x,
-        y: shape.y,
-        shapeTypeId: shape.shapeTypeId,
-        uuid: newUuid,
-      };
-      const items = this.updateSelectionOriginalPosition([uuid], shapes);
-      this.setState({
-        shapes: items.shapes,
-      });
-    } else if (has(texts, uuid)) {
-      const text = texts[uuid];
-      texts[newUuid] = {
-        content: text.content,
-        x: text.x,
-        y: text.y,
-        fontSize: text.fontSize,
-        uuid: newUuid,
-      };
-      const items = this.updateSelectionOriginalPosition([uuid], shapes, texts);
-      this.setState({
-        texts: items.texts,
-      });
-    }
-    return newUuid;
-  }
-
-  deleteSvgPath(uuid) {
-    const { shapes, texts, currentPageId } = this.state;
-    const { selectedPrototype, user } = this.props.application;
-
-    if (has(shapes, uuid)) {
-      delete shapes[uuid];
-      this.props.actions.deleteShape(selectedPrototype, currentPageId, uuid, user.token);
-    } else if (has(texts, uuid)) {
-      delete texts[uuid];
-      this.props.actions.deleteText(selectedPrototype, currentPageId, uuid, user.token);
-    }
-
-    this.setState({
-      shapes,
-    });
-  }
-
   dragItems(translation) {
     const { shapes, texts, selectedItems } = this.state;
 
@@ -408,7 +359,7 @@ class Workspace extends Component {
         break;
       case constants.menuItems.DELETE_SELECTION.action:
         for (const uuid of this.state.selectedItems) {
-          this.deleteSvgPath(uuid);
+          this.deleteSvgItem(uuid);
         }
         this.setState({
           selectedItems: [],

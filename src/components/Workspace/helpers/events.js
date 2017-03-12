@@ -231,7 +231,7 @@ export function onMovingEvent(e) {
  */
 export function onKeyDownEvent(e) {
   if (e.key === constants.keys.DELETE || e.key === constants.keys.BACKSPACE) {
-    this.state.selectedItems.forEach(o => this.deleteSvgPath(o));
+    this.state.selectedItems.forEach(o => this.deleteSvgItem(o));
     this.setState({
       selectedItems: [],
     });
