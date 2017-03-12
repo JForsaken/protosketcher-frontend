@@ -20,20 +20,27 @@ export function copySvgItem(uuid) {
     newUuid = newShape.uuid;
 
     this.setState({
-      shapes: this.updateSelectionOriginalPosition([uuid], { ...shapes, newShape }).shapes,
+      shapes: this.updateSelectionOriginalPosition([uuid], {
+        ...shapes,
+        [newUuid]: newShape,
+      }).shapes,
     });
   } else if (has(texts, uuid)) {
-    const text = shapes[uuid];
+    const text = texts[uuid];
     const newText = cloneElement(uuid, text, texts);
     newUuid = newText.uuid;
 
     this.setState({
-      texts: this.updateSelectionOriginalPosition([uuid], shapes, { ...texts, newText }).texts,
+      texts: this.updateSelectionOriginalPosition([uuid], shapes, {
+        ...texts,
+        [newUuid]: newText,
+      }).texts,
     });
   }
 
   return newUuid;
 }
+
 
 /**
  * Delete the svg element

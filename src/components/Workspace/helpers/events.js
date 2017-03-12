@@ -125,7 +125,7 @@ export function onMovingEvent(e) {
 
         // Move on a sub-menu item
         else if (classes.length > 2
-          && classes[2] !== this.props.application.workspace.actionValue) {
+                 && classes[2] !== this.props.application.workspace.actionValue) {
           this.props.actions.updateWorkspace({
             action: classes[1],
             actionValue: classes[2],
@@ -251,7 +251,7 @@ export function onMovingEvent(e) {
  */
 export function onKeyDownEvent(e) {
   if (e.key === constants.keys.DELETE || e.key === constants.keys.BACKSPACE) {
-    this.state.selectedItems.forEach(o => this.deleteSvgItem(o));
+    this.state.selectedItems.forEach(o => this.deleteSvgPath(o));
     this.setState({
       selectedItems: [],
     });
@@ -265,7 +265,12 @@ export function onKeyDownEvent(e) {
   }
 }
 
-// Return the position of an event
+/**
+ * Gives the position of an event
+ * @param {Object} e event
+ * @param {String} type The type of the event
+ * @returns {Object} The position of the event
+ */
 export function getPointFromEvent(e, type) {
   let pointer = e;
   if (e.type === type) {
