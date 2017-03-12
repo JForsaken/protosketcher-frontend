@@ -36,7 +36,9 @@ import { updateWorkspace, selectPage } from '../../actions/application';
 import { changeColor } from './helpers/changeColor';
 import { createText as addText } from './helpers/createText';
 import { createShape as addShape } from './helpers/createShape';
-import { cloneElement, createPastedClipboard } from './helpers/copyPaste';
+import {
+  cloneElement,
+  pasteClipboard } from './helpers/copyPaste';
 import {
   getCentralPointOfSelection,
   monoSelect,
@@ -74,7 +76,7 @@ class Workspace extends Component {
     this.copySvgPath = this.copySvgPath.bind(this);
     this.onKeyDownEvent = this.onKeyDownEvent.bind(this);
     this.copySelectedItems = this.copySelectedItems.bind(this);
-    this.pasteClipboard = this.pasteClipboard.bind(this);
+    this.pasteClipboard = pasteClipboard.bind(this);
     this.getPointFromEvent = this.getPointFromEvent.bind(this);
 
     // selection
@@ -519,59 +521,6 @@ class Workspace extends Component {
     this.setState({ selectedItems: newSelectedItems });
   }
 
-  pasteClipboard() {
-    const { shapes, texts } = this.state;
-    const offset = constants.COPY_PASTE_OFFSET;
-
-    // the pasted shapes
-    const clipboardShapes = createPastedClipboard(shapes, this.clipboard, offset);
-
-    // the pasted controls
-    const clipboardTexts = createPastedClipboard(texts, this.clipboard, offset);
-
-    // the newly pasted element ids
-    const newSelectedItems = [...Object.keys(clipboardShapes), ...Object.keys(clipboardTexts)];
-
-    // save path of the pasted elements in case they were to be dragged afterwards
-    const items = this.updateSelectionOriginalPosition(newSelectedItems);
-    this.setState({
-      shapes: {
-        ...shapes,
-        ...items.shapes,
-      },
-      texts: {
-        ...texts,
-        ...items.shapes,
-      },
-    }, () => {
-      const { selectedPrototype, user } = this.props.application;
-
-      // save elements
-      newSelectedItems.forEach(o => {
-        if (has(clipboardShapes, o)) {
-          this.props.actions.createShape(
-            selectedPrototype,
-            this.state.currentPageId,
-            this.state.shapes[o],
-            user.token
-          );
-        } else if (has(clipboardTexts, o)) {
-          this.props.actions.createText(
-            selectedPrototype,
-            this.state.currentPageId,
-            this.state.texts[o],
-            user.token
-          );
-        }
-      });
-
-      this.centralSelectionPoint = this.getCentralPointOfSelection();
-
-      this.setState({
-        selectedItems: newSelectedItems,
-      });
-    });
-  }
 
   copySvgPath(uuid) {
     const newUuid = uuidV1();
