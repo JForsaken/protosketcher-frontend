@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import uuidV1 from 'uuid/v1';
-import { isEmpty, has, omit, invert, clone } from 'lodash';
+import { isEmpty, has, omit, clone } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -37,6 +37,11 @@ import { changeColor } from './helpers/changeColor';
 import { createText as addText } from './helpers/createText';
 import { createShape as addShape } from './helpers/createShape';
 import { cloneElement, createPastedClipboard } from './helpers/copyPaste';
+import {
+  getCentralPointOfSelection,
+  monoSelect,
+  multiSelect,
+  updateSelectionOriginalPosition } from './helpers/selection';
 
 const menuItems = [
   constants.menuItems.CHANGE_COLOR,
@@ -68,13 +73,15 @@ class Workspace extends Component {
     this.deleteSvgPath = this.deleteSvgPath.bind(this);
     this.copySvgPath = this.copySvgPath.bind(this);
     this.onKeyDownEvent = this.onKeyDownEvent.bind(this);
-    this.monoSelect = this.monoSelect.bind(this);
-    this.multiSelect = this.multiSelect.bind(this);
-    this.updateSelectionOriginalPosition = this.updateSelectionOriginalPosition.bind(this);
-    this.getCentralPointOfSelection = this.getCentralPointOfSelection.bind(this);
     this.copySelectedItems = this.copySelectedItems.bind(this);
     this.pasteClipboard = this.pasteClipboard.bind(this);
     this.getPointFromEvent = this.getPointFromEvent.bind(this);
+
+    // selection
+    this.updateSelectionOriginalPosition = updateSelectionOriginalPosition.bind(this);
+    this.getCentralPointOfSelection = getCentralPointOfSelection.bind(this);
+    this.monoSelect = monoSelect.bind(this);
+    this.multiSelect = multiSelect.bind(this);
 
     // Helpers
     this.changeColor = changeColor.bind(this);
@@ -294,7 +301,6 @@ class Workspace extends Component {
         },
       });
     }
-
   }
 
   onEndingEvent(e) {
@@ -487,34 +493,6 @@ class Workspace extends Component {
     return point;
   }
 
-  // Return the central point of the selected element's bounding boxes
-  getCentralPointOfSelection(selectedItems = this.state.selectedItems) {
-    let right = 0;
-    let left = Number.MAX_SAFE_INTEGER;
-    let top = 0;
-    let bottom = Number.MAX_SAFE_INTEGER;
-
-    const svgPool = { ...this.svgShapes, ...this.svgTexts };
-    for (const uuid of selectedItems) {
-      const box = svgPool[uuid].getBoundingClientRect();
-
-      right = Math.max(right, box.right);
-      left = Math.min(left, box.left);
-      top = Math.max(top, box.top);
-      bottom = Math.min(bottom, box.bottom);
-    }
-
-    // Translate the box to account for menus
-    right -= constants.LEFT_MENU_WIDTH;
-    left -= constants.LEFT_MENU_WIDTH;
-    top -= constants.TOP_MENU_HEIGHT;
-    bottom -= constants.TOP_MENU_HEIGHT;
-
-    return {
-      x: left + Math.round((right - left) / 2),
-      y: top + Math.round((bottom - top) / 2),
-    };
-  }
   arePointsFeedable(currentPoint) {
     const a = this.state.previousPoint.x - currentPoint.x;
     const b = this.state.previousPoint.y - currentPoint.y;
@@ -592,7 +570,6 @@ class Workspace extends Component {
       this.setState({
         selectedItems: newSelectedItems,
       });
-
     });
   }
 
@@ -665,58 +642,6 @@ class Workspace extends Component {
     this.setState({
       shapes,
       texts,
-    });
-  }
-
-  monoSelect(uuid) {
-    this.selectionDirty = true;
-    const items = this.updateSelectionOriginalPosition([uuid]);
-    this.centralSelectionPoint = this.getCentralPointOfSelection([uuid]);
-    this.setState({
-      selectedItems: [uuid],
-      shapes: items.shapes,
-      texts: items.texts,
-    });
-  }
-
-  multiSelect(pointerPos) {
-    const { currentPos } = this.props.application.workspace;
-
-    const selectRectRight = pointerPos.x < currentPos.x ? currentPos.x : pointerPos.x;
-    const selectRectLeft = pointerPos.x > currentPos.x ? currentPos.x : pointerPos.x;
-    const selectRectTop = pointerPos.y > currentPos.y ? currentPos.y : pointerPos.y;
-    const selectRectBottom = pointerPos.y < currentPos.y ? currentPos.y : pointerPos.y;
-
-    this.selectionDirty = true;
-    const svgPool = { ...this.svgShapes, ...this.svgTexts };
-
-    const selectedItems = Object.keys({
-      ...this.state.shapes,
-      ...this.state.texts,
-    }).filter((key) => {
-      // If the selected shape has not been created in the backend yet
-
-      if (!has(svgPool, key)) {
-        return false;
-      }
-
-      const box = svgPool[key].getBoundingClientRect();
-      const pathRectRight = box.right - constants.LEFT_MENU_WIDTH;
-      const pathRectLeft = box.left - constants.LEFT_MENU_WIDTH;
-      const pathRectTop = box.top - constants.TOP_MENU_HEIGHT;
-      const pathRectBottom = box.bottom - constants.TOP_MENU_HEIGHT;
-
-      return pathRectRight <= selectRectRight && pathRectLeft >= selectRectLeft
-          && pathRectTop >= selectRectTop && pathRectBottom <= selectRectBottom;
-    });
-
-    const items = this.updateSelectionOriginalPosition(selectedItems);
-    this.centralSelectionPoint = this.getCentralPointOfSelection(selectedItems);
-
-    this.setState({
-      selectedItems,
-      shapes: items.shapes,
-      texts: items.texts,
     });
   }
 
@@ -832,27 +757,6 @@ class Workspace extends Component {
     }
   }
 
-  updateSelectionOriginalPosition(uuids, _shapes = this.state.shapes, _texts = this.state.texts) {
-    const shapes = _shapes;
-    const texts = _texts;
-
-    uuids.forEach(uuid => {
-      if (has(shapes, uuid)) {
-        shapes[uuid].originalPositionBeforeDrag = {
-          x: shapes[uuid].x,
-          y: shapes[uuid].y,
-        };
-      } else if (has(texts, uuid)) {
-        texts[uuid].originalPositionBeforeDrag = {
-          x: texts[uuid].x,
-          y: texts[uuid].y,
-        };
-      }
-    });
-
-    return { shapes, texts };
-  }
-
   shapeDidMount(id, shapeSvg) {
     this.svgShapes = { ...this.svgShapes, [id]: shapeSvg };
   }
@@ -864,6 +768,7 @@ class Workspace extends Component {
   radialMenuDidMount(el) {
     this.radialMenuEl = el;
   }
+
   selectionRadialMenuDidMount(el) {
     this.selectionRadialMenuEl = el;
   }
