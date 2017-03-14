@@ -1,6 +1,9 @@
 import iconPalette from '../../assets/images/icons/palette.png';
 import iconSelect from '../../assets/images/icons/select-area.svg';
 import iconText from '../../assets/images/icons/text-fields.png';
+import dragSelection from '../../assets/images/icons/drag-selection.svg';
+import copySelection from '../../assets/images/icons/copy-selection.svg';
+import deleteSelection from '../../assets/images/icons/delete-selection.svg';
 
 import { red500, blue500, green500, black } from 'material-ui/styles/colors';
 
@@ -36,6 +39,8 @@ export const paths = {
   TEXT_DEFAULT_SIZE: 24,
 };
 
+/* Copy-Paste repositioning */
+export const COPY_PASTE_OFFSET = 20;
 
 /* Menu Items */
 export const menuItems = {
@@ -75,6 +80,25 @@ export const menuItems = {
     icon: iconSelect,
     items: [],
   },
+  DRAG_SELECTION: {
+    action: 'dragSelection',
+    color: green500,
+    flex: 2,
+    icon: dragSelection,
+    items: [],
+  },
+  COPY_SELECTION: {
+    action: 'copySelection',
+    color: blue500,
+    icon: copySelection,
+    items: [],
+  },
+  DELETE_SELECTION: {
+    action: 'deleteSelection',
+    color: red500,
+    icon: deleteSelection,
+    items: [],
+  },
 };
 
 
@@ -84,7 +108,7 @@ export const keys = {
   BACKSPACE: 'Backspace',
   ENTER: 'Enter',
   C: 'c',
-  D: 'd',
+  V: 'v',
   MOUSE_LEFT: 1,
   MOUSE_RIGHT: 3,
 };
