@@ -37,7 +37,6 @@ class Shape extends Component {
         id={this.props.id}
         ref={svgShape => (this.svgShape = svgShape)}
         onMouseDown={() => this.selectShape()}
-        onMouseDown={() => this.selectShape()}
         className={this.props.selected ? 'workspace-line-selected' : 'workspace-line'}
         d={this.props.path}
         stroke={this.props.color}
