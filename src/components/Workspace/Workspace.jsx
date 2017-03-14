@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { isEmpty, has, omit } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -113,6 +113,8 @@ class Workspace extends Component {
     this.changeColor = changeColor.bind(this);
     this.createText = addText.bind(this);
     this.createShape = addShape.bind(this);
+
+    this.getRealId = this.getRealId.bind(this);
 
     const { prototypes, selectedPrototype, selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
@@ -224,65 +226,44 @@ class Workspace extends Component {
           }
           break;
         // Replace the uuid of the created shape with the uuid of the DB
-        case actions.CREATE_SHAPE:
-          if (!has(this.state.shapes, newProps.api.createShape.shape.id)) {
-            const { shape } = newProps.api.createShape;
-
-            // update the ref that shape
-            this.svgShapes = {
-              ...omit(this.svgShapes, shape.uuid),
-              [shape.id]: this.svgShapes[shape.uuid],
-            };
+        case actions.CREATE_SHAPE: {
+          const { id, uuid } = newProps.api.createShape.shape;
+          if (!this.state.shapes[uuid].id) {
+            const shape = this.state.shapes[uuid];
 
             // update the shape list with that shape
             this.setState({
               shapes: {
-                ...omit(this.state.shapes, shape.uuid),
-                [shape.id]: omit(shape, ['uuid', 'id', 'pageId']),
+                ...this.state.shapes,
+                [uuid]: {
+                  ...shape,
+                  id,
+                },
               },
-            }, () => {
-              // update selectedItems
-              const selectedItems = this.state.selectedItems.slice(0);
-              const i = selectedItems.indexOf(shape.uuid);
-              if (i !== -1) {
-                selectedItems[i] = shape.id;
-                this.setState({
-                  selectedItems,
-                });
-              }
             });
           }
           break;
-        // Replace the uuid of the created text with th uui of the DB
-        case actions.CREATE_TEXT:
-          if (!has(this.state.texts, newProps.api.createText.text.id)) {
-            const { text } = newProps.api.createText;
+        }
 
-            // update the ref that text
-            this.svgTexts = {
-              ...omit(this.svgTexts, text.uuid),
-              [text.id]: this.svgTexts[text.uuid],
-            };
+        // Replace the uuid of the created text with th uui of the DB
+        case actions.CREATE_TEXT: {
+          const { id, uuid } = newProps.api.createText.text;
+          if (!this.state.texts[uuid].id) {
+            const text = this.state.texts[uuid];
 
             // update the text list with that text
             this.setState({
               texts: {
-                ...omit(this.state.texts, text.uuid),
-                [text.id]: omit(text, ['uuid', 'id', 'pageId']),
+                ...this.state.texts,
+                [uuid]: {
+                  ...text,
+                  id,
+                },
               },
-            }, () => {
-              // update selectedItems
-              const selectedItems = this.state.selectedItems.slice(0);
-              const i = selectedItems.indexOf(text.uuid);
-              if (i !== -1) {
-                selectedItems[i] = text.id;
-                this.setState({
-                  selectedItems,
-                });
-              }
             });
           }
           break;
+        }
         default:
           break;
       }
@@ -294,6 +275,14 @@ class Workspace extends Component {
     if (this.state.currentMode === constants.modes.TEXT && this.textEdit) {
       this.textEdit.focus();
     }
+  }
+
+  getRealId(uuid) {
+    const items = {
+      ...this.state.shapes,
+      ...this.state.texts,
+    };
+    return items[uuid].id || uuid;
   }
 
   /* Ref referencing */

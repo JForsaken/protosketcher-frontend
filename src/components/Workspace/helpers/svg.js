@@ -53,12 +53,14 @@ export function deleteSvgItem(uuid) {
   const { shapes, texts, currentPageId } = this.state;
   const { selectedPrototype, user } = this.props.application;
 
+  const id = this.getRealId(uuid);
+
   if (has(shapes, uuid)) {
     delete shapes[uuid];
-    this.props.actions.deleteShape(selectedPrototype, currentPageId, uuid, user.token);
+    this.props.actions.deleteShape(selectedPrototype, currentPageId, id, user.token);
   } else if (has(texts, uuid)) {
     delete texts[uuid];
-    this.props.actions.deleteText(selectedPrototype, currentPageId, uuid, user.token);
+    this.props.actions.deleteText(selectedPrototype, currentPageId, id, user.token);
   }
 
   this.setState({

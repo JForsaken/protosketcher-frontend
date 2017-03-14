@@ -76,13 +76,14 @@ export function doAction(point) {
       const { shapes, texts, currentPageId } = this.state;
       this.state.selectedItems.forEach((o) => {
         const { selectedPrototype, user } = this.props.application;
+        const id = this.getRealId(o);
 
         if (has(shapes, o)) {
           const patch = { x: shapes[o].x, y: shapes[o].y };
-          this.props.actions.patchShape(selectedPrototype, currentPageId, o, patch, user.token);
+          this.props.actions.patchShape(selectedPrototype, currentPageId, id, patch, user.token);
         } else if (has(texts, o)) {
           const patch = { x: texts[o].x, y: texts[o].y };
-          this.props.actions.patchText(selectedPrototype, currentPageId, o, patch, user.token);
+          this.props.actions.patchText(selectedPrototype, currentPageId, id, patch, user.token);
         }
       });
 
