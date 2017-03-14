@@ -1,8 +1,5 @@
 /* Node modules */
-import { has, omit } from 'lodash';
-
-/* Helpers */
-import { cloneElement } from './copyPaste';
+import { has } from 'lodash';
 
 /* Constants */
 import * as constants from '../../constants';
@@ -96,9 +93,6 @@ export function doAction(point) {
       break;
     }
     case constants.menuItems.COPY_SELECTION.action: {
-      const shapesToClear = [];
-      const textsToClear = [];
-
     // when done copying, create all new items
       const { shapes, texts, currentPageId } = this.state;
       this.state.selectedItems.forEach((o) => {
@@ -106,20 +100,10 @@ export function doAction(point) {
 
       // create the elements
         if (has(shapes, o)) {
-          shapesToClear.push(o);
-          const copy = cloneElement(o, shapes[o], shapes);
-          this.props.actions.createShape(selectedPrototype, currentPageId, copy, user.token);
+          this.props.actions.createShape(selectedPrototype, currentPageId, shapes[o], user.token);
         } else if (has(texts, o)) {
-          textsToClear.push(o);
-          const copy = cloneElement(o, texts[o], texts);
-          this.props.actions.createText(selectedPrototype, currentPageId, copy, user.token);
+          this.props.actions.createText(selectedPrototype, currentPageId, texts[o], user.token);
         }
-      });
-
-    // clear the dragging elements that displayed where the new elements were created
-      this.setState({
-        shapes: omit(shapes, shapesToClear),
-        texts: omit(texts, textsToClear),
       });
 
     // clear clipboard

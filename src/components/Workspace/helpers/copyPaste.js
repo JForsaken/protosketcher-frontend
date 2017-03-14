@@ -15,11 +15,12 @@ import * as constants from '../../constants';
  * @returns {Object} The cloned element
  */
 export function cloneElement(elementId, element, source, offset = 0) {
-  return {
-    ...omit(clone(source[elementId], [
+  const obj = {
+    ...omit(clone(source[elementId]), [
       'parentId',
+      'id',
       'controls',
-    ])),
+    ]),
     uuid: uuidV1(),
     x: source[elementId].x + offset,
     y: source[elementId].y + offset,
@@ -27,7 +28,9 @@ export function cloneElement(elementId, element, source, offset = 0) {
       x: source[elementId].originalPositionBeforeDrag.x + offset,
       y: source[elementId].originalPositionBeforeDrag.y + offset,
     },
+    controls: {},
   };
+  return obj;
 }
 
 

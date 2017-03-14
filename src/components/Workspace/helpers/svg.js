@@ -23,10 +23,10 @@ export function copySvgItem(uuid) {
     newUuid = newShape.uuid;
 
     this.setState({
-      shapes: this.updateSelectionOriginalPosition([uuid], {
+      shapes: {
         ...shapes,
         [newUuid]: newShape,
-      }).shapes,
+      },
     });
   } else if (has(texts, uuid)) {
     const text = texts[uuid];
@@ -34,10 +34,10 @@ export function copySvgItem(uuid) {
     newUuid = newText.uuid;
 
     this.setState({
-      texts: this.updateSelectionOriginalPosition([uuid], shapes, {
+      texts: {
         ...texts,
         [newUuid]: newText,
-      }).texts,
+      },
     });
   }
 
