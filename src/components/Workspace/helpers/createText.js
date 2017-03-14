@@ -5,12 +5,6 @@ import * as constants from '../../constants';
 export function createText() {
   const value = this.textEdit.value;
 
-  this.setState({
-    currentPath: null,
-    previousPoint: null,
-    currentMode: null,
-  });
-
   // Only create a text if it is not empty
   if (value) {
     const uuid = uuidV1();
@@ -24,7 +18,25 @@ export function createText() {
       uuid,
     };
 
+    this.setState({
+      currentPath: null,
+      previousPoint: null,
+      currentMode: null,
+      texts: {
+        ...this.state.texts,
+        [uuid]: text,
+      },
+    });
+
     this.props.actions.createText(this.props.application.selectedPrototype,
       this.state.currentPageId, text, this.props.application.user.token);
+  }
+
+  else {
+    this.setState({
+      currentPath: null,
+      previousPoint: null,
+      currentMode: null,
+    });
   }
 }

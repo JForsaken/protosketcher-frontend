@@ -200,8 +200,7 @@ class Workspace extends Component {
 
     // If the selected prototype's pages are not cached, get them
     else if (!prototype.pages) {
-      newProps.actions.getPages(selectedPrototype,
-        newProps.application.user.token);
+      newProps.actions.getPages(selectedPrototype, newProps.application.user.token);
     }
 
     // If you just cached the pages, select the first one
@@ -210,74 +209,83 @@ class Workspace extends Component {
       this.setState({ pages: prototype.pages });
     }
 
-    // If you just cached the shapes, copy them in the state
-    else if (newProps.api.lastAction === actions.GET_SHAPES && isEmpty(this.state.shapes)) {
-      this.setState({ shapes: prototype.pages[selectedPage].shapes });
-    }
+    else {
+      switch (newProps.api.lastAction) {
+        // If you just cached the shapes, copy them in the state
+        case actions.GET_SHAPES:
+          if (isEmpty(this.state.shapes)) {
+            this.setState({ shapes: prototype.pages[selectedPage].shapes });
+          }
+          break;
+        // If you just cached the texts, copy them in the state
+        case actions.GET_TEXTS:
+          if (isEmpty(this.state.texts)) {
+            this.setState({ texts: prototype.pages[selectedPage].texts });
+          }
+          break;
+        // Replace the uuid of the created shape with the uuid of the DB
+        case actions.CREATE_SHAPE:
+          if (!has(this.state.shapes, newProps.api.createShape.shape.id)) {
+            const { shape } = newProps.api.createShape;
 
-    // If you just cached the texts, copy them in the state
-    else if (newProps.api.lastAction === actions.GET_TEXTS && isEmpty(this.state.texts)) {
-      this.setState({ texts: prototype.pages[selectedPage].texts });
-    }
+            // update the ref that shape
+            this.svgShapes = {
+              ...omit(this.svgShapes, shape.uuid),
+              [shape.id]: this.svgShapes[shape.uuid],
+            };
 
-    // Replace the uuid of the created shape with the uuid of the DB
-    else if (newProps.api.lastAction === actions.CREATE_SHAPE &&
-             !has(this.state.shapes, newProps.api.createShape.shape.id)) {
-      const { shape } = newProps.api.createShape;
+            // update the shape list with that shape
+            this.setState({
+              shapes: {
+                ...omit(this.state.shapes, shape.uuid),
+                [shape.id]: omit(shape, ['uuid', 'id', 'pageId']),
+              },
+            }, () => {
+              // update selectedItems
+              const selectedItems = this.state.selectedItems.slice(0);
+              const i = selectedItems.indexOf(shape.uuid);
+              if (i !== -1) {
+                selectedItems[i] = shape.id;
+                this.setState({
+                  selectedItems,
+                });
+              }
+            });
+          }
+          break;
+        // Replace the uuid of the created text with th uui of the DB
+        case actions.CREATE_TEXT:
+          if (!has(this.state.texts, newProps.api.createText.text.id)) {
+            const { text } = newProps.api.createText;
 
-      // update the ref that shape
-      this.svgShapes = {
-        ...omit(this.svgShapes, shape.uuid),
-        [shape.id]: this.svgShapes[shape.uuid],
-      };
+            // update the ref that text
+            this.svgTexts = {
+              ...omit(this.svgTexts, text.uuid),
+              [text.id]: this.svgTexts[text.uuid],
+            };
 
-      // update the shape list with that shape
-      this.setState({
-        shapes: {
-          ...omit(this.state.shapes, shape.uuid),
-          [shape.id]: omit(shape, ['uuid', 'id', 'pageId']),
-        },
-      }, () => {
-        // update selectedItems
-        const selectedItems = this.state.selectedItems.slice(0);
-        const i = selectedItems.indexOf(shape.uuid);
-        if (i !== -1) {
-          selectedItems[i] = shape.id;
-          this.setState({
-            selectedItems,
-          });
-        }
-      });
-    }
-
-    // Replace the uuid of the created text with th uui of the DB
-    else if (newProps.api.lastAction === actions.CREATE_TEXT &&
-      !has(this.state.texts, newProps.api.createText.text.id)) {
-      const { text } = newProps.api.createText;
-
-      // update the ref that text
-      this.svgTexts = {
-        ...omit(this.svgTexts, text.uuid),
-        [text.id]: this.svgTexts[text.uuid],
-      };
-
-      // update the text list with that text
-      this.setState({
-        texts: {
-          ...omit(this.state.texts, text.uuid),
-          [text.id]: omit(text, ['uuid', 'id', 'pageId']),
-        },
-      }, () => {
-        // update selectedItems
-        const selectedItems = this.state.selectedItems.slice(0);
-        const i = selectedItems.indexOf(text.uuid);
-        if (i !== -1) {
-          selectedItems[i] = text.id;
-          this.setState({
-            selectedItems,
-          });
-        }
-      });
+            // update the text list with that text
+            this.setState({
+              texts: {
+                ...omit(this.state.texts, text.uuid),
+                [text.id]: omit(text, ['uuid', 'id', 'pageId']),
+              },
+            }, () => {
+              // update selectedItems
+              const selectedItems = this.state.selectedItems.slice(0);
+              const i = selectedItems.indexOf(text.uuid);
+              if (i !== -1) {
+                selectedItems[i] = text.id;
+                this.setState({
+                  selectedItems,
+                });
+              }
+            });
+          }
+          break;
+        default:
+          break;
+      }
     }
   }
 

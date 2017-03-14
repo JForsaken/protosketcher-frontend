@@ -17,13 +17,16 @@ import * as constants from '../../constants';
 export function cloneElement(elementId, element, source, offset = 0) {
   return {
     ...omit(clone(source[elementId], [
-      'originalPositionBeforeDrag',
       'parentId',
       'controls',
     ])),
     uuid: uuidV1(),
     x: source[elementId].x + offset,
     y: source[elementId].y + offset,
+    originalPositionBeforeDrag: {
+      x: source[elementId].originalPositionBeforeDrag.x + offset,
+      y: source[elementId].originalPositionBeforeDrag.y + offset,
+    },
   };
 }
 
@@ -59,23 +62,15 @@ export function pasteClipboard() {
   // the pasted shapes
   const clipboardShapes = createPastedClipboard(shapes, this.clipboard, offset);
 
-  // the pasted controls
+  // the pasted texts
   const clipboardTexts = createPastedClipboard(texts, this.clipboard, offset);
 
   // the newly pasted element ids
   const newSelectedItems = [...Object.keys(clipboardShapes), ...Object.keys(clipboardTexts)];
 
-  // save path of the pasted elements in case they were to be dragged afterwards
-  const items = this.updateSelectionOriginalPosition(newSelectedItems);
   this.setState({
-    shapes: {
-      ...shapes,
-      ...items.shapes,
-    },
-    texts: {
-      ...texts,
-      ...items.shapes,
-    },
+    shapes: Object.assign(shapes, clipboardShapes),
+    texts: Object.assign(texts, clipboardTexts),
   }, () => {
     const { selectedPrototype, user } = this.props.application;
 
