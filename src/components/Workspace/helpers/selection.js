@@ -97,19 +97,19 @@ export function multiSelect(pointerPos) {
   const selectRectTop = pointerPos.y > currentPos.y ? currentPos.y : pointerPos.y;
   const selectRectBottom = pointerPos.y < currentPos.y ? currentPos.y : pointerPos.y;
 
-  this.selectionDirty = true;
-  const svgPool = { ...this.svgShapes, ...this.svgTexts };
+  // const svgPool = { ...this.svgShapes, ...this.svgTexts };
 
   const selectedItems = Object.keys({
     ...this.state.shapes,
     ...this.state.texts,
   }).filter((key) => {
     // If the selected shape has not been created in the backend yet
-    if (!has(svgPool, key)) {
-      return false;
-    }
+    // if (!has(svgPool, key)) {
+    //   return false;
+    // }
 
-    const box = svgPool[key].getBoundingClientRect();
+    // FIXME use React refs instead of getElementById
+    const box = document.getElementById(key).getBoundingClientRect();
     const pathRectRight = box.right - constants.LEFT_MENU_WIDTH;
     const pathRectLeft = box.left - constants.LEFT_MENU_WIDTH;
     const pathRectTop = box.top - constants.TOP_MENU_HEIGHT;

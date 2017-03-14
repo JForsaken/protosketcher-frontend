@@ -57,9 +57,11 @@ export function deleteSvgItem(uuid) {
 
   if (has(shapes, uuid)) {
     delete shapes[uuid];
+    delete this.svgShapes[id];
     this.props.actions.deleteShape(selectedPrototype, currentPageId, id, user.token);
   } else if (has(texts, uuid)) {
     delete texts[uuid];
+    delete this.svgTexts[id];
     this.props.actions.deleteText(selectedPrototype, currentPageId, id, user.token);
   }
 

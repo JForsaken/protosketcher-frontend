@@ -91,6 +91,7 @@ export function onEndingEvent(e) {
   }
   this.selectionDirty = false;
 
+
   this.doAction(point);
   this.setState({
     selectingRect: null,
