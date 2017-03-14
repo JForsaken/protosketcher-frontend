@@ -125,7 +125,6 @@ class Simulation extends Component {
     // If we did click the backdrop, close the modal
     if (e.target === this.container) {
       this.props.closeModal();
-      delete this;
     }
   }
 
