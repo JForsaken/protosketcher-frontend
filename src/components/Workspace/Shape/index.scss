@@ -3,12 +3,13 @@
   stroke-width: 3;
   cursor: pointer;
 
-  &.workspace-line-selected, &.workspace-line-hovered {
-    filter: url(#dropshadow-line);
+  &.workspace-line-selected {
+    filter: url(#dropshadowAlpha);
   }
 
   &.workspace-line-hovered {
     stroke: color('accent');
+    filter: url(#dropshadowGraphic);
   }
 
   &.line-padding {

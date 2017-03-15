@@ -47,7 +47,13 @@ export const PATCH_TEXT = 'PATCH_TEXT';
 export const DELETE_TEXT = 'DELETE_TEXT';
 
 // Controls
+export const CREATE_CONTROL = 'CREATE_CONTROL';
+export const PATCH_CONTROL = 'PATCH_CONTROL';
+export const DELETE_CONTROL = 'DELETE_CONTROL';
+
+// Types
 export const GET_ACTION_TYPES = 'GET_ACTION_TYPES';
+export const GET_EVENT_TYPES = 'GET_EVENT_TYPES';
 
 // API
 export const SAVE = 'SAVE';

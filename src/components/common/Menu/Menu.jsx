@@ -13,6 +13,7 @@ import {
   IconButton,
   AppBar,
   TextField } from 'material-ui';
+import { orange500 } from 'material-ui/styles/colors';
 import { isEqual } from 'lodash';
 import Scroll from 'react-scroll';
 
@@ -166,6 +167,7 @@ class Menu extends Component {
           onBlur={(e) => this.renamePrototype(e)}
           onChange={(e) => this.setState({ prototypeName: e.target.value })}
           value={this.state.prototypeName}
+          underlineFocusStyle={{ borderColor: orange500 }}
         />
       </form>
     );

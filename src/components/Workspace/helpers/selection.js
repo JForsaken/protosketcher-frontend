@@ -97,6 +97,7 @@ export function monoSelect(uuid, e) {
   this.selectionDirty = true;
   const items = this.updateSelectionOriginalPosition([uuid]);
   this.centralSelectionPoint = this.getCentralPointOfSelection([uuid]);
+  this.changePageChecked = false;
   this.setState({
     selectedItems: [uuid],
     shapes: items.shapes,
@@ -151,6 +152,8 @@ export function multiSelect(pointerPos) {
     selectedItems,
     shapes: items.shapes,
     texts: items.texts,
+    showSettingsPanel: false,
+    selectingRect: null,
   });
 }
 

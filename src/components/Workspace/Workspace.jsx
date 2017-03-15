@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { isEmpty, has } from 'lodash';
-import { MuiThemeProvider } from 'material-ui';
+import { isEmpty } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -29,7 +28,8 @@ import {
   createText,
   patchText,
   deleteText,
-  getActionTypes } from '../../actions/api';
+  getActionTypes,
+  getEventTypes } from '../../actions/api';
 import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
@@ -66,6 +66,7 @@ import {
   onStartingEvent,
   onEndingEvent,
   onMovingEvent,
+  onMouseLeaveEvent,
   onKeyDownEvent } from './helpers/events';
 
 import {
@@ -91,6 +92,7 @@ class Workspace extends Component {
     this.onStartingEvent = onStartingEvent.bind(this);
     this.onEndingEvent = onEndingEvent.bind(this);
     this.onMovingEvent = onMovingEvent.bind(this);
+    this.onMouseLeaveEvent = onMouseLeaveEvent.bind(this);
     this.onKeyDownEvent = onKeyDownEvent.bind(this);
     this.getPointFromEvent = getPointFromEvent.bind(this);
 
@@ -126,10 +128,9 @@ class Workspace extends Component {
     this.extractCreatedElementMoment = extractCreatedElementMoment.bind(this);
     this.extractMovedElementMoment = extractMovedElementMoment.bind(this);
     this.extractDeletedElementMoment = extractDeletedElementMoment.bind(this);
-
+    
     // Workspace
     this.getRealId = this.getRealId.bind(this);
-    this.renderItemSettings = this.renderItemSettings.bind(this);
 
     const { prototypes, selectedPrototype, selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
@@ -161,7 +162,6 @@ class Workspace extends Component {
     this.groupCopy = {};
     this.memento = [];
     this.keepsake = [];
-
     this.touchTimer = 0;
     this.menuPending = false;
     this.selectionDirty = false;
@@ -175,7 +175,6 @@ class Workspace extends Component {
       x: 0,
       y: 0,
     };
-
     this.itemsList = {};
   }
 
@@ -222,6 +221,7 @@ class Workspace extends Component {
       this.props.actions.getPageTypes(newProps.application.user.token);
     }
 
+
     // If the shape types are not cached, get them
     if (isEmpty(newProps.api.getShapeTypes.shapeTypes)) {
       this.props.actions.getShapeTypes(newProps.application.user.token);
@@ -230,6 +230,11 @@ class Workspace extends Component {
     // If the action types are not cached, get them
     if (isEmpty(newProps.api.getActionTypes.actionTypes)) {
       this.props.actions.getActionTypes(newProps.application.user.token);
+    }
+
+    // If the event types are not cached, get them
+    if (isEmpty(newProps.api.getEventTypes.eventTypes)) {
+      this.props.actions.getEventTypes(newProps.application.user.token);
     }
 
     // If the selected prototype's pages are not cached, get them
@@ -264,7 +269,6 @@ class Workspace extends Component {
 
             // for undo
             this.extractCreatedElementMoment(id, uuid, shape, 'shape');
-
             // update the shape list with that shape
             this.setState({
               shapes: {
@@ -284,7 +288,6 @@ class Workspace extends Component {
           const { id, uuid } = newProps.api.createText.text;
           if (this.state.texts.hasOwnProperty(uuid) && !this.state.texts[uuid].id) {
             const text = this.state.texts[uuid];
-
             // for undo
             this.extractCreatedElementMoment(id, uuid, text, 'text');
 
@@ -343,20 +346,6 @@ class Workspace extends Component {
     this.selectionRadialMenuEl = el;
   }
 
-  renderItemSettings() {
-    const { shapes, texts, selectedItems } = this.state;
-    const id = selectedItems[0];
-
-    // Text item
-    if (has(texts, id)) {
-    }
-
-    // Shape item
-    else if (has(shapes, id)) {
-      // const shapeType = this.props.api.getShapeTypes.shapeTypes[shapes[id].shapeTypeId];
-    }
-  }
-
   /* Rendering */
   renderWorkspace() {
     const { prototypes, selectedPrototype, selectedPage } = this.props.application;
@@ -381,7 +370,7 @@ class Workspace extends Component {
           onMouseDown={this.onStartingEvent}
           onMouseMove={this.onMovingEvent}
           onMouseUp={this.onEndingEvent}
-          onMouseLeave={this.onEndingEvent}
+          onMouseLeave={this.onMouseLeaveEvent}
           onTouchStart={this.onStartingEvent}
           onTouchMove={this.onMovingEvent}
           onTouchEnd={this.onEndingEvent}
@@ -477,17 +466,17 @@ class Workspace extends Component {
 
   render() {
     return (
-      <div
-        id="workspace-container"
-        ref={div => div && div.focus()}
-        className="workspace-container"
-        tabIndex="0"
-        onKeyDown={this.onKeyDownEvent}
-      >
-        <MuiThemeProvider>
-          <SideMenu />
-        </MuiThemeProvider>
-        {this.renderWorkspace()}
+      <div className="flexbox">
+        <SideMenu parent={this} parentState={this.state} />
+        <div
+          id="workspace-container"
+          ref={div => div && div.focus()}
+          className="workspace-container"
+          tabIndex="0"
+          onKeyDown={this.onKeyDownEvent}
+        >
+          {this.renderWorkspace()}
+        </div>
         <Footer selectedPage={this.state.currentPageId || ''} />
       </div>
     );
@@ -512,6 +501,7 @@ export default connect(
       patchText,
       deleteText,
       getActionTypes,
+      getEventTypes,
     }, dispatch),
   })
 )(Workspace);

@@ -4,6 +4,7 @@
   padding: 20px;
   position: relative;
   z-index: 5;
+  outline: none;
 
   &.desktop {
     width: $page-width;

@@ -1,13 +1,12 @@
 /* Node modules */
 import React from 'react';
-import { has, clone } from 'lodash';
+import { has } from 'lodash';
 
 /* Components */
 import RadialMenu from '../../common/RadialMenu/RadialMenu';
 
 /* Constants */
 import * as constants from '../../constants';
-
 const menuItems = [
   constants.menuItems.CHANGE_COLOR,
   constants.menuItems.ADD_TEXT,
@@ -15,13 +14,6 @@ const menuItems = [
 ];
 
 const selectionMenuItems = [
-  Object.assign(clone(constants.menuItems.DRAG_SELECTION), { flex: 1 }),
-  constants.menuItems.SETTINGS,
-  constants.menuItems.COPY_SELECTION,
-  constants.menuItems.DELETE_SELECTION,
-];
-
-const multiSelectionMenuItems = [
   constants.menuItems.DRAG_SELECTION,
   constants.menuItems.COPY_SELECTION,
   constants.menuItems.DELETE_SELECTION,
@@ -60,6 +52,7 @@ export function doAction(point) {
     case constants.menuItems.ADD_TEXT.action:
       this.setState({
         currentMode: constants.modes.TEXT,
+        showSettingsPanel: false,
       });
       break;
     case constants.menuItems.SELECT_AREA.action:
@@ -72,6 +65,7 @@ export function doAction(point) {
       }
       this.setState({
         selectedItems: [],
+        showSettingsPanel: false,
       });
       break;
     }
@@ -172,23 +166,10 @@ export function renderRadialMenu(currentPos) {
     );
   }
 
-  // Menu with settings when only one item is selected
-  else if (length === 1) {
-    return (
-      <RadialMenu
-        items={selectionMenuItems}
-        offset={Math.PI / 4}
-        onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
-        x={currentPos.x}
-        y={currentPos.y}
-      />
-    );
-  }
-
-  // General menu for multiple selection
+  // General menu for single and multiple selection
   return (
     <RadialMenu
-      items={multiSelectionMenuItems}
+      items={selectionMenuItems}
       offset={Math.PI / 4}
       onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
       x={currentPos.x}

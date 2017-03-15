@@ -70,11 +70,8 @@ export function onEndingEvent(e) {
     this.createShape(point);
   }
 
-  if (!(e.type === constants.events.MOUSE_LEAVE
-        && e.target.classList.contains('workspace-container'))) {
-    this.toggleMenu(false);
-    this.props.actions.updateWorkspace({ action: null });
-  }
+  this.toggleMenu(false);
+  this.props.actions.updateWorkspace({ action: null });
 
   // stops short touches from firing the event
   if (this.touchTimer) {
@@ -83,17 +80,25 @@ export function onEndingEvent(e) {
   if (!this.selectionDirty && !this.props.application.workspace.action) {
     this.setState({
       selectedItems: [],
+      showSettingsPanel: false,
     });
   }
   this.selectionDirty = false;
 
 
   this.doAction(point);
-  this.setState({
-    selectingRect: null,
-  });
 }
 
+/**
+ * On mouse leave event
+ * @param {Object} e event
+ */
+export function onMouseLeaveEvent(e) {
+  if (!e.target.classList.contains('workspace-container')
+    && this.props.application.workspace.action) {
+    this.onEndingEvent(e);
+  }
+}
 
 /**
  * On moving event
