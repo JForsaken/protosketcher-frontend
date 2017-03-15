@@ -105,8 +105,8 @@ class Control extends Component {
 
   extractControlData() {
     const { shapeTypes } = this.props.api.getShapeTypes;
-    const { pageTypes: allPageTypes } = this.props.api.getPageTypes;
     const { actionTypes: types } = this.props.api.getActionTypes;
+    let { pageTypes: allPageTypes } = this.props.api.getPageTypes;
     const { pages } = this.props.application.prototypes[this.props.application.selectedPrototype];
 
     const affectedPages = [];
@@ -115,12 +115,15 @@ class Control extends Component {
 
     let pageTypeId;
 
+    // in order to have the pageTypes already mapped as { id: value }
+    allPageTypes = invert(allPageTypes);
+
     forEach(this.props.controls, (control) => {
       switch (types[control.actionTypeId]) {
         case actionTypes.CHANGE_PAGE:
           // Check which type of page
           pageTypeId = pages[control.affectedPageId].pageTypeId;
-          if (invert(allPageTypes)[pageTypeId] === pageTypes.MODAL) {
+          if (allPageTypes[pageTypeId] === pageTypes.MODAL) {
             affectedPages.push({ pageId: control.affectedPageId, type: pageTypes.MODAL });
           } else {
             affectedPages.push({ pageId: control.affectedPageId, type: pageTypes.PAGE });
