@@ -106,7 +106,8 @@ class Control extends Component {
   extractControlData() {
     const { shapeTypes } = this.props.api.getShapeTypes;
     const { actionTypes: types } = this.props.api.getActionTypes;
-    let { pageTypes: allPageTypes } = this.props.api.getPageTypes;
+    // in order to have the pageTypes already mapped as { id: value }
+    const allPageTypes = invert(this.props.api.getPageTypes.pageTypes);
     const { pages } = this.props.application.prototypes[this.props.application.selectedPrototype];
 
     const affectedPages = [];
@@ -114,9 +115,6 @@ class Control extends Component {
     let toHide = [];
 
     let pageTypeId;
-
-    // in order to have the pageTypes already mapped as { id: value }
-    allPageTypes = invert(allPageTypes);
 
     forEach(this.props.controls, (control) => {
       switch (types[control.actionTypeId]) {
