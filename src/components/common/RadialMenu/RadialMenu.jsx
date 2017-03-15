@@ -43,6 +43,14 @@ class RadialMenu extends Component {
     }
   }
 
+  shouldComponentUpdate(newProps) {
+    if (this.props.items !== newProps.items) {
+      this.initElements();
+      return true;
+    }
+    return false;
+  }
+
   onMovingEvent() {
     if (this.props.application.workspace.action) {
       this.props.actions.updateWorkspace({ action: null });
@@ -68,8 +76,12 @@ class RadialMenu extends Component {
   }
 
   render() {
+    const menuStyle = {
+      left: this.props.application.workspace.currentPos.x - RADIAL_MENU_SIZE,
+      top: this.props.application.workspace.currentPos.y - RADIAL_MENU_SIZE,
+    };
     return (
-      <svg ref={svgEl => (this.svgEl = svgEl)} className="radial-menu">
+      <svg ref={svgEl => (this.svgEl = svgEl)} className="radial-menu" style={menuStyle}>
         {
           this.props.items.map((item, i) =>
             <RadialMenuItem

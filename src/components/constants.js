@@ -1,11 +1,12 @@
-import iconPalette from '../../assets/images/icons/palette.png';
+import iconPalette from '../../assets/images/icons/palette.svg';
 import iconSelect from '../../assets/images/icons/select-area.svg';
-import iconText from '../../assets/images/icons/text-fields.png';
+import iconText from '../../assets/images/icons/text-fields.svg';
 import dragSelection from '../../assets/images/icons/drag-selection.svg';
 import copySelection from '../../assets/images/icons/copy-selection.svg';
 import deleteSelection from '../../assets/images/icons/delete-selection.svg';
+import settings from '../../assets/images/icons/settings.svg';
 
-import { red500, blue500, green500, black } from 'material-ui/styles/colors';
+import { red500, blue500, green500, yellow500, black } from 'material-ui/styles/colors';
 
 /* Sizes */
 export const TOP_MENU_HEIGHT = 50;
@@ -102,6 +103,12 @@ export const menuItems = {
     action: 'deleteSelection',
     color: red500,
     icon: deleteSelection,
+    items: [],
+  },
+  SETTINGS: {
+    action: 'editSettings',
+    color: yellow500,
+    icon: settings,
     items: [],
   },
 };

@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { isEmpty } from 'lodash';
+import { isEmpty, has, clone } from 'lodash';
+
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
 import absorbEvent from '../../utils/events';
@@ -70,6 +71,13 @@ const menuItems = [
 ];
 
 const selectionMenuItems = [
+  Object.assign(clone(constants.menuItems.DRAG_SELECTION), { flex: 1 }),
+  constants.menuItems.SETTINGS,
+  constants.menuItems.COPY_SELECTION,
+  constants.menuItems.DELETE_SELECTION,
+];
+
+const multiSelectionMenuItems = [
   constants.menuItems.DRAG_SELECTION,
   constants.menuItems.COPY_SELECTION,
   constants.menuItems.DELETE_SELECTION,
@@ -113,7 +121,10 @@ class Workspace extends Component {
     this.createText = addText.bind(this);
     this.createShape = addShape.bind(this);
 
+    // Workspace
     this.getRealId = this.getRealId.bind(this);
+    this.renderRadialMenu = this.renderRadialMenu.bind(this);
+    this.renderItemSettings = this.renderItemSettings.bind(this);
 
     const { prototypes, selectedPrototype, selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
@@ -300,6 +311,54 @@ class Workspace extends Component {
     this.selectionRadialMenuEl = el;
   }
 
+  renderRadialMenu() {
+    const length = this.state.selectedItems.length;
+
+    // General menu when no items are selected
+    if (length === 0) {
+      return (
+        <RadialMenu
+          items={menuItems}
+          offset={Math.PI / 4}
+          onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
+        />
+      );
+    }
+
+    // Menu with settings when only one item is selected
+    else if (length === 1) {
+      return (
+        <RadialMenu
+          items={selectionMenuItems}
+          offset={Math.PI / 4}
+          onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
+        />
+      );
+    }
+
+    // General menu for multiple selection
+    return (
+      <RadialMenu
+        items={multiSelectionMenuItems}
+        offset={Math.PI / 4}
+        onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
+      />
+    );
+  }
+
+  renderItemSettings() {
+    const { shapes, texts, selectedItems } = this.state;
+    const id = selectedItems[0];
+
+    // Text item
+    if (has(texts, id)) {
+    }
+
+    // Shape item
+    else if (has(shapes, id)) {
+      // const shapeType = this.props.api.getShapeTypes.shapeTypes[shapes[id].shapeTypeId];
+    }
+  }
   /* Rendering */
   renderWorkspace() {
     const { workspace } = this.props.application;
@@ -317,16 +376,7 @@ class Workspace extends Component {
           onTouchCancel={absorbEvent}
           onContextMenu={absorbEvent}
         >
-          <RadialMenu
-            items={menuItems}
-            offset={Math.PI / 4}
-            onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
-          />
-          <RadialMenu
-            items={selectionMenuItems}
-            offset={Math.PI / 4}
-            onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
-          />
+        {this.state.showMenu && this.renderRadialMenu()}
           <svg height="100%" width="100%">
             <filter id="dropshadow" height="130%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />

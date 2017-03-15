@@ -52,6 +52,9 @@ class RadialMenuItem extends Component {
     }
 
     if (!isEmpty(this.props.items)) {
+      if (this.props.items !== newProps.items) {
+        this.initElements();
+      }
       for (const item of this.props.items) {
         item.selected = newProps.application.workspace.actionValue === item.actionValue;
       }

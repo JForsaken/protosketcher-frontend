@@ -10,25 +10,7 @@ import * as constants from '../../constants';
  * @param {Boolean} state Is true if visible
  * @param {Object} point First argument of params, the point where it will be displayed
  */
-export function toggleMenu(state, ...params) {
-  let menu = null;
-  menu = this.state.selectedItems.length > 0 ? this.selectionRadialMenuEl : this.radialMenuEl;
-  let point;
-  if (params.length) {
-    point = params[0];
-  } else {
-    point = {
-      x: this.props.application.workspace.currentPos.x,
-      y: this.props.application.workspace.currentPos.y,
-    };
-  }
-
-  if (state) {
-    menu.style.left = point.x - constants.RADIAL_MENU_SIZE;
-    menu.style.top = point.y - constants.RADIAL_MENU_SIZE;
-  } else {
-    menu.style.left = -9999;
-  }
+export function toggleMenu(state) {
   this.menuPending = false;
   if (this.state.currentPath) {
     this.setState({

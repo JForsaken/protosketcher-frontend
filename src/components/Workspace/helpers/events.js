@@ -32,7 +32,7 @@ export function onStartingEvent(e) {
   // Right mouse press
   if (e.type === constants.events.MOUSE_DOWN
       && e.nativeEvent.which === constants.keys.MOUSE_RIGHT) {
-    this.toggleMenu(true, point);
+    this.toggleMenu(true);
   }
 
   // Left mouse press
