@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { isEmpty } from 'lodash';
-
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
 import absorbEvent from '../../utils/events';
@@ -307,7 +306,7 @@ class Workspace extends Component {
     if (this.state.shapes && this.state.texts) {
       return (
         <div
-          id="workspace"
+          className="workspace"
           onMouseDown={this.onStartingEvent}
           onMouseMove={this.onMovingEvent}
           onMouseUp={this.onEndingEvent}

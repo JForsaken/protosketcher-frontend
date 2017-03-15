@@ -25,7 +25,9 @@ class Text extends Component {
   }
 
   selectText() {
-    this.props.monoSelect(this.props.id);
+    if (!this.props.application.simulation.isSimulating) {
+      this.props.monoSelect(this.props.id);
+    }
   }
 
   render() {

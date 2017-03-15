@@ -26,7 +26,9 @@ class Shape extends Component {
   }
 
   selectShape() {
-    this.props.monoSelect(this.props.id);
+    if (!this.props.application.simulation.isSimulating) {
+      this.props.monoSelect(this.props.id);
+    }
   }
 
   render() {
@@ -34,7 +36,6 @@ class Shape extends Component {
       <path
         id={this.props.id}
         ref={svgShape => (this.svgShape = svgShape)}
-        onMouseDown={() => this.selectShape()}
         onMouseDown={() => this.selectShape()}
         className={this.props.selected ? 'workspace-line-selected' : 'workspace-line'}
         d={this.props.path}
