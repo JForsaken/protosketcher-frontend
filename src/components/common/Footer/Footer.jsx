@@ -260,34 +260,38 @@ class Footer extends Component {
       <footer id="footer" className={isEmpty(pages) ? 'footer-hidden' : ''}>
         <div className="container">
           {this.renderModal()}
-          {
-            Object.keys(pages).map((key, index) =>
-              <div key={index}>
-                <ContextMenuTrigger id={`page-${key}`} key={`trigger${key}`}>
-                  <Button
-                    key={`page-${key}`}
-                    className={classNames({
-                      'page-tab': true,
-                      'page-tab--active': this.props.selectedPage === key,
-                    })}
-                    onDoubleClick={() => this.showRenameModal(key)}
-                    onClick={() => this.changePage(key)}
-                  >
-                    {pages[key].name}
-                    {icons[pages[key].pageTypeId]}
-                  </Button>
-                </ContextMenuTrigger>
+          <div className="tabs-container">
+            <div className="tabs-slider">
+              {
+                Object.keys(pages).map((key, index) =>
+                  <div key={index}>
+                    <ContextMenuTrigger id={`page-${key}`} key={`trigger${key}`}>
+                      <Button
+                        key={`page-${key}`}
+                        className={classNames({
+                          'page-tab': true,
+                          'page-tab--active': this.props.selectedPage === key,
+                        })}
+                        onDoubleClick={() => this.showRenameModal(key)}
+                        onClick={() => this.changePage(key)}
+                      >
+                        {pages[key].name}
+                        {icons[pages[key].pageTypeId]}
+                      </Button>
+                    </ContextMenuTrigger>
 
-                <ContextMenu key={`menu-${key}`} id={`page-${key}`}>
-                  <MenuItem key={`rename-${key}`} onClick={() => this.showRenameModal(key)}>
-                    {this.props.intl.messages['footer.renamePage']}
-                  </MenuItem>
-                  <MenuItem key={`remove-${key}`} onClick={() => this.showDeleteModal(key)}>
-                    {this.props.intl.messages['footer.deletePage']}
-                  </MenuItem>
-                </ContextMenu>
-              </div>)
-          }
+                    <ContextMenu key={`menu-${key}`} id={`page-${key}`}>
+                      <MenuItem key={`rename-${key}`} onClick={() => this.showRenameModal(key)}>
+                        {this.props.intl.messages['footer.renamePage']}
+                      </MenuItem>
+                      <MenuItem key={`remove-${key}`} onClick={() => this.showDeleteModal(key)}>
+                        {this.props.intl.messages['footer.deletePage']}
+                      </MenuItem>
+                    </ContextMenu>
+                  </div>)
+              }
+            </div>
+          </div>
           <AddPageMenu
             addNormalPage={() => this.addPage('page')}
             addModalPage={() => this.addPage('modal')}
