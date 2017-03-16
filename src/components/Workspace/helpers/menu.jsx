@@ -125,7 +125,7 @@ export function doAction(point) {
  * Render the correct radial menu depending on the selected items
  * @return {html} The html code of the rendered radial menu
  */
-export function renderRadialMenu() {
+export function renderRadialMenu(currentPos) {
   const length = this.state.selectedItems.length;
 
   // General menu when no items are selected
@@ -135,6 +135,8 @@ export function renderRadialMenu() {
         items={menuItems}
         offset={Math.PI / 4}
         onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
+        x={currentPos.x}
+        y={currentPos.y}
       />
     );
   }
@@ -146,6 +148,8 @@ export function renderRadialMenu() {
         items={selectionMenuItems}
         offset={Math.PI / 4}
         onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
+        x={currentPos.x}
+        y={currentPos.y}
       />
     );
   }
@@ -156,6 +160,8 @@ export function renderRadialMenu() {
       items={multiSelectionMenuItems}
       offset={Math.PI / 4}
       onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
+      x={currentPos.x}
+      y={currentPos.y}
     />
   );
 }

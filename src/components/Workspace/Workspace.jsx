@@ -143,6 +143,10 @@ class Workspace extends Component {
     this.copiedItesmsInit = false;
     this.clipboard = [];
     this.centralSelectionPoint = null;
+    this.currentPos = {
+      x: 0,
+      y: 0,
+    };
   }
 
   componentDidMount() {
@@ -312,9 +316,9 @@ class Workspace extends Component {
       // const shapeType = this.props.api.getShapeTypes.shapeTypes[shapes[id].shapeTypeId];
     }
   }
+
   /* Rendering */
   renderWorkspace() {
-    const { workspace } = this.props.application;
     if (this.state.shapes && this.state.texts) {
       return (
         <div
@@ -329,7 +333,7 @@ class Workspace extends Component {
           onTouchCancel={absorbEvent}
           onContextMenu={absorbEvent}
         >
-        {this.state.showMenu && this.renderRadialMenu()}
+        {this.state.showMenu && this.renderRadialMenu(this.currentPos)}
           <svg height="100%" width="100%">
             <filter id="dropshadow" height="130%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
@@ -342,8 +346,8 @@ class Workspace extends Component {
             {
               this.state.currentMode === constants.modes.TEXT &&
                 <foreignObject
-                  x={workspace.currentPos.x}
-                  y={workspace.currentPos.y}
+                  x={this.currentPos.x}
+                  y={this.currentPos.y}
                 >
                   <input
                     id="textEdit"

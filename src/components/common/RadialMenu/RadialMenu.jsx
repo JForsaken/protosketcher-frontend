@@ -77,8 +77,8 @@ class RadialMenu extends Component {
 
   render() {
     const menuStyle = {
-      left: this.props.application.workspace.currentPos.x - RADIAL_MENU_SIZE,
-      top: this.props.application.workspace.currentPos.y - RADIAL_MENU_SIZE,
+      left: this.props.x - RADIAL_MENU_SIZE,
+      top: this.props.y - RADIAL_MENU_SIZE,
     };
     return (
       <svg ref={svgEl => (this.svgEl = svgEl)} className="radial-menu" style={menuStyle}>
