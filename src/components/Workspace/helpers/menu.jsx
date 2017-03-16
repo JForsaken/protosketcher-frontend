@@ -1,8 +1,31 @@
 /* Node modules */
-import { has } from 'lodash';
+import React from 'react';
+import { has, clone } from 'lodash';
+
+/* Components */
+import RadialMenu from '../../common/RadialMenu/RadialMenu';
 
 /* Constants */
 import * as constants from '../../constants';
+
+const menuItems = [
+  constants.menuItems.CHANGE_COLOR,
+  constants.menuItems.ADD_TEXT,
+  constants.menuItems.SELECT_AREA,
+];
+
+const selectionMenuItems = [
+  Object.assign(clone(constants.menuItems.DRAG_SELECTION), { flex: 1 }),
+  constants.menuItems.SETTINGS,
+  constants.menuItems.COPY_SELECTION,
+  constants.menuItems.DELETE_SELECTION,
+];
+
+const multiSelectionMenuItems = [
+  constants.menuItems.DRAG_SELECTION,
+  constants.menuItems.COPY_SELECTION,
+  constants.menuItems.DELETE_SELECTION,
+];
 
 
 /**
@@ -96,4 +119,43 @@ export function doAction(point) {
     }
     default:
   }
+}
+
+/**
+ * Render the correct radial menu depending on the selected items
+ * @return {html} The html code of the rendered radial menu
+ */
+export function renderRadialMenu() {
+  const length = this.state.selectedItems.length;
+
+  // General menu when no items are selected
+  if (length === 0) {
+    return (
+      <RadialMenu
+        items={menuItems}
+        offset={Math.PI / 4}
+        onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
+      />
+    );
+  }
+
+  // Menu with settings when only one item is selected
+  else if (length === 1) {
+    return (
+      <RadialMenu
+        items={selectionMenuItems}
+        offset={Math.PI / 4}
+        onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
+      />
+    );
+  }
+
+  // General menu for multiple selection
+  return (
+    <RadialMenu
+      items={multiSelectionMenuItems}
+      offset={Math.PI / 4}
+      onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
+    />
+  );
 }

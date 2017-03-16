@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { isEmpty, has, clone } from 'lodash';
+import { isEmpty, has } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -11,7 +11,6 @@ import absorbEvent from '../../utils/events';
 
 /* Components */
 import Footer from '../common/Footer/Footer';
-import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
 import Text from './Text/Text';
 
@@ -42,7 +41,8 @@ import {
 
 import {
   toggleMenu,
-  doAction } from './helpers/menu';
+  doAction,
+  renderRadialMenu } from './helpers/menu';
 
 import {
   getCentralPointOfSelection,
@@ -64,25 +64,6 @@ import {
   onMovingEvent,
   onKeyDownEvent } from './helpers/events';
 
-const menuItems = [
-  constants.menuItems.CHANGE_COLOR,
-  constants.menuItems.ADD_TEXT,
-  constants.menuItems.SELECT_AREA,
-];
-
-const selectionMenuItems = [
-  Object.assign(clone(constants.menuItems.DRAG_SELECTION), { flex: 1 }),
-  constants.menuItems.SETTINGS,
-  constants.menuItems.COPY_SELECTION,
-  constants.menuItems.DELETE_SELECTION,
-];
-
-const multiSelectionMenuItems = [
-  constants.menuItems.DRAG_SELECTION,
-  constants.menuItems.COPY_SELECTION,
-  constants.menuItems.DELETE_SELECTION,
-];
-
 class Workspace extends Component {
 
   constructor(props, context) {
@@ -91,6 +72,7 @@ class Workspace extends Component {
     // menu
     this.toggleMenu = toggleMenu.bind(this);
     this.doAction = doAction.bind(this);
+    this.renderRadialMenu = renderRadialMenu.bind(this);
 
     // events
     this.onStartingEvent = onStartingEvent.bind(this);
@@ -123,7 +105,6 @@ class Workspace extends Component {
 
     // Workspace
     this.getRealId = this.getRealId.bind(this);
-    this.renderRadialMenu = this.renderRadialMenu.bind(this);
     this.renderItemSettings = this.renderItemSettings.bind(this);
 
     const { prototypes, selectedPrototype, selectedPage } = this.props.application;
@@ -309,41 +290,6 @@ class Workspace extends Component {
   }
   selectionRadialMenuDidMount(el) {
     this.selectionRadialMenuEl = el;
-  }
-
-  renderRadialMenu() {
-    const length = this.state.selectedItems.length;
-
-    // General menu when no items are selected
-    if (length === 0) {
-      return (
-        <RadialMenu
-          items={menuItems}
-          offset={Math.PI / 4}
-          onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
-        />
-      );
-    }
-
-    // Menu with settings when only one item is selected
-    else if (length === 1) {
-      return (
-        <RadialMenu
-          items={selectionMenuItems}
-          offset={Math.PI / 4}
-          onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
-        />
-      );
-    }
-
-    // General menu for multiple selection
-    return (
-      <RadialMenu
-        items={multiSelectionMenuItems}
-        offset={Math.PI / 4}
-        onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
-      />
-    );
   }
 
   renderItemSettings() {
