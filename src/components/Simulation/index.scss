@@ -1,1 +1,59 @@
 @import './Control/index';
+
+.simulation-container {
+  background-color: color('background', 'light');
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 5;
+
+  .workspace {
+    bottom: 0;
+  }
+
+  &.modalSimulation {
+    z-index: 10;
+    background-color: color('background', 'backdrop');
+
+    .workspace {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      margin-left: -$modal-width/2;
+      margin-top: -$modal-height/2;
+      background-color: color('background', 'light');
+      width: $modal-width;
+      height: $modal-height;
+    }
+  }
+}
+
+// React transition group properties
+.simulation-enter {
+  opacity: 0.01;
+}
+
+.simulation-enter.simulation-enter-active {
+  opacity: 1;
+  @include transition(opacity 0.2s ease);
+}
+
+.simulation-leave {
+  opacity: 1;
+}
+
+.simulation-leave.simulation-leave-active {
+  opacity: 0.01;
+  @include transition(opacity 0.2s ease-in);
+}
+
+.simulation-appear {
+  opacity: 0.01;
+  @include transition(opacity 0.2s ease-in);
+}
+
+.simulation-appear.simulation-appear-active {
+  opacity: 1;
+}

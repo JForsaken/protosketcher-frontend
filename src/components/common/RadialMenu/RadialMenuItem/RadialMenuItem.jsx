@@ -110,18 +110,22 @@ class RadialMenuItem extends Component {
     ].join(' ');
   }
 
-  createCSSTransform(angle1, angle2, r) {
+  createCSSTransform(angle1, angle2, r, getObject) {
     const angleStop = angle2 > angle1
       ? angle2 : 2 * Math.PI + angle2;
     const angleOffset = angle1 + (angleStop - angle1) / 2;
     const x = Math.cos(angleOffset) * (65 + r) + 127;
     const y = Math.sin(angleOffset) * (-65 - r) + 125;
-    return { transform: `translate(${x}px,${y}px)`,
-    };
+    // If we want the object instead of the css property (for safary, which doesn't like transform)
+    if (getObject) {
+      return { x, y };
+    }
+    return { transform: `translate(${x}px,${y}px)` };
   }
 
   render() {
     const baseClassName = `action-${this.props.action}`;
+    const imagePos = this.createCSSTransform(this.props.startAngle, this.props.endAngle, 0, true);
     return (
       <g className="radial-menu-item">
       {
@@ -157,7 +161,10 @@ class RadialMenuItem extends Component {
         />
         <image
           xlinkHref={this.props.icon}
-          style={this.createCSSTransform(this.props.startAngle, this.props.endAngle, 0)}
+          x={imagePos.x}
+          y={imagePos.y}
+          width="48"
+          height="48"
         />
       </g>
     );

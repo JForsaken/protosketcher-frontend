@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { filter, has, isEqual } from 'lodash';
+import { filter, has, isEqual, map } from 'lodash';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 /* Components */
 import Shape from '../Workspace/Shape/Shape';
@@ -12,16 +13,21 @@ import Control from './Control/Control';
 
 /* Actions */
 import { getShapes, getTexts } from '../../actions/api';
-import { showElements } from '../../actions/application';
+import { hideElements } from '../../actions/application';
+
+/* CONSTANTS */
+import { MODAL_WIDTH, MODAL_HEIGHT, PAGE_WIDTH, PAGE_HEIGHT } from '../constants';
+
+const animationTime = 200;
 
 class Simulation extends Component {
 
   constructor(props, context) {
     super(props, context);
 
-    const { prototypes, selectedPrototype, selectedPage } = this.props.application;
+    const { prototypes, selectedPrototype } = this.props.application;
+    let { selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
-    const { shapes, texts } = prototype.pages[selectedPage];
 
     // the pages that still need to be fetched in order to be cached
     const pagesToFetch = filter(Object.keys(prototype.pages),
@@ -29,6 +35,12 @@ class Simulation extends Component {
                                       !has(prototype.pages[p], 'texts')));
 
     this.svgShapes = {};
+    this.isModal = props.isModal;
+    // If this Simulation is a Modal, hard assign the Page
+    if (this.isModal) {
+      selectedPage = props.pageId;
+    }
+    const { shapes, texts } = prototype.pages[selectedPage];
 
     this.state = {
       pages: prototype.pages || null,
@@ -39,6 +51,7 @@ class Simulation extends Component {
       pagesToFetch,
       pagesWithShapesFetched: [],
       pagesWithTextsFetched: [],
+      modalId: '',
     };
   }
 
@@ -52,7 +65,20 @@ class Simulation extends Component {
     });
 
     // reset all hidden elements when the simulation first starts
-    this.props.actions.showElements(this.props.application.simulation.hiddenElements);
+    if (!this.isModal) {
+      const { prototypes } = this.props.application;
+      let elementsToHide = [];
+
+      // get all the elements that start the simulation as hidden
+      Object.keys(prototypes[selectedPrototype].pages).forEach((p) => {
+        const page = prototypes[selectedPrototype].pages[p];
+        elementsToHide = map(page.shapes, (o, k) => (!o.visible ? k : false))
+          .concat(map(page.texts, (o, k) => (!o.visible ? k : false)))
+          .concat(elementsToHide);
+      });
+
+      this.props.actions.hideElements(elementsToHide);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -91,22 +117,50 @@ class Simulation extends Component {
     }
   }
 
+  showModal(pageId) {
+    this.setState({ modalId: pageId });
+  }
+
+  checkClickBackdrop(e) {
+    // If we did click the backdrop, close the modal
+    if (e.target === this.container) {
+      this.props.closeModal();
+    }
+  }
+
+  closeModal() {
+    this.setState({ modalId: '' });
+  }
+
   renderShapes() {
     const { hiddenElements } = this.props.application.simulation;
+    let posX;
+    let posY;
 
     return (
       Object.entries(this.state.shapes)
             .filter(item => !hiddenElements.includes(item[0]))
-            .map((item, i) =>
-              <Shape
-                id={item[0]}
-                onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
-                color={item[1].color}
-                path={item[1].path}
-                posX={item[1].x}
-                posY={item[1].y}
-                key={i}
-              />)
+            .map((item, i) => {
+              if (this.isModal) {
+                posX = (item[1].x / PAGE_WIDTH) * MODAL_WIDTH;
+                posY = (item[1].y / PAGE_HEIGHT) * MODAL_HEIGHT;
+              } else {
+                posX = item[1].x;
+                posY = item[1].y;
+              }
+
+              return (
+                <Shape
+                  id={item[0]}
+                  onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
+                  color={item[1].color}
+                  path={item[1].path}
+                  posX={posX}
+                  posY={posY}
+                  key={i}
+                />
+              );
+            })
     );
   }
 
@@ -144,8 +198,22 @@ class Simulation extends Component {
           posY={item[1].y}
           path={item[1].path}
           key={`control-${i}`}
+          onClickModal={(pageId) => this.showModal(pageId)}
         />
       )
+    );
+  }
+
+  renderModal() {
+    return (
+      <Simulation
+        isModal="true"
+        pageId={this.state.modalId}
+        application={this.props.application}
+        api={this.props.api}
+        actions={this.props.actions}
+        closeModal={() => this.closeModal()}
+      />
     );
   }
 
@@ -171,9 +239,10 @@ class Simulation extends Component {
     }
 
     return (
-      <div id="workspace">
+      <div className="workspace">
+        {this.state.modalId && this.renderModal()}
         <svg height="100%" width="100%">
-          <filter id="dropshadow" height="130%">
+          <filter className="dropshadow" height="130%">
             <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
             <feOffset dx="0" dy="0" result="offsetblur" />
             <feMerge>
@@ -192,13 +261,21 @@ class Simulation extends Component {
   render() {
     return (
       <div
-        id="workspace-container"
-        ref={div => div && div.focus()}
-        className="workspace-container"
+        ref={div => { this.container = div; }}
+        className={`simulation-container${(this.isModal) ? ' modalSimulation' : ''}`}
         tabIndex="0"
         onKeyDown={this.onKeyDownEvent}
+        onClick={(this.isModal) ? (e) => this.checkClickBackdrop(e) : ''}
       >
-        {this.renderSimulation()}
+        <ReactCSSTransitionGroup
+          transitionName="simulation"
+          transitionAppear
+          transitionEnter={false}
+          transitionLeave={false}
+          transitionAppearTimeout={animationTime}
+        >
+          {this.renderSimulation()}
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
@@ -210,7 +287,7 @@ export default connect(
     actions: bindActionCreators({
       getShapes,
       getTexts,
-      showElements,
+      hideElements,
     }, dispatch),
   })
 )(Simulation);

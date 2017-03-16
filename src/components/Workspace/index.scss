@@ -13,7 +13,7 @@
   }
 }
 
-#workspace {
+.workspace {
   bottom: $footer-height;
   left: 0;
   position: absolute;
@@ -74,3 +74,4 @@
 }
 
 @import './Text/index';
+@import './Shape/index';
