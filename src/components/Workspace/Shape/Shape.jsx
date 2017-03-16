@@ -2,7 +2,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { isEmpty } from 'lodash';
 
 /* Actions */
 import { updateWorkspace } from '../../../actions/application';
@@ -26,13 +25,9 @@ class Shape extends Component {
     }
   }
 
-  onClick() {
-    if (isEmpty(this.props.application.workspace.selectedItems)
-        && !this.props.application.simulation.isSimulating) {
-      this.props.actions.updateWorkspace({
-        selectedItems: [this.props.id],
-        currentPath: null,
-      });
+  selectShape() {
+    if (!this.props.application.simulation.isSimulating) {
+      this.props.monoSelect(this.props.id);
     }
   }
 
@@ -41,9 +36,8 @@ class Shape extends Component {
       <path
         id={this.props.id}
         ref={svgShape => (this.svgShape = svgShape)}
-        onClick={() => this.onClick()}
-        className={this.props.application.workspace.selectedItems.some(e => e === this.props.id)
-          ? 'workspace-line-selected' : 'workspace-line'}
+        onMouseDown={() => this.selectShape()}
+        className={this.props.selected ? 'workspace-line-selected' : 'workspace-line'}
         d={this.props.path}
         stroke={this.props.color}
         transform={`translate(${this.props.posX} ${this.props.posY})`}

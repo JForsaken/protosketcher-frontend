@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { filter, has, isEqual } from 'lodash';
+import { filter, has, isEqual, map } from 'lodash';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 /* Components */
@@ -13,10 +13,12 @@ import Control from './Control/Control';
 
 /* Actions */
 import { getShapes, getTexts } from '../../actions/api';
-import { showElements } from '../../actions/application';
+import { hideElements } from '../../actions/application';
 
 /* CONSTANTS */
 import { MODAL_WIDTH, MODAL_HEIGHT, PAGE_WIDTH, PAGE_HEIGHT } from '../constants';
+
+const animationTime = 200;
 
 class Simulation extends Component {
 
@@ -63,7 +65,20 @@ class Simulation extends Component {
     });
 
     // reset all hidden elements when the simulation first starts
-    this.props.actions.showElements(this.props.application.simulation.hiddenElements);
+    if (!this.isModal) {
+      const { prototypes } = this.props.application;
+      let elementsToHide = [];
+
+      // get all the elements that start the simulation as hidden
+      Object.keys(prototypes[selectedPrototype].pages).forEach((p) => {
+        const page = prototypes[selectedPrototype].pages[p];
+        elementsToHide = map(page.shapes, (o, k) => (!o.visible ? k : false))
+          .concat(map(page.texts, (o, k) => (!o.visible ? k : false)))
+          .concat(elementsToHide);
+      });
+
+      this.props.actions.hideElements(elementsToHide);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -110,13 +125,13 @@ class Simulation extends Component {
     // If we did click the backdrop, close the modal
     if (e.target === this.container) {
       this.props.closeModal();
-      delete this;
     }
   }
 
   closeModal() {
     this.setState({ modalId: '' });
   }
+
 
   renderShapes() {
     const { hiddenElements } = this.props.application.simulation;
@@ -210,6 +225,21 @@ class Simulation extends Component {
       pagesWithTextsFetched,
     } = this.state;
 
+    const { prototypes, selectedPrototype, selectedPage } = this.props.application;
+    const prototype = prototypes[selectedPrototype];
+    let prototypeType = '';
+    if (prototype && prototype.pages && selectedPage) {
+      const { pageTypeId } = prototype.pages[selectedPage];
+      const { pageTypes: allPageTypes } = this.props.api.getPageTypes;
+
+      if (allPageTypes) {
+        this.pageType = allPageTypes[pageTypeId];
+        this.isMobile = prototype.isMobile;
+      }
+      prototypeType = (this.isMobile) ? 'mobile' : 'desktop';
+    }
+
+
     // the loading is over when the pages to fetch have their shapes and texts
     if (!pagesToFetch.every(p => (pagesWithShapesFetched.includes(p) &&
                                   pagesWithTextsFetched.includes(p)))) {
@@ -225,7 +255,7 @@ class Simulation extends Component {
     }
 
     return (
-      <div className="workspace">
+      <div className={`workspace workspace-${this.pageType} ${prototypeType}`}>
         {this.state.modalId && this.renderModal()}
         <svg height="100%" width="100%">
           <filter className="dropshadow" height="130%">
@@ -256,6 +286,9 @@ class Simulation extends Component {
         <ReactCSSTransitionGroup
           transitionName="simulation"
           transitionAppear
+          transitionEnter={false}
+          transitionLeave={false}
+          transitionAppearTimeout={animationTime}
         >
           {this.renderSimulation()}
         </ReactCSSTransitionGroup>
@@ -270,7 +303,7 @@ export default connect(
     actions: bindActionCreators({
       getShapes,
       getTexts,
-      showElements,
+      hideElements,
     }, dispatch),
   })
 )(Simulation);

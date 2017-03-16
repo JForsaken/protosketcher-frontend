@@ -5,6 +5,26 @@
   position: relative;
   z-index: 5;
 
+  &.desktop {
+    width: $page-width;
+    height: $page-height;
+
+    &.workspace-modal {
+      width: $modal-width;
+      height: $modal-height;
+    }
+  }
+
+  &.mobile {
+    width: $portait-width;
+    height: $portait-height;
+
+    &.workspace-modal {
+      width: $portait-modal-width;
+      height: $portait-modal-height;
+    }
+  }
+
   &.modalSimulation {
     z-index: 10;
     background-color: color('background', 'backdrop');
@@ -39,6 +59,15 @@
 .simulation-leave.simulation-leave-active {
   opacity: 0.01;
   @include transition(opacity 0.2s ease-in);
+}
+
+.simulation-appear {
+  opacity: 0.01;
+  @include transition(opacity 0.2s ease-in);
+}
+
+.simulation-appear.simulation-appear-active {
+  opacity: 1;
 }
 
 .simulation-appear {

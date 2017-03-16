@@ -2,7 +2,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { isEmpty } from 'lodash';
 
 /* Actions */
 import { updateWorkspace } from '../../../actions/application';
@@ -25,13 +24,9 @@ class Text extends Component {
     }
   }
 
-  onClick() {
-    if (isEmpty(this.props.application.workspace.selectedItems)
-        && !this.props.application.simulating) {
-      this.props.actions.updateWorkspace({
-        selectedItems: [this.props.id],
-        currentPath: null,
-      });
+  selectText() {
+    if (!this.props.application.simulation.isSimulating) {
+      this.props.monoSelect(this.props.id);
     }
   }
 
@@ -40,9 +35,9 @@ class Text extends Component {
       <text
         id={this.props.id}
         ref={svgText => (this.svgText = svgText)}
-        onClick={() => this.onClick()}
-        className={this.props.application.workspace.selectedItems.some(e => e === this.props.id)
-          ? 'workspace-text-selected' : null}
+        onMouseDown={() => this.selectText()}
+        onTouchStart={() => this.selectText()}
+        className={this.props.selected ? 'workspace-text-selected' : null}
         transform={`translate(${this.props.posX} ${this.props.posY})`}
         style={{ fontSize: this.props.size }}
       >

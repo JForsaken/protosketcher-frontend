@@ -7,7 +7,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
-import { isEmpty, invert } from 'lodash';
+import { isEmpty, find, keys, invert } from 'lodash';
 
 // Components
 import AddPageMenu from './AddPageMenu';
@@ -61,8 +61,20 @@ class Footer extends Component {
   }
 
   removePage() {
-    this.props.actions.deletePage(this.props.application.selectedPrototype,
-      this.state.pageModifiedId, this.props.application.user.token);
+    const { selectedPrototype, selectedPage, prototypes } = this.props.application;
+    const { pageModifiedId } = this.state;
+
+    // If deleting current page, change page
+    if (pageModifiedId === selectedPage) {
+      const { pages } = prototypes[selectedPrototype];
+
+      const newPageId = find(keys(pages), (pageId) => (pageId !== pageModifiedId));
+
+      this.changePage(newPageId);
+    }
+
+    this.props.actions.deletePage(selectedPrototype,
+      pageModifiedId, this.props.application.user.token);
 
     this.setState({
       showDeleteModal: false,
