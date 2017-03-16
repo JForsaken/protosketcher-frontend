@@ -48,7 +48,8 @@ import {
   getCentralPointOfSelection,
   monoSelect,
   multiSelect,
-  updateSelectionOriginalPosition } from './helpers/selection';
+  updateSelectionOriginalPosition,
+  renderSelectionRect } from './helpers/selection';
 
 import {
   copySvgItem,
@@ -97,6 +98,7 @@ class Workspace extends Component {
     this.getCentralPointOfSelection = getCentralPointOfSelection.bind(this);
     this.monoSelect = monoSelect.bind(this);
     this.multiSelect = multiSelect.bind(this);
+    this.renderSelectionRect = renderSelectionRect.bind(this);
 
     // Helpers
     this.changeColor = changeColor.bind(this);
@@ -268,6 +270,11 @@ class Workspace extends Component {
     }
   }
 
+  /**
+   * Returns the uuid of the item does not exists in the DB, or the DB's id if it exists
+   * @param  {uuid} uuid The uuid of the item to check
+   * @return {uuid}      The correct uuid to use for this item's call to the DB
+   */
   getRealId(uuid) {
     const items = {
       ...this.state.shapes,
@@ -382,20 +389,7 @@ class Workspace extends Component {
                     ${this.state.currentPath.position.y})`}
               />
             }
-            {this.state.selectingRect !== null &&
-              <path
-                className="workspace-line"
-                d={`M${this.state.selectingRect.x} ${this.state.selectingRect.y}
-                  L${this.state.selectingRect.x}
-                  ${this.state.selectingRect.y + this.state.selectingRect.height}
-                  L${this.state.selectingRect.x + this.state.selectingRect.width}
-                  ${this.state.selectingRect.y + this.state.selectingRect.height}
-                  L${this.state.selectingRect.x + this.state.selectingRect.width}
-                  ${this.state.selectingRect.y} Z`}
-                stroke="black"
-                strokeDasharray="5, 5"
-              />
-            }
+            {this.state.selectingRect && this.renderSelectionRect()}
           </svg>
         </div>
       );

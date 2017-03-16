@@ -1,4 +1,5 @@
 /* Node modules */
+import React from 'react';
 import { has } from 'lodash';
 
 /* Constants */
@@ -127,4 +128,19 @@ export function multiSelect(pointerPos) {
     shapes: items.shapes,
     texts: items.texts,
   });
+}
+
+export function renderSelectionRect() {
+  const { selectingRect } = this.state;
+  return (
+    <path
+      className="workspace-line"
+      d={`M${selectingRect.x} ${selectingRect.y}
+      L${selectingRect.x} ${selectingRect.y + selectingRect.height}
+      L${selectingRect.x + selectingRect.width} ${selectingRect.y + selectingRect.height}
+      L${selectingRect.x + selectingRect.width} ${selectingRect.y} Z`}
+      stroke="black"
+      strokeDasharray="5, 5"
+    />
+  );
 }
