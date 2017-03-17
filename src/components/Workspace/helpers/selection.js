@@ -1,10 +1,6 @@
 /* Node modules */
 import { has } from 'lodash';
 
-/* Constants */
-import * as constants from '../../constants';
-
-
 /**
  * Return the central point of the selected element's bounding boxes
  * @param {Object} selectedItems The ids of the selected items, contained in an array
@@ -25,11 +21,12 @@ export function getCentralPointOfSelection(selectedItems = this.state.selectedIt
     bottom = Math.min(bottom, box.bottom);
   }
 
-  // Translate the box to account for menus
-  right -= constants.LEFT_MENU_WIDTH;
-  left -= constants.LEFT_MENU_WIDTH;
-  top -= constants.TOP_MENU_HEIGHT;
-  bottom -= constants.TOP_MENU_HEIGHT;
+  // Translate the box to account for workspace position
+  const workspacePos = this.workspace.getBoundingClientRect();
+  right -= workspacePos.left;
+  left -= workspacePos.left;
+  top -= workspacePos.top;
+  bottom -= workspacePos.top;
 
   return {
     x: left + Math.round((right - left) / 2),
