@@ -1,9 +1,18 @@
 nav.navbar {
   height: $top-menu-height;
+  background-color: color('foreground');
+
+  ul {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
   a {
     position: relative;
     cursor: pointer;
     z-index: 3;
+    background: color('foreground');
+    color: color('text', 'light');
   }
 
   .centered {
@@ -50,7 +59,8 @@ nav.navbar {
     }
 
     &__title {
-      color: #BDBDBD;
+      height: $top-menu-height - 1px;
+      color: color('text', 'light');
       text-decoration: none;
       font-family: 'Permanent Marker', 'Roboto', 'Helvetica Light', sans-serif;
 
