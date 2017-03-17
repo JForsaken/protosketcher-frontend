@@ -200,3 +200,10 @@
   -webkit-user-select: none;
   -ms-user-select: none;
 }
+
+// Media queries
+@media (min-width: 768px){
+  .container {
+    width: 90%;
+  }
+}
