@@ -110,10 +110,11 @@ export function multiSelect(pointerPos) {
 
     // FIXME use React refs instead of getElementById
     const box = document.getElementById(key).getBoundingClientRect();
-    const pathRectRight = box.right - constants.LEFT_MENU_WIDTH;
-    const pathRectLeft = box.left - constants.LEFT_MENU_WIDTH;
-    const pathRectTop = box.top - constants.TOP_MENU_HEIGHT;
-    const pathRectBottom = box.bottom - constants.TOP_MENU_HEIGHT;
+    const workspacePos = this.workspace.getBoundingClientRect();
+    const pathRectRight = box.right - workspacePos.left;
+    const pathRectLeft = box.left - workspacePos.left;
+    const pathRectTop = box.top - workspacePos.top;
+    const pathRectBottom = box.bottom - workspacePos.top;
 
     return pathRectRight <= selectRectRight && pathRectLeft >= selectRectLeft
       && pathRectTop >= selectRectTop && pathRectBottom <= selectRectBottom;
