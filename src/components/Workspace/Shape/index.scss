@@ -3,13 +3,13 @@
   stroke-width: 3;
   cursor: pointer;
 
-  &:hover, &.workspace-line-selected {
+  &:hover, &.workspace-line-selected, &.workspace-line-hovered {
     filter: url(#dropshadow);
   }
 
   &.line-padding {
     cursor: pointer;
-    stroke-width: 15;
+    stroke-width: 18;
   }
 }
 
