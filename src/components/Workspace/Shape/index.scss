@@ -1,13 +1,15 @@
-path {
+.workspace-line {
+  fill: none;
+  stroke-width: 3;
   cursor: pointer;
 
-  &:hover {
+  &:hover, &.workspace-line-selected {
     filter: url(#dropshadow);
   }
 }
 
 .in-simulation {
-  path {
+  .workspace-line {
     cursor: default;
   }
 }
