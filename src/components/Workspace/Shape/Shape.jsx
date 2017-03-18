@@ -33,15 +33,23 @@ class Shape extends Component {
 
   render() {
     return (
-      <path
-        id={this.props.id}
-        ref={svgShape => (this.svgShape = svgShape)}
-        onMouseDown={() => this.selectShape()}
-        className={`workspace-line${this.props.selected ? ' workspace-line-selected' : ''}`}
-        d={this.props.path}
-        stroke={this.props.color}
-        transform={`translate(${this.props.posX} ${this.props.posY})`}
-      />
+      <g className="path-container">
+        <path
+          onMouseDown={() => this.selectShape()}
+          className="workspace-line line-padding"
+          d={this.props.path}
+          stroke="transparent"
+          transform={`translate(${this.props.posX} ${this.props.posY})`}
+        />
+        <path
+          id={this.props.id}
+          ref={svgShape => (this.svgShape = svgShape)}
+          className={`workspace-line${this.props.selected ? ' workspace-line-selected' : ''}`}
+          d={this.props.path}
+          stroke={this.props.color}
+          transform={`translate(${this.props.posX} ${this.props.posY})`}
+        />
+      </g>
     );
   }
 }

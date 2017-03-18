@@ -6,10 +6,19 @@
   &:hover, &.workspace-line-selected {
     filter: url(#dropshadow);
   }
+
+  &.line-padding {
+    cursor: pointer;
+    stroke-width: 15;
+  }
 }
 
 .in-simulation {
   .workspace-line {
     cursor: default;
+
+    &.line-padding {
+      cursor: default;
+    }
   }
 }
