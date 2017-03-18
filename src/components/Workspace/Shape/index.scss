@@ -3,8 +3,12 @@
   stroke-width: 3;
   cursor: pointer;
 
-  &:hover, &.workspace-line-selected, &.workspace-line-hovered {
+  &.workspace-line-selected, &.workspace-line-hovered {
     filter: url(#dropshadow);
+  }
+
+  &.workspace-line-hovered {
+    stroke: color('accent');
   }
 
   &.line-padding {
