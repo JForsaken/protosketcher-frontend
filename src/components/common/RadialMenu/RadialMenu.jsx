@@ -43,14 +43,6 @@ class RadialMenu extends Component {
     }
   }
 
-  shouldComponentUpdate(newProps) {
-    if (this.props.items !== newProps.items) {
-      this.initElements();
-      return true;
-    }
-    return false;
-  }
-
   onMovingEvent() {
     if (this.props.application.workspace.action) {
       this.props.actions.updateWorkspace({ action: null });
