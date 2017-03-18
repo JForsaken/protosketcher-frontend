@@ -227,7 +227,7 @@ class Workspace extends Component {
         // Replace the uuid of the created shape with the uuid of the DB
         case actions.CREATE_SHAPE: {
           const { id, uuid } = newProps.api.createShape.shape;
-          if (!this.state.shapes[uuid].id) {
+          if (this.state.shapes.hasOwnProperty(uuid) && !this.state.shapes[uuid].id) {
             const shape = this.state.shapes[uuid];
 
             // update the shape list with that shape
@@ -247,7 +247,7 @@ class Workspace extends Component {
         // Replace the uuid of the created text with th uui of the DB
         case actions.CREATE_TEXT: {
           const { id, uuid } = newProps.api.createText.text;
-          if (!this.state.texts[uuid].id) {
+          if (this.state.texts.hasOwnProperty(uuid) && !this.state.texts[uuid].id) {
             const text = this.state.texts[uuid];
 
             // update the text list with that text
