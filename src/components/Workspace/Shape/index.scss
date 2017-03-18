@@ -1,3 +1,11 @@
+path {
+  cursor: pointer;
+
+  &:hover {
+    filter: url(#dropshadow);
+  }
+}
+
 .in-simulation {
   path {
     cursor: default;
