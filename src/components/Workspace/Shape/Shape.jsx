@@ -63,20 +63,20 @@ class Shape extends Component {
     return (
       <g className="path-container">
         <path
+          id={this.props.id}
+          ref={svgShape => (this.svgShape = svgShape)}
+          className={classNames}
+          d={this.props.path}
+          stroke={this.props.color}
+          transform={`translate(${this.props.posX} ${this.props.posY})`}
+        />
+        <path
           onMouseDown={() => this.selectShape()}
           onMouseOver={() => this.hoverShape()}
           onMouseLeave={() => this.leaveShape()}
           className="workspace-line line-padding"
           d={this.props.path}
           stroke="transparent"
-          transform={`translate(${this.props.posX} ${this.props.posY})`}
-        />
-        <path
-          id={this.props.id}
-          ref={svgShape => (this.svgShape = svgShape)}
-          className={classNames}
-          d={this.props.path}
-          stroke={this.props.color}
           transform={`translate(${this.props.posX} ${this.props.posY})`}
         />
       </g>
