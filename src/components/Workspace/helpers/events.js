@@ -141,9 +141,11 @@ export function onMovingEvent(e) {
     }
   }
 
+
+  const workspacePos = this.workspace.getBoundingClientRect();
   const point = {
-    x: pointer.clientX - constants.LEFT_MENU_WIDTH,
-    y: pointer.clientY - constants.TOP_MENU_HEIGHT,
+    x: pointer.clientX - workspacePos.left,
+    y: pointer.clientY - workspacePos.top,
   };
 
   // Determine if we draw or wait for the menu
@@ -272,9 +274,10 @@ export function getPointFromEvent(e, type) {
   if (e.type === type) {
     pointer = e.changedTouches.item(0);
   }
+  const workspacePos = this.workspace.getBoundingClientRect();
   const point = {
-    x: pointer.clientX - constants.LEFT_MENU_WIDTH,
-    y: pointer.clientY - constants.TOP_MENU_HEIGHT,
+    x: pointer.clientX - workspacePos.left,
+    y: pointer.clientY - workspacePos.top,
   };
   return point;
 }

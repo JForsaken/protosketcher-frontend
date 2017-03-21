@@ -2,10 +2,6 @@
 import React from 'react';
 import { has } from 'lodash';
 
-/* Constants */
-import * as constants from '../../constants';
-
-
 /**
  * Return the central point of the selected element's bounding boxes
  * @param {Object} selectedItems The ids of the selected items, contained in an array
@@ -26,11 +22,12 @@ export function getCentralPointOfSelection(selectedItems = this.state.selectedIt
     bottom = Math.min(bottom, box.bottom);
   }
 
-  // Translate the box to account for menus
-  right -= constants.LEFT_MENU_WIDTH;
-  left -= constants.LEFT_MENU_WIDTH;
-  top -= constants.TOP_MENU_HEIGHT;
-  bottom -= constants.TOP_MENU_HEIGHT;
+  // Translate the box to account for workspace position
+  const workspacePos = this.workspace.getBoundingClientRect();
+  right -= workspacePos.left;
+  left -= workspacePos.left;
+  top -= workspacePos.top;
+  bottom -= workspacePos.top;
 
   return {
     x: left + Math.round((right - left) / 2),
@@ -109,10 +106,11 @@ export function multiSelect(pointerPos) {
 
     // FIXME use React refs instead of getElementById
     const box = document.getElementById(key).getBoundingClientRect();
-    const pathRectRight = box.right - constants.LEFT_MENU_WIDTH;
-    const pathRectLeft = box.left - constants.LEFT_MENU_WIDTH;
-    const pathRectTop = box.top - constants.TOP_MENU_HEIGHT;
-    const pathRectBottom = box.bottom - constants.TOP_MENU_HEIGHT;
+    const workspacePos = this.workspace.getBoundingClientRect();
+    const pathRectRight = box.right - workspacePos.left;
+    const pathRectLeft = box.left - workspacePos.left;
+    const pathRectTop = box.top - workspacePos.top;
+    const pathRectBottom = box.bottom - workspacePos.top;
 
     return pathRectRight <= selectRectRight && pathRectLeft >= selectRectLeft
       && pathRectTop >= selectRectTop && pathRectBottom <= selectRectBottom;

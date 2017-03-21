@@ -189,7 +189,7 @@ const actionHandlers = {
     getPageTypes: {
       pageTypes: action.pageTypes.reduce((acc, curr) => ({
         ...acc,
-        [curr.type]: curr.id,
+        [curr.id]: curr.type,
       }), {}),
       time: action.time,
       error: action.error,

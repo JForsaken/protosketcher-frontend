@@ -132,6 +132,7 @@ class Simulation extends Component {
     this.setState({ modalId: '' });
   }
 
+
   renderShapes() {
     const { hiddenElements } = this.props.application.simulation;
     let posX;
@@ -224,6 +225,21 @@ class Simulation extends Component {
       pagesWithTextsFetched,
     } = this.state;
 
+    const { prototypes, selectedPrototype, selectedPage } = this.props.application;
+    const prototype = prototypes[selectedPrototype];
+    let prototypeType = '';
+    if (prototype && prototype.pages && selectedPage) {
+      const { pageTypeId } = prototype.pages[selectedPage];
+      const { pageTypes: allPageTypes } = this.props.api.getPageTypes;
+
+      if (allPageTypes) {
+        this.pageType = allPageTypes[pageTypeId];
+        this.isMobile = prototype.isMobile;
+      }
+      prototypeType = (this.isMobile) ? 'mobile' : 'desktop';
+    }
+
+
     // the loading is over when the pages to fetch have their shapes and texts
     if (!pagesToFetch.every(p => (pagesWithShapesFetched.includes(p) &&
                                   pagesWithTextsFetched.includes(p)))) {
@@ -239,7 +255,7 @@ class Simulation extends Component {
     }
 
     return (
-      <div className="workspace">
+      <div className={`workspace workspace-${this.pageType} ${prototypeType}`}>
         {this.state.modalId && this.renderModal()}
         <svg height="100%" width="100%">
           <filter className="dropshadow" height="130%">
