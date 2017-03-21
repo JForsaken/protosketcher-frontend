@@ -1,5 +1,28 @@
+.workspace-line {
+  fill: none;
+  stroke-width: 3;
+  cursor: pointer;
+
+  &.workspace-line-selected, &.workspace-line-hovered {
+    filter: url(#dropshadow);
+  }
+
+  &.workspace-line-hovered {
+    stroke: color('accent');
+  }
+
+  &.line-padding {
+    cursor: pointer;
+    stroke-width: 18;
+  }
+}
+
 .in-simulation {
-  path {
+  .workspace-line {
     cursor: default;
+
+    &.line-padding {
+      cursor: default;
+    }
   }
 }
