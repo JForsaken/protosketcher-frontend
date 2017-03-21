@@ -33,12 +33,6 @@ class Shape extends Component {
     }
   }
 
-  selectShape() {
-    if (!this.props.application.simulation.isSimulating) {
-      this.props.monoSelect(this.props.id);
-    }
-  }
-
   hoverShape() {
     this.setState({
       hovered: true,
@@ -49,6 +43,12 @@ class Shape extends Component {
     this.setState({
       hovered: false,
     });
+  }
+
+  selectShape() {
+    if (!this.props.application.simulation.isSimulating) {
+      this.props.monoSelect(this.props.id);
+    }
   }
 
   render() {
@@ -74,6 +74,7 @@ class Shape extends Component {
           onMouseDown={() => this.selectShape()}
           onMouseOver={() => this.hoverShape()}
           onMouseLeave={() => this.leaveShape()}
+          onTouchStart={() => this.selectShape()}
           className="workspace-line line-padding"
           d={this.props.path}
           stroke="transparent"

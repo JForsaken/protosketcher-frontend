@@ -1,11 +1,15 @@
-text {
+.workspace-text {
   cursor: pointer;
   font-family: 'Permanent Marker';
   user-select: none;
-}
 
-.in-simulation {
-  text {
-    cursor: default;
+  &.workspace-text-selected {
+    filter: url(#dropshadow);
+  }
+
+  &:hover {
+    filter: url(#dropshadow);
+    stroke: color('accent');
+    fill: color('accent');
   }
 }

@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import classNames from 'classnames';
 
 /* Actions */
 import { updateWorkspace } from '../../../actions/application';
@@ -37,7 +38,10 @@ class Text extends Component {
         ref={svgText => (this.svgText = svgText)}
         onMouseDown={() => this.selectText()}
         onTouchStart={() => this.selectText()}
-        className={this.props.selected ? 'workspace-text-selected' : null}
+        className={classNames({
+          'workspace-text': true,
+          'workspace-text-selected': this.props.selected,
+        })}
         transform={`translate(${this.props.posX} ${this.props.posY})`}
         style={{ fontSize: this.props.size }}
       >
