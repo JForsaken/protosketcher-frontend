@@ -1,48 +1,8 @@
 /* Node modules */
 import { has } from 'lodash';
 
-/* Helpers */
-import { cloneElement } from './copyPaste.js';
-
 /* Constants */
 import * as constants from '../../constants';
-
-
-/**
- * Copy the svg element and update its original position of selection
- * @param {string} uuid The id of the element to copy
- * @returns {string} The id of the newly copied element
- */
-export function copySvgItem(uuid) {
-  const { shapes, texts } = this.state;
-  let newUuid;
-
-  if (has(shapes, uuid)) {
-    const shape = shapes[uuid];
-    const newShape = cloneElement(uuid, shape, shapes);
-    newUuid = newShape.uuid;
-
-    this.setState({
-      shapes: {
-        ...shapes,
-        [newUuid]: newShape,
-      },
-    });
-  } else if (has(texts, uuid)) {
-    const text = texts[uuid];
-    const newText = cloneElement(uuid, text, texts);
-    newUuid = newText.uuid;
-
-    this.setState({
-      texts: {
-        ...texts,
-        [newUuid]: newText,
-      },
-    });
-  }
-
-  return newUuid;
-}
 
 
 /**

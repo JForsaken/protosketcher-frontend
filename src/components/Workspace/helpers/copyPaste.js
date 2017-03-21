@@ -14,41 +14,37 @@ import * as constants from '../../constants';
  * @param {Number} offset The offset where the element will be offsetted compared the the original
  * @returns {Object} The cloned element
  */
-export function cloneElement(elementId, element, source, offset = 0) {
-  const obj = {
-    ...omit(clone(source[elementId]), [
+export function cloneElement(element, offset = 0) {
+  return {
+    ...omit(clone(element), [
       'parentId',
       'id',
       'controls',
     ]),
     uuid: uuidV1(),
-    x: source[elementId].x + offset,
-    y: source[elementId].y + offset,
+    x: element.x + offset,
+    y: element.y + offset,
     originalPositionBeforeDrag: {
-      x: source[elementId].originalPositionBeforeDrag.x + offset,
-      y: source[elementId].originalPositionBeforeDrag.y + offset,
+      x: element.originalPositionBeforeDrag.x + offset,
+      y: element.originalPositionBeforeDrag.y + offset,
     },
     controls: {},
   };
-  return obj;
 }
 
 
 /**
- * Creates a set of new elements matching the ids in the clipboard
+ * Creates a set of new elements matching an array of Ids
  * @param {Object} source The whole map object containing the shapes or text, depends of the element
- * @param {Array} clipboard The ids of the element that are being copy-pasted
+ * @param {Array} ids The array of ids of the elements that needs to be cloned
  * @param {Number} offset The offset where the element will be offsetted compared the the original
  * @returns {Object} The cloned elements
  */
-export function createPastedClipboard(source, clipboard, offset = 0) {
-  return clipboard.filter(o => has(source, o))
+export function createClonedElements(source, ids, offset = 0) {
+  return ids.filter(o => has(source, o))
     .reduce((acc, current) => {
       const accCopy = acc;
-      const newElem = cloneElement(current,
-                                   source[current],
-                                   source,
-                                   offset);
+      const newElem = cloneElement(source[current], offset);
       accCopy[newElem.uuid] = newElem;
       return accCopy;
     }, {});
@@ -63,10 +59,10 @@ export function pasteClipboard() {
   const offset = constants.COPY_PASTE_OFFSET;
 
   // the pasted shapes
-  const clipboardShapes = createPastedClipboard(shapes, this.clipboard, offset);
+  const clipboardShapes = createClonedElements(shapes, this.clipboard, offset);
 
   // the pasted texts
-  const clipboardTexts = createPastedClipboard(texts, this.clipboard, offset);
+  const clipboardTexts = createClonedElements(texts, this.clipboard, offset);
 
   // the newly pasted element ids
   const newSelectedItems = [...Object.keys(clipboardShapes), ...Object.keys(clipboardTexts)];
@@ -110,9 +106,17 @@ export function pasteClipboard() {
  * @param {Array} selectedItems The ids of the elements that will be copied
  */
 export function copySelectedItems(selectedItems = this.state.selectedItems) {
-  const newSelectedItems = [];
-  selectedItems.forEach(o => newSelectedItems.push(this.copySvgItem(o)));
+  const { shapes, texts } = this.state;
+
+  const newShapes = createClonedElements(shapes, selectedItems);
+  const newTexts = createClonedElements(texts, selectedItems);
+
+  const newSelectedItems = [...Object.keys(newShapes), ...Object.keys(newTexts)];
 
   this.selectedItemsCopied = true;
-  this.setState({ selectedItems: newSelectedItems });
+  this.setState({
+    shapes: Object.assign(shapes, newShapes),
+    texts: Object.assign(texts, newTexts),
+    selectedItems: newSelectedItems,
+  });
 }

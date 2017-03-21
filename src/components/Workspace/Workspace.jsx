@@ -52,7 +52,6 @@ import {
   renderSelectionRect } from './helpers/selection';
 
 import {
-  copySvgItem,
   computeSvgPath,
   dragItems,
   arePointsFeedable,
@@ -88,7 +87,6 @@ class Workspace extends Component {
 
     // svg
     this.deleteSvgItem = deleteSvgItem.bind(this);
-    this.copySvgItem = copySvgItem.bind(this);
     this.computeSvgPath = computeSvgPath.bind(this);
     this.arePointsFeedable = arePointsFeedable.bind(this);
     this.dragItems = dragItems.bind(this);
