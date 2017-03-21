@@ -16,12 +16,7 @@ const initialState = {
   selectedPage: null,
   prototypes: {},
   workspace: {
-    currentPos: {
-      x: 0,
-      y: 0,
-    },
     drawColor: '#000000',
-    menuHidden: true,
     action: null,
     actionValue: null,
   },

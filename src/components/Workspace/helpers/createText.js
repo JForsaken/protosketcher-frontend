@@ -8,12 +8,11 @@ export function createText() {
   // Only create a text if it is not empty
   if (value) {
     const uuid = uuidV1();
-    const { currentPos } = this.props.application.workspace;
 
     const text = {
       content: value,
-      x: currentPos.x,
-      y: currentPos.y + constants.paths.TEXT_OFFSET_Y,
+      x: this.currentPos.x,
+      y: this.currentPos.y + constants.paths.TEXT_OFFSET_Y,
       fontSize: this.state.fontSize,
       uuid,
     };

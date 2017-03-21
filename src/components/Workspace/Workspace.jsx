@@ -3,14 +3,14 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { isEmpty } from 'lodash';
+import { isEmpty, has } from 'lodash';
+
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
 import absorbEvent from '../../utils/events';
 
 /* Components */
 import Footer from '../common/Footer/Footer';
-import RadialMenu from '../common/RadialMenu/RadialMenu';
 import Shape from './Shape/Shape';
 import Text from './Text/Text';
 
@@ -41,13 +41,15 @@ import {
 
 import {
   toggleMenu,
-  doAction } from './helpers/menu';
+  doAction,
+  renderRadialMenu } from './helpers/menu';
 
 import {
   getCentralPointOfSelection,
   monoSelect,
   multiSelect,
-  updateSelectionOriginalPosition } from './helpers/selection';
+  updateSelectionOriginalPosition,
+  renderSelectionRect } from './helpers/selection';
 
 import {
   copySvgItem,
@@ -63,18 +65,6 @@ import {
   onMovingEvent,
   onKeyDownEvent } from './helpers/events';
 
-const menuItems = [
-  constants.menuItems.CHANGE_COLOR,
-  constants.menuItems.ADD_TEXT,
-  constants.menuItems.SELECT_AREA,
-];
-
-const selectionMenuItems = [
-  constants.menuItems.DRAG_SELECTION,
-  constants.menuItems.COPY_SELECTION,
-  constants.menuItems.DELETE_SELECTION,
-];
-
 class Workspace extends Component {
 
   constructor(props, context) {
@@ -83,6 +73,7 @@ class Workspace extends Component {
     // menu
     this.toggleMenu = toggleMenu.bind(this);
     this.doAction = doAction.bind(this);
+    this.renderRadialMenu = renderRadialMenu.bind(this);
 
     // events
     this.onStartingEvent = onStartingEvent.bind(this);
@@ -107,13 +98,16 @@ class Workspace extends Component {
     this.getCentralPointOfSelection = getCentralPointOfSelection.bind(this);
     this.monoSelect = monoSelect.bind(this);
     this.multiSelect = multiSelect.bind(this);
+    this.renderSelectionRect = renderSelectionRect.bind(this);
 
     // Helpers
     this.changeColor = changeColor.bind(this);
     this.createText = addText.bind(this);
     this.createShape = addShape.bind(this);
 
+    // Workspace
     this.getRealId = this.getRealId.bind(this);
+    this.renderItemSettings = this.renderItemSettings.bind(this);
 
     const { prototypes, selectedPrototype, selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
@@ -149,6 +143,10 @@ class Workspace extends Component {
     this.copiedItesmsInit = false;
     this.clipboard = [];
     this.centralSelectionPoint = null;
+    this.currentPos = {
+      x: 0,
+      y: 0,
+    };
   }
 
   componentDidMount() {
@@ -276,6 +274,11 @@ class Workspace extends Component {
     }
   }
 
+  /**
+   * Returns the uuid of the item does not exists in the DB, or the DB's id if it exists
+   * @param  {uuid} uuid The uuid of the item to check
+   * @return {uuid}      The correct uuid to use for this item's call to the DB
+   */
   getRealId(uuid) {
     const items = {
       ...this.state.shapes,
@@ -300,9 +303,22 @@ class Workspace extends Component {
     this.selectionRadialMenuEl = el;
   }
 
+  renderItemSettings() {
+    const { shapes, texts, selectedItems } = this.state;
+    const id = selectedItems[0];
+
+    // Text item
+    if (has(texts, id)) {
+    }
+
+    // Shape item
+    else if (has(shapes, id)) {
+      // const shapeType = this.props.api.getShapeTypes.shapeTypes[shapes[id].shapeTypeId];
+    }
+  }
+
   /* Rendering */
   renderWorkspace() {
-    const { workspace } = this.props.application;
     if (this.state.shapes && this.state.texts) {
       return (
         <div
@@ -317,16 +333,7 @@ class Workspace extends Component {
           onTouchCancel={absorbEvent}
           onContextMenu={absorbEvent}
         >
-          <RadialMenu
-            items={menuItems}
-            offset={Math.PI / 4}
-            onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
-          />
-          <RadialMenu
-            items={selectionMenuItems}
-            offset={Math.PI / 4}
-            onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
-          />
+        {this.state.showMenu && this.renderRadialMenu(this.currentPos)}
           <svg height="100%" width="100%">
             <filter id="dropshadow" height="130%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
@@ -339,8 +346,8 @@ class Workspace extends Component {
             {
               this.state.currentMode === constants.modes.TEXT &&
                 <foreignObject
-                  x={workspace.currentPos.x}
-                  y={workspace.currentPos.y}
+                  x={this.currentPos.x}
+                  y={this.currentPos.y}
                 >
                   <input
                     id="textEdit"
@@ -386,20 +393,7 @@ class Workspace extends Component {
                     ${this.state.currentPath.position.y})`}
               />
             }
-            {this.state.selectingRect !== null &&
-              <path
-                className="workspace-line"
-                d={`M${this.state.selectingRect.x} ${this.state.selectingRect.y}
-                  L${this.state.selectingRect.x}
-                  ${this.state.selectingRect.y + this.state.selectingRect.height}
-                  L${this.state.selectingRect.x + this.state.selectingRect.width}
-                  ${this.state.selectingRect.y + this.state.selectingRect.height}
-                  L${this.state.selectingRect.x + this.state.selectingRect.width}
-                  ${this.state.selectingRect.y} Z`}
-                stroke="black"
-                strokeDasharray="5, 5"
-              />
-            }
+            {this.state.selectingRect && this.renderSelectionRect()}
           </svg>
         </div>
       );

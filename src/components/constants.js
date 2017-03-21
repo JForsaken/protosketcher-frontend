@@ -1,11 +1,12 @@
-import iconPalette from '../../assets/images/icons/palette.png';
+import iconPalette from '../../assets/images/icons/palette.svg';
 import iconSelect from '../../assets/images/icons/select-area.svg';
-import iconText from '../../assets/images/icons/text-fields.png';
+import iconText from '../../assets/images/icons/text-fields.svg';
 import dragSelection from '../../assets/images/icons/drag-selection.svg';
 import copySelection from '../../assets/images/icons/copy-selection.svg';
 import deleteSelection from '../../assets/images/icons/delete-selection.svg';
+import settings from '../../assets/images/icons/settings.svg';
 
-import { red500, blue500, green500, black } from 'material-ui/styles/colors';
+import { red500, blue500, green500, yellow500, pink500, black } from 'material-ui/styles/colors';
 
 /* Sizes */
 export const TOP_MENU_HEIGHT = 50;
@@ -51,7 +52,7 @@ export const COPY_PASTE_OFFSET = 20;
 export const menuItems = {
   CHANGE_COLOR: {
     action: 'changeColor',
-    color: red500,
+    color: pink500,
     icon: iconPalette,
     items: [
       {
@@ -87,14 +88,14 @@ export const menuItems = {
   },
   DRAG_SELECTION: {
     action: 'dragSelection',
-    color: green500,
+    color: blue500,
     flex: 2,
     icon: dragSelection,
     items: [],
   },
   COPY_SELECTION: {
     action: 'copySelection',
-    color: blue500,
+    color: green500,
     icon: copySelection,
     items: [],
   },
@@ -102,6 +103,12 @@ export const menuItems = {
     action: 'deleteSelection',
     color: red500,
     icon: deleteSelection,
+    items: [],
+  },
+  SETTINGS: {
+    action: 'editSettings',
+    color: yellow500,
+    icon: settings,
     items: [],
   },
 };

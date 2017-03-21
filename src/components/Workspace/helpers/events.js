@@ -22,21 +22,17 @@ export function onStartingEvent(e) {
   }
 
   const point = this.getPointFromEvent(e, constants.events.TOUCH_START);
-  this.props.actions.updateWorkspace({
-    currentPos: {
-      x: point.x,
-      y: point.y,
-    },
-  });
+  this.currentPos = point;
 
   // Right mouse press
   if (e.type === constants.events.MOUSE_DOWN
       && e.nativeEvent.which === constants.keys.MOUSE_RIGHT) {
-    this.toggleMenu(true, point);
+    this.toggleMenu(true);
   }
 
   // Left mouse press
   else {
+    this.currentPos = point;
     // Set timer for menu
     this.touchTimer = setTimeout(() => this.toggleMenu(true), 500);
 
@@ -150,14 +146,13 @@ export function onMovingEvent(e) {
     y: pointer.clientY - constants.TOP_MENU_HEIGHT,
   };
 
-  const { currentPos } = this.props.application.workspace;
   // Determine if we draw or wait for the menu
   if (this.menuPending === true) {
     let deltaX = 0;
     let deltaY = 0;
 
-    deltaX = Math.abs(point.x - currentPos.x);
-    deltaY = Math.abs(point.y - currentPos.y);
+    deltaX = Math.abs(point.x - this.currentPos.x);
+    deltaY = Math.abs(point.y - this.currentPos.y);
 
     // Add error margin for small moves
     if (deltaX > MAX_TOUCH_DISTANCE || deltaY > MAX_TOUCH_DISTANCE) {
@@ -184,10 +179,10 @@ export function onMovingEvent(e) {
     // Selecting
     this.setState({
       selectingRect: {
-        x: currentPos.x,
-        y: currentPos.y,
-        width: point.x - currentPos.x,
-        height: point.y - currentPos.y,
+        x: this.currentPos.x,
+        y: this.currentPos.y,
+        width: point.x - this.currentPos.x,
+        height: point.y - this.currentPos.y,
       },
     });
   }
