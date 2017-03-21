@@ -18,10 +18,10 @@
   background-color: color('background', 'light');
   position: relative;
   margin: 0 auto;
-  border: 1px solid color('foreground');
   @include rounded-equal(2px);
   width: 0;
   height: 0;
+  @include box-shadow(0px, 0px, 15px, #000);
 
   &.desktop {
     width: $page-width;

@@ -1,8 +1,31 @@
 /* Node modules */
-import { has } from 'lodash';
+import React from 'react';
+import { has, clone } from 'lodash';
+
+/* Components */
+import RadialMenu from '../../common/RadialMenu/RadialMenu';
 
 /* Constants */
 import * as constants from '../../constants';
+
+const menuItems = [
+  constants.menuItems.CHANGE_COLOR,
+  constants.menuItems.ADD_TEXT,
+  constants.menuItems.SELECT_AREA,
+];
+
+const selectionMenuItems = [
+  Object.assign(clone(constants.menuItems.DRAG_SELECTION), { flex: 1 }),
+  constants.menuItems.SETTINGS,
+  constants.menuItems.COPY_SELECTION,
+  constants.menuItems.DELETE_SELECTION,
+];
+
+const multiSelectionMenuItems = [
+  constants.menuItems.DRAG_SELECTION,
+  constants.menuItems.COPY_SELECTION,
+  constants.menuItems.DELETE_SELECTION,
+];
 
 
 /**
@@ -10,25 +33,7 @@ import * as constants from '../../constants';
  * @param {Boolean} state Is true if visible
  * @param {Object} point First argument of params, the point where it will be displayed
  */
-export function toggleMenu(state, ...params) {
-  let menu = null;
-  menu = this.state.selectedItems.length > 0 ? this.selectionRadialMenuEl : this.radialMenuEl;
-  let point;
-  if (params.length) {
-    point = params[0];
-  } else {
-    point = {
-      x: this.props.application.workspace.currentPos.x,
-      y: this.props.application.workspace.currentPos.y,
-    };
-  }
-
-  if (state) {
-    menu.style.left = point.x - constants.RADIAL_MENU_SIZE;
-    menu.style.top = point.y - constants.RADIAL_MENU_SIZE;
-  } else {
-    menu.style.left = -9999;
-  }
+export function toggleMenu(state) {
   this.menuPending = false;
   if (this.state.currentPath) {
     this.setState({
@@ -114,4 +119,49 @@ export function doAction(point) {
     }
     default:
   }
+}
+
+/**
+ * Render the correct radial menu depending on the selected items
+ * @return {html} The html code of the rendered radial menu
+ */
+export function renderRadialMenu(currentPos) {
+  const length = this.state.selectedItems.length;
+
+  // General menu when no items are selected
+  if (length === 0) {
+    return (
+      <RadialMenu
+        items={menuItems}
+        offset={Math.PI / 4}
+        onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
+        x={currentPos.x}
+        y={currentPos.y}
+      />
+    );
+  }
+
+  // Menu with settings when only one item is selected
+  else if (length === 1) {
+    return (
+      <RadialMenu
+        items={selectionMenuItems}
+        offset={Math.PI / 4}
+        onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
+        x={currentPos.x}
+        y={currentPos.y}
+      />
+    );
+  }
+
+  // General menu for multiple selection
+  return (
+    <RadialMenu
+      items={multiSelectionMenuItems}
+      offset={Math.PI / 4}
+      onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
+      x={currentPos.x}
+      y={currentPos.y}
+    />
+  );
 }

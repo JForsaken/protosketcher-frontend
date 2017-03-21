@@ -1,4 +1,5 @@
 /* Node modules */
+import React from 'react';
 import { has } from 'lodash';
 
 /**
@@ -87,12 +88,10 @@ export function monoSelect(uuid) {
  * @param {Object} pointerPos The position of the cursor on ending event of the cursor
  */
 export function multiSelect(pointerPos) {
-  const { currentPos } = this.props.application.workspace;
-
-  const selectRectRight = pointerPos.x < currentPos.x ? currentPos.x : pointerPos.x;
-  const selectRectLeft = pointerPos.x > currentPos.x ? currentPos.x : pointerPos.x;
-  const selectRectTop = pointerPos.y > currentPos.y ? currentPos.y : pointerPos.y;
-  const selectRectBottom = pointerPos.y < currentPos.y ? currentPos.y : pointerPos.y;
+  const selectRectRight = pointerPos.x < this.currentPos.x ? this.currentPos.x : pointerPos.x;
+  const selectRectLeft = pointerPos.x > this.currentPos.x ? this.currentPos.x : pointerPos.x;
+  const selectRectTop = pointerPos.y > this.currentPos.y ? this.currentPos.y : pointerPos.y;
+  const selectRectBottom = pointerPos.y < this.currentPos.y ? this.currentPos.y : pointerPos.y;
 
   // const svgPool = { ...this.svgShapes, ...this.svgTexts };
 
@@ -125,4 +124,19 @@ export function multiSelect(pointerPos) {
     shapes: items.shapes,
     texts: items.texts,
   });
+}
+
+export function renderSelectionRect() {
+  const { selectingRect } = this.state;
+  return (
+    <path
+      className="workspace-line"
+      d={`M${selectingRect.x} ${selectingRect.y}
+      L${selectingRect.x} ${selectingRect.y + selectingRect.height}
+      L${selectingRect.x + selectingRect.width} ${selectingRect.y + selectingRect.height}
+      L${selectingRect.x + selectingRect.width} ${selectingRect.y} Z`}
+      stroke="black"
+      strokeDasharray="5, 5"
+    />
+  );
 }
