@@ -13,6 +13,7 @@ import absorbEvent from '../../utils/events';
 import Footer from '../common/Footer/Footer';
 import Shape from './Shape/Shape';
 import Text from './Text/Text';
+import SideMenu from './SideMenu/SideMenu';
 
 /* Actions */
 import {
@@ -434,6 +435,7 @@ class Workspace extends Component {
         tabIndex="0"
         onKeyDown={this.onKeyDownEvent}
       >
+        <SideMenu />
         {this.renderWorkspace()}
         <Footer pages={this.state.pages || {}} selectedPage={this.state.currentPageId || ''} />
       </div>
