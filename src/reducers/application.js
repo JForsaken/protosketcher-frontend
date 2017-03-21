@@ -2,7 +2,8 @@
 
 import * as constants from '../actions/constants';
 import createReducer from '../utils/create-reducer';
-import { has, isEmpty, omit, merge } from 'lodash';
+import { has, isEmpty, omit, cloneDeep } from 'lodash';
+import { cloneMerge } from '../utils/collections';
 
 const initialState = {
   locale: 'en',
@@ -39,13 +40,11 @@ function onGetPrototypes(state, action) {
     return copy;
   }, {});
 
-  merge(state, {
+  return cloneMerge(state, {
     prototypes: {
       ...dict,
     },
   });
-
-  return state;
 }
 
 function onCreatePrototype(state, action) {
@@ -53,13 +52,11 @@ function onCreatePrototype(state, action) {
     return { ...state };
   }
 
-  merge(state, {
+  return cloneMerge(state, {
     prototypes: {
       [action.prototype.id]: omit(action.prototype, ['user', 'id']),
     },
   });
-
-  return state;
 }
 
 function onDeletePrototype(state, action) {
@@ -67,7 +64,7 @@ function onDeletePrototype(state, action) {
     return { ...state };
   }
 
-  const data = state;
+  const data = cloneDeep(state);
   delete data.prototypes[action.prototypeId];
 
   return data;
@@ -88,7 +85,7 @@ function onGetPages(state, action) {
     return copy;
   }, {});
 
-  merge(state, {
+  return cloneMerge(state, {
     prototypes: {
       [action.requestedPrototype]: {
         pages: {
@@ -97,8 +94,6 @@ function onGetPages(state, action) {
       },
     },
   });
-
-  return state;
 }
 
 function onCreatePage(state, action) {
@@ -106,7 +101,7 @@ function onCreatePage(state, action) {
     return { ...state };
   }
 
-  merge(state, {
+  return cloneMerge(state, {
     prototypes: {
       [action.requestedPrototype]: {
         pages: {
@@ -115,8 +110,6 @@ function onCreatePage(state, action) {
       },
     },
   });
-
-  return state;
 }
 
 function onPatchPage(state, action) {
@@ -124,7 +117,7 @@ function onPatchPage(state, action) {
     return { ...state };
   }
 
-  merge(state, {
+  return cloneMerge(state, {
     prototypes: {
       [action.requestedPrototype]: {
         pages: {
@@ -133,8 +126,6 @@ function onPatchPage(state, action) {
       },
     },
   });
-
-  return state;
 }
 
 function onDeletePage(state, action) {
@@ -142,7 +133,7 @@ function onDeletePage(state, action) {
     return { ...state };
   }
 
-  const data = state;
+  const data = cloneDeep(state);
   delete data.prototypes[action.requestedPrototype].pages[action.page.id];
 
   return data;
@@ -154,7 +145,7 @@ function onGetShapes(state, action) {
   }
 
   if (isEmpty(action.shapes)) {
-    merge(state, {
+    return cloneMerge(state, {
       prototypes: {
         [action.requestedPrototype]: {
           pages: {
@@ -165,53 +156,51 @@ function onGetShapes(state, action) {
         },
       },
     });
-  } else {
-    const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
+  }
 
-    const dict = action.shapes.reduce((accShapes, curShape) => {
-      const accumulatedShapes = accShapes;
-      const currentShape = curShape;
+  const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
 
-      if (!page.shapes || !page[currentShape.id]) {
-        // clean controls
-        currentShape.controls = currentShape.controls.reduce((accCtrls, curCtrl) => {
-          const accumulatedCtrls = accCtrls;
-          const currentCtrl = curCtrl;
+  const dict = action.shapes.reduce((accShapes, curShape) => {
+    const accumulatedShapes = accShapes;
+    const currentShape = curShape;
 
-          if (has(currentCtrl, '_id')) {
-            currentCtrl.id = currentCtrl._id;
-            delete currentCtrl._id;
-          }
-          if (has(currentCtrl, '__v')) {
-            delete currentCtrl.__v;
-          }
+    if (!page.shapes || !page[currentShape.id]) {
+      // clean controls
+      currentShape.controls = currentShape.controls.reduce((accCtrls, curCtrl) => {
+        const accumulatedCtrls = accCtrls;
+        const currentCtrl = curCtrl;
 
-          accumulatedCtrls[currentCtrl.id] = omit(currentCtrl, ['id', 'shapeId']);
-          return accumulatedCtrls;
-        }, {});
+        if (has(currentCtrl, '_id')) {
+          currentCtrl.id = currentCtrl._id;
+          delete currentCtrl._id;
+        }
+        if (has(currentCtrl, '__v')) {
+          delete currentCtrl.__v;
+        }
 
-        accumulatedShapes[currentShape.id] = omit(currentShape, ['id', 'pageId']);
-      }
+        accumulatedCtrls[currentCtrl.id] = omit(currentCtrl, ['id', 'shapeId']);
+        return accumulatedCtrls;
+      }, {});
 
-      return accumulatedShapes;
-    }, {});
+      accumulatedShapes[currentShape.id] = omit(currentShape, ['id', 'pageId']);
+    }
 
-    merge(state, {
-      prototypes: {
-        [action.requestedPrototype]: {
-          pages: {
-            [action.requestedPage]: {
-              shapes: {
-                ...dict,
-              },
+    return accumulatedShapes;
+  }, {});
+
+  return cloneMerge(state, {
+    prototypes: {
+      [action.requestedPrototype]: {
+        pages: {
+          [action.requestedPage]: {
+            shapes: {
+              ...dict,
             },
           },
         },
       },
-    });
-  }
-
-  return state;
+    },
+  });
 }
 
 function onCreateShape(state, action) {
@@ -223,7 +212,7 @@ function onCreateShape(state, action) {
   const shapes = omit(page.shapes, action.shape.uuid);
   action.shape.controls = {};
 
-  merge(state, {
+  return cloneMerge(state, {
     prototypes: {
       [action.requestedPrototype]: {
         pages: {
@@ -237,8 +226,6 @@ function onCreateShape(state, action) {
       },
     },
   });
-
-  return state;
 }
 
 function onPatchShape(state, action) {
@@ -246,7 +233,7 @@ function onPatchShape(state, action) {
     return { ...state };
   }
 
-  merge(state, {
+  return cloneMerge(state, {
     prototypes: {
       [action.requestedPrototype]: {
         pages: {
@@ -259,8 +246,6 @@ function onPatchShape(state, action) {
       },
     },
   });
-
-  return state;
 }
 
 function onDeleteShape(state, action) {
@@ -268,7 +253,7 @@ function onDeleteShape(state, action) {
     return { ...state };
   }
 
-  const data = state;
+  const data = cloneDeep(state);
   const { requestedPrototype, requestedPage, shape } = action;
   delete data.prototypes[requestedPrototype].pages[requestedPage].shapes[shape.id];
 
@@ -281,7 +266,7 @@ function onGetTexts(state, action) {
   }
 
   if (isEmpty(action.texts)) {
-    merge(state, {
+    return cloneMerge(state, {
       prototypes: {
         [action.requestedPrototype]: {
           pages: {
@@ -292,33 +277,31 @@ function onGetTexts(state, action) {
         },
       },
     });
-  } else {
-    const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
+  }
 
-    const dict = action.texts.reduce((acc, current) => {
-      const copy = acc;
-      if (!page.texts || !page[current.id]) {
-        copy[current.id] = omit(current, ['id', 'pageId']);
-      }
-      return copy;
-    }, {});
+  const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
 
-    merge(state, {
-      prototypes: {
-        [action.requestedPrototype]: {
-          pages: {
-            [action.requestedPage]: {
-              texts: {
-                ...dict,
-              },
+  const dict = action.texts.reduce((acc, current) => {
+    const copy = acc;
+    if (!page.texts || !page[current.id]) {
+      copy[current.id] = omit(current, ['id', 'pageId']);
+    }
+    return copy;
+  }, {});
+
+  return cloneMerge(state, {
+    prototypes: {
+      [action.requestedPrototype]: {
+        pages: {
+          [action.requestedPage]: {
+            texts: {
+              ...dict,
             },
           },
         },
       },
-    });
-  }
-
-  return state;
+    },
+  });
 }
 
 function onCreateText(state, action) {
@@ -329,7 +312,7 @@ function onCreateText(state, action) {
   const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
   const texts = omit(page.texts, action.text.uuid);
 
-  merge(state, {
+  return cloneMerge(state, {
     prototypes: {
       [action.requestedPrototype]: {
         pages: {
@@ -343,8 +326,6 @@ function onCreateText(state, action) {
       },
     },
   });
-
-  return state;
 }
 
 function onPatchText(state, action) {
@@ -352,7 +333,7 @@ function onPatchText(state, action) {
     return { ...state };
   }
 
-  merge(state, {
+  return cloneDeep(state, {
     prototypes: {
       [action.requestedPrototype]: {
         pages: {
@@ -365,8 +346,6 @@ function onPatchText(state, action) {
       },
     },
   });
-
-  return state;
 }
 
 function onDeleteText(state, action) {
@@ -374,7 +353,7 @@ function onDeleteText(state, action) {
     return { ...state };
   }
 
-  const data = state;
+  const data = cloneDeep(state);
   const { requestedPrototype, requestedPage, text } = action;
   delete data.prototypes[requestedPrototype].pages[requestedPage].texts[text.id];
 
