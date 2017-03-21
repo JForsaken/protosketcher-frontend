@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import classNames from 'classnames';
 
 /* Actions */
 import { updateWorkspace } from '../../../actions/application';
@@ -14,15 +15,6 @@ class Text extends Component {
     posY: PropTypes.number.isRequired,
     onLoad: PropTypes.func,
   }
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      hovered: false,
-    };
-  }
-
 
   componentDidMount() {
     const { onLoad, id } = this.props;
@@ -39,22 +31,23 @@ class Text extends Component {
     }
   }
 
-  render() {
-    let classNames = 'workspace-text';
-    if (this.props.selected) {
-      classNames += ' workspace-text-selected';
-    }
-    if (this.state.hovered) {
-      classNames += ' workspace-text-hovered';
-    }
+  hoverShape() {
+    this.setState({
+      hovered: true,
+    });
+  }
 
+  render() {
     return (
       <text
         id={this.props.id}
         ref={svgText => (this.svgText = svgText)}
         onMouseDown={() => this.selectText()}
         onTouchStart={() => this.selectText()}
-        className={classNames}
+        className={classNames({
+          'workspace-text': true,
+          'workspace-text-selected': this.props.selected,
+        })}
         transform={`translate(${this.props.posX} ${this.props.posY})`}
         style={{ fontSize: this.props.size }}
       >
