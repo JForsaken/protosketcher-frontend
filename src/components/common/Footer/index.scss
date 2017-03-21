@@ -18,7 +18,7 @@ footer#footer {
     .tabs-container {
       position: absolute;
       left: 0;
-      right: 94px;
+      right: 60px;
       overflow: auto;
       overflow-y: hidden;
       height: $add-page-button-size - 6px;
@@ -62,6 +62,8 @@ footer#footer {
     }
 
     .addPageMenu {
+      left: 37px !important;
+
       div {
         border-radius: 2px !important;
 

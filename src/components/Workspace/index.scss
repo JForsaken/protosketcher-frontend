@@ -70,18 +70,6 @@
   }
 }
 
-.workspace-line {
-  fill: none;
-  stroke-width: 3;
-  cursor: pointer;
-}
-
-.workspace-line-selected {
-  fill: none;
-  stroke-width: 3;
-  filter: url(#dropshadow);
-}
-
 .workspace-text-selected {
   filter: url(#dropshadow);
 }

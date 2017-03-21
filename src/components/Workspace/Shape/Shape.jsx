@@ -16,6 +16,14 @@ class Shape extends Component {
     onLoad: PropTypes.func,
   };
 
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      hovered: false,
+    };
+  }
+
   componentDidMount() {
     const { onLoad, id } = this.props;
 
@@ -31,17 +39,47 @@ class Shape extends Component {
     }
   }
 
+  hoverShape() {
+    this.setState({
+      hovered: true,
+    });
+  }
+
+  leaveShape() {
+    this.setState({
+      hovered: false,
+    });
+  }
+
   render() {
+    let classNames = 'workspace-line';
+    if (this.props.selected) {
+      classNames += ' workspace-line-selected';
+    }
+    if (this.state.hovered) {
+      classNames += ' workspace-line-hovered';
+    }
+
     return (
-      <path
-        id={this.props.id}
-        ref={svgShape => (this.svgShape = svgShape)}
-        onMouseDown={() => this.selectShape()}
-        className={this.props.selected ? 'workspace-line-selected' : 'workspace-line'}
-        d={this.props.path}
-        stroke={this.props.color}
-        transform={`translate(${this.props.posX} ${this.props.posY})`}
-      />
+      <g className="path-container">
+        <path
+          id={this.props.id}
+          ref={svgShape => (this.svgShape = svgShape)}
+          className={classNames}
+          d={this.props.path}
+          stroke={this.props.color}
+          transform={`translate(${this.props.posX} ${this.props.posY})`}
+        />
+        <path
+          onMouseDown={() => this.selectShape()}
+          onMouseOver={() => this.hoverShape()}
+          onMouseLeave={() => this.leaveShape()}
+          className="workspace-line line-padding"
+          d={this.props.path}
+          stroke="transparent"
+          transform={`translate(${this.props.posX} ${this.props.posY})`}
+        />
+      </g>
     );
   }
 }

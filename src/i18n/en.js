@@ -45,7 +45,7 @@ export default {
   'hud.saving': 'Saving...',
 
   // MENU
-  'menu.backToPrototypes': 'Back to prototypes',
+  'menu.backToPrototypes': 'Back',
   'menu.simulation': 'Simulation',
   'menu.backToEdit': 'Back to edit mode',
   'menu.save': 'Save',
