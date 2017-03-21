@@ -72,8 +72,15 @@ class HomePage extends Component {
       );
     }
 
-    // TODO: show loading maybe instead of nothing
-    return null;
+    return (
+      <div>
+        <div className="backdrop"></div>
+        <div className="loading">
+          <FormattedMessage id="workspace.loading" />
+          <div className="spinner" />
+        </div>
+      </div>
+    );
   }
 
   render() {
