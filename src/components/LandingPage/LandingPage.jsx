@@ -5,6 +5,8 @@ import React, { Component, PropTypes } from 'react';
 import Menu from '../common/Menu/Menu';
 import Slideshow from './Slideshow/Slideshow';
 import Content from './Content/Content';
+import LandingMenu from './LandingMenu/LandingMenu';
+import ParallaxContainer from './ParallaxContainer/ParallaxContainer';
 
 
 export default class LandingPage extends Component {
@@ -16,9 +18,9 @@ export default class LandingPage extends Component {
     return (
       <div className="landing-page">
         <Menu router={this.props.router} />
-        <div className="container page-container">
-          <Slideshow />
-          <Content />
+        <LandingMenu />
+        <div className="page-container">
+          <ParallaxContainer />
         </div>
       </div>
     );

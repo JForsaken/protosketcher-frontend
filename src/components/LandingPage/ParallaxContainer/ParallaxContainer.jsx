@@ -29,6 +29,12 @@ export default class ParallaxContainer extends Component {
             for making user interface
             prototypes easily in an agile development context and it starts right here with you!
           </h1>
+          <div className="button">
+            <p className="btnText">READY?</p>
+            <div className="btnTwo">
+              <p className="btnText2">SIGN UP!</p>
+            </div>
+          </div>
         </Parallax>
         <Parallax className="parallax-content" bgImage={radialMenuParallax} strength={400}>
           <br />
@@ -42,7 +48,7 @@ export default class ParallaxContainer extends Component {
         </Parallax>
         <Parallax className="parallax-content" bgImage={mountainParallax} strength={400}>
           <br />
-          <h1 className="parallax-white-text"> Demonstrating UI to your customer in
+          <h1 className="parallax-white-text"> Demonstrating UI to your clients in
             early development phases has never been easier.
           </h1>
         </Parallax>
@@ -51,6 +57,12 @@ export default class ParallaxContainer extends Component {
           <h1 className="parallax-white-text"> Stop wondering if it can help you or not and jump
             into a pure experience of UI conception!
           </h1>
+          <div className="button">
+            <p className="btnText">DO IT!</p>
+            <div className="btnTwo">
+              <p className="btnText2">JUST DO IT!!!</p>
+            </div>
+          </div>
         </Parallax>
       </div>
     );

@@ -1,7 +1,6 @@
 /* Node modules */
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import ParallaxContainer from '../ParallaxContainer/ParallaxContainer';
 import Scroll from 'react-scroll';
 
 const Element = Scroll.Element;
@@ -55,7 +54,6 @@ export default class Content extends Component {
             Vestibulum sit amet nulla risus.
           </p>
         </div>
-        <ParallaxContainer />
       </div>
     );
   }
