@@ -31,12 +31,6 @@ class Text extends Component {
     }
   }
 
-  hoverShape() {
-    this.setState({
-      hovered: true,
-    });
-  }
-
   render() {
     return (
       <text
