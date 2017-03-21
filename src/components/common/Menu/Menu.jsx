@@ -191,15 +191,20 @@ class Menu extends Component {
                 <MenuListItem
                   {...item}
                   key={i}
-                  /* Constants */
-                  // TODO check why this is there
-                  // import onClick={this.state.expanded ? this.toggleNav : null}
+                  onClick={this.state.expanded ? this.toggleNav : null}
                 />)
             }
           </Nav>
           {this.renderPrototypeName()}
           <Nav pullRight>
-            <NavItem onClick={this.handleSwitchLocale}>
+            <NavItem
+              onClick={() => {
+                this.handleSwitchLocale();
+                if (this.state.expanded) {
+                  this.toggleNav();
+                }
+              }}
+            >
               {otherLocale.toUpperCase()}
             </NavItem>
             <NavItem
