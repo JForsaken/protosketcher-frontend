@@ -141,7 +141,8 @@ class Workspace extends Component {
 
     this.selectedItemsCopied = false;
     this.copiedItesmsInit = false;
-    this.clipboard = [];
+    this.shapesClipboard = {};
+    this.textsClipboard = {};
     this.centralSelectionPoint = null;
     this.currentPos = {
       x: 0,

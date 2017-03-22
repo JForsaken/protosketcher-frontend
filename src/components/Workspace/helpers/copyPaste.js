@@ -14,7 +14,14 @@ import * as constants from '../../constants';
  * @param {Number} offset The offset where the element will be offsetted compared the the original
  * @returns {Object} The cloned element
  */
-export function cloneElement(element, offset = 0) {
+export function cloneElement(
+  element,
+  offset = 0,
+  newPosition = {
+    x: element.x,
+    y: element.y,
+  }
+) {
   return {
     ...omit(clone(element), [
       'parentId',
@@ -22,11 +29,11 @@ export function cloneElement(element, offset = 0) {
       'controls',
     ]),
     uuid: uuidV1(),
-    x: element.x + offset,
-    y: element.y + offset,
+    x: newPosition.x + offset,
+    y: newPosition.y + offset,
     originalPositionBeforeDrag: {
-      x: element.originalPositionBeforeDrag.x + offset,
-      y: element.originalPositionBeforeDrag.y + offset,
+      x: newPosition.x + offset,
+      y: newPosition.y + offset,
     },
     controls: {},
   };
@@ -40,14 +47,27 @@ export function cloneElement(element, offset = 0) {
  * @param {Number} offset The offset where the element will be offsetted compared the the original
  * @returns {Object} The cloned elements
  */
-export function createClonedElements(source, ids, offset = 0) {
-  return ids.filter(o => has(source, o))
-    .reduce((acc, current) => {
-      const accCopy = acc;
-      const newElem = cloneElement(source[current], offset);
-      accCopy[newElem.uuid] = newElem;
-      return accCopy;
-    }, {});
+export function createClonedElements(
+  source,
+  ids = false,
+  offset = 0,
+  newPosition = false
+) {
+  if (ids) {
+    return ids.filter(o => has(source, o))
+      .reduce((acc, current) => {
+        const accCopy = acc;
+        const newElem = newPosition
+          ? cloneElement(source[current], offset, newPosition)
+          : cloneElement(source[current], offset);
+        accCopy[newElem.uuid] = newElem;
+        return accCopy;
+      }, {});
+  }
+  source.forEach(o => {
+    cloneElement(o, offset, newPosition);
+  });
+  return {};
 }
 
 

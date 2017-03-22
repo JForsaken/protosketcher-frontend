@@ -115,7 +115,8 @@ export function doAction(point) {
     // clear clipboard
       this.selectedItemsCopied = false;
       this.copiedItesmsInit = false;
-      this.clipboard = [];
+      this.shapesClipboard = {};
+      this.textsClipboard = {};
       break;
     }
     default:
