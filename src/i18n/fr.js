@@ -60,6 +60,9 @@ export default {
   // WORKSPACE
   'workspace.loading': "Chargement de l'espace de travail",
 
+  // SIDEMENU
+  'sidemenu.toggle': 'Paramètres des formes',
+
   // SIMULATION
   'simulation.loading': 'Chargement de la simulation',
 

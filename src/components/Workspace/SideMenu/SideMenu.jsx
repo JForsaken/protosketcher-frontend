@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Drawer from 'material-ui/Drawer';
 import { Button } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
+import { FormattedMessage } from 'react-intl';
 
 export default class SideMenu extends Component {
   constructor(props) {
@@ -27,10 +28,11 @@ export default class SideMenu extends Component {
       <div>
         <Drawer open={this.state.isOpen} containerStyle={style}>
           <Button
-            className="drawer-toggle"
+            className="drawer-toggle vertical-text"
             onClick={() => this.handleToggle()}
           >
-            <FontAwesome name="caret-left" />
+            <FontAwesome name="caret-down" />
+            <FormattedMessage id="sidemenu.toggle" />
           </Button>
         </Drawer>
       </div>

@@ -60,6 +60,9 @@ export default {
   // WORKSPACE
   'workspace.loading': 'Loading workspace',
 
+  // SIDEMENU
+  'sidemenu.toggle': 'Shape settings',
+
   // SIMULATION
   'simulation.loading': 'Loading simulation',
 
