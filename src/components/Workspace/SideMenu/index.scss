@@ -1,0 +1,13 @@
+$button-size: 32px;
+
+.drawer-toggle {
+  display: block;
+  width: $button-size;
+  height: $button-size;
+  line-height: $button-size;
+  padding: 0;
+  position: absolute;
+  right: -$button-size;
+  top: 15px;
+  @include rounded-indiv(0, 2px, 0, 2px);
+}

@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { isEmpty, has } from 'lodash';
+import { MuiThemeProvider } from 'material-ui';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -435,7 +436,9 @@ class Workspace extends Component {
         tabIndex="0"
         onKeyDown={this.onKeyDownEvent}
       >
-        <SideMenu />
+        <MuiThemeProvider>
+          <SideMenu />
+        </MuiThemeProvider>
         {this.renderWorkspace()}
         <Footer pages={this.state.pages || {}} selectedPage={this.state.currentPageId || ''} />
       </div>
