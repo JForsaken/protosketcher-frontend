@@ -5,12 +5,13 @@ import { bindActionCreators } from 'redux';
 import { Drawer, SelectField, MenuItem } from 'material-ui';
 import { Button } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { omit, invert, map } from 'lodash';
 
 /* ACTIONS */
 import { getShapeTypes, getActionTypes } from '../../../actions/api';
 
+@injectIntl
 class SideMenu extends Component {
   static propTypes = {
     application: PropTypes.object.isRequired,
@@ -38,7 +39,7 @@ class SideMenu extends Component {
     const { actionTypes } = this.props.api.getActionTypes;
     const { prototypes, selectedPrototype } = this.props.application;
     const prototype = prototypes[selectedPrototype];
-    console.log(prototype.pages);
+
     const menuItemStyle = {
       textTransform: 'capitalize',
     };
@@ -47,7 +48,7 @@ class SideMenu extends Component {
       <div>
         <SelectField
           className="select-type"
-          floatingLabelText="TYPES"
+          floatingLabelText={this.props.intl.messages['sidemenu.typeSelector']}
           fullWidth
         >
           {
@@ -57,7 +58,7 @@ class SideMenu extends Component {
         </SelectField>
         <SelectField
           className="select-control"
-          floatingLabelText="CONTROLS"
+          floatingLabelText={this.props.intl.messages['sidemenu.actionSelector']}
           fullWidth
         >
           {
@@ -67,7 +68,7 @@ class SideMenu extends Component {
         </SelectField>
         <SelectField
           className="select-control"
-          floatingLabelText="PAGES"
+          floatingLabelText={this.props.intl.messages['sidemenu.pageSelector']}
           fullWidth
         >
           {

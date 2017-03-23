@@ -62,6 +62,9 @@ export default {
 
   // SIDEMENU
   'sidemenu.toggle': 'Shape settings',
+  'sidemenu.typeSelector': 'Shape Type',
+  'sidemenu.actionSelector': 'Action Type',
+  'sidemenu.pageSelector': 'Affected Page',
 
   // SIMULATION
   'simulation.loading': 'Loading simulation',

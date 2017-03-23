@@ -62,6 +62,9 @@ export default {
 
   // SIDEMENU
   'sidemenu.toggle': 'Paramètres des formes',
+  'sidemenu.typeSelector': 'Type de forme',
+  'sidemenu.actionSelector': 'Type d\'action',
+  'sidemenu.pageSelector': 'Page affectée',
 
   // SIMULATION
   'simulation.loading': 'Chargement de la simulation',
