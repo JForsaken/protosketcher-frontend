@@ -60,6 +60,22 @@ export default {
   // WORKSPACE
   'workspace.loading': 'Loading workspace',
 
+  // SIDEMENU
+  'sidemenu.toggle': 'Shape settings',
+  'sidemenu.typeSelector': 'Shape Type',
+  'sidemenu.actionSelector': 'Action Type',
+  'sidemenu.pageSelector': 'Affected Page',
+
+  // SHAPE TYPES
+  'line': 'Line',
+  'textbox': 'TextBox',
+  'button': 'Button',
+
+  // ACTION TYPES
+  'show': 'Show',
+  'hide': 'Hide',
+  'changePage': 'Change Page',
+
   // SIMULATION
   'simulation.loading': 'Loading simulation',
 
