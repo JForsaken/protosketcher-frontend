@@ -1,17 +1,21 @@
 /* Node modules */
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Drawer, SelectField, MenuItem } from 'material-ui';
 import { Button } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 import { FormattedMessage } from 'react-intl';
-import { omit, invert } from 'lodash';
+import { omit, invert, map } from 'lodash';
 
 /* ACTIONS */
 import { getShapeTypes, getActionTypes } from '../../../actions/api';
 
 class SideMenu extends Component {
+  static propTypes = {
+    application: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -32,7 +36,9 @@ class SideMenu extends Component {
   renderSettings() {
     const { shapeTypes } = this.props.api.getShapeTypes;
     const { actionTypes } = this.props.api.getActionTypes;
-
+    const { prototypes, selectedPrototype } = this.props.application;
+    const prototype = prototypes[selectedPrototype];
+    console.log(prototype.pages);
     const menuItemStyle = {
       textTransform: 'capitalize',
     };
@@ -57,6 +63,16 @@ class SideMenu extends Component {
           {
             Object.entries(actionTypes).map((item) =>
               <MenuItem style={menuItemStyle} key={item[0]} value={item[0]} primaryText={item[1]} />
+            )}
+        </SelectField>
+        <SelectField
+          className="select-control"
+          floatingLabelText="PAGES"
+          fullWidth
+        >
+          {
+            map(prototype.pages, (page, pageId) =>
+              <MenuItem style={menuItemStyle} key={pageId} value={pageId} primaryText={page.name} />
             )}
         </SelectField>
       </div>
@@ -88,7 +104,7 @@ class SideMenu extends Component {
 }
 
 export default connect(
-  ({ api }) => ({ api }),
+  ({ api, application }) => ({ api, application }),
   dispatch => ({
     actions: bindActionCreators({
       getShapeTypes,
