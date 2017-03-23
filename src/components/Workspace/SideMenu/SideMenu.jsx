@@ -40,10 +40,6 @@ class SideMenu extends Component {
     const { prototypes, selectedPrototype } = this.props.application;
     const prototype = prototypes[selectedPrototype];
 
-    const menuItemStyle = {
-      textTransform: 'capitalize',
-    };
-
     return (
       <div>
         <SelectField
@@ -52,8 +48,12 @@ class SideMenu extends Component {
           fullWidth
         >
           {
-            Object.entries(omit(shapeTypes, [invert(shapeTypes).squiggly])).map((item) =>
-              <MenuItem style={menuItemStyle} key={item[0]} value={item[0]} primaryText={item[1]} />
+            map(omit(shapeTypes, [invert(shapeTypes).squiggly]), (shapeType, typeId) =>
+              <MenuItem
+                key={typeId}
+                value={typeId}
+                primaryText={this.props.intl.messages[shapeType]}
+              />
             )}
         </SelectField>
         <SelectField
@@ -62,8 +62,12 @@ class SideMenu extends Component {
           fullWidth
         >
           {
-            Object.entries(actionTypes).map((item) =>
-              <MenuItem style={menuItemStyle} key={item[0]} value={item[0]} primaryText={item[1]} />
+            map(actionTypes, (actionType, typeId) =>
+              <MenuItem
+                key={typeId}
+                value={typeId}
+                primaryText={this.props.intl.messages[actionType]}
+              />
             )}
         </SelectField>
         <SelectField
@@ -73,7 +77,7 @@ class SideMenu extends Component {
         >
           {
             map(prototype.pages, (page, pageId) =>
-              <MenuItem style={menuItemStyle} key={pageId} value={pageId} primaryText={page.name} />
+              <MenuItem key={pageId} value={pageId} primaryText={page.name} />
             )}
         </SelectField>
       </div>

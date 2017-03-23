@@ -66,6 +66,16 @@ export default {
   'sidemenu.actionSelector': 'Action Type',
   'sidemenu.pageSelector': 'Affected Page',
 
+  // SHAPE TYPES
+  'line': 'Line',
+  'textbox': 'TextBox',
+  'button': 'Button',
+
+  // ACTION TYPES
+  'show': 'Show',
+  'hide': 'Hide',
+  'changePage': 'Change Page',
+
   // SIMULATION
   'simulation.loading': 'Loading simulation',
 
