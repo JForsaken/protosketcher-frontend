@@ -89,7 +89,8 @@ export function doAction(point) {
         }
       });
 
-    // Save new original positions before draging
+    // Save new original positions before draging and new central point of selection
+      this.centralSelectionPoint = this.getCentralPointOfSelection();
       const items = this.updateSelectionOriginalPosition(this.state.selectedItems);
       this.setState({
         shapes: items.shapes,
