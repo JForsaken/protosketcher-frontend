@@ -42,9 +42,9 @@ export default {
   'form.errors.email': 'Adresse courriel invalide',
 
   // MENU
-  'menu.backToPrototypes': 'Retour',
+  'menu.backToPrototypes': 'Prototypes',
   'menu.simulation': 'Simulation',
-  'menu.backToEdit': 'Retour au mode édition',
+  'menu.backToEdit': 'Mode édition',
   'menu.save': 'Sauvegarder',
   'menu.logout': 'Déconnexion',
   'menu.renamePrototype': 'Renommer votre prototype',

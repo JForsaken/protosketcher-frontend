@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { injectIntl } from 'react-intl';
 import {
   Divider,
   FlatButton,
@@ -36,12 +37,13 @@ import { patchPrototype } from '../../../actions/api';
 /* CONSTANTS */
 import { TOP_MENU_HEIGHT } from '../../constants';
 
-
+@injectIntl
 class Menu extends Component {
   static propTypes = {
     router: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     application: PropTypes.object.isRequired,
+    intl: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -97,19 +99,6 @@ class Menu extends Component {
     }
   }
 
-  renamePrototype(e) {
-    const { prototypes, selectedPrototype } = this.props.application;
-
-    e.preventDefault();
-
-    if (prototypes[selectedPrototype].name !== this.state.prototypeName) {
-      this.props.actions.patchPrototype({
-        name: this.state.prototypeName,
-        id: this.props.application.selectedPrototype,
-      }, this.props.application.user.token);
-    }
-  }
-
   toggleSimulation() {
     // deselect shapes if some are selected
     this.props.actions.updateWorkspace({
@@ -129,13 +118,26 @@ class Menu extends Component {
     });
   }
 
+  renamePrototype(e) {
+    const { prototypes, selectedPrototype } = this.props.application;
+
+    e.preventDefault();
+
+    if (prototypes[selectedPrototype].name !== this.state.prototypeName) {
+      this.props.actions.patchPrototype({
+        name: this.state.prototypeName,
+        id: this.props.application.selectedPrototype,
+      }, this.props.application.user.token);
+    }
+  }
+
   renderBrand() {
     return (
       <a
         className="app-bar__title"
         onClick={() => this.onHome()}
       >
-        Protosketcher
+        {this.props.intl.messages['website.title']}
       </a>
     );
   }
@@ -162,16 +164,18 @@ class Menu extends Component {
   }
 
   renderLogin() {
+    const { messages } = this.props.intl;
+
     return (
       <div>
         <FlatButton
-          label="Login"
+          label={messages['login.form.button']}
           onTouchTap={() => this.props.router.push('/login')}
           labelStyle={{ color: 'white' }}
           icon={<Send style={{ fill: 'white', width: 18 }} />}
         />
         <FlatButton
-          label="Sign up"
+          label={messages['signup.form.context']}
           onTouchTap={() => this.props.router.push('/signup')}
           labelStyle={{ color: 'white' }}
           icon={<Create style={{ fill: 'white', width: 18 }} />}
@@ -181,19 +185,19 @@ class Menu extends Component {
   }
 
   renderLogged() {
-    const { application: { locale, locales } } = this.props;
+    const { application: { locale, locales }, intl: { messages } } = this.props;
     const otherLocale = locales.find(o => o !== locale);
     let simulation = null;
 
     if (this.props.router.location.pathname === '/') {
       simulation = !this.props.application.simulation.isSimulating ?
         <MenuItem
-          primaryText="Preview"
+          primaryText={messages['menu.simulation']}
           onTouchTap={() => this.toggleSimulation()}
           leftIcon={<Visibility />}
         /> :
         <MenuItem
-          primaryText="Edit mode"
+          primaryText={messages['menu.backToEdit']}
           onTouchTap={() => this.toggleSimulation()}
           leftIcon={<VisibilityOff />}
         />;
@@ -208,7 +212,7 @@ class Menu extends Component {
       >
         {simulation}
         <MenuItem
-          primaryText="Prototypes"
+          primaryText={messages['menu.backToPrototypes']}
           onTouchTap={() => this.redirectToDashboard()}
           leftIcon={<Apps />}
         />
@@ -219,7 +223,7 @@ class Menu extends Component {
         />
         <Divider />
         <MenuItem
-          primaryText="Sign out"
+          primaryText={messages['menu.logout']}
           onTouchTap={() => this.props.actions.logout()}
           leftIcon={<ExitToApp />}
         />
@@ -236,7 +240,7 @@ class Menu extends Component {
         className="app-bar__icon"
       >
         <MenuItem
-          primaryText="Features"
+          primaryText={this.props.intl.messages['landing.features']}
           onTouchTap={() => this.scrollToElement('features')}
         />
       </IconMenu>

@@ -45,9 +45,9 @@ export default {
   'hud.saving': 'Saving...',
 
   // MENU
-  'menu.backToPrototypes': 'Back',
-  'menu.simulation': 'Simulation',
-  'menu.backToEdit': 'Back to edit mode',
+  'menu.backToPrototypes': 'Prototypes',
+  'menu.simulation': 'Preview',
+  'menu.backToEdit': 'Edit mode',
   'menu.save': 'Save',
   'menu.logout': 'Logout',
   'menu.renamePrototype': 'Rename your prototype',
@@ -77,7 +77,7 @@ export default {
   'changePage': 'Change Page',
 
   // SIMULATION
-  'simulation.loading': 'Loading simulation',
+  'simulation.loading': 'Loading Preview',
 
   // FOOTER
   'footer.page': 'Page',
