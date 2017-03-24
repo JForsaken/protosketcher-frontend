@@ -123,16 +123,16 @@ class Menu extends Component {
     return (
       <div>
         <FlatButton
-          label="Sign up"
-          onTouchTap={() => this.props.router.push('/signup')}
-          labelStyle={{ color: 'white' }}
-          icon={<Create style={{ fill: 'white', width: 18 }} />}
-        />
-        <FlatButton
           label="Login"
           onTouchTap={() => this.props.router.push('/login')}
           labelStyle={{ color: 'white' }}
           icon={<Send style={{ fill: 'white', width: 18 }} />}
+        />
+        <FlatButton
+          label="Sign up"
+          onTouchTap={() => this.props.router.push('/signup')}
+          labelStyle={{ color: 'white' }}
+          icon={<Create style={{ fill: 'white', width: 18 }} />}
         />
       </div>
     );
