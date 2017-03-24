@@ -1,72 +1,45 @@
-nav.navbar {
-  height: $top-menu-height;
-  background-color: color('foreground');
+.app-bar {
+  position: absolute !important;
+  background-color: color('accent') !important;
+  height: 50px;
+  top: 0;
 
-  ul {
-    margin-top: 0;
-    margin-bottom: 0;
+  &__icon {
+    margin-top: -7px;
   }
 
-  a {
-    position: relative;
-    cursor: pointer;
-    z-index: 3;
-    background: color('foreground');
-    color: color('text', 'light');
-  }
-
-  .centered {
+  &__title {
     position: absolute;
-    top: 13px;
+    font-size: 22px;
+    margin-top: -8px;
+    color: color('text', 'light');
+    text-decoration: none;
+    font-family: 'Permanent Marker', 'Roboto', 'Helvetica Light', sans-serif;
+    @include transition(all 0.5s ease);
+    cursor: pointer;
+
+    &:hover, :focus {
+      color: white;
+    }
+  }
+
+  &__prototype-form {
+    position: absolute;
+    z-index: 99999;
+    top: -3px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 0;
-    margin: 0;
-    color: color('text', 'light');
-    font-family: 'Roboto', 'Helvetica Light', sans-serif;
-    font-size: 1.5em;
-    z-index: 2;
-    cursor: default;
+    color: white;
+    font-size: 30px !important;
   }
 
-  form.centered {
-    top: 9px;
-    width: 10%;
-    color: color('text');
-
-    input {
-      width: 100%;
-    }
-  }
-
-  .brand {
-
-    &__logo {
-      background: url(http://placehold.it/32x32) no-repeat;
-      position: fixed;
-      height: 32px;
-      width: 32px;
-      background-size: contain;
-      margin-top: -6px;
-    }
-
-    &__spacer {
-      margin-right: 10px;
-      vertical-align: middle;
-      width: 30px;
-      height: 1px;
-      display: inline-block;
-    }
-
-    &__title {
-      height: $top-menu-height - 1px;
-      color: color('text', 'light');
-      text-decoration: none;
-      font-family: 'Permanent Marker', 'Roboto', 'Helvetica Light', sans-serif;
-
-      &:hover, :focus {
-        color: white;
-      }
-    }
+  &__simulation {
+    position: absolute !important;
+    top: 12px;
+    left: 190px;
+    width: auto !important;
+    z-index: 99999;
+    color: white !important;
+    fill: white !important;
   }
 }

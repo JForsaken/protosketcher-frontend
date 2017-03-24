@@ -420,6 +420,7 @@ const actionHandlers = {
     selectedPrototype: null,
     selectedPage: null,
     prototypes: {},
+    simulation: initialState.simulation,
   }),
 
   [constants.PATCH_PROTOTYPE]: (state, action) => {
