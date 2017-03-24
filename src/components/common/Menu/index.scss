@@ -23,6 +23,16 @@
     }
   }
 
+  &__prototype-form {
+    position: absolute;
+    z-index: 99999;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 30px !important;
+  }
+
   &__simulation {
     position: absolute !important;
     top: 12px;

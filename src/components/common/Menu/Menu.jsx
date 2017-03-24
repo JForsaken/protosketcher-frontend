@@ -2,7 +2,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Divider, FlatButton, MenuItem, IconMenu, IconButton, AppBar } from 'material-ui';
+import {
+  Divider,
+  FlatButton,
+  MenuItem,
+  IconMenu,
+  IconButton,
+  AppBar,
+  TextField } from 'material-ui';
 import { isEqual } from 'lodash';
 import Scroll from 'react-scroll';
 
@@ -24,6 +31,7 @@ import {
   logout,
   switchLocale,
   updateWorkspace } from '../../../actions/application';
+import { patchPrototype } from '../../../actions/api';
 
 /* CONSTANTS */
 import { TOP_MENU_HEIGHT } from '../../constants';
@@ -32,13 +40,17 @@ import { TOP_MENU_HEIGHT } from '../../constants';
 class Menu extends Component {
   static propTypes = {
     router: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
+    application: PropTypes.object.isRequired,
   };
 
   constructor(props) {
     super(props);
 
+    const { prototypes, selectedPrototype } = this.props.application;
     this.state = {
       logged: true,
+      prototypeName: selectedPrototype ? prototypes[selectedPrototype].name : null,
     };
   }
 
@@ -56,10 +68,6 @@ class Menu extends Component {
       const { prototypes, selectedPrototype } = nextProps.application;
       this.setState({ prototypeName: prototypes[selectedPrototype].name });
     }
-  }
-
-  onSettings() {
-    this.props.router.push('/account');
   }
 
   onHome() {
@@ -86,6 +94,19 @@ class Menu extends Component {
     this.props.actions.redirectToDashboard();
     if (router.location.pathname !== '/') {
       router.push('/');
+    }
+  }
+
+  renamePrototype(e) {
+    const { prototypes, selectedPrototype } = this.props.application;
+
+    e.preventDefault();
+
+    if (prototypes[selectedPrototype].name !== this.state.prototypeName) {
+      this.props.actions.patchPrototype({
+        name: this.state.prototypeName,
+        id: this.props.application.selectedPrototype,
+      }, this.props.application.user.token);
     }
   }
 
@@ -116,6 +137,27 @@ class Menu extends Component {
       >
         Protosketcher
       </a>
+    );
+  }
+
+  renderPrototypeName() {
+    const { user, selectedPrototype } = this.props.application;
+
+    if (!user || !selectedPrototype) {
+      return null;
+    }
+
+    return (
+      <form onSubmit={(e) => this.renamePrototype(e)} className="app-bar__prototype-form">
+        <TextField
+          type="text"
+          name="prototype-name"
+          inputStyle={{ textAlign: 'center', margin: 'auto 0', fontSize: 20, color: 'white' }}
+          onBlur={(e) => this.renamePrototype(e)}
+          onChange={(e) => this.setState({ prototypeName: e.target.value })}
+          value={this.state.prototypeName}
+        />
+      </form>
     );
   }
 
@@ -212,6 +254,7 @@ class Menu extends Component {
           iconElementRight={this.props.application.user ?
                             this.renderLogged() : this.renderLogin()}
         />
+        {this.renderPrototypeName()}
       </div>
     );
   }
@@ -226,6 +269,7 @@ export default (connect(
       redirectToDashboard,
       logout,
       switchLocale,
+      patchPrototype,
     }, dispatch),
   })
 )(Menu));
