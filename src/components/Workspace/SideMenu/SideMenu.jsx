@@ -7,6 +7,7 @@ import { Button } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { omit, invert, map } from 'lodash';
+import classNames from 'classnames';
 
 /* ACTIONS */
 import { getShapeTypes, getActionTypes } from '../../../actions/api';
@@ -86,14 +87,19 @@ class SideMenu extends Component {
 
   render() {
     const style = {
-      position: 'absolute',
+      position: 'relative',
       overflow: 'visible',
       padding: '17px',
+      float: 'left',
+      height: '2000px', // Hack to make menu look like 100% height
     };
     return (
       <div>
         <Drawer
-          className={this.state.isOpen ? 'drawer-open' : ''}
+          className={classNames({
+            drawer: true,
+            'drawer-open': this.state.isOpen,
+          })}
           open={this.state.isOpen}
           containerStyle={style}
         >
