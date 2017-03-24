@@ -92,7 +92,11 @@ class SideMenu extends Component {
     };
     return (
       <div>
-        <Drawer className={this.state.isOpen ? 'drawer-open' : ''} open={this.state.isOpen} containerStyle={style}>
+        <Drawer
+          className={this.state.isOpen ? 'drawer-open' : ''}
+          open={this.state.isOpen}
+          containerStyle={style}
+        >
           <Button
             className="drawer-toggle vertical-text"
             onClick={() => this.handleToggle()}
