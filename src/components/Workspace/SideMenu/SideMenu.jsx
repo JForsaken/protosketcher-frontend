@@ -92,12 +92,12 @@ class SideMenu extends Component {
     };
     return (
       <div>
-        <Drawer open={this.state.isOpen} containerStyle={style}>
+        <Drawer className={this.state.isOpen ? 'drawer-open' : ''} open={this.state.isOpen} containerStyle={style}>
           <Button
             className="drawer-toggle vertical-text"
             onClick={() => this.handleToggle()}
           >
-            <FontAwesome name="caret-down" />
+            <FontAwesome name="caret-up" />
             <FormattedMessage id="sidemenu.toggle" />
           </Button>
 

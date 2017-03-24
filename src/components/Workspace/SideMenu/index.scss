@@ -9,5 +9,14 @@
 
   .fa {
     margin-right: 8px;
+    @include transition(transform 0.2s linear);
+  }
+}
+
+.drawer-open {
+  .drawer-toggle {
+    .fa {
+      transform: rotate(180deg);
+    }
   }
 }
