@@ -1,47 +1,54 @@
 /* Node modules */
 import React, { Component, PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
-import { Nav, Navbar, NavItem, FormGroup } from 'react-bootstrap';
-import { Link } from 'react-router';
-import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import FontAwesome from 'react-fontawesome';
-import { isEqual, forEach } from 'lodash';
+import { bindActionCreators } from 'redux';
+import { Divider, FlatButton, MenuItem, IconMenu, IconButton, AppBar } from 'material-ui';
+import { isEqual } from 'lodash';
+import Scroll from 'react-scroll';
 
-/* Components */
-import MenuListItem from '../MenuListItem/MenuListItem';
+/* Icons */
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import Hamburger from 'material-ui/svg-icons/navigation/menu';
+import Visibility from 'material-ui/svg-icons/action/visibility';
+import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
+import Create from 'material-ui/svg-icons/content/create';
+import Send from 'material-ui/svg-icons/content/send';
+import Apps from 'material-ui/svg-icons/navigation/apps';
+import ExitToApp from 'material-ui/svg-icons/action/exit-to-app';
+import Language from 'material-ui/svg-icons/action/language';
 
 /* Actions */
-import * as applicationActions from '../../../actions/application';
-import * as apiActions from '../../../actions/api';
+import {
+  redirectToDashboard,
+  toggleSimulation,
+  logout,
+  switchLocale,
+  updateWorkspace } from '../../../actions/application';
+
+/* CONSTANTS */
+import { TOP_MENU_HEIGHT } from '../../constants';
 
 
-@injectIntl
 class Menu extends Component {
   static propTypes = {
-    actions: PropTypes.object,
-    application: PropTypes.object.isRequired,
     router: PropTypes.object.isRequired,
   };
 
-  constructor(props, context) {
-    super(props, context);
-    this.handleSwitchLocale = this.handleSwitchLocale.bind(this);
-    this.toggleNav = this.toggleNav.bind(this);
+  constructor(props) {
+    super(props);
 
-    const { prototypes, selectedPrototype } = this.props.application;
     this.state = {
-      expanded: false,
-      showRenameModal: false,
-      prototypeName: prototypes[selectedPrototype].name,
+      logged: true,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     // LOGOUT
     if (!isEqual(this.props.application.user, nextProps.application.user) &&
-      nextProps.application.user === null) {
-      this.props.router.push('/landing');
+        nextProps.application.user === null) {
+      if (this.props.router.location.pathname === '/') {
+        this.props.router.push('/landing');
+      }
     }
 
     if (!isEqual(this.props.application.prototypes, nextProps.application.propTypes) &&
@@ -51,27 +58,31 @@ class Menu extends Component {
     }
   }
 
-  componentDidUpdate() {
-    if (this.inputName) {
-      this.inputName.focus();
+  onSettings() {
+    this.props.router.push('/account');
+  }
+
+  onHome() {
+    if (this.props.router.location.pathname !== '/') {
+      this.props.router.push('/');
     }
   }
 
   handleSwitchLocale() {
     const { application: { locales, locale } } = this.props;
-
     const langIndex = locales.indexOf(locale);
     const nextLocale = langIndex + 1 < locales.length ? langIndex + 1 : 0;
 
     this.props.actions.switchLocale(locales[nextLocale]);
   }
 
-  logout() {
-    this.props.actions.logout();
-  }
-
   redirectToDashboard() {
+    const { router } = this.props;
+
     this.props.actions.redirectToDashboard();
+    if (router.location.pathname !== '/') {
+      router.push('/');
+    }
   }
 
   toggleSimulation() {
@@ -82,150 +93,135 @@ class Menu extends Component {
     this.props.actions.toggleSimulation();
   }
 
-  redirectToLanding() {
-    this.props.actions.backToLanding();
-  }
-
-  toggleNav() {
-    this.setState({
-      expanded: !this.state.expanded,
+  scrollToElement(elementName) {
+    const scroller = Scroll.scroller;
+    const padding = 20;
+    scroller.scrollTo(elementName, {
+      duration: 250,
+      delay: 0,
+      smooth: true,
+      offset: - (TOP_MENU_HEIGHT + padding),
     });
   }
 
-  changePrototypeName() {
-    this.setState({ showRenameModal: true });
+  renderBrand() {
+    return (
+      <a
+        className="app-bar__title"
+        onClick={() => this.onHome()}
+      >
+        Protosketcher
+      </a>
+    );
   }
 
-  renamePrototype(e) {
-    this.props.actions.patchPrototype({
-      name: this.inputName.value,
-      id: this.props.application.selectedPrototype,
-    }, this.props.application.user.token);
-
-    e.preventDefault();
-    this.closeModal();
+  renderLogin() {
+    return (
+      <div>
+        <FlatButton
+          label="Sign up"
+          onTouchTap={() => this.props.router.push('/signup')}
+          labelStyle={{ color: 'white' }}
+          icon={<Create style={{ fill: 'white', width: 18 }} />}
+        />
+        <FlatButton
+          label="Login"
+          onTouchTap={() => this.props.router.push('/login')}
+          labelStyle={{ color: 'white' }}
+          icon={<Send style={{ fill: 'white', width: 18 }} />}
+        />
+      </div>
+    );
   }
 
-  closeModal() {
-    this.setState({
-      showRenameModal: false,
-    });
-  }
+  renderLogged() {
+    const { application: { locale, locales } } = this.props;
+    const otherLocale = locales.find(o => o !== locale);
+    let simulation = null;
 
-  renderPrototypeName() {
-    if (!this.state.showRenameModal) {
-      return (
-        <h2
-          className="centered"
-          onDoubleClick={() => this.changePrototypeName()}
-          title={this.props.intl.messages['menu.dblClickRename']}
-        >
-          {this.state.prototypeName}
-        </h2>
-      );
+    if (this.props.router.location.pathname === '/') {
+      simulation = !this.props.application.simulation.isSimulating ?
+        <MenuItem
+          primaryText="Preview"
+          onTouchTap={() => this.toggleSimulation()}
+          leftIcon={<Visibility />}
+        /> :
+        <MenuItem
+          primaryText="Edit mode"
+          onTouchTap={() => this.toggleSimulation()}
+          leftIcon={<VisibilityOff />}
+        />;
     }
 
     return (
-      <form onSubmit={(e) => this.renamePrototype(e)} className="centered">
-        <FormGroup controlId="prototype-name">
-          <input
-            type="text"
-            onBlur={(e) => this.renamePrototype(e)}
-            defaultValue={this.state.prototypeName}
-            placeholder={this.props.intl.messages['menu.newName']}
-            ref={ref => { this.inputName = ref; }}
-          />
-        </FormGroup>
-      </form>
+      <IconMenu
+        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+        className="app-bar__icon"
+      >
+        {simulation}
+        <MenuItem
+          primaryText="Prototypes"
+          onTouchTap={() => this.redirectToDashboard()}
+          leftIcon={<Apps />}
+        />
+        <MenuItem
+          primaryText={otherLocale.toUpperCase()}
+          onTouchTap={() => this.handleSwitchLocale()}
+          leftIcon={<Language />}
+        />
+        <Divider />
+        <MenuItem
+          primaryText="Sign out"
+          onTouchTap={() => this.props.actions.logout()}
+          leftIcon={<ExitToApp />}
+        />
+      </IconMenu>
+    );
+  }
+
+  renderNav() {
+    return (
+      <IconMenu
+        iconButtonElement={<IconButton iconStyle={{ fill: 'white' }}><Hamburger /></IconButton>}
+        targetOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        className="app-bar__icon"
+      >
+        <MenuItem
+          primaryText="Features"
+          onTouchTap={() => this.scrollToElement('features')}
+        />
+      </IconMenu>
     );
   }
 
   render() {
-    const { application: { locale, locales } } = this.props;
-    let otherLocale = '';
-
-    // Get other locale
-    forEach(locales, (lang) => {
-      if (lang !== locale) {
-        otherLocale = lang;
-      }
-    });
-
-    const { expanded } = this.state;
-    const menuItems = [
-      {
-        text: <FormattedMessage id="menu.backToPrototypes" />,
-        link: '',
-        icon: 'list-alt',
-        onClick: () => this.redirectToDashboard(),
-      },
-      {
-        text: <FormattedMessage id="menu.simulation" />,
-        link: '',
-        icon: 'eye',
-        onClick: () => this.toggleSimulation(),
-      },
-    ];
-
-    const prototypeId = this.props.application.selectedPrototype;
-    if (!prototypeId) {
-      return false;
-    }
-
     return (
-      <Navbar inverse fixedTop expanded={expanded} onToggle={this.toggleNav}>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <Link className="brand__title" to="/landing" onClick={() => this.redirectToLanding()}>
-              <div className="brand__logo" />
-              <div className="brand__spacer" />
-              <FormattedMessage id="website.title" />
-            </Link>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav>
-            {
-              menuItems.map((item, i) =>
-                <MenuListItem
-                  {...item}
-                  key={i}
-                  onClick={this.state.expanded ? this.toggleNav : null}
-                />)
-            }
-          </Nav>
-          {this.renderPrototypeName()}
-          <Nav pullRight>
-            <NavItem
-              onClick={() => {
-                this.handleSwitchLocale();
-                if (this.state.expanded) {
-                  this.toggleNav();
-                }
-              }}
-            >
-              {otherLocale.toUpperCase()}
-            </NavItem>
-            <NavItem
-              title={this.props.intl.messages['menu.logout']}
-              onClick={() => this.logout()}
-            >
-              <FontAwesome name="sign-out" />
-            </NavItem>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+      <div>
+        <AppBar
+          title={this.renderBrand()}
+          className="app-bar"
+          iconElementLeft={this.props.router.location.pathname === '/landing' ?
+                           this.renderNav() : <i />}
+          iconElementRight={this.props.application.user ?
+                            this.renderLogged() : this.renderLogin()}
+        />
+      </div>
     );
   }
 }
 
-export default connect(
-  ({ api, application }) => ({ api, application }),
+export default (connect(
+  ({ application }) => ({ application }),
   dispatch => ({
     actions: bindActionCreators({
-      ...applicationActions,
-      ...apiActions,
+      toggleSimulation,
+      updateWorkspace,
+      redirectToDashboard,
+      logout,
+      switchLocale,
     }, dispatch),
   })
-)(Menu);
+)(Menu));

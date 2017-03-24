@@ -70,3 +70,39 @@ nav.navbar {
     }
   }
 }
+
+.app-bar {
+  position: absolute !important;
+  background-color: color('accent') !important;
+  height: 50px;
+  top: 0;
+
+  &__icon {
+    margin-top: -7px;
+  }
+
+  &__title {
+    position: absolute;
+    font-size: 22px;
+    margin-top: -8px;
+    color: color('text', 'light');
+    text-decoration: none;
+    font-family: 'Permanent Marker', 'Roboto', 'Helvetica Light', sans-serif;
+    @include transition(all 0.5s ease);
+    cursor: pointer;
+
+    &:hover, :focus {
+      color: white;
+    }
+  }
+
+  &__simulation {
+    position: absolute !important;
+    top: 12px;
+    left: 190px;
+    width: auto !important;
+    z-index: 99999;
+    color: white !important;
+    fill: white !important;
+  }
+}

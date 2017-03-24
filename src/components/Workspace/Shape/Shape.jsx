@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import classNames from 'classnames';
 
 /* Actions */
 import { updateWorkspace } from '../../../actions/application';
@@ -34,15 +35,11 @@ class Shape extends Component {
   }
 
   hoverShape() {
-    this.setState({
-      hovered: true,
-    });
-  }
-
-  leaveShape() {
-    this.setState({
-      hovered: false,
-    });
+    if (!this.props.application.simulation.isSimulating) {
+      this.setState({
+        hovered: true,
+      });
+    }
   }
 
   selectShape() {
@@ -52,20 +49,16 @@ class Shape extends Component {
   }
 
   render() {
-    let classNames = 'workspace-line';
-    if (this.props.selected) {
-      classNames += ' workspace-line-selected';
-    }
-    if (this.state.hovered) {
-      classNames += ' workspace-line-hovered';
-    }
-
     return (
       <g className="path-container">
         <path
           id={this.props.id}
           ref={svgShape => (this.svgShape = svgShape)}
-          className={classNames}
+          className={classNames({
+            'workspace-line': true,
+            'workspace-line-selected': this.props.selected,
+            'workspace-line-hovered': this.state.hovered,
+          })}
           d={this.props.path}
           stroke={this.props.color}
           transform={`translate(${this.props.posX} ${this.props.posY})`}
@@ -73,7 +66,7 @@ class Shape extends Component {
         <path
           onMouseDown={() => this.selectShape()}
           onMouseOver={() => this.hoverShape()}
-          onMouseLeave={() => this.leaveShape()}
+          onMouseLeave={() => this.setState({ hovered: false })}
           onTouchStart={() => this.selectShape()}
           className="workspace-line line-padding"
           d={this.props.path}

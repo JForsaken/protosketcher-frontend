@@ -16,6 +16,14 @@ class Text extends Component {
     onLoad: PropTypes.func,
   }
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      hovered: false,
+    };
+  }
+
   componentDidMount() {
     const { onLoad, id } = this.props;
 
@@ -31,16 +39,27 @@ class Text extends Component {
     }
   }
 
+  hoverText() {
+    if (!this.props.application.simulation.isSimulating) {
+      this.setState({
+        hovered: true,
+      });
+    }
+  }
+
   render() {
     return (
       <text
         id={this.props.id}
         ref={svgText => (this.svgText = svgText)}
         onMouseDown={() => this.selectText()}
+        onMouseOver={() => this.hoverText()}
+        onMouseLeave={() => this.setState({ hovered: false })}
         onTouchStart={() => this.selectText()}
         className={classNames({
           'workspace-text': true,
           'workspace-text-selected': this.props.selected,
+          'workspace-text-hovered': this.state.hovered,
         })}
         transform={`translate(${this.props.posX} ${this.props.posY})`}
         style={{ fontSize: this.props.size }}

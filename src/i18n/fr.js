@@ -26,7 +26,7 @@ export default {
   'login.form.lastname': 'Nom',
   'login.form.email': 'Courriel',
   'login.form.password': 'Mot de passe',
-  'login.form.modal.title': 'Échec de connection.',
+  'login.form.modal.title': 'Échec de connexion.',
   'login.form.modal.content': 'Veuillez vérifier vos informations. :(',
 
   // PROTOTYPE DASHBOARD
