@@ -77,7 +77,11 @@ class Menu extends Component {
   }
 
   redirectToDashboard() {
-    const { router } = this.props;
+    const { router, application: { simulation } } = this.props;
+
+    if (simulation.isSimulating) {
+      this.toggleSimulation();
+    }
 
     this.props.actions.redirectToDashboard();
     if (router.location.pathname !== '/') {
