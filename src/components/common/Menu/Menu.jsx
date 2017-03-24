@@ -65,7 +65,7 @@ class Menu extends Component {
       }
     }
 
-    if (!isEqual(this.props.application.prototypes, nextProps.application.propTypes) &&
+    if (!isEqual(this.props.application.prototypes, nextProps.application.prototypes) &&
         nextProps.application.selectedPrototype) {
       const { prototypes, selectedPrototype } = nextProps.application;
       this.setState({ prototypeName: prototypes[selectedPrototype].name });
