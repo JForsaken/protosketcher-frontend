@@ -59,6 +59,11 @@ body {
 
   .page-container {
     padding-top: $top-menu-height;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
     &.in-simulation {
       padding-top: $top-menu-height;
