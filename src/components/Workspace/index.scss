@@ -14,6 +14,7 @@
     .workspace-wrapper {
       display: table-cell;
       padding: $container-padding;
+      padding-bottom: $container-padding + $footer-height;
       vertical-align: top;
       z-index: 40;
 

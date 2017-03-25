@@ -436,7 +436,11 @@ class Workspace extends Component {
         tabIndex="0"
         onKeyDown={this.onKeyDownEvent}
       >
-        <div className="workspace-row">
+        <div
+          className="workspace-row"
+          onMouseDown={absorbEvent}
+          onMouseUp={absorbEvent}
+        >
           <MuiThemeProvider>
             <SideMenu />
           </MuiThemeProvider>
