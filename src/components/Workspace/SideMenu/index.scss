@@ -1,14 +1,20 @@
 $drawer-width: 230px;
 
 .drawer {
+  display: table-cell;
   position: relative;
-  float: left;
-  width: $drawer-width;
+  width: 0;
   background-color: color('background', 'light');
-  margin-top: -$container-padding;
-  padding: 17px;
-  margin-left: -$drawer-width - $container-padding;
-  @include transition(margin-left 0.2s);
+  padding: 0;
+  vertical-align: top;
+  z-index: 50;
+  @include transition(width 0.2s);
+
+  .drawer-content {
+    width: 0;
+    opacity: 0;
+    @include transition(all 0.2s);
+  }
 
   .drawer-toggle {
     position: absolute;
@@ -28,7 +34,13 @@ $drawer-width: 230px;
   }
 
   &.drawer-open {
-    margin-left: -$container-padding;
+    width: $drawer-width;
+    padding: 17px;
+
+    .drawer-content {
+      width: 100%;
+      opacity: 1;
+    }
 
     .drawer-toggle {
       .fa {

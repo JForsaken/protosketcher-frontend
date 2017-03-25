@@ -42,7 +42,7 @@ class SideMenu extends Component {
     const prototype = prototypes[selectedPrototype];
 
     return (
-      <div>
+      <div className="drawer-content">
         <SelectField
           className="select-type"
           floatingLabelText={this.props.intl.messages['sidemenu.typeSelector']}
