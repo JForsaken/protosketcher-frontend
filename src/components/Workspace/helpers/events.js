@@ -1,5 +1,5 @@
 /* Node modules */
-import { isEmpty, cloneDeep, has, pick } from 'lodash';
+import { isEmpty, clone, has, pick } from 'lodash';
 
 /* Utils */
 import absorbEvent from '../../../utils/events.js';
@@ -257,8 +257,8 @@ export function onKeyDownEvent(e) {
     this.createText();
   } else if (e.key === constants.keys.C && e.ctrlKey === true) {
     this.centralItemsClipboardPoint = this.getCentralPointOfSelection();
-    this.shapesClipboard = cloneDeep(pick(this.state.shapes, this.state.selectedItems));
-    this.textsClipboard = cloneDeep(pick(this.state.texts, this.state.selectedItems));
+    this.shapesClipboard = clone(pick(this.state.shapes, this.state.selectedItems));
+    this.textsClipboard = clone(pick(this.state.texts, this.state.selectedItems));
   } else if (
     e.key === constants.keys.V &&
     e.ctrlKey === true &&

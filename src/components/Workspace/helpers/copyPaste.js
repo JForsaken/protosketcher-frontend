@@ -81,8 +81,8 @@ export function computeCopyPasteOffset() {
   } else {
     const workspaceBox = this.workspace.getBoundingClientRect();
     pastePosition = {
-      x: Math.round((workspaceBox.right - workspaceBox.left) / 2),
-      y: Math.round((workspaceBox.bottom - workspaceBox.top) / 2),
+      x: Math.round((workspaceBox.width) / 2),
+      y: Math.round((workspaceBox.height) / 2),
     };
   }
 
