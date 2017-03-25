@@ -16,10 +16,9 @@ import * as constants from '../../constants';
  */
 export function cloneElement(
   element,
-  offset = 0,
-  newPosition = {
-    x: element.x,
-    y: element.y,
+  offset = {
+    x: 0,
+    y: 0,
   }
 ) {
   return {
@@ -29,11 +28,11 @@ export function cloneElement(
       'controls',
     ]),
     uuid: uuidV1(),
-    x: newPosition.x + offset,
-    y: newPosition.y + offset,
+    x: element.x + offset.x,
+    y: element.y + offset.y,
     originalPositionBeforeDrag: {
-      x: newPosition.x + offset,
-      y: newPosition.y + offset,
+      x: element.x + offset.x,
+      y: element.y + offset.y,
     },
     controls: {},
   };
@@ -50,24 +49,47 @@ export function cloneElement(
 export function createClonedElements(
   source,
   ids = false,
-  offset = 0,
-  newPosition = false
+  offset = {
+    x: 0,
+    y: 0,
+  }
 ) {
+  let clonedElements;
   if (ids) {
     return ids.filter(o => has(source, o))
       .reduce((acc, current) => {
-        const accCopy = acc;
-        const newElem = newPosition
-          ? cloneElement(source[current], offset, newPosition)
-          : cloneElement(source[current], offset);
-        accCopy[newElem.uuid] = newElem;
-        return accCopy;
+        clonedElements = acc;
+        const newElem = cloneElement(source[current], offset);
+        clonedElements[newElem.uuid] = newElem;
+        return clonedElements;
       }, {});
   }
-  source.forEach(o => {
-    cloneElement(o, offset, newPosition);
+  clonedElements = {};
+  Object.values(source).forEach(o => {
+    const newElem = cloneElement(o, offset);
+    clonedElements[newElem.uuid] = newElem;
   });
-  return {};
+  return clonedElements;
+}
+
+export function computeCopyPasteOffset() {
+  let baseOffset = 0;
+  let pastePosition;
+  if (this.state.selectedItems.length) {
+    pastePosition = this.centralSelectionPoint;
+    baseOffset = constants.COPY_PASTE_OFFSET;
+  } else {
+    const workspaceBox = this.workspace.getBoundingClientRect();
+    pastePosition = {
+      x: Math.round((workspaceBox.right - workspaceBox.left) / 2),
+      y: Math.round((workspaceBox.bottom - workspaceBox.top) / 2),
+    };
+  }
+
+  return {
+    x: pastePosition.x - this.centralItemsClipboardPoint.x + baseOffset,
+    y: pastePosition.y - this.centralItemsClipboardPoint.y + baseOffset,
+  };
 }
 
 
@@ -76,33 +98,33 @@ export function createClonedElements(
  */
 export function pasteClipboard() {
   const { shapes, texts } = this.state;
-  const offset = constants.COPY_PASTE_OFFSET;
+  const offset = this.computeCopyPasteOffset();
 
   // the pasted shapes
-  const clipboardShapes = createClonedElements(shapes, this.clipboard, offset);
+  const newShapes = createClonedElements(this.shapesClipboard, undefined, offset);
 
   // the pasted texts
-  const clipboardTexts = createClonedElements(texts, this.clipboard, offset);
+  const newTexts = createClonedElements(this.textsClipboard, undefined, offset);
 
   // the newly pasted element ids
-  const newSelectedItems = [...Object.keys(clipboardShapes), ...Object.keys(clipboardTexts)];
+  const newSelectedItems = [...Object.keys(newShapes), ...Object.keys(newTexts)];
 
   this.setState({
-    shapes: Object.assign(shapes, clipboardShapes),
-    texts: Object.assign(texts, clipboardTexts),
+    shapes: Object.assign(shapes, newShapes),
+    texts: Object.assign(texts, newTexts),
   }, () => {
     const { selectedPrototype, user } = this.props.application;
 
     // save elements
     newSelectedItems.forEach(o => {
-      if (has(clipboardShapes, o)) {
+      if (has(newShapes, o)) {
         this.props.actions.createShape(
           selectedPrototype,
           this.state.currentPageId,
           this.state.shapes[o],
           user.token
         );
-      } else if (has(clipboardTexts, o)) {
+      } else if (has(newTexts, o)) {
         this.props.actions.createText(
           selectedPrototype,
           this.state.currentPageId,
@@ -112,7 +134,7 @@ export function pasteClipboard() {
       }
     });
 
-    this.centralSelectionPoint = this.getCentralPointOfSelection();
+    this.centralSelectionPoint = this.getCentralPointOfSelection(newSelectedItems);
 
     this.setState({
       selectedItems: newSelectedItems,
