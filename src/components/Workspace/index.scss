@@ -17,7 +17,8 @@
 .workspace {
   background-color: color('background', 'light');
   position: relative;
-  margin: 0 auto;
+  float: left;
+  margin-left: 45px;
   @include rounded-equal(2px);
   width: 0;
   height: 0;

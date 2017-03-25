@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Drawer, SelectField, MenuItem } from 'material-ui';
+import { SelectField, MenuItem } from 'material-ui';
 import { Button } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -86,33 +86,22 @@ class SideMenu extends Component {
   }
 
   render() {
-    const style = {
-      position: 'relative',
-      overflow: 'visible',
-      padding: '17px',
-      float: 'left',
-      height: '2000px', // Hack to make menu look like 100% height
-    };
     return (
-      <div>
-        <Drawer
-          className={classNames({
-            drawer: true,
-            'drawer-open': this.state.isOpen,
-          })}
-          open={this.state.isOpen}
-          containerStyle={style}
+      <div
+        className={classNames({
+          drawer: true,
+          'drawer-open': this.state.isOpen,
+        })}
+      >
+        <Button
+          className="drawer-toggle vertical-text"
+          onClick={() => this.handleToggle()}
         >
-          <Button
-            className="drawer-toggle vertical-text"
-            onClick={() => this.handleToggle()}
-          >
-            <FontAwesome name="caret-up" />
-            <FormattedMessage id="sidemenu.toggle" />
-          </Button>
+          <FontAwesome name="caret-up" />
+          <FormattedMessage id="sidemenu.toggle" />
+        </Button>
 
-          {this.renderSettings()}
-        </Drawer>
+        {this.renderSettings()}
       </div>
     );
   }
