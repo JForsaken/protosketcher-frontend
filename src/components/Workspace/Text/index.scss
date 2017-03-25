@@ -7,9 +7,15 @@
     filter: url(#dropshadow);
   }
 
-  &:hover {
+  &.workspace-text-hovered {
     filter: url(#dropshadow);
     stroke: color('accent');
     fill: color('accent');
+  }
+}
+
+.in-simulation {
+  .workspace-text {
+    cursor: default;
   }
 }

@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 import configureStore from './utils/configure-store';
 import { bindActionCreators } from 'redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 /* Components */
 import * as components from './components';
@@ -94,7 +95,9 @@ class Root extends Component {
     };
     const rootChildren = [
       <IntlProvider key="intl" {...intlData}>
-        {this.renderRoutes(props)}
+        <MuiThemeProvider>
+          {this.renderRoutes(props)}
+        </MuiThemeProvider>
       </IntlProvider>,
     ];
 

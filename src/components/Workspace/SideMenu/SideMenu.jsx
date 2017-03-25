@@ -41,6 +41,10 @@ class SideMenu extends Component {
     const { prototypes, selectedPrototype } = this.props.application;
     const prototype = prototypes[selectedPrototype];
 
+    if (!prototype) {
+      return null;
+    }
+
     return (
       <div className="drawer-content">
         <SelectField

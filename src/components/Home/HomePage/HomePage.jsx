@@ -48,6 +48,7 @@ class HomePage extends Component {
       if (this.props.application.simulation.isSimulating) {
         return (
           <div className="page-container in-simulation" key="homepage-anim">
+            <Menu router={router} />
             <div className="back-to-edit-container">
               <Link
                 to=""

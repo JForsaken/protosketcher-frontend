@@ -1,17 +1,21 @@
 /* Node modules */
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 /* Components */
-import LandingMenu from './LandingMenu/LandingMenu';
+import Menu from '../common/Menu/Menu';
 import Slideshow from './Slideshow/Slideshow';
 import Content from './Content/Content';
 
 
 export default class LandingPage extends Component {
+  static propTypes = {
+    router: PropTypes.object.isRequired,
+  };
+
   render() {
     return (
       <div className="landing-page">
-        <LandingMenu />
+        <Menu router={this.props.router} />
         <div className="container page-container">
           <Slideshow />
           <Content />

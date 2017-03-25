@@ -61,7 +61,7 @@ body {
     padding-top: $top-menu-height;
 
     &.in-simulation {
-      padding-top: 0;
+      padding-top: $top-menu-height;
     }
   }
 
