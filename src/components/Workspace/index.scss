@@ -16,39 +16,38 @@
       vertical-align: top;
       z-index: 40;;
       outline: 0;
+    }
+  }
+}
 
-      .workspace {
-        background-color: color('background', 'light');
-        position: relative;
-        margin: 0 auto;
-        @include rounded-equal(2px);
-        width: 0;
-        height: 0;
-        @include box-shadow(0px, 0px, 15px, #000);
+.workspace {
+  background-color: color('background', 'light');
+  position: relative;
+  margin: 0 auto;
+  @include rounded-equal(2px);
+  width: 0;
+  height: 0;
+  @include box-shadow(0px, 0px, 15px, #000);
 
-        &.desktop {
-          width: $page-width;
-          height: $page-height;
+  &.desktop {
+    width: $page-width;
+    height: $page-height;
 
-          &.workspace-modal {
-            width: $modal-width;
-            height: $modal-height;
-          }
-        }
-
-        &.mobile {
-          width: $portait-width;
-          height: $portait-height;
-
-          &.workspace-modal {
-            width: $portait-modal-width;
-            height: $portait-modal-height;
-          }
-        }
-      }
+    &.workspace-modal {
+      width: $modal-width;
+      height: $modal-height;
     }
   }
 
+  &.mobile {
+    width: $portait-width;
+    height: $portait-height;
+
+    &.workspace-modal {
+      width: $portait-modal-width;
+      height: $portait-modal-height;
+    }
+  }
 }
 
 .in-simulation {
