@@ -353,7 +353,7 @@ class Workspace extends Component {
         >
         {this.state.showMenu && this.renderRadialMenu(this.currentPos)}
           <svg height="100%" width="100%">
-            <filter id="dropshadow" height="130%">
+            <filter id="dropshadow" height="130%" filterUnits="userSpaceOnUse">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
               <feOffset dx="0" dy="0" result="offsetblur" />
               <feMerge>
