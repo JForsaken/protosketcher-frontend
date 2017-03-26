@@ -39,6 +39,7 @@ import { createShape as addShape } from './helpers/createShape';
 
 import {
   copySelectedItems,
+  computeCopyPasteOffset,
   pasteClipboard } from './helpers/copyPaste';
 
 import {
@@ -86,6 +87,7 @@ class Workspace extends Component {
     // copy paste
     this.pasteClipboard = pasteClipboard.bind(this);
     this.copySelectedItems = copySelectedItems.bind(this);
+    this.computeCopyPasteOffset = computeCopyPasteOffset.bind(this);
 
     // svg
     this.deleteSvgItem = deleteSvgItem.bind(this);
@@ -141,7 +143,8 @@ class Workspace extends Component {
 
     this.selectedItemsCopied = false;
     this.copiedItesmsInit = false;
-    this.clipboard = [];
+    this.shapesClipboard = {};
+    this.textsClipboard = {};
     this.centralSelectionPoint = null;
     this.currentPos = {
       x: 0,
