@@ -43,7 +43,7 @@ export default class RenderField extends Component {
           {touched &&
            ((error &&
              <div className={errorClass}>
-               <FormattedMessage id={error} />
+               <FormattedMessage id={error.error} values={error.values} />
              </div>
            ) ||
            (warning &&

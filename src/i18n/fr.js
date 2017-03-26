@@ -27,7 +27,10 @@ export default {
   'login.form.email': 'Courriel',
   'login.form.password': 'Mot de passe',
   'login.form.modal.title': 'Échec de connexion.',
-  'login.form.modal.content': 'Veuillez vérifier vos informations. :(',
+  'signup.form.modal.title': 'Échec de création de compte.',
+  'login.form.modal.404': 'Utilisateur inexistant. :(',
+  'signup.form.modal.409': 'Utilisateur existant. :(',
+  'signup.form.modal.500': 'Erreur du serveur, veuillez essayer plus tard. :(',
 
   // PROTOTYPE DASHBOARD
   'dashboard.title': 'Prototypes',
@@ -40,6 +43,11 @@ export default {
   // FORM ERRORS
   'form.errors.required': 'Champs requis',
   'form.errors.email': 'Adresse courriel invalide',
+  'form.errors.maxLength': 'La longueur excède {length} caractères',
+  'form.errors.minLength': 'La longueur est sous {length} caractères',
+  'form.errors.upperCase': 'Doit contenir au moins une lettre majuscule et minuscule',
+  'form.errors.special': 'Doit contenir au moins 1 caractère spécial (!@#$%^&*()_+)',
+  'form.errors.digit': 'Doit contenir au moins 1 chiffre',
 
   // MENU
   'menu.backToPrototypes': 'Prototypes',

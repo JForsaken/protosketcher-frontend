@@ -27,7 +27,11 @@ export default {
   'login.form.email': 'Email',
   'login.form.password': 'Password',
   'login.form.modal.title': 'Failed login.',
-  'login.form.modal.content': 'Please review your login information. :(',
+  'signup.form.modal.title': 'Failed sign up.',
+  'login.form.modal.404': 'User does not exist. :(',
+  'signup.form.modal.409': 'User already exists. :(',
+  'signup.form.modal.500': 'Server error, try again later. :(',
+
 
   // PROTOTYPE DASHBOARD
   'dashboard.title': 'Prototypes',
@@ -40,6 +44,11 @@ export default {
   // FORM ERRORS
   'form.errors.required': 'Required',
   'form.errors.email': 'Invalid email',
+  'form.errors.maxLength': 'Length exceeds {length} characters',
+  'form.errors.minLength': 'Length is below {length} characters',
+  'form.errors.upperCase': 'Requires at least 1 upper case and lower case character',
+  'form.errors.special': 'Requires at least 1 special character (!@#$%^&*()_+)',
+  'form.errors.digit': 'Requires at least 1 digit',
 
   // HUD MENU
   'hud.saving': 'Saving...',
