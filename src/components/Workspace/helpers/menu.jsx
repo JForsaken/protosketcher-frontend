@@ -141,6 +141,12 @@ export function doAction(point) {
       this.state.selectedItems.forEach((o) => {
         const { selectedPrototype, user } = this.props.application;
 
+        // for undo
+        this.groupCopy = {
+          group: clone(this.state.selectedItems),
+          actionId: this.lastActions.length,
+        };
+
       // create the elements
         if (has(shapes, o)) {
           this.props.actions.createShape(selectedPrototype, currentPageId, shapes[o], user.token);

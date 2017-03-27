@@ -144,8 +144,11 @@ class Workspace extends Component {
       selectedItems: [],
     };
 
+    // undo
     this.isUndoing = [];
+    this.groupCopy = {};
     this.lastActions = [];
+
     this.touchTimer = 0;
     this.menuPending = false;
     this.selectionDirty = false;
@@ -242,7 +245,7 @@ class Workspace extends Component {
 
             // for undo
             if (!this.isUndoing.includes(uuid)) {
-              this.lastActions.push({
+              const lastAction = {
                 action: 'create',
                 element: {
                   type: 'shape',
@@ -252,7 +255,17 @@ class Workspace extends Component {
                     id,
                   },
                 },
-              });
+              };
+
+              if (this.groupCopy.group && this.groupCopy.group.includes(uuid)) {
+                if (!this.lastActions[this.groupCopy.actionId]) {
+                  this.lastActions[this.groupCopy.actionId] = [];
+                }
+                this.lastActions[this.groupCopy.actionId].push(lastAction);
+                this.groupCopy.group = this.groupCopy.group.filter(o => o !== uuid);
+              } else {
+                this.lastActions.push(lastAction);
+              }
             } else {
               this.isUndoing = this.isUndoing.filter(o => o !== uuid);
             }
@@ -279,7 +292,7 @@ class Workspace extends Component {
 
             // for undo
             if (!this.isUndoing.includes(uuid)) {
-              this.lastActions.push({
+              const lastAction = {
                 action: 'create',
                 element: {
                   type: 'text',
@@ -289,7 +302,17 @@ class Workspace extends Component {
                     id,
                   },
                 },
-              });
+              };
+
+              if (this.groupCopy.group && this.groupCopy.group.includes(uuid)) {
+                if (!this.lastActions[this.groupCopy.actionId]) {
+                  this.lastActions[this.groupCopy.actionId] = [];
+                }
+                this.lastActions[this.groupCopy.actionId].push(lastAction);
+                this.groupCopy.group = this.groupCopy.group.filter(o => o !== uuid);
+              } else {
+                this.lastActions.push(lastAction);
+              }
             } else {
               this.isUndoing = this.isUndoing.filter(o => o !== uuid);
             }
