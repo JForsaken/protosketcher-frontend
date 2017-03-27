@@ -65,14 +65,16 @@ export function doAction(point) {
     case constants.menuItems.SELECT_AREA.action:
       this.multiSelect(point);
       break;
-    case constants.menuItems.DELETE_SELECTION.action:
+    case constants.menuItems.DELETE_SELECTION.action: {
+      const actionId = this.lastActions.length;
       for (const uuid of this.state.selectedItems) {
-        this.deleteSvgItem(uuid);
+        this.deleteSvgItem(uuid, actionId);
       }
       this.setState({
         selectedItems: [],
       });
       break;
+    }
     case constants.menuItems.DRAG_SELECTION.action: {
     // when done dragging, patch all dragged items
       const { shapes, texts, currentPageId } = this.state;

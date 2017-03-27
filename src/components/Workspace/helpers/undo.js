@@ -1,5 +1,7 @@
 /* Node modules */
 import { cloneDeep, isArray, omit, isEmpty } from 'lodash';
+import uuidV1 from 'uuid/v1';
+
 
 export function undo() {
   const { currentPageId } = this.state;
@@ -12,23 +14,24 @@ export function undo() {
   const apply = (last) => {
     switch (last.action) {
       case 'delete': {
-        const { uuid } = last.element.object;
-        this.isUndoing = uuid;
+        const uuid = last.element.object.uuid || uuidV1();
+
+        this.isUndoing.push(uuid);
 
         if (last.element.type === 'shape') {
           this.props.actions.createShape(selectedPrototype,
-                                       currentPageId,
-                                       last.element.object,
-                                       user.token);
+                                         currentPageId,
+                                         { ...last.element.object, uuid },
+                                         user.token);
           shapes = {
             ...shapes,
             [uuid]: omit(last.element.object, ['id']),
           };
         } else {
           this.props.actions.createText(selectedPrototype,
-                                      currentPageId,
-                                      last.element.object,
-                                      user.token);
+                                        currentPageId,
+                                        { ...last.element.object, uuid },
+                                        user.token);
           texts = {
             ...texts,
             [uuid]: omit(last.element.object, ['id']),
@@ -38,7 +41,7 @@ export function undo() {
       }
       case 'create':
         shouldSetState = false;
-        this.isUndoing = last.element.object.uuid;
+        this.isUndoing.push(last.element.object.uuid);
         this.deleteSvgItem(last.element.object.uuid);
         break;
       case 'move':

@@ -144,7 +144,7 @@ class Workspace extends Component {
       selectedItems: [],
     };
 
-    this.isUndoing = null;
+    this.isUndoing = [];
     this.lastActions = [];
     this.touchTimer = 0;
     this.menuPending = false;
@@ -241,7 +241,7 @@ class Workspace extends Component {
             const shape = this.state.shapes[uuid];
 
             // for undo
-            if (this.isUndoing !== uuid) {
+            if (!this.isUndoing.includes(uuid)) {
               this.lastActions.push({
                 action: 'create',
                 element: {
@@ -254,7 +254,7 @@ class Workspace extends Component {
                 },
               });
             } else {
-              this.isUndoing = null;
+              this.isUndoing = this.isUndoing.filter(o => o !== uuid);
             }
 
             // update the shape list with that shape
@@ -278,7 +278,7 @@ class Workspace extends Component {
             const text = this.state.texts[uuid];
 
             // for undo
-            if (this.isUndoing !== uuid) {
+            if (!this.isUndoing.includes(uuid)) {
               this.lastActions.push({
                 action: 'create',
                 element: {
@@ -291,7 +291,7 @@ class Workspace extends Component {
                 },
               });
             } else {
-              this.isUndoing = null;
+              this.isUndoing = this.isUndoing.filter(o => o !== uuid);
             }
 
             // update the text list with that text

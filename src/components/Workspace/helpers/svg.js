@@ -9,7 +9,7 @@ import * as constants from '../../constants';
  * Delete the svg element
  * @param {string} uuid the id of the element to delete
  */
-export function deleteSvgItem(uuid) {
+export function deleteSvgItem(uuid, actionId) {
   const { shapes, texts, currentPageId } = this.state;
   const { selectedPrototype, user } = this.props.application;
 
@@ -29,13 +29,23 @@ export function deleteSvgItem(uuid) {
   }
 
   // for undo
-  if (this.isUndoing !== uuid) {
-    this.lastActions.push({
+  if (!this.isUndoing.includes(uuid)) {
+    const lastAction = {
       action: 'delete',
       element,
-    });
+    };
+
+    // if group
+    if (actionId >= 0) {
+      if (!this.lastActions[actionId]) {
+        this.lastActions[actionId] = [];
+      }
+      this.lastActions[actionId].push(lastAction);
+    } else {
+      this.lastActions.push(lastAction);
+    }
   } else {
-    this.isUndoing = null;
+    this.isUndoing = this.isUndoing.filter(o => o === uuid);
   }
 
   this.setState({
