@@ -118,7 +118,7 @@ export function doAction(point) {
       this.state.selectedItems.forEach((o) => {
         const { selectedPrototype, user } = this.props.application;
 
-        // for undo
+        // to be able to undo the whole copy if we undo
         this.groupCopy = {
           group: clone(this.state.selectedItems),
           mementoId: this.memento.length,

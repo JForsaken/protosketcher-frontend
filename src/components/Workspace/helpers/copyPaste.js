@@ -115,7 +115,7 @@ export function pasteClipboard() {
   }, () => {
     const { selectedPrototype, user } = this.props.application;
 
-    // for undo
+    // to be able to undo the whole paste if we undo
     this.groupCopy = {
       group: clone(newSelectedItems),
       mementoId: this.memento.length,
