@@ -125,3 +125,24 @@ export function extractMovedElementMoment(uuid, element, type) {
     },
   };
 }
+
+export function extractDeletedElementMoment(uuid, element, mementoId) {
+  if (!this.isUndoing.includes(uuid)) {
+    const lastAction = {
+      action: 'delete',
+      element,
+    };
+
+    // if group
+    if (mementoId >= 0) {
+      if (!this.memento[mementoId]) {
+        this.memento[mementoId] = [];
+      }
+      this.memento[mementoId].push(lastAction);
+    } else {
+      this.memento.push(lastAction);
+    }
+  } else {
+    this.isUndoing = this.isUndoing.filter(o => o === uuid);
+  }
+}

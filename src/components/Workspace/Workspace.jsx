@@ -70,6 +70,8 @@ import {
 
 import {
   undo,
+  extractMovedElementMoment,
+  extractDeletedElementMoment,
   extractCreatedElementMoment } from './helpers/undo';
 
 class Workspace extends Component {
@@ -116,6 +118,8 @@ class Workspace extends Component {
     // Undo
     this.undo = undo.bind(this);
     this.extractCreatedElementMoment = extractCreatedElementMoment.bind(this);
+    this.extractMovedElementMoment = extractMovedElementMoment.bind(this);
+    this.extractDeletedElementMoment = extractDeletedElementMoment.bind(this);
 
     // Workspace
     this.getRealId = this.getRealId.bind(this);
