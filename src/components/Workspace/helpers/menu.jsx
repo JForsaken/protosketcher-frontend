@@ -1,6 +1,6 @@
 /* Node modules */
 import React from 'react';
-import { omit, has, clone } from 'lodash';
+import { isEmpty, omit, has, clone } from 'lodash';
 
 /* Components */
 import RadialMenu from '../../common/RadialMenu/RadialMenu';
@@ -76,6 +76,8 @@ export function doAction(point) {
     case constants.menuItems.DRAG_SELECTION.action: {
     // when done dragging, patch all dragged items
       const { shapes, texts, currentPageId } = this.state;
+
+      const lastActions = [];
       this.state.selectedItems.forEach((o) => {
         const { selectedPrototype, user } = this.props.application;
         const id = this.getRealId(o);
@@ -84,7 +86,7 @@ export function doAction(point) {
           const patch = { x: shapes[o].x, y: shapes[o].y };
 
           // for undo
-          this.lastActions.push({
+          lastActions.push({
             action: 'move',
             element: {
               type: 'shape',
@@ -102,7 +104,7 @@ export function doAction(point) {
           const patch = { x: texts[o].x, y: texts[o].y };
 
           // for undo
-          this.lastActions.push({
+          lastActions.push({
             action: 'move',
             element: {
               type: 'text',
@@ -117,6 +119,10 @@ export function doAction(point) {
           this.props.actions.patchText(selectedPrototype, currentPageId, id, patch, user.token);
         }
       });
+
+      if (!isEmpty(lastActions)) {
+        this.lastActions.push(lastActions.length === 1 ? lastActions[0] : lastActions);
+      }
 
     // Save new original positions before draging and new central point of selection
       this.centralSelectionPoint = this.getCentralPointOfSelection();
