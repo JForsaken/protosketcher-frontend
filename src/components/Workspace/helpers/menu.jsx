@@ -88,14 +88,14 @@ export function doAction(point) {
           const patch = { x: shapes[o].x, y: shapes[o].y };
 
           // for undo
-          lastActions.push(o, shapes[o], 'shape');
+          lastActions.push(this.extractMovedElementMoment(o, shapes[o], 'shape'));
 
           this.props.actions.patchShape(selectedPrototype, currentPageId, id, patch, user.token);
         } else if (has(texts, o)) {
           const patch = { x: texts[o].x, y: texts[o].y };
 
           // for undo
-          lastActions.push(o, texts[o], 'text');
+          lastActions.push(this.extractMovedElementMoment(o, texts[o], 'text'));
 
           this.props.actions.patchText(selectedPrototype, currentPageId, id, patch, user.token);
         }
