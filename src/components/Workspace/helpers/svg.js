@@ -28,6 +28,7 @@ export function deleteSvgItem(uuid) {
     this.props.actions.deleteText(selectedPrototype, currentPageId, id, user.token);
   }
 
+  // for undo
   if (this.isUndoing !== uuid) {
     this.lastActions.push({
       action: 'delete',

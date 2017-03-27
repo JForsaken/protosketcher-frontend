@@ -63,11 +63,12 @@ import {
 
 import {
   getPointFromEvent,
-  undo,
   onStartingEvent,
   onEndingEvent,
   onMovingEvent,
   onKeyDownEvent } from './helpers/events';
+
+import { undo } from './helpers/undo';
 
 class Workspace extends Component {
 
@@ -85,7 +86,6 @@ class Workspace extends Component {
     this.onMovingEvent = onMovingEvent.bind(this);
     this.onKeyDownEvent = onKeyDownEvent.bind(this);
     this.getPointFromEvent = getPointFromEvent.bind(this);
-    this.undo = undo.bind(this);
 
     // copy paste
     this.pasteClipboard = pasteClipboard.bind(this);
@@ -110,6 +110,9 @@ class Workspace extends Component {
     this.changeColor = changeColor.bind(this);
     this.createText = addText.bind(this);
     this.createShape = addShape.bind(this);
+
+    // Undo
+    this.undo = undo.bind(this);
 
     // Workspace
     this.getRealId = this.getRealId.bind(this);
@@ -237,6 +240,7 @@ class Workspace extends Component {
           if (this.state.shapes.hasOwnProperty(uuid) && !this.state.shapes[uuid].id) {
             const shape = this.state.shapes[uuid];
 
+            // for undo
             if (this.isUndoing !== uuid) {
               this.lastActions.push({
                 action: 'create',
@@ -273,6 +277,7 @@ class Workspace extends Component {
           if (this.state.texts.hasOwnProperty(uuid) && !this.state.texts[uuid].id) {
             const text = this.state.texts[uuid];
 
+            // for undo
             if (this.isUndoing !== uuid) {
               this.lastActions.push({
                 action: 'create',

@@ -1,5 +1,5 @@
 /* Node modules */
-import { omit, isEmpty, clone, has, pick } from 'lodash';
+import { isEmpty, clone, has, pick } from 'lodash';
 
 /* Utils */
 import absorbEvent from '../../../utils/events.js';
@@ -8,55 +8,6 @@ import absorbEvent from '../../../utils/events.js';
 import * as constants from '../../constants';
 const MAX_TOUCH_DISTANCE = 15;
 
-
-export function undo() {
-  const { currentPageId } = this.state;
-  const { selectedPrototype, user } = this.props.application;
-
-  if (!isEmpty(this.lastActions)) {
-    const last = this.lastActions.pop();
-
-    switch (last.action) {
-      case 'delete': {
-        const { uuid } = last.element.object;
-        this.isUndoing = uuid;
-
-        if (last.element.type === 'shape') {
-          this.props.actions.createShape(selectedPrototype,
-                                        currentPageId,
-                                        last.element.object,
-                                        user.token);
-          this.setState({
-            shapes: {
-              ...this.state.shapes,
-              [uuid]: omit(last.element.object, ['id']),
-            },
-          });
-        } else {
-          this.props.actions.createText(selectedPrototype,
-                                        currentPageId,
-                                        last.element.object,
-                                        user.token);
-          this.setState({
-            texts: {
-              ...this.state.texts,
-              [uuid]: omit(last.element.object, ['id']),
-            },
-          });
-        }
-        break;
-      }
-      case 'create':
-        this.isUndoing = last.element.object.uuid;
-        this.deleteSvgItem(last.element.object.uuid);
-        break;
-      case 'move':
-        break;
-      default:
-        break;
-    }
-  }
-}
 
 /**
  * On starting event

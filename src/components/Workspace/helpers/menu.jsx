@@ -1,6 +1,6 @@
 /* Node modules */
 import React from 'react';
-import { has, clone } from 'lodash';
+import { omit, has, clone } from 'lodash';
 
 /* Components */
 import RadialMenu from '../../common/RadialMenu/RadialMenu';
@@ -82,9 +82,38 @@ export function doAction(point) {
 
         if (has(shapes, o)) {
           const patch = { x: shapes[o].x, y: shapes[o].y };
+
+          // for undo
+          this.lastActions.push({
+            action: 'move',
+            element: {
+              type: 'shape',
+              uuid: o,
+              object: {
+                ...omit(shapes[o], ['originalPositionBeforeDrag']),
+                x: shapes[o].originalPositionBeforeDrag.x,
+                y: shapes[o].originalPositionBeforeDrag.y,
+              },
+            },
+          });
+
           this.props.actions.patchShape(selectedPrototype, currentPageId, id, patch, user.token);
         } else if (has(texts, o)) {
           const patch = { x: texts[o].x, y: texts[o].y };
+
+          // for undo
+          this.lastActions.push({
+            action: 'move',
+            element: {
+              type: 'text',
+              uuid: o,
+              object: {
+                ...omit(texts[o], ['originalPositionBeforeDrag']),
+                x: texts[o].originalPositionBeforeDrag.x,
+                y: texts[o].originalPositionBeforeDrag.y,
+              },
+            },
+          });
           this.props.actions.patchText(selectedPrototype, currentPageId, id, patch, user.token);
         }
       });
