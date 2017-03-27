@@ -1,6 +1,6 @@
 /* Node modules */
 import React from 'react';
-import { isEmpty, omit, has, clone } from 'lodash';
+import { has, clone } from 'lodash';
 
 /* Components */
 import RadialMenu from '../../common/RadialMenu/RadialMenu';
@@ -88,43 +88,20 @@ export function doAction(point) {
           const patch = { x: shapes[o].x, y: shapes[o].y };
 
           // for undo
-          lastActions.push({
-            action: 'move',
-            element: {
-              type: 'shape',
-              uuid: o,
-              object: {
-                ...omit(shapes[o], ['originalPositionBeforeDrag']),
-                x: shapes[o].originalPositionBeforeDrag.x,
-                y: shapes[o].originalPositionBeforeDrag.y,
-              },
-            },
-          });
+          lastActions.push(o, shapes[o], 'shape');
 
           this.props.actions.patchShape(selectedPrototype, currentPageId, id, patch, user.token);
         } else if (has(texts, o)) {
           const patch = { x: texts[o].x, y: texts[o].y };
 
           // for undo
-          lastActions.push({
-            action: 'move',
-            element: {
-              type: 'text',
-              uuid: o,
-              object: {
-                ...omit(texts[o], ['originalPositionBeforeDrag']),
-                x: texts[o].originalPositionBeforeDrag.x,
-                y: texts[o].originalPositionBeforeDrag.y,
-              },
-            },
-          });
+          lastActions.push(o, texts[o], 'text');
+
           this.props.actions.patchText(selectedPrototype, currentPageId, id, patch, user.token);
         }
       });
 
-      if (!isEmpty(lastActions)) {
-        this.memento.push(lastActions.length === 1 ? lastActions[0] : lastActions);
-      }
+      this.memento.push(lastActions);
 
     // Save new original positions before draging and new central point of selection
       this.centralSelectionPoint = this.getCentralPointOfSelection();

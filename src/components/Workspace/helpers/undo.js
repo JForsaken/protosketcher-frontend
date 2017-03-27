@@ -83,14 +83,14 @@ export function undo() {
   }
 }
 
-export function saveCreateElementAction(id, uuid, obj, type) {
+export function extractCreatedElementMoment(id, uuid, element, type) {
   if (!this.isUndoing.includes(uuid)) {
     const lastAction = {
       action: 'create',
       element: {
         type,
         object: {
-          ...obj,
+          ...element,
           uuid,
           id,
         },
@@ -109,4 +109,19 @@ export function saveCreateElementAction(id, uuid, obj, type) {
   } else {
     this.isUndoing = this.isUndoing.filter(o => o !== uuid);
   }
+}
+
+export function extractMovedElementMoment(uuid, element, type) {
+  return {
+    action: 'move',
+    element: {
+      type,
+      uuid,
+      object: {
+        ...omit(element, ['originalPositionBeforeDrag']),
+        x: element.originalPositionBeforeDrag.x,
+        y: element.originalPositionBeforeDrag.y,
+      },
+    },
+  };
 }

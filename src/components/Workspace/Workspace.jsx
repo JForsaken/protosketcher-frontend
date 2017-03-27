@@ -70,7 +70,7 @@ import {
 
 import {
   undo,
-  saveElementToMemento } from './helpers/undo';
+  extractCreatedElementMoment } from './helpers/undo';
 
 class Workspace extends Component {
 
@@ -115,7 +115,7 @@ class Workspace extends Component {
 
     // Undo
     this.undo = undo.bind(this);
-    this.saveElementToMemento = saveElementToMemento.bind(this);
+    this.extractCreatedElementMoment = extractCreatedElementMoment.bind(this);
 
     // Workspace
     this.getRealId = this.getRealId.bind(this);
@@ -252,7 +252,7 @@ class Workspace extends Component {
             const shape = this.state.shapes[uuid];
 
             // for undo
-            this.saveElementToMemento(id, uuid, shape, 'shape');
+            this.extractCreatedElementMoment(id, uuid, shape, 'shape');
 
             // update the shape list with that shape
             this.setState({
@@ -275,7 +275,7 @@ class Workspace extends Component {
             const text = this.state.texts[uuid];
 
             // for undo
-            this.saveElementToMemento(id, uuid, text, 'text');
+            this.extractCreatedElementMoment(id, uuid, text, 'text');
 
             // update the text list with that text
             this.setState({
