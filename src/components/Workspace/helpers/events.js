@@ -266,7 +266,7 @@ export function onKeyDownEvent(e) {
     Object.keys(this.textsClipboard).length)
   ) {
     this.pasteClipboard();
-  } else if (e.key === 'z' && e.ctrlKey === true) {
+  } else if (e.key === constants.keys.Z && e.ctrlKey === true) {
     this.undo();
   }
 }
