@@ -66,9 +66,9 @@ export function doAction(point) {
       this.multiSelect(point);
       break;
     case constants.menuItems.DELETE_SELECTION.action: {
-      const actionId = this.lastActions.length;
+      const mementoId = this.memento.length;
       for (const uuid of this.state.selectedItems) {
-        this.deleteSvgItem(uuid, actionId);
+        this.deleteSvgItem(uuid, mementoId);
       }
       this.setState({
         selectedItems: [],
@@ -123,7 +123,7 @@ export function doAction(point) {
       });
 
       if (!isEmpty(lastActions)) {
-        this.lastActions.push(lastActions.length === 1 ? lastActions[0] : lastActions);
+        this.memento.push(lastActions.length === 1 ? lastActions[0] : lastActions);
       }
 
     // Save new original positions before draging and new central point of selection
@@ -144,7 +144,7 @@ export function doAction(point) {
         // for undo
         this.groupCopy = {
           group: clone(this.state.selectedItems),
-          actionId: this.lastActions.length,
+          mementoId: this.memento.length,
         };
 
       // create the elements

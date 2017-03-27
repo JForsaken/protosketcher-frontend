@@ -63,8 +63,8 @@ export function undo() {
   };
 
   // Only apply undo if there exist last actions
-  if (!isEmpty(this.lastActions)) {
-    const last = this.lastActions.pop();
+  if (!isEmpty(this.memento)) {
+    const last = this.memento.pop();
 
     // if it was a multi action or a single action
     if (isArray(last)) {
@@ -83,3 +83,30 @@ export function undo() {
   }
 }
 
+export function saveCreateElementAction(id, uuid, obj, type) {
+  if (!this.isUndoing.includes(uuid)) {
+    const lastAction = {
+      action: 'create',
+      element: {
+        type,
+        object: {
+          ...obj,
+          uuid,
+          id,
+        },
+      },
+    };
+
+    if (this.groupCopy.group && this.groupCopy.group.includes(uuid)) {
+      if (!this.memento[this.groupCopy.mementoId]) {
+        this.memento[this.groupCopy.mementoId] = [];
+      }
+      this.memento[this.groupCopy.mementoId].push(lastAction);
+      this.groupCopy.group = this.groupCopy.group.filter(o => o !== uuid);
+    } else {
+      this.memento.push(lastAction);
+    }
+  } else {
+    this.isUndoing = this.isUndoing.filter(o => o !== uuid);
+  }
+}

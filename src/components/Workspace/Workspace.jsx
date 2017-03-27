@@ -68,7 +68,9 @@ import {
   onMovingEvent,
   onKeyDownEvent } from './helpers/events';
 
-import { undo } from './helpers/undo';
+import {
+  undo,
+  saveElementToMemento } from './helpers/undo';
 
 class Workspace extends Component {
 
@@ -113,6 +115,7 @@ class Workspace extends Component {
 
     // Undo
     this.undo = undo.bind(this);
+    this.saveElementToMemento = saveElementToMemento.bind(this);
 
     // Workspace
     this.getRealId = this.getRealId.bind(this);
@@ -147,7 +150,7 @@ class Workspace extends Component {
     // undo
     this.isUndoing = [];
     this.groupCopy = {};
-    this.lastActions = [];
+    this.memento = [];
 
     this.touchTimer = 0;
     this.menuPending = false;
@@ -194,6 +197,11 @@ class Workspace extends Component {
         this.props.actions.getTexts(selectedPrototype, selectedPage,
         newProps.application.user.token);
       }
+
+      // clear undo
+      this.isUndoing = [];
+      this.groupCopy = {};
+      this.memento = [];
     }
 
     // If the page types are not cached, get them
@@ -244,31 +252,7 @@ class Workspace extends Component {
             const shape = this.state.shapes[uuid];
 
             // for undo
-            if (!this.isUndoing.includes(uuid)) {
-              const lastAction = {
-                action: 'create',
-                element: {
-                  type: 'shape',
-                  object: {
-                    ...shape,
-                    uuid,
-                    id,
-                  },
-                },
-              };
-
-              if (this.groupCopy.group && this.groupCopy.group.includes(uuid)) {
-                if (!this.lastActions[this.groupCopy.actionId]) {
-                  this.lastActions[this.groupCopy.actionId] = [];
-                }
-                this.lastActions[this.groupCopy.actionId].push(lastAction);
-                this.groupCopy.group = this.groupCopy.group.filter(o => o !== uuid);
-              } else {
-                this.lastActions.push(lastAction);
-              }
-            } else {
-              this.isUndoing = this.isUndoing.filter(o => o !== uuid);
-            }
+            this.saveElementToMemento(id, uuid, shape, 'shape');
 
             // update the shape list with that shape
             this.setState({
@@ -291,31 +275,7 @@ class Workspace extends Component {
             const text = this.state.texts[uuid];
 
             // for undo
-            if (!this.isUndoing.includes(uuid)) {
-              const lastAction = {
-                action: 'create',
-                element: {
-                  type: 'text',
-                  object: {
-                    ...text,
-                    uuid,
-                    id,
-                  },
-                },
-              };
-
-              if (this.groupCopy.group && this.groupCopy.group.includes(uuid)) {
-                if (!this.lastActions[this.groupCopy.actionId]) {
-                  this.lastActions[this.groupCopy.actionId] = [];
-                }
-                this.lastActions[this.groupCopy.actionId].push(lastAction);
-                this.groupCopy.group = this.groupCopy.group.filter(o => o !== uuid);
-              } else {
-                this.lastActions.push(lastAction);
-              }
-            } else {
-              this.isUndoing = this.isUndoing.filter(o => o !== uuid);
-            }
+            this.saveElementToMemento(id, uuid, text, 'text');
 
             // update the text list with that text
             this.setState({

@@ -118,7 +118,7 @@ export function pasteClipboard() {
     // for undo
     this.groupCopy = {
       group: clone(newSelectedItems),
-      actionId: this.lastActions.length,
+      mementoId: this.memento.length,
     };
 
     // save elements
