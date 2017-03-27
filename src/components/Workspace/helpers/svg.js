@@ -1,5 +1,5 @@
 /* Node modules */
-import { has } from 'lodash';
+import { has, clone } from 'lodash';
 
 /* Constants */
 import * as constants from '../../constants';
@@ -14,15 +14,27 @@ export function deleteSvgItem(uuid) {
   const { selectedPrototype, user } = this.props.application;
 
   const id = this.getRealId(uuid);
+  let element = null;
 
   if (has(shapes, uuid)) {
+    element = { type: 'shape', object: clone(shapes[uuid]) };
     delete shapes[uuid];
     delete this.svgShapes[id];
     this.props.actions.deleteShape(selectedPrototype, currentPageId, id, user.token);
   } else if (has(texts, uuid)) {
+    element = { type: 'text', object: clone(texts[uuid]) };
     delete texts[uuid];
     delete this.svgTexts[id];
     this.props.actions.deleteText(selectedPrototype, currentPageId, id, user.token);
+  }
+
+  if (this.isUndoing !== uuid) {
+    this.lastActions.push({
+      action: 'delete',
+      element,
+    });
+  } else {
+    this.isUndoing = null;
   }
 
   this.setState({

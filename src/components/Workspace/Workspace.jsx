@@ -63,6 +63,7 @@ import {
 
 import {
   getPointFromEvent,
+  undo,
   onStartingEvent,
   onEndingEvent,
   onMovingEvent,
@@ -84,6 +85,7 @@ class Workspace extends Component {
     this.onMovingEvent = onMovingEvent.bind(this);
     this.onKeyDownEvent = onKeyDownEvent.bind(this);
     this.getPointFromEvent = getPointFromEvent.bind(this);
+    this.undo = undo.bind(this);
 
     // copy paste
     this.pasteClipboard = pasteClipboard.bind(this);
@@ -139,6 +141,8 @@ class Workspace extends Component {
       selectedItems: [],
     };
 
+    this.isUndoing = null;
+    this.lastActions = [];
     this.touchTimer = 0;
     this.menuPending = false;
     this.selectionDirty = false;
@@ -233,6 +237,22 @@ class Workspace extends Component {
           if (this.state.shapes.hasOwnProperty(uuid) && !this.state.shapes[uuid].id) {
             const shape = this.state.shapes[uuid];
 
+            if (this.isUndoing !== uuid) {
+              this.lastActions.push({
+                action: 'create',
+                element: {
+                  type: 'shape',
+                  object: {
+                    ...shape,
+                    uuid,
+                    id,
+                  },
+                },
+              });
+            } else {
+              this.isUndoing = null;
+            }
+
             // update the shape list with that shape
             this.setState({
               shapes: {
@@ -252,6 +272,22 @@ class Workspace extends Component {
           const { id, uuid } = newProps.api.createText.text;
           if (this.state.texts.hasOwnProperty(uuid) && !this.state.texts[uuid].id) {
             const text = this.state.texts[uuid];
+
+            if (this.isUndoing !== uuid) {
+              this.lastActions.push({
+                action: 'create',
+                element: {
+                  type: 'text',
+                  object: {
+                    ...text,
+                    uuid,
+                    id,
+                  },
+                },
+              });
+            } else {
+              this.isUndoing = null;
+            }
 
             // update the text list with that text
             this.setState({
