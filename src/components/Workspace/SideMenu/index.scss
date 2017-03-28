@@ -35,6 +35,7 @@ $side-menu-width: 225px;
 
   &.drawer-open {
     width: $side-menu-width;
+    min-width: $side-menu-width;
     padding: 17px;
 
     .drawer-content {
