@@ -18,7 +18,14 @@ import * as apiActions from '../../../actions/api';
 import { LOGIN } from '../../../actions/constants';
 
 /* Utils */
-import { isRequired, isEmail } from '../../../utils/validation';
+import {
+  isRequired,
+  isEmail,
+  isMinLengthValid,
+  isMaxLengthValid,
+  containsUpperCase,
+  containsSpecial,
+  containsDigit } from '../../../utils/validation';
 
 @injectIntl
 class SignupSection extends Component {
@@ -33,6 +40,7 @@ class SignupSection extends Component {
     this.state = {
       isShowingModal: false,
       pending: false,
+      message: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -42,9 +50,20 @@ class SignupSection extends Component {
     const { login, createUser } = nextProps.api;
 
     if (!isEqual(this.props.api.createUser, createUser)) {
+      this.setState({ pending: false });
+
       // if the user creation has errors
       if (!isEmpty(createUser.error)) {
-        this.setState({ isShowingModal: true, pending: false });
+        let message = '';
+        switch (createUser.error.code) {
+          case 409:
+            message = 'signup.form.modal.409';
+            break;
+          default:
+            message = 'signup.form.modal.500';
+            break;
+        }
+        this.setState({ isShowingModal: true, message });
       } else {
         const { email, password } = this.props.form.signupForm.values;
         this.props.actions.login({ email, password });
@@ -82,10 +101,10 @@ class SignupSection extends Component {
       <ModalContainer onClose={() => this.handleModalClose()}>
         <ModalDialog className="error-modal" onClose={() => this.handleModalClose()}>
           <h2>
-            <FormattedMessage id="login.form.modal.title" />
+            <FormattedMessage id="signup.form.modal.title" />
           </h2>
           <h4>
-            <FormattedMessage id="login.form.modal.content" />
+            <FormattedMessage id={this.state.message} />
           </h4>
         </ModalDialog>
       </ModalContainer>
@@ -126,7 +145,13 @@ class SignupSection extends Component {
             inputClass="login-section__input-container__input"
             errorClass="login-section__input-container__error-label"
             type="password"
-            validate={isRequired}
+            validate={[isRequired,
+                       (v) => isMaxLengthValid(v, 25),
+                       (v) => isMinLengthValid(v, 8),
+                       (v) => containsUpperCase(v, false),
+                       (v) => containsSpecial(v, false),
+                       (v) => containsDigit(v, false),
+              ]}
             placeholder={intl.messages['login.form.password']}
           />
           <Button

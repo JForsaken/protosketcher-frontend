@@ -33,6 +33,7 @@ class LoginSection extends Component {
     this.state = {
       isShowingModal: false,
       pending: false,
+      message: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -47,7 +48,16 @@ class LoginSection extends Component {
 
       // if the login has errors
       if (!isEmpty(login.error)) {
-        this.setState({ isShowingModal: true });
+        let message = '';
+        switch (login.error.code) {
+          case 404:
+            message = 'login.form.modal.404';
+            break;
+          default:
+            message = 'signup.form.modal.500';
+            break;
+        }
+        this.setState({ isShowingModal: true, message });
       } else {
         this.redirectToSketch();
       }
@@ -77,7 +87,7 @@ class LoginSection extends Component {
             <FormattedMessage id="login.form.modal.title" />
           </h2>
           <h4>
-            <FormattedMessage id="login.form.modal.content" />
+            <FormattedMessage id={this.state.message} />
           </h4>
         </ModalDialog>
       </ModalContainer>
