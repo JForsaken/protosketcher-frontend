@@ -52,7 +52,8 @@ import {
   monoSelect,
   multiSelect,
   updateSelectionOriginalPosition,
-  renderSelectionRect } from './helpers/selection';
+  renderSelectionRect,
+  addItemToSelection } from './helpers/selection';
 
 import {
   computeSvgPath,
@@ -101,6 +102,7 @@ class Workspace extends Component {
     this.monoSelect = monoSelect.bind(this);
     this.multiSelect = multiSelect.bind(this);
     this.renderSelectionRect = renderSelectionRect.bind(this);
+    this.addItemToSelection = addItemToSelection.bind(this);
 
     // Helpers
     this.changeColor = changeColor.bind(this);
