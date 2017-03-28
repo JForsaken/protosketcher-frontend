@@ -209,10 +209,11 @@ class Workspace extends Component {
         newProps.application.user.token);
       }
 
-      // clear undo
+      // clear undo/redo upon page change
       this.isUndoing = [];
       this.groupCopy = {};
       this.memento = [];
+      this.keepsake = [];
     }
 
     // If the page types are not cached, get them
