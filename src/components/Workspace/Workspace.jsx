@@ -70,6 +70,7 @@ import {
 
 import {
   undo,
+  redo,
   extractMovedElementMoment,
   extractDeletedElementMoment,
   extractCreatedElementMoment } from './helpers/undo';
@@ -117,6 +118,7 @@ class Workspace extends Component {
 
     // Undo
     this.undo = undo.bind(this);
+    this.redo = redo.bind(this);
     this.extractCreatedElementMoment = extractCreatedElementMoment.bind(this);
     this.extractMovedElementMoment = extractMovedElementMoment.bind(this);
     this.extractDeletedElementMoment = extractDeletedElementMoment.bind(this);
@@ -155,6 +157,7 @@ class Workspace extends Component {
     this.isUndoing = [];
     this.groupCopy = {};
     this.memento = [];
+    this.keepsake = [];
 
     this.touchTimer = 0;
     this.menuPending = false;

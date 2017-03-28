@@ -269,6 +269,8 @@ export function onKeyDownEvent(e) {
     this.pasteClipboard();
   } else if (e.key === constants.keys.Z && e.ctrlKey === true) {
     this.undo();
+  } else if (e.key === constants.keys.Y && e.ctrlKey === true) {
+    this.redo();
   }
 }
 

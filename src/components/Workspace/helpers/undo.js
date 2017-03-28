@@ -3,86 +3,6 @@ import { cloneDeep, isArray, omit, isEmpty } from 'lodash';
 import uuidV1 from 'uuid/v1';
 
 
-export function undo() {
-  const { currentPageId } = this.state;
-  const { selectedPrototype, user } = this.props.application;
-  let shouldSetState = true;
-  let shapes = cloneDeep(this.state.shapes);
-  let texts = cloneDeep(this.state.texts);
-
-  // Closure in which the undo will be applied
-  const apply = (last) => {
-    switch (last.action) {
-      case 'delete': {
-        const uuid = last.element.object.uuid || uuidV1();
-
-        this.isUndoing.push(uuid);
-
-        if (last.element.type === 'shape') {
-          this.props.actions.createShape(selectedPrototype,
-                                         currentPageId,
-                                         { ...last.element.object, uuid },
-                                         user.token);
-          shapes = {
-            ...shapes,
-            [uuid]: omit(last.element.object, ['id']),
-          };
-        } else {
-          this.props.actions.createText(selectedPrototype,
-                                        currentPageId,
-                                        { ...last.element.object, uuid },
-                                        user.token);
-          texts = {
-            ...texts,
-            [uuid]: omit(last.element.object, ['id']),
-          };
-        }
-        break;
-      }
-      case 'create':
-        shouldSetState = false;
-        this.isUndoing.push(last.element.object.uuid);
-        this.deleteSvgItem(last.element.object.uuid);
-        break;
-      case 'move':
-        if (last.element.type === 'shape') {
-          shapes = {
-            ...shapes,
-            [last.element.uuid]: last.element.object,
-          };
-        } else {
-          texts = {
-            ...texts,
-            [last.element.uuid]: last.element.object,
-          };
-        }
-        break;
-      default:
-        break;
-    }
-  };
-
-  // Only apply undo if there exist last actions
-  if (!isEmpty(this.memento)) {
-    const last = this.memento.pop();
-
-    // if it was a multi action or a single action
-    if (isArray(last)) {
-      last.forEach(o => apply(o));
-    } else {
-      apply(last);
-    }
-
-    // set state if needed
-    if (shouldSetState) {
-      this.setState({
-        shapes,
-        texts,
-      });
-    }
-  }
-}
-
 export function extractCreatedElementMoment(id, uuid, element, type) {
   if (!this.isUndoing.includes(uuid)) {
     const lastAction = {
@@ -144,5 +64,142 @@ export function extractDeletedElementMoment(uuid, element, mementoId) {
     }
   } else {
     this.isUndoing = this.isUndoing.filter(o => o === uuid);
+  }
+}
+
+export function undo() {
+  const { currentPageId } = this.state;
+  const { selectedPrototype, user } = this.props.application;
+  let shouldSetState = true;
+  let shapes = cloneDeep(this.state.shapes);
+  let texts = cloneDeep(this.state.texts);
+
+  // Closure in which the undo will be applied
+  const apply = (last) => {
+    const ref = last;
+
+    switch (ref.action) {
+      case 'delete': {
+        const uuid = ref.element.object.uuid || uuidV1();
+        ref.element.object.uuid = uuid;
+
+        this.isUndoing.push(uuid);
+
+        if (ref.element.type === 'shape') {
+          this.props.actions.createShape(selectedPrototype,
+                                         currentPageId,
+                                         { ...ref.element.object, uuid },
+                                         user.token);
+          shapes = {
+            ...shapes,
+            [uuid]: omit(ref.element.object, ['id']),
+          };
+        } else {
+          this.props.actions.createText(selectedPrototype,
+                                        currentPageId,
+                                        { ...ref.element.object, uuid },
+                                        user.token);
+          texts = {
+            ...texts,
+            [uuid]: omit(ref.element.object, ['id']),
+          };
+        }
+        break;
+      }
+      case 'create':
+        shouldSetState = false;
+        this.isUndoing.push(ref.element.object.uuid);
+        this.deleteSvgItem(ref.element.object.uuid);
+        break;
+      case 'move':
+        if (ref.element.type === 'shape') {
+          shapes = {
+            ...shapes,
+            [ref.element.uuid]: ref.element.object,
+          };
+        } else {
+          texts = {
+            ...texts,
+            [ref.element.uuid]: ref.element.object,
+          };
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Only apply undo if there exist last actions
+  if (!isEmpty(this.memento)) {
+    const last = this.memento.pop();
+
+    // keep track of the undos
+    this.keepsake.push(last);
+
+    // if it was a multi action or a single action
+    if (isArray(last)) {
+      last.forEach(o => apply(o));
+    } else {
+      apply(last);
+    }
+
+    // set state if needed
+    if (shouldSetState) {
+      this.setState({
+        shapes,
+        texts,
+      });
+    }
+  }
+}
+
+export function redo() {
+  // const { currentPageId } = this.state;
+  // const { selectedPrototype, user } = this.props.application;
+  let shouldSetState = true;
+
+  const shapes = cloneDeep(this.state.shapes);
+  const texts = cloneDeep(this.state.texts);
+
+  // Closure in which the redo will be applied
+  const apply = (last) => {
+    const ref = last;
+
+    switch (ref.action) {
+      case 'delete':
+        shouldSetState = false;
+        this.isUndoing.push(ref.element.object.uuid);
+        this.deleteSvgItem(ref.element.object.uuid);
+        delete ref.element.object.uuid;
+        break;
+      case 'create':
+        break;
+      case 'move':
+        break;
+      default:
+        break;
+    }
+  };
+
+  if (!isEmpty(this.keepsake)) {
+    const last = this.keepsake.pop();
+
+    // keep track of the undos
+    this.memento.push(last);
+
+    // if it was a multi action or a single action
+    if (isArray(last)) {
+      last.forEach(o => apply(o));
+    } else {
+      apply(last);
+    }
+
+    // set state if needed
+    if (shouldSetState) {
+      this.setState({
+        shapes,
+        texts,
+      });
+    }
   }
 }
