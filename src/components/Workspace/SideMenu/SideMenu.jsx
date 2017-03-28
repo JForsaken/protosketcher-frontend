@@ -2,11 +2,12 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Drawer, SelectField, MenuItem } from 'material-ui';
+import { SelectField, MenuItem } from 'material-ui';
 import { Button } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { omit, invert, map } from 'lodash';
+import classNames from 'classnames';
 
 /* ACTIONS */
 import { getShapeTypes, getActionTypes } from '../../../actions/api';
@@ -45,7 +46,7 @@ class SideMenu extends Component {
     }
 
     return (
-      <div>
+      <div className="drawer-content">
         <SelectField
           className="select-type"
           floatingLabelText={this.props.intl.messages['sidemenu.typeSelector']}
@@ -89,24 +90,22 @@ class SideMenu extends Component {
   }
 
   render() {
-    const style = {
-      position: 'absolute',
-      overflow: 'visible',
-      padding: '17px',
-    };
     return (
-      <div>
-        <Drawer open={this.state.isOpen} containerStyle={style}>
-          <Button
-            className="drawer-toggle vertical-text"
-            onClick={() => this.handleToggle()}
-          >
-            <FontAwesome name="caret-down" />
-            <FormattedMessage id="sidemenu.toggle" />
-          </Button>
+      <div
+        className={classNames({
+          drawer: true,
+          'drawer-open': this.state.isOpen,
+        })}
+      >
+        <Button
+          className="drawer-toggle vertical-text"
+          onClick={() => this.handleToggle()}
+        >
+          <FontAwesome name="caret-up" />
+          <FormattedMessage id="sidemenu.toggle" />
+        </Button>
 
-          {this.renderSettings()}
-        </Drawer>
+        {this.renderSettings()}
       </div>
     );
   }

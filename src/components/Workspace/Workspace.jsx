@@ -338,81 +338,83 @@ class Workspace extends Component {
 
     if (this.state.shapes && this.state.texts) {
       return (
-        <div
-          className={`workspace workspace-${this.pageType} ${prototypeType}`}
-          ref={div => { this.workspace = div; }}
-          onMouseDown={this.onStartingEvent}
-          onMouseMove={this.onMovingEvent}
-          onMouseUp={this.onEndingEvent}
-          onMouseLeave={this.onEndingEvent}
-          onTouchStart={this.onStartingEvent}
-          onTouchMove={this.onMovingEvent}
-          onTouchEnd={this.onEndingEvent}
-          onTouchCancel={absorbEvent}
-          onContextMenu={absorbEvent}
-        >
-        {this.state.showMenu && this.renderRadialMenu(this.currentPos)}
-          <svg height="100%" width="100%">
-            <filter id="dropshadow" height="130%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-              <feOffset dx="0" dy="0" result="offsetblur" />
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            {
-              this.state.currentMode === constants.modes.TEXT &&
-                <foreignObject
-                  x={this.currentPos.x}
-                  y={this.currentPos.y}
-                >
-                  <input
-                    id="textEdit"
-                    ref={textEdit => (this.textEdit = textEdit)}
-                    style={{ fontSize: this.state.fontSize }}
-                  />
-                </foreignObject>
-            }
-            {
-              Object.entries(this.state.shapes).map((item, i) =>
-                <Shape
-                  id={item[0]}
-                  color={item[1].color}
-                  path={item[1].path}
-                  posX={item[1].x}
-                  posY={item[1].y}
-                  selected={this.state.selectedItems.some(e => e === item[0])}
-                  monoSelect={this.monoSelect}
-                  onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
-                  key={i}
-                />)
-            }
-            {
-              Object.entries(this.state.texts).map((item, i) =>
-                <Text
-                  id={item[0]}
-                  posX={item[1].x}
-                  posY={item[1].y}
-                  size={item[1].fontSize}
-                  content={item[1].content}
-                  selected={this.state.selectedItems.some(e => e === item[0])}
-                  monoSelect={this.monoSelect}
-                  onLoad={(id, svgText) => this.textDidMount(id, svgText)}
-                  key={i}
-                />)
-            }
-            {this.state.currentPath &&
-              <path
-                className="workspace-line"
-                d={this.state.currentPath.pathString}
-                stroke={this.props.application.workspace.drawColor}
-                transform={`translate(${this.state.currentPath.position.x}
-                    ${this.state.currentPath.position.y})`}
-              />
-            }
-            {this.state.selectingRect && this.renderSelectionRect()}
-          </svg>
+        <div className="workspace-wrapper">
+          <div
+            className={`workspace workspace-${this.pageType} ${prototypeType}`}
+            ref={div => { this.workspace = div; }}
+            onMouseDown={this.onStartingEvent}
+            onMouseMove={this.onMovingEvent}
+            onMouseUp={this.onEndingEvent}
+            onMouseLeave={this.onEndingEvent}
+            onTouchStart={this.onStartingEvent}
+            onTouchMove={this.onMovingEvent}
+            onTouchEnd={this.onEndingEvent}
+            onTouchCancel={absorbEvent}
+            onContextMenu={absorbEvent}
+          >
+            {this.state.showMenu && this.renderRadialMenu(this.currentPos)}
+            <svg height="100%" width="100%">
+              <filter id="dropshadow" height="130%">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+                <feOffset dx="0" dy="0" result="offsetblur" />
+                <feMerge>
+                  <feMergeNode />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              {
+                this.state.currentMode === constants.modes.TEXT &&
+                  <foreignObject
+                    x={this.currentPos.x}
+                    y={this.currentPos.y}
+                  >
+                    <input
+                      id="textEdit"
+                      ref={textEdit => (this.textEdit = textEdit)}
+                      style={{ fontSize: this.state.fontSize }}
+                    />
+                  </foreignObject>
+              }
+              {
+                Object.entries(this.state.shapes).map((item, i) =>
+                  <Shape
+                    id={item[0]}
+                    color={item[1].color}
+                    path={item[1].path}
+                    posX={item[1].x}
+                    posY={item[1].y}
+                    selected={this.state.selectedItems.some(e => e === item[0])}
+                    monoSelect={this.monoSelect}
+                    onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
+                    key={i}
+                  />)
+              }
+              {
+                Object.entries(this.state.texts).map((item, i) =>
+                  <Text
+                    id={item[0]}
+                    posX={item[1].x}
+                    posY={item[1].y}
+                    size={item[1].fontSize}
+                    content={item[1].content}
+                    selected={this.state.selectedItems.some(e => e === item[0])}
+                    monoSelect={this.monoSelect}
+                    onLoad={(id, svgText) => this.textDidMount(id, svgText)}
+                    key={i}
+                  />)
+              }
+              {this.state.currentPath &&
+                <path
+                  className="workspace-line"
+                  d={this.state.currentPath.pathString}
+                  stroke={this.props.application.workspace.drawColor}
+                  transform={`translate(${this.state.currentPath.position.x}
+                      ${this.state.currentPath.position.y})`}
+                />
+              }
+              {this.state.selectingRect && this.renderSelectionRect()}
+            </svg>
+          </div>
         </div>
       );
     }
@@ -437,11 +439,17 @@ class Workspace extends Component {
         tabIndex="0"
         onKeyDown={this.onKeyDownEvent}
       >
-        <MuiThemeProvider>
-          <SideMenu />
-        </MuiThemeProvider>
-        {this.renderWorkspace()}
-        <Footer pages={this.state.pages || {}} selectedPage={this.state.currentPageId || ''} />
+        <div
+          className="workspace-row"
+          onMouseDown={absorbEvent}
+          onMouseUp={absorbEvent}
+        >
+          <MuiThemeProvider>
+            <SideMenu />
+          </MuiThemeProvider>
+          {this.renderWorkspace()}
+          <Footer pages={this.state.pages || {}} selectedPage={this.state.currentPageId || ''} />
+        </div>
       </div>
     );
   }

@@ -1,16 +1,22 @@
 .workspace-container {
-  bottom: $footer-height;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: $top-menu-height;
-  padding: 20px;
-  overflow: auto;
-}
+  display: table;
+  width: 100%;
+  height: 100%;
+  overflow: auto;;
+  outline: 0;
 
-.in-simulation {
-  .workspace-container {
-    top: 0;
+  .workspace-row {
+    display: table-row;
+    outline: 0;
+
+    .workspace-wrapper {
+      display: table-cell;
+      padding: $container-padding;
+      padding-bottom: $container-padding + $footer-height;
+      vertical-align: top;
+      z-index: 40;;
+      outline: 0;
+    }
   }
 }
 
@@ -41,6 +47,12 @@
       width: $portait-modal-width;
       height: $portait-modal-height;
     }
+  }
+}
+
+.in-simulation {
+  .workspace-container {
+    top: 0;
   }
 }
 
