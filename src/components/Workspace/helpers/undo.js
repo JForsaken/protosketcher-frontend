@@ -67,12 +67,67 @@ export function extractDeletedElementMoment(uuid, element, mementoId) {
   }
 }
 
-export function undo() {
+export function deleteElem(moment) {
+  this.isUndoing.push(moment.element.object.uuid);
+  this.deleteSvgItem(moment.element.object.uuid);
+}
+
+function moveElem(moment, shapes, texts) {
+  let shapesRef = shapes;
+  let textsRef = texts;
+
+  if (moment.element.type === 'shape') {
+    shapesRef = {
+      ...shapesRef,
+      [moment.element.uuid]: moment.element.object,
+    };
+  } else {
+    textsRef = {
+      ...textsRef,
+      [moment.element.uuid]: moment.element.object,
+    };
+  }
+
+  return { shapes: shapesRef, texts: textsRef };
+}
+
+export function createElem(moment, shapes, texts) {
   const { currentPageId } = this.state;
   const { selectedPrototype, user } = this.props.application;
-  let shouldSetState = true;
+  let shapesRef = shapes;
+  let textsRef = texts;
+
+  const uuid = moment.element.object.uuid || uuidV1();
+
+  this.isUndoing.push(uuid);
+
+  if (moment.element.type === 'shape') {
+    this.props.actions.createShape(selectedPrototype,
+                                   currentPageId,
+                                   { ...moment.element.object, uuid },
+                                   user.token);
+    shapesRef = {
+      ...shapes,
+      [uuid]: omit(moment.element.object, ['id']),
+    };
+  } else {
+    this.props.actions.createText(selectedPrototype,
+                                  currentPageId,
+                                  { ...moment.element.object, uuid },
+                                  user.token);
+    textsRef = {
+      ...texts,
+      [uuid]: omit(moment.element.object, ['id']),
+    };
+  }
+
+  return { uuid, shapes: shapesRef, texts: textsRef };
+}
+
+export function undo() {
   let shapes = cloneDeep(this.state.shapes);
   let texts = cloneDeep(this.state.texts);
+  let shouldSetState = true;
 
   // Closure in which the undo will be applied
   const apply = (last) => {
@@ -80,50 +135,25 @@ export function undo() {
 
     switch (ref.action) {
       case 'delete': {
-        const uuid = ref.element.object.uuid || uuidV1();
+        const {
+          uuid,
+          shapes: updatedShapes,
+          texts: updatedTexts } = this.createElem(ref, shapes, texts);
+        shapes = updatedShapes;
+        texts = updatedTexts;
         ref.element.object.uuid = uuid;
-
-        this.isUndoing.push(uuid);
-
-        if (ref.element.type === 'shape') {
-          this.props.actions.createShape(selectedPrototype,
-                                         currentPageId,
-                                         { ...ref.element.object, uuid },
-                                         user.token);
-          shapes = {
-            ...shapes,
-            [uuid]: omit(ref.element.object, ['id']),
-          };
-        } else {
-          this.props.actions.createText(selectedPrototype,
-                                        currentPageId,
-                                        { ...ref.element.object, uuid },
-                                        user.token);
-          texts = {
-            ...texts,
-            [uuid]: omit(ref.element.object, ['id']),
-          };
-        }
         break;
       }
       case 'create':
         shouldSetState = false;
-        this.isUndoing.push(ref.element.object.uuid);
-        this.deleteSvgItem(ref.element.object.uuid);
+        this.deleteElem(ref, shapes, texts);
         break;
-      case 'move':
-        if (ref.element.type === 'shape') {
-          shapes = {
-            ...shapes,
-            [ref.element.uuid]: ref.element.object,
-          };
-        } else {
-          texts = {
-            ...texts,
-            [ref.element.uuid]: ref.element.object,
-          };
-        }
+      case 'move': {
+        const { shapes: updatedShapes, texts: updatedTexts } = moveElem(ref, shapes, texts);
+        shapes = updatedShapes;
+        texts = updatedTexts;
         break;
+      }
       default:
         break;
     }
@@ -154,12 +184,9 @@ export function undo() {
 }
 
 export function redo() {
-  // const { currentPageId } = this.state;
-  // const { selectedPrototype, user } = this.props.application;
+  let shapes = cloneDeep(this.state.shapes);
+  let texts = cloneDeep(this.state.texts);
   let shouldSetState = true;
-
-  const shapes = cloneDeep(this.state.shapes);
-  const texts = cloneDeep(this.state.texts);
 
   // Closure in which the redo will be applied
   const apply = (last) => {
@@ -168,12 +195,19 @@ export function redo() {
     switch (ref.action) {
       case 'delete':
         shouldSetState = false;
-        this.isUndoing.push(ref.element.object.uuid);
-        this.deleteSvgItem(ref.element.object.uuid);
+        this.deleteElem(ref, shapes, texts);
         delete ref.element.object.uuid;
         break;
-      case 'create':
+      case 'create': {
+        const {
+          uuid,
+          shapes: updatedShapes,
+          texts: updatedTexts } = this.createElem(ref, shapes, texts);
+        shapes = updatedShapes;
+        texts = updatedTexts;
+        ref.element.object.uuid = uuid;
         break;
+      }
       case 'move':
         break;
       default:
