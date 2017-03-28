@@ -75,7 +75,7 @@ import {
   deleteElem,
   extractMovedElementMoment,
   extractDeletedElementMoment,
-  extractCreatedElementMoment } from './helpers/undo';
+  extractCreatedElementMoment } from './helpers/memento';
 
 class Workspace extends Component {
 

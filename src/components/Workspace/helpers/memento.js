@@ -133,6 +133,7 @@ export function createElem(moment, shapes, texts) {
                                    user.token);
     shapesRef = {
       ...shapes,
+      // removal of the id is necessary since the DB will give us a new one
       [uuid]: omit(moment.element.object, ['id']),
     };
   } else {
@@ -142,6 +143,7 @@ export function createElem(moment, shapes, texts) {
                                   user.token);
     textsRef = {
       ...texts,
+      // removal of the id is necessary since the DB will give us a new one
       [uuid]: omit(moment.element.object, ['id']),
     };
   }
