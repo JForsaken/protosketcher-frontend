@@ -4,6 +4,9 @@ import uuidV1 from 'uuid/v1';
 
 
 export function extractCreatedElementMoment(id, uuid, element, type) {
+  // when we do a new organic action, we clear keepsakes
+  this.keepsake = [];
+
   if (!this.isUndoing.includes(uuid)) {
     const lastAction = {
       action: 'create',
@@ -32,28 +35,30 @@ export function extractCreatedElementMoment(id, uuid, element, type) {
 }
 
 export function extractMovedElementMoment(uuid, element, type) {
+  // when we do a new organic action, we clear keepsakes
+  this.keepsake = [];
+
   return {
     action: 'move',
     element: {
       type,
       uuid,
-      object: {
-        ...omit(element, ['originalPositionBeforeDrag']),
-        x: element.originalPositionBeforeDrag.x,
-        y: element.originalPositionBeforeDrag.y,
-      },
+      object: cloneDeep(element),
     },
   };
 }
 
 export function extractDeletedElementMoment(uuid, element, mementoId) {
+  // when we do a new organic action, we clear keepsakes
+  this.keepsake = [];
+
   if (!this.isUndoing.includes(uuid)) {
     const lastAction = {
       action: 'delete',
       element,
     };
 
-    // if group
+    // if multi delete
     if (mementoId >= 0) {
       if (!this.memento[mementoId]) {
         this.memento[mementoId] = [];
@@ -72,19 +77,25 @@ export function deleteElem(moment) {
   this.deleteSvgItem(moment.element.object.uuid);
 }
 
-function moveElem(moment, shapes, texts) {
+function moveElem(moment, shapes, texts, isUndo) {
+  const elem = cloneDeep(moment.element.object);
   let shapesRef = shapes;
   let textsRef = texts;
+
+  if (isUndo) {
+    elem.x = elem.originalPositionBeforeDrag.x;
+    elem.y = elem.originalPositionBeforeDrag.y;
+  }
 
   if (moment.element.type === 'shape') {
     shapesRef = {
       ...shapesRef,
-      [moment.element.uuid]: moment.element.object,
+      [moment.element.uuid]: { ...omit(elem, ['originalPositionBeforeDrag']) },
     };
   } else {
     textsRef = {
       ...textsRef,
-      [moment.element.uuid]: moment.element.object,
+      [moment.element.uuid]: { ...omit(elem, ['originalPositionBeforeDrag']) },
     };
   }
 
@@ -127,6 +138,7 @@ export function createElem(moment, shapes, texts) {
 export function undo() {
   let shapes = cloneDeep(this.state.shapes);
   let texts = cloneDeep(this.state.texts);
+
   let shouldSetState = true;
 
   // Closure in which the undo will be applied
@@ -149,7 +161,7 @@ export function undo() {
         this.deleteElem(ref, shapes, texts);
         break;
       case 'move': {
-        const { shapes: updatedShapes, texts: updatedTexts } = moveElem(ref, shapes, texts);
+        const { shapes: updatedShapes, texts: updatedTexts } = moveElem(ref, shapes, texts, true);
         shapes = updatedShapes;
         texts = updatedTexts;
         break;
@@ -186,6 +198,7 @@ export function undo() {
 export function redo() {
   let shapes = cloneDeep(this.state.shapes);
   let texts = cloneDeep(this.state.texts);
+
   let shouldSetState = true;
 
   // Closure in which the redo will be applied
@@ -208,17 +221,22 @@ export function redo() {
         ref.element.object.uuid = uuid;
         break;
       }
-      case 'move':
+      case 'move': {
+        const { shapes: updatedShapes, texts: updatedTexts } = moveElem(ref, shapes, texts);
+        shapes = updatedShapes;
+        texts = updatedTexts;
         break;
+      }
       default:
         break;
     }
   };
 
+  // Only apply undo if there exist keepsakes
   if (!isEmpty(this.keepsake)) {
     const last = this.keepsake.pop();
 
-    // keep track of the undos
+    // restore the used keepsake to the memento
     this.memento.push(last);
 
     // if it was a multi action or a single action
