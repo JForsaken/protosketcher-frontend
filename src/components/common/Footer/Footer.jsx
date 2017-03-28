@@ -93,7 +93,7 @@ class Footer extends Component {
   showDeleteModal(id) {
     const { prototypes, selectedPrototype } = this.props.application;
     const prototype = prototypes[selectedPrototype] || {};
-    const pages = prototype.pages || [];
+    const pages = prototype.pages || {};
     if (Object.keys(pages).length <= 1) {
       this.setState({
         showOnePageWarningModal: true,
@@ -253,7 +253,7 @@ class Footer extends Component {
   render() {
     const { prototypes, selectedPrototype } = this.props.application;
     const prototype = prototypes[selectedPrototype] || {};
-    const pages = prototype.pages || [];
+    const pages = prototype.pages || {};
     let { pageTypes } = this.props.api.getPageTypes || {};
 
     pageTypes = invert(pageTypes);
