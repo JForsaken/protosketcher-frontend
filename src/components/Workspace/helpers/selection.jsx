@@ -66,12 +66,34 @@ export function updateSelectionOriginalPosition(uuids = this.state.selectedItems
   return { shapes, texts };
 }
 
+/**
+ * Adds an item in selected items
+ * @param {String} uuid The id of the selected shape/text
+ */
+export function addItemToSelection(uuid) {
+  this.selectionDirty = true;
+  const { selectedItems } = this.state;
+  selectedItems.push(uuid);
+  const items = this.updateSelectionOriginalPosition(selectedItems);
+  this.centralSelectionPoint = this.getCentralPointOfSelection(selectedItems);
+  this.setState({
+    selectedItems,
+    shapes: items.shapes,
+    texts: items.texts,
+  });
+}
 
 /**
  * Applies a selection of a single shape or a single text
  * @param {String} uuid The id of the selected shape/text
+ * @param {Object} e The event
  */
-export function monoSelect(uuid) {
+export function monoSelect(uuid, e) {
+  if (e && e.ctrlKey) {
+    // User used CTRL, so we add the item
+    this.addItemToSelection(uuid);
+    return;
+  }
   this.selectionDirty = true;
   const items = this.updateSelectionOriginalPosition([uuid]);
   this.centralSelectionPoint = this.getCentralPointOfSelection([uuid]);
@@ -81,7 +103,6 @@ export function monoSelect(uuid) {
     texts: items.texts,
   });
 }
-
 
 /**
  * Applies a multiple element selection on the ending event of the cursor

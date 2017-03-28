@@ -42,9 +42,9 @@ class Shape extends Component {
     }
   }
 
-  selectShape() {
+  selectShape(e) {
     if (!this.props.application.simulation.isSimulating) {
-      this.props.monoSelect(this.props.id);
+      this.props.monoSelect(this.props.id, e);
     }
   }
 
@@ -64,10 +64,10 @@ class Shape extends Component {
           transform={`translate(${this.props.posX} ${this.props.posY})`}
         />
         <path
-          onMouseDown={() => this.selectShape()}
+          onMouseDown={(e) => this.selectShape(e)}
           onMouseOver={() => this.hoverShape()}
           onMouseLeave={() => this.setState({ hovered: false })}
-          onTouchStart={() => this.selectShape()}
+          onTouchStart={(e) => this.selectShape(e)}
           className="workspace-line line-padding"
           d={this.props.path}
           stroke="transparent"

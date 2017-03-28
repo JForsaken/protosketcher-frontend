@@ -14,7 +14,7 @@ class Text extends Component {
     posX: PropTypes.number.isRequired,
     posY: PropTypes.number.isRequired,
     onLoad: PropTypes.func,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -33,9 +33,9 @@ class Text extends Component {
     }
   }
 
-  selectText() {
+  selectText(e) {
     if (!this.props.application.simulation.isSimulating) {
-      this.props.monoSelect(this.props.id);
+      this.props.monoSelect(this.props.id, e);
     }
   }
 
@@ -52,10 +52,10 @@ class Text extends Component {
       <text
         id={this.props.id}
         ref={svgText => (this.svgText = svgText)}
-        onMouseDown={() => this.selectText()}
+        onMouseDown={(e) => this.selectText(e)}
         onMouseOver={() => this.hoverText()}
         onMouseLeave={() => this.setState({ hovered: false })}
-        onTouchStart={() => this.selectText()}
+        onTouchStart={(e) => this.selectText(e)}
         className={classNames({
           'workspace-text': true,
           'workspace-text-selected': this.props.selected,
