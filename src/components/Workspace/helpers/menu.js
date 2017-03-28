@@ -113,14 +113,16 @@ export function doAction(point) {
       break;
     }
     case constants.menuItems.COPY_SELECTION.action: {
-    // when done copying, create all new items
-      const { shapes, texts, currentPageId } = this.state;
-      this.state.selectedItems.forEach((o) => {
+      // when done copying, create all new items
+      const { shapes, texts, currentPageId, selectedItems } = this.state;
+      let items = { shapes, texts };
+
+      selectedItems.forEach((o) => {
         const { selectedPrototype, user } = this.props.application;
 
         // to be able to undo the whole copy if we undo
         this.groupCopy = {
-          group: clone(this.state.selectedItems),
+          group: clone(selectedItems),
           mementoId: this.memento.length,
         };
 
@@ -130,6 +132,10 @@ export function doAction(point) {
         } else if (has(texts, o)) {
           this.props.actions.createText(selectedPrototype, currentPageId, texts[o], user.token);
         }
+
+        items = {
+          ...this.updateSelectionOriginalPosition(selectedItems, items.shapes, items.texts),
+        };
       });
 
     // clear clipboard
@@ -137,6 +143,8 @@ export function doAction(point) {
       this.copiedItesmsInit = false;
       this.shapesClipboard = {};
       this.textsClipboard = {};
+
+      this.setState({ ...items });
       break;
     }
     default:

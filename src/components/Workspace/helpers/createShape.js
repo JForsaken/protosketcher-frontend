@@ -23,7 +23,13 @@ export function createShape(point) {
     previousPoint: null,
     shapes: {
       ...this.state.shapes,
-      [uuid]: shape,
+      [uuid]: {
+        ...shape,
+        originalPositionBeforeDrag: {
+          x: shape.x,
+          y: shape.y,
+        },
+      },
     },
   });
 

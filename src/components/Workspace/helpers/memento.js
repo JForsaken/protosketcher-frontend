@@ -5,7 +5,7 @@ import uuidV1 from 'uuid/v1';
 
 export function extractCreatedElementMoment(id, uuid, element, type) {
   // when we do a new organic action, we clear the keepsake
-  this.keepsake = [];
+  // this.keepsake = [];
 
   if (!this.isUndoing.includes(uuid)) {
     const lastAction = {
@@ -42,7 +42,7 @@ export function extractCreatedElementMoment(id, uuid, element, type) {
 
 export function extractMovedElementMoment(uuid, element, type) {
   // when we do a new organic action, we clear the keepsake
-  this.keepsake = [];
+  // this.keepsake = [];
 
   return {
     action: 'move',
@@ -57,7 +57,7 @@ export function extractMovedElementMoment(uuid, element, type) {
 
 export function extractDeletedElementMoment(uuid, element, mementoId) {
   // when we do a new organic action, we clear the keepsake
-  this.keepsake = [];
+  // this.keepsake = [];
 
   if (!this.isUndoing.includes(uuid)) {
     const lastAction = {
