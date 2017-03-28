@@ -4,7 +4,7 @@ import uuidV1 from 'uuid/v1';
 
 
 export function extractCreatedElementMoment(id, uuid, element, type) {
-  // when we do a new organic action, we clear keepsakes
+  // when we do a new organic action, we clear the keepsake
   this.keepsake = [];
 
   if (!this.isUndoing.includes(uuid)) {
@@ -20,11 +20,17 @@ export function extractCreatedElementMoment(id, uuid, element, type) {
       },
     };
 
+    // if it was a multi create
     if (this.groupCopy.group && this.groupCopy.group.includes(uuid)) {
+      /* create an array that will be filled with the create action
+       * that will be considered as a single action
+       */
       if (!this.memento[this.groupCopy.mementoId]) {
         this.memento[this.groupCopy.mementoId] = [];
       }
+      // push the current create into the group action
       this.memento[this.groupCopy.mementoId].push(lastAction);
+      // remove itselft from the group ids since it has been added
       this.groupCopy.group = this.groupCopy.group.filter(o => o !== uuid);
     } else {
       this.memento.push(lastAction);
@@ -35,7 +41,7 @@ export function extractCreatedElementMoment(id, uuid, element, type) {
 }
 
 export function extractMovedElementMoment(uuid, element, type) {
-  // when we do a new organic action, we clear keepsakes
+  // when we do a new organic action, we clear the keepsake
   this.keepsake = [];
 
   return {
@@ -43,13 +49,14 @@ export function extractMovedElementMoment(uuid, element, type) {
     element: {
       type,
       uuid,
+      // clone since if the element moves, it would have been affected since its a reference
       object: cloneDeep(element),
     },
   };
 }
 
 export function extractDeletedElementMoment(uuid, element, mementoId) {
-  // when we do a new organic action, we clear keepsakes
+  // when we do a new organic action, we clear the keepsake
   this.keepsake = [];
 
   if (!this.isUndoing.includes(uuid)) {
@@ -60,6 +67,9 @@ export function extractDeletedElementMoment(uuid, element, mementoId) {
 
     // if multi delete
     if (mementoId >= 0) {
+      /* create an array that will be filled with the create action
+       * that will be considered as a single action
+       */
       if (!this.memento[mementoId]) {
         this.memento[mementoId] = [];
       }
@@ -82,6 +92,9 @@ function moveElem(moment, shapes, texts, isUndo) {
   let shapesRef = shapes;
   let textsRef = texts;
 
+  /* Toggles between the 'originalPositionBeforeDrag' and the current
+   * position depending if we are undoing or redoing
+   */
   if (isUndo) {
     elem.x = elem.originalPositionBeforeDrag.x;
     elem.y = elem.originalPositionBeforeDrag.y;
@@ -108,6 +121,7 @@ export function createElem(moment, shapes, texts) {
   let shapesRef = shapes;
   let textsRef = texts;
 
+  // depending on if the shape was existing on the DB already
   const uuid = moment.element.object.uuid || uuidV1();
 
   this.isUndoing.push(uuid);
@@ -157,6 +171,9 @@ export function undo() {
         break;
       }
       case 'create':
+        /* if we 'setState' upon a deleteElem,
+         * the element would not have been deleted from the Workspace state
+         */
         shouldSetState = false;
         this.deleteElem(ref, shapes, texts);
         break;
@@ -207,6 +224,9 @@ export function redo() {
 
     switch (ref.action) {
       case 'delete':
+        /* if we 'setState' upon a deleteElem,
+        * the element would not have been deleted from the Workspace state
+        */
         shouldSetState = false;
         this.deleteElem(ref, shapes, texts);
         delete ref.element.object.uuid;
@@ -232,7 +252,7 @@ export function redo() {
     }
   };
 
-  // Only apply undo if there exist keepsakes
+  // Only apply undo if a keepsake exist
   if (!isEmpty(this.keepsake)) {
     const last = this.keepsake.pop();
 
