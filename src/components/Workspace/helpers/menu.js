@@ -144,6 +144,7 @@ export function doAction(point) {
       this.shapesClipboard = {};
       this.textsClipboard = {};
 
+      this.centralSelectionPoint = this.getCentralPointOfSelection();
       this.setState({ ...items });
       break;
     }
