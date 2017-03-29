@@ -75,8 +75,8 @@
     display:block;
     background: color('accent');
     margin : 20px auto;
-    width : 200px;
-    height : 50px;
+    width : 300px;
+    height : 75px;
     overflow: hidden;
     text-align : center;
     transition : .2s;
@@ -86,29 +86,31 @@
   }
   .btnTwo {
     position : relative;
-    width : 200px;
-    height : 100px;
+    width : 400px;
+    height : 150px;
     margin-top: -90px;
     padding-top: 2px;
     background : #26A69A;
-    left : -250px;
+    left : -450px;
     transition : .3s;
   }
   .btnText {
     color : black;
+    font-weight : bold;
+    font-size : 30px;
     transition : .3s;
-    font-family: 'Gloria Hallelujah';
-    margin-top: 15px;
+    margin-top: 18px;
   }
   .btnText2 {
-    margin-top : 58px;
+    margin-top : 36px;
     margin-right : -130px;
+    font-size : 30px;
     color : black;
-    font-family: 'Gloria Hallelujah';
-    margin-left: -60px;
+    font-weight : bold;
+    margin-left: -25px;
   }
   .button:hover .btnTwo{ /*When hovering over .button change .btnTwo*/
-    left: -65px;
+    left: -100px;
   }
   .button:hover .btnText{ /*When hovering over .button change .btnText*/
     margin-left : 135px;
