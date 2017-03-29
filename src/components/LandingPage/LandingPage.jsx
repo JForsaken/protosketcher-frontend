@@ -16,7 +16,7 @@ export default class LandingPage extends Component {
       <div className="landing-page">
         <Menu router={this.props.router} />
         <div className="page-container">
-          <ParallaxContainer />
+          <ParallaxContainer router={this.props.router} />
         </div>
       </div>
     );
