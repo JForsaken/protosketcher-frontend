@@ -443,7 +443,7 @@ class Workspace extends Component {
           <SideMenu />
         </MuiThemeProvider>
         {this.renderWorkspace()}
-        <Footer pages={this.state.pages || {}} selectedPage={this.state.currentPageId || ''} />
+        <Footer selectedPage={this.state.currentPageId || ''} />
       </div>
     );
   }
