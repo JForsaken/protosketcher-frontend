@@ -143,3 +143,10 @@ export const pageTypes = {
   MODAL: 'modal',
   PAGE: 'page',
 };
+
+/* Landing page */
+export const landingPage = {
+  PARALLAX: {
+    strength: 400,
+  },
+};

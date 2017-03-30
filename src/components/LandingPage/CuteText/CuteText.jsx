@@ -6,7 +6,7 @@ export default class CuteText extends Component {
   render() {
     return (
       <div>
-        <h1 className="parallax-white-text" style={{ color: this.props.color }}>
+        <h1 className="parallax-text" style={{ color: this.props.color }}>
           <FormattedMessage id={this.props.text} />
         </h1>
       </div>
