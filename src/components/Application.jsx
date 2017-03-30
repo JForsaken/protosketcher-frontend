@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { isEmpty, isEqual } from 'lodash';
 import DisplayError from './common/DisplayErrors/DisplayError';
 import { FormattedMessage } from 'react-intl';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 /* Actions */
 import { logout } from '../actions/application';
@@ -41,27 +40,25 @@ class Application extends Component {
   render() {
     const { user } = this.props.api.login;
     return (
-      <MuiThemeProvider>
-        <div id="layout">
-          <div id="main">
-            <DisplayError />
+      <div id="layout">
+        <div id="main">
+          <DisplayError />
 
-            {user && !user.id && this.props.location.pathname === '/' ?
-              <div>
-                <div className="backdrop"></div>
-                <div className="loading">
-                  <FormattedMessage id="website.userInfo" />
-                  <div className="spinner" />
-                </div>
+          {user && !user.id && this.props.location.pathname === '/' ?
+            <div>
+              <div className="backdrop"></div>
+              <div className="loading">
+                <FormattedMessage id="website.userInfo" />
+                <div className="spinner" />
               </div>
-             : null
-            }
+            </div>
+           : null
+          }
 
-            {/* this will render the child routes */}
-            {this.props.children}
-          </div>
+          {/* this will render the child routes */}
+          {this.props.children}
         </div>
-      </MuiThemeProvider>
+      </div>
     );
   }
 }
