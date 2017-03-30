@@ -115,6 +115,12 @@ export function pasteClipboard() {
   }, () => {
     const { selectedPrototype, user } = this.props.application;
 
+    // to be able to undo the whole paste if we undo
+    this.groupCopy = {
+      group: clone(newSelectedItems),
+      mementoId: this.memento.length,
+    };
+
     // save elements
     newSelectedItems.forEach(o => {
       if (has(newShapes, o)) {

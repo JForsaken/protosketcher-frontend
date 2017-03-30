@@ -1,5 +1,5 @@
 /* Node modules */
-import { has } from 'lodash';
+import { has, clone } from 'lodash';
 
 /* Constants */
 import * as constants from '../../constants';
@@ -9,21 +9,27 @@ import * as constants from '../../constants';
  * Delete the svg element
  * @param {string} uuid the id of the element to delete
  */
-export function deleteSvgItem(uuid) {
+export function deleteSvgItem(uuid, mementoId) {
   const { shapes, texts, currentPageId } = this.state;
   const { selectedPrototype, user } = this.props.application;
 
   const id = this.getRealId(uuid);
+  let element = null;
 
   if (has(shapes, uuid)) {
+    element = { type: 'shape', object: clone(shapes[uuid]) };
     delete shapes[uuid];
     delete this.svgShapes[id];
     this.props.actions.deleteShape(selectedPrototype, currentPageId, id, user.token);
   } else if (has(texts, uuid)) {
+    element = { type: 'text', object: clone(texts[uuid]) };
     delete texts[uuid];
     delete this.svgTexts[id];
     this.props.actions.deleteText(selectedPrototype, currentPageId, id, user.token);
   }
+
+  // for undo
+  this.extractDeletedElementMoment(uuid, element, mementoId);
 
   this.setState({
     shapes,

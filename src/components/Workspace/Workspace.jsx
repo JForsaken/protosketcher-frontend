@@ -68,6 +68,15 @@ import {
   onMovingEvent,
   onKeyDownEvent } from './helpers/events';
 
+import {
+  undo,
+  redo,
+  createElem,
+  deleteElem,
+  extractMovedElementMoment,
+  extractDeletedElementMoment,
+  extractCreatedElementMoment } from './helpers/memento';
+
 class Workspace extends Component {
 
   constructor(props, context) {
@@ -109,6 +118,15 @@ class Workspace extends Component {
     this.createText = addText.bind(this);
     this.createShape = addShape.bind(this);
 
+    // Undo
+    this.undo = undo.bind(this);
+    this.redo = redo.bind(this);
+    this.createElem = createElem.bind(this);
+    this.deleteElem = deleteElem.bind(this);
+    this.extractCreatedElementMoment = extractCreatedElementMoment.bind(this);
+    this.extractMovedElementMoment = extractMovedElementMoment.bind(this);
+    this.extractDeletedElementMoment = extractDeletedElementMoment.bind(this);
+
     // Workspace
     this.getRealId = this.getRealId.bind(this);
     this.renderItemSettings = this.renderItemSettings.bind(this);
@@ -138,6 +156,12 @@ class Workspace extends Component {
       fontSize: constants.paths.TEXT_DEFAULT_SIZE,
       selectedItems: [],
     };
+
+    // undo
+    this.isUndoing = [];
+    this.groupCopy = {};
+    this.memento = [];
+    this.keepsake = [];
 
     this.touchTimer = 0;
     this.menuPending = false;
@@ -184,6 +208,12 @@ class Workspace extends Component {
         this.props.actions.getTexts(selectedPrototype, selectedPage,
         newProps.application.user.token);
       }
+
+      // clear undo/redo upon page change
+      this.isUndoing = [];
+      this.groupCopy = {};
+      this.memento = [];
+      this.keepsake = [];
     }
 
     // If the page types are not cached, get them
@@ -233,6 +263,9 @@ class Workspace extends Component {
           if (this.state.shapes.hasOwnProperty(uuid) && !this.state.shapes[uuid].id) {
             const shape = this.state.shapes[uuid];
 
+            // for undo
+            this.extractCreatedElementMoment(id, uuid, shape, 'shape');
+
             // update the shape list with that shape
             this.setState({
               shapes: {
@@ -252,6 +285,9 @@ class Workspace extends Component {
           const { id, uuid } = newProps.api.createText.text;
           if (this.state.texts.hasOwnProperty(uuid) && !this.state.texts[uuid].id) {
             const text = this.state.texts[uuid];
+
+            // for undo
+            this.extractCreatedElementMoment(id, uuid, text, 'text');
 
             // update the text list with that text
             this.setState({

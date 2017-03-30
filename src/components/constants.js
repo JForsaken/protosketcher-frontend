@@ -124,7 +124,9 @@ export const keys = {
   BACKSPACE: 'Backspace',
   ENTER: 'Enter',
   C: 'c',
+  Y: 'y',
   V: 'v',
+  Z: 'z',
   MOUSE_LEFT: 1,
   MOUSE_RIGHT: 3,
 };
