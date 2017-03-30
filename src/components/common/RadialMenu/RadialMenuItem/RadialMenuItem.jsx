@@ -61,10 +61,6 @@ class RadialMenuItem extends Component {
   onMovingEvent() {
     if (this.props.action !== this.props.application.workspace.action) {
       this.props.actions.updateWorkspace({ action: this.props.action });
-      // Some menu items need to close the menu when activating their actions
-      if (this.props.closeMenuOnLeave) {
-        this.props.toggleMenu(false);
-      }
     } else if (this.props.application.workspace.actionValue) {
       this.props.actions.updateWorkspace({ actionValue: null });
     }
@@ -76,6 +72,15 @@ class RadialMenuItem extends Component {
       this.props.actions.updateWorkspace({
         actionValue: classes[2],
       });
+    }
+  }
+
+  onLeavingEvent(e) {
+    // Some menu items need to close the menu when activating their actions
+    if (this.props.closeMenuOnLeave) {
+      if (document.elementFromPoint(e.clientX, e.clientY).tagName !== 'circle') {
+        this.props.toggleMenu(false);
+      }
     }
   }
 
@@ -162,6 +167,7 @@ class RadialMenuItem extends Component {
           fill={this.props.color}
           onMouseMove={this.onMovingEvent}
           onTouchMove={this.onMovingEvent}
+          onMouseLeave={(e) => this.onLeavingEvent(e)}
         />
         <image
           xlinkHref={this.props.icon}
