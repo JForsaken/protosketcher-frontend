@@ -139,6 +139,7 @@ export function renderRadialMenu(currentPos) {
         onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
         x={currentPos.x}
         y={currentPos.y}
+        toggleMenu={this.toggleMenu}
       />
     );
   }
@@ -152,6 +153,7 @@ export function renderRadialMenu(currentPos) {
         onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
         x={currentPos.x}
         y={currentPos.y}
+        toggleMenu={this.toggleMenu}
       />
     );
   }
@@ -164,6 +166,7 @@ export function renderRadialMenu(currentPos) {
       onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
       x={currentPos.x}
       y={currentPos.y}
+      toggleMenu={this.toggleMenu}
     />
   );
 }

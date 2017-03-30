@@ -89,6 +89,7 @@ export const menuItems = {
     flex: 2,
     icon: iconSelect,
     items: [],
+    closeMenuOnLeave: true,
   },
   DRAG_SELECTION: {
     action: 'dragSelection',
@@ -96,12 +97,14 @@ export const menuItems = {
     flex: 2,
     icon: dragSelection,
     items: [],
+    closeMenuOnLeave: true,
   },
   COPY_SELECTION: {
     action: 'copySelection',
     color: green500,
     icon: copySelection,
     items: [],
+    closeMenuOnLeave: true,
   },
   DELETE_SELECTION: {
     action: 'deleteSelection',

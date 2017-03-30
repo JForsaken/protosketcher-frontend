@@ -61,6 +61,10 @@ class RadialMenuItem extends Component {
   onMovingEvent() {
     if (this.props.action !== this.props.application.workspace.action) {
       this.props.actions.updateWorkspace({ action: this.props.action });
+      // Some menu items need to close the menu when activating their actions
+      if (this.props.closeMenuOnLeave) {
+        this.props.toggleMenu(false);
+      }
     } else if (this.props.application.workspace.actionValue) {
       this.props.actions.updateWorkspace({ actionValue: null });
     }
