@@ -3,8 +3,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { injectIntl } from 'react-intl';
+import { Row, Col } from 'react-bootstrap';
 import {
   Divider,
+  Checkbox,
   FlatButton,
   MenuItem,
   IconMenu,
@@ -185,49 +187,47 @@ class Menu extends Component {
   }
 
   renderLogged() {
-    const { application: { locale, locales }, intl: { messages } } = this.props;
+    const { application: { locale, locales, simulation }, intl: { messages } } = this.props;
     const otherLocale = locales.find(o => o !== locale);
-    let simulation = null;
-
-    if (this.props.router.location.pathname === '/') {
-      simulation = !this.props.application.simulation.isSimulating ?
-        <MenuItem
-          primaryText={messages['menu.simulation']}
-          onTouchTap={() => this.toggleSimulation()}
-          leftIcon={<Visibility />}
-        /> :
-        <MenuItem
-          primaryText={messages['menu.backToEdit']}
-          onTouchTap={() => this.toggleSimulation()}
-          leftIcon={<VisibilityOff />}
-        />;
-    }
 
     return (
-      <IconMenu
-        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-        className="app-bar__icon"
-      >
-        {simulation}
-        <MenuItem
-          primaryText={messages['menu.backToPrototypes']}
-          onTouchTap={() => this.redirectToDashboard()}
-          leftIcon={<Apps />}
-        />
-        <MenuItem
-          primaryText={otherLocale.toUpperCase()}
-          onTouchTap={() => this.handleSwitchLocale()}
-          leftIcon={<Language />}
-        />
-        <Divider />
-        <MenuItem
-          primaryText={messages['menu.logout']}
-          onTouchTap={() => this.props.actions.logout()}
-          leftIcon={<ExitToApp />}
-        />
-      </IconMenu>
+      <Row className="app-bar__right-container">
+        <Col xs={6} className="app-bar__right-container__col">
+          <Checkbox
+            iconStyle={{ fill: 'white' }}
+            className={"app-bar__right-container__col__eye"}
+            checkedIcon={simulation.isSimulating ? <VisibilityOff /> : <Visibility />}
+            uncheckedIcon={simulation.isSimulating ? <VisibilityOff /> : <Visibility />}
+            onTouchTap={() => this.toggleSimulation()}
+          />
+        </Col>
+        <Col xs={6} className="app-bar__right-container__col">
+          <IconMenu
+            iconStyle={{ fill: 'white' }}
+            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+            targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+            className="app-bar__icon"
+          >
+            <MenuItem
+              primaryText={messages['menu.backToPrototypes']}
+              onTouchTap={() => this.redirectToDashboard()}
+              leftIcon={<Apps />}
+            />
+            <MenuItem
+              primaryText={otherLocale.toUpperCase()}
+              onTouchTap={() => this.handleSwitchLocale()}
+              leftIcon={<Language />}
+            />
+            <Divider />
+            <MenuItem
+              primaryText={messages['menu.logout']}
+              onTouchTap={() => this.props.actions.logout()}
+              leftIcon={<ExitToApp />}
+            />
+          </IconMenu>
+        </Col>
+      </Row>
     );
   }
 
