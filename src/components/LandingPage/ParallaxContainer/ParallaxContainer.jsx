@@ -19,25 +19,25 @@ export default class ParallaxContainer extends Component {
         <Parallax className="parallax-content" bgImage={colorsParallax} strength={400}>
           <br />
           <ScrollEffect animate="fadeInUp">
-            <CuteText text="landing.contentText1" />
+            <CuteText text="landing.contentText1" color="white" />
           </ScrollEffect>
         </Parallax>
         <Parallax className="parallax-content" bgImage={starsParallax} strength={400}>
           <br />
           <ScrollEffect animate="fadeInUp">
-            <CuteText text="landing.contentText2" />
+            <CuteText text="landing.contentText2" color="white" />
           </ScrollEffect>
         </Parallax>
         <Parallax className="parallax-content" bgImage={blueParallax} strength={400}>
           <br />
           <ScrollEffect animate="fadeInUp">
-            <CuteText text="landing.contentText3" />
+            <CuteText text="landing.contentText3" color="white" />
           </ScrollEffect>
           <ScrollEffect animate="slideInRight">
             <CallToAction
               router={this.props.router}
-              inactiveText="READY?"
-              hoveredText="GO!"
+              inactiveText="landing.firstCtaInactiveText"
+              hoveredText="landing.firstCtaHoveredText"
             />
           </ScrollEffect>
         </Parallax>
@@ -50,26 +50,26 @@ export default class ParallaxContainer extends Component {
         <Parallax className="parallax-content" bgImage={geometryParallax} strength={400}>
           <br />
           <ScrollEffect animate="fadeInUp">
-            <CuteText text="landing.contentText5" />
+            <CuteText text="landing.contentText5" color="white" />
           </ScrollEffect>
         </Parallax>
         <Parallax className="parallax-content" bgImage={mountainParallax} strength={400}>
           <br />
           <ScrollEffect animate="fadeInUp">
-            <CuteText text="landing.contentText6" />
+            <CuteText text="landing.contentText6" color="white" />
           </ScrollEffect>
         </Parallax>
         <Parallax className="parallax-content" bgImage={blackParallax} strength={400}>
           <br />
           <ScrollEffect animate="fadeInUp">
-            <CuteText text="landing.contentText7" />
+            <CuteText text="landing.contentText7" color="white" />
           </ScrollEffect>
           <ScrollEffect animate="slideInRight">
             <ScrollEffect animate="slideInRight">
               <CallToAction
                 router={this.props.router}
-                inactiveText="DO IT!"
-                hoveredText="JUST DO IT!!!"
+                inactiveText="landing.secondCtaInactiveText"
+                hoveredText="landing.secondCtaHoveredText"
               />
             </ScrollEffect>
           </ScrollEffect>

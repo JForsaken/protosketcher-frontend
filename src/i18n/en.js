@@ -21,6 +21,10 @@ export default {
   'landing.contentText5': "Protosketcher can simulate on the fly the interface you're drawing and it's pretty.",
   'landing.contentText6': 'Demonstrating UI to your clients in early development phases has never been easier.',
   'landing.contentText7': 'Stop wondering if it can help you or not and jump into a pure experience of UI conception!',
+  'landing.firstCtaInactiveText': 'READY?',
+  'landing.firstCtaHoveredText': 'SIGN UP!',
+  'landing.secondCtaInactiveText': 'DO IT!',
+  'landing.secondCtaHoveredText': 'JUST DO IT!!!',
 
   // LOGIN FORM
   'login.form.title': 'Welcome Back!',
