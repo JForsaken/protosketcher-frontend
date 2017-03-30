@@ -380,6 +380,7 @@ class Workspace extends Component {
               Object.entries(this.state.shapes).map((item, i) =>
                 <Shape
                   id={item[0]}
+                  ref={(shape) => { this[item[0]] = shape; }}
                   color={item[1].color}
                   path={item[1].path}
                   posX={item[1].x}
@@ -394,6 +395,7 @@ class Workspace extends Component {
               Object.entries(this.state.texts).map((item, i) =>
                 <Text
                   id={item[0]}
+                  ref={(text) => { this[item[0]] = text; }}
                   posX={item[1].x}
                   posY={item[1].y}
                   size={item[1].fontSize}

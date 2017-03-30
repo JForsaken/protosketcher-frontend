@@ -84,5 +84,9 @@ export default connect(
     actions: bindActionCreators({
       updateWorkspace,
     }, dispatch),
-  })
+  }),
+  null,
+  {
+    withRef: true,
+  }
 )(Shape);
