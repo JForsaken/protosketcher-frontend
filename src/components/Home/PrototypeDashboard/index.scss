@@ -35,6 +35,7 @@
   text-align: center;
 
   &__prototype {
+    display: table;
     position: relative;
     color: white;
     height: 200px;
@@ -60,9 +61,15 @@
     &__title {
       font-size: 20px;
       font-weight: 600;
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%);
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+
+      .prototype-type {
+        display: block;
+        margin-top: -20px;
+        font-size: 2.5em;
+      }
 
       &--add {
         @extend .prototype-container__prototype__title;
