@@ -63,7 +63,6 @@ export function updateSelectionOriginalPosition(uuids = this.state.selectedItems
     }
   });
 
-
   return { shapes, texts };
 }
 
