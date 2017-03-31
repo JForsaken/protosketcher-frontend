@@ -68,6 +68,15 @@ import {
   onMovingEvent,
   onKeyDownEvent } from './helpers/events';
 
+import {
+  undo,
+  redo,
+  createElem,
+  deleteElem,
+  extractMovedElementMoment,
+  extractDeletedElementMoment,
+  extractCreatedElementMoment } from './helpers/memento';
+
 class Workspace extends Component {
 
   constructor(props, context) {
@@ -109,6 +118,15 @@ class Workspace extends Component {
     this.createText = addText.bind(this);
     this.createShape = addShape.bind(this);
 
+    // Undo
+    this.undo = undo.bind(this);
+    this.redo = redo.bind(this);
+    this.createElem = createElem.bind(this);
+    this.deleteElem = deleteElem.bind(this);
+    this.extractCreatedElementMoment = extractCreatedElementMoment.bind(this);
+    this.extractMovedElementMoment = extractMovedElementMoment.bind(this);
+    this.extractDeletedElementMoment = extractDeletedElementMoment.bind(this);
+
     // Workspace
     this.getRealId = this.getRealId.bind(this);
     this.renderItemSettings = this.renderItemSettings.bind(this);
@@ -130,7 +148,6 @@ class Workspace extends Component {
       currentPath: null,
       selectingRect: null,
       previousPoint: null,
-      pages: prototype.pages || null,
       currentPageId: null,
       shapes,
       texts,
@@ -138,6 +155,12 @@ class Workspace extends Component {
       fontSize: constants.paths.TEXT_DEFAULT_SIZE,
       selectedItems: [],
     };
+
+    // undo
+    this.isUndoing = [];
+    this.groupCopy = {};
+    this.memento = [];
+    this.keepsake = [];
 
     this.touchTimer = 0;
     this.menuPending = false;
@@ -167,7 +190,7 @@ class Workspace extends Component {
 
     // If the selected page has changed, set the state to reflect the new page
     if (selectedPage && this.state.currentPageId !== selectedPage) {
-      const { shapes, texts } = this.state.pages[newProps.application.selectedPage];
+      const { shapes, texts } = prototypes[selectedPrototype].pages[selectedPage];
 
       this.setState({
         currentPageId: newProps.application.selectedPage,
@@ -184,13 +207,18 @@ class Workspace extends Component {
         this.props.actions.getTexts(selectedPrototype, selectedPage,
         newProps.application.user.token);
       }
+
+      // clear undo/redo upon page change
+      this.isUndoing = [];
+      this.groupCopy = {};
+      this.memento = [];
+      this.keepsake = [];
     }
 
     // If the page types are not cached, get them
     if (isEmpty(newProps.api.getPageTypes.pageTypes)) {
       this.props.actions.getPageTypes(newProps.application.user.token);
     }
-
 
     // If the shape types are not cached, get them
     if (isEmpty(newProps.api.getShapeTypes.shapeTypes)) {
@@ -210,7 +238,6 @@ class Workspace extends Component {
     // If you just cached the pages, select the first one
     else if (!newProps.application.selectedPage) {
       this.props.actions.selectPage(Object.keys(prototype.pages)[0]);
-      this.setState({ pages: prototype.pages });
     }
 
     else {
@@ -233,6 +260,9 @@ class Workspace extends Component {
           if (this.state.shapes.hasOwnProperty(uuid) && !this.state.shapes[uuid].id) {
             const shape = this.state.shapes[uuid];
 
+            // for undo
+            this.extractCreatedElementMoment(id, uuid, shape, 'shape');
+
             // update the shape list with that shape
             this.setState({
               shapes: {
@@ -252,6 +282,9 @@ class Workspace extends Component {
           const { id, uuid } = newProps.api.createText.text;
           if (this.state.texts.hasOwnProperty(uuid) && !this.state.texts[uuid].id) {
             const text = this.state.texts[uuid];
+
+            // for undo
+            this.extractCreatedElementMoment(id, uuid, text, 'text');
 
             // update the text list with that text
             this.setState({
@@ -355,7 +388,15 @@ class Workspace extends Component {
         >
         {this.state.showMenu && this.renderRadialMenu(this.currentPos)}
           <svg height="100%" width="100%">
-            <filter id="dropshadow" height="130%" filterUnits="userSpaceOnUse">
+            <filter id="dropshadow-line" height="130%" filterUnits="userSpaceOnUse">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+              <feOffset dx="0" dy="0" result="offsetblur" />
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="dropshadow-curve" height="130%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
               <feOffset dx="0" dy="0" result="offsetblur" />
               <feMerge>

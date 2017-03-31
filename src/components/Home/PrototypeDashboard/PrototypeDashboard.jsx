@@ -16,7 +16,11 @@ class PrototypeDashboard extends Component {
     super(props);
 
     this.state = {
-      prototypes: map(props.application.prototypes, ((o, k) => ({ id: k, name: o.name }))),
+      prototypes: map(props.application.prototypes, ((o, k) => ({
+        id: k,
+        name: o.name,
+        isMobile: o.isMobile,
+      }))),
       showAddModal: false,
       desktopRadio: true,
       mobileRadio: false,
@@ -29,7 +33,11 @@ class PrototypeDashboard extends Component {
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.state.prototypes, nextProps.application.prototypes)) {
       this.setState({
-        prototypes: map(nextProps.application.prototypes, ((o, k) => ({ id: k, name: o.name }))),
+        prototypes: map(nextProps.application.prototypes, ((o, k) => ({
+          id: k,
+          name: o.name,
+          isMobile: o.isMobile,
+        }))),
       });
     }
   }
@@ -232,7 +240,10 @@ class PrototypeDashboard extends Component {
           <span className="remove-prototype" onClick={(e) => this.showDeleteModal(e, p.id)}>
             <FontAwesome name="times" />
           </span>
-          <div className="prototype-container__prototype__title">{p.name}</div>
+          <div className="prototype-container__prototype__title">
+            <FontAwesome className="prototype-type" name={(p.isMobile) ? 'mobile' : 'desktop'} />
+            {p.name}
+          </div>
         </div>
       </Col>
     )));

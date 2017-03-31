@@ -249,7 +249,8 @@ export function onMovingEvent(e) {
  */
 export function onKeyDownEvent(e) {
   if (e.key === constants.keys.DELETE || e.key === constants.keys.BACKSPACE) {
-    this.state.selectedItems.forEach(o => this.deleteSvgItem(o));
+    const mementoId = this.memento.length;
+    this.state.selectedItems.forEach(o => this.deleteSvgItem(o, mementoId));
     this.setState({
       selectedItems: [],
     });
@@ -266,6 +267,10 @@ export function onKeyDownEvent(e) {
     Object.keys(this.textsClipboard).length)
   ) {
     this.pasteClipboard();
+  } else if (e.key === constants.keys.Z && e.ctrlKey === true) {
+    this.undo();
+  } else if (e.key === constants.keys.Y && e.ctrlKey === true) {
+    this.redo();
   }
 }
 
