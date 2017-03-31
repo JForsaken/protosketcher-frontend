@@ -125,7 +125,7 @@ export function multiSelect(pointerPos) {
     //   return false;
     // }
 
-    const component = this[key].getWrappedInstance();
+    const component = this.itemsList[key].getWrappedInstance();
     let element;
     // Check if component is Shape or Text
     if (component.svgShape) {
