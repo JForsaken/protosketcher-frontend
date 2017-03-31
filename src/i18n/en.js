@@ -28,6 +28,7 @@ export default {
   'login.form.password': 'Password',
   'login.form.modal.title': 'Failed login.',
   'signup.form.modal.title': 'Failed sign up.',
+  'login.form.modal.400': 'Wrong password. :(',
   'login.form.modal.404': 'User does not exist. :(',
   'signup.form.modal.409': 'User already exists. :(',
   'signup.form.modal.500': 'Server error, try again later. :(',
