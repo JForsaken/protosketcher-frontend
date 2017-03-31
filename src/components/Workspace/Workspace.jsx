@@ -148,7 +148,6 @@ class Workspace extends Component {
       currentPath: null,
       selectingRect: null,
       previousPoint: null,
-      pages: prototype.pages || null,
       currentPageId: null,
       shapes,
       texts,
@@ -191,7 +190,7 @@ class Workspace extends Component {
 
     // If the selected page has changed, set the state to reflect the new page
     if (selectedPage && this.state.currentPageId !== selectedPage) {
-      const { shapes, texts } = this.state.pages[newProps.application.selectedPage];
+      const { shapes, texts } = prototypes[selectedPrototype].pages[selectedPage];
 
       this.setState({
         currentPageId: newProps.application.selectedPage,
@@ -221,7 +220,6 @@ class Workspace extends Component {
       this.props.actions.getPageTypes(newProps.application.user.token);
     }
 
-
     // If the shape types are not cached, get them
     if (isEmpty(newProps.api.getShapeTypes.shapeTypes)) {
       this.props.actions.getShapeTypes(newProps.application.user.token);
@@ -240,7 +238,6 @@ class Workspace extends Component {
     // If you just cached the pages, select the first one
     else if (!newProps.application.selectedPage) {
       this.props.actions.selectPage(Object.keys(prototype.pages)[0]);
-      this.setState({ pages: prototype.pages });
     }
 
     else {
@@ -391,7 +388,15 @@ class Workspace extends Component {
         >
         {this.state.showMenu && this.renderRadialMenu(this.currentPos)}
           <svg height="100%" width="100%">
-            <filter id="dropshadow" height="130%" filterUnits="userSpaceOnUse">
+            <filter id="dropshadow-line" height="130%" filterUnits="userSpaceOnUse">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+              <feOffset dx="0" dy="0" result="offsetblur" />
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="dropshadow-curve" height="130%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
               <feOffset dx="0" dy="0" result="offsetblur" />
               <feMerge>
