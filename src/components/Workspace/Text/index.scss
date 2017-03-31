@@ -4,11 +4,11 @@
   user-select: none;
 
   &.workspace-text-selected {
-    filter: url(#dropshadow);
+    filter: url(#dropshadow-curve);
   }
 
   &.workspace-text-hovered {
-    filter: url(#dropshadow);
+    filter: url(#dropshadow-curve);
     stroke: color('accent');
     fill: color('accent');
   }

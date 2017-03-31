@@ -65,29 +65,43 @@ export function doAction(point) {
     case constants.menuItems.SELECT_AREA.action:
       this.multiSelect(point);
       break;
-    case constants.menuItems.DELETE_SELECTION.action:
+    case constants.menuItems.DELETE_SELECTION.action: {
+      const mementoId = this.memento.length;
       for (const uuid of this.state.selectedItems) {
-        this.deleteSvgItem(uuid);
+        this.deleteSvgItem(uuid, mementoId);
       }
       this.setState({
         selectedItems: [],
       });
       break;
+    }
     case constants.menuItems.DRAG_SELECTION.action: {
     // when done dragging, patch all dragged items
       const { shapes, texts, currentPageId } = this.state;
+
+      const lastActions = [];
       this.state.selectedItems.forEach((o) => {
         const { selectedPrototype, user } = this.props.application;
         const id = this.getRealId(o);
 
         if (has(shapes, o)) {
           const patch = { x: shapes[o].x, y: shapes[o].y };
+
+          // for undo
+          lastActions.push(this.extractMovedElementMoment(o, shapes[o], 'shape'));
+
           this.props.actions.patchShape(selectedPrototype, currentPageId, id, patch, user.token);
         } else if (has(texts, o)) {
           const patch = { x: texts[o].x, y: texts[o].y };
+
+          // for undo
+          lastActions.push(this.extractMovedElementMoment(o, texts[o], 'text'));
+
           this.props.actions.patchText(selectedPrototype, currentPageId, id, patch, user.token);
         }
       });
+
+      this.memento.push(lastActions);
 
     // Save new original positions before draging and new central point of selection
       this.centralSelectionPoint = this.getCentralPointOfSelection();
@@ -99,10 +113,18 @@ export function doAction(point) {
       break;
     }
     case constants.menuItems.COPY_SELECTION.action: {
-    // when done copying, create all new items
-      const { shapes, texts, currentPageId } = this.state;
-      this.state.selectedItems.forEach((o) => {
+      // when done copying, create all new items
+      const { shapes, texts, currentPageId, selectedItems } = this.state;
+      let items = { shapes, texts };
+
+      selectedItems.forEach((o) => {
         const { selectedPrototype, user } = this.props.application;
+
+        // to be able to undo the whole copy if we undo
+        this.groupCopy = {
+          group: clone(selectedItems),
+          mementoId: this.memento.length,
+        };
 
       // create the elements
         if (has(shapes, o)) {
@@ -110,6 +132,10 @@ export function doAction(point) {
         } else if (has(texts, o)) {
           this.props.actions.createText(selectedPrototype, currentPageId, texts[o], user.token);
         }
+
+        items = {
+          ...this.updateSelectionOriginalPosition(selectedItems, items.shapes, items.texts),
+        };
       });
 
     // clear clipboard
@@ -117,6 +143,9 @@ export function doAction(point) {
       this.copiedItesmsInit = false;
       this.shapesClipboard = {};
       this.textsClipboard = {};
+
+      this.centralSelectionPoint = this.getCentralPointOfSelection();
+      this.setState({ ...items });
       break;
     }
     default:
