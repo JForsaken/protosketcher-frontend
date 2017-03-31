@@ -40,7 +40,6 @@ class RadialMenuItem extends Component {
     // Functions
     this.createSvgArc = this.createSvgArc.bind(this);
     this.createCSSTransform = this.createCSSTransform.bind(this);
-    this.onMovingEvent = this.onMovingEvent.bind(this);
     this.onMovingEventOnItem = this.onMovingEventOnItem.bind(this);
   }
 
@@ -58,9 +57,13 @@ class RadialMenuItem extends Component {
     }
   }
 
-  onMovingEvent() {
+  onMovingEvent(isTouch) {
     if (this.props.action !== this.props.application.workspace.action) {
       this.props.actions.updateWorkspace({ action: this.props.action });
+      if (isTouch && this.props.closeMenuOnLeave) {
+        // If event was touch and this is a closable action, close menu
+        this.props.toggleMenu(false);
+      }
     } else if (this.props.application.workspace.actionValue) {
       this.props.actions.updateWorkspace({ actionValue: null });
     }
@@ -165,8 +168,8 @@ class RadialMenuItem extends Component {
           className={this.state.selected ? 'hover' : baseClassName}
           d={this.createSvgArc(150, 150, 100, this.props.startAngle, this.props.endAngle)}
           fill={this.props.color}
-          onMouseMove={this.onMovingEvent}
-          onTouchMove={this.onMovingEvent}
+          onMouseMove={() => this.onMovingEvent()}
+          onTouchMove={() => this.onMovingEvent(true)}
           onMouseLeave={(e) => this.onLeavingEvent(e)}
         />
         <image
