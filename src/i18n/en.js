@@ -14,6 +14,17 @@ export default {
   'landing.useForFree': 'Use for Free',
   'landing.features': 'Features',
   'landing.goToPrototypes': 'Go to your prototypes',
+  'landing.contentText1': 'Bored of using whiteboards or complex apps?',
+  'landing.contentText2': "Here's a solution for your dev team called Protosketcher.",
+  'landing.contentText3': "It's a lightweight application for making user interface prototypes easily in an agile development context and it starts right here with you!",
+  'landing.contentText4': 'It supports mobile and desktop environments.',
+  'landing.contentText5': "Protosketcher can simulate on the fly the interface you're drawing and it's pretty.",
+  'landing.contentText6': 'Demonstrating UI to your clients in early development phases has never been easier.',
+  'landing.contentText7': 'Stop wondering if it can help you or not and jump into a pure experience of UI conception!',
+  'landing.firstCtaInactiveText': 'READY?',
+  'landing.firstCtaHoveredText': 'SIGN UP!',
+  'landing.secondCtaInactiveText': 'DO IT!',
+  'landing.secondCtaHoveredText': 'JUST DO IT!!!',
 
   // LOGIN FORM
   'login.form.title': 'Welcome Back!',

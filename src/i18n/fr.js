@@ -14,6 +14,17 @@ export default {
   'landing.useForFree': 'Utilisation Gratuite',
   'landing.features': 'Fonctionnalités',
   'landing.goToPrototypes': 'Aller à vos Prototypes',
+  'landing.contentText1': "L'utilisation de tableaux blancs ou d'applications complexes ne vous enchante plus comme autrefois?",
+  'landing.contentText2': 'Une solution simple et efficace existe pour votre équipe de développement et elle se nomme Protosketcher.',
+  'landing.contentText3': "Il s'agit d'une application web permettant de créer aisément et rapidement des prototypes d'interface utilisateur dans un contexte de développement agile et ça commence ici avec vous!",
+  'landing.contentText4': 'Il prend en charge les environnements PC et mobile.',
+  'landing.contentText5': 'Protosketcher peut magnifiquement simuler sur le pouce les interfaces que vous dessinez.',
+  'landing.contentText6': "Effectuer des démonstrations d'interfaces à vos clients durant les phases de pré-développement n'aura jamais été aussi facile.",
+  'landing.contentText7': "N'hésitez plus et sautez tête première dans une expérience sans pareil de conception d'interfaces usagers",
+  'landing.firstCtaInactiveText': 'ÊTES-VOUS PRÊT(E)?',
+  'landing.firstCtaHoveredText': 'INSCRIVEZ-VOUS!',
+  'landing.secondCtaInactiveText': 'ALLEZ-Y!',
+  'landing.secondCtaHoveredText': 'VOUS Y ÊTES PRESQUE!!!',
 
   // LOGIN FORM
   'login.form.title': 'Bon Retour!',
