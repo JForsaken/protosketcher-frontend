@@ -23,14 +23,22 @@ class Shape extends Component {
     this.state = {
       hovered: false,
     };
+
+    this.type = 'curve';
   }
 
   componentDidMount() {
     const { onLoad, id } = this.props;
+    const boundingBox = this.svgShape.getBBox();
 
     // if an onLoad callback has been provided
     if (onLoad) {
       onLoad(id, this.svgShape);
+    }
+
+    // if the bounding box width or height is 0, its a straight line
+    if (boundingBox.width === 0 || boundingBox.height === 0) {
+      this.type = 'line';
     }
   }
 
@@ -49,15 +57,20 @@ class Shape extends Component {
   }
 
   render() {
+    const { type } = this;
+
     return (
       <g className="path-container">
         <path
           id={this.props.id}
           ref={svgShape => (this.svgShape = svgShape)}
           className={classNames({
-            'workspace-line': true,
-            'workspace-line-selected': this.props.selected,
-            'workspace-line-hovered': this.state.hovered,
+            'workspace-line': type === 'line',
+            'workspace-line-selected': type === 'line' && this.props.selected,
+            'workspace-line-hovered': type === 'line' && this.state.hovered,
+            'workspace-curve': type === 'curve',
+            'workspace-curve-selected': type === 'curve' && this.props.selected,
+            'workspace-curve-hovered': type === 'curve' && this.state.hovered,
           })}
           d={this.props.path}
           stroke={this.props.color}
@@ -68,7 +81,7 @@ class Shape extends Component {
           onMouseOver={() => this.hoverShape()}
           onMouseLeave={() => this.setState({ hovered: false })}
           onTouchStart={(e) => this.selectShape(e)}
-          className="workspace-line line-padding"
+          className={`workspace-${type} ${type}-padding`}
           d={this.props.path}
           stroke="transparent"
           transform={`translate(${this.props.posX} ${this.props.posY})`}
