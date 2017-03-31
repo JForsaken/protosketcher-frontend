@@ -125,8 +125,15 @@ export function multiSelect(pointerPos) {
     //   return false;
     // }
 
-    // FIXME use React refs instead of getElementById
-    const box = document.getElementById(key).getBoundingClientRect();
+    const component = this.itemsList[key].getWrappedInstance();
+    let element;
+    // Check if component is Shape or Text
+    if (component.svgShape) {
+      element = component.svgShape;
+    } else {
+      element = component.svgText;
+    }
+    const box = element.getBoundingClientRect();
     const workspacePos = this.workspace.getBoundingClientRect();
     const pathRectRight = box.right - workspacePos.left;
     const pathRectLeft = box.left - workspacePos.left;
