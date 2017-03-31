@@ -50,6 +50,9 @@ class LoginSection extends Component {
       if (!isEmpty(login.error)) {
         let message = '';
         switch (login.error.code) {
+          case 400:
+            message = 'login.form.modal.400';
+            break;
           case 404:
             message = 'login.form.modal.404';
             break;

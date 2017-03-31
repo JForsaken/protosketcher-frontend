@@ -28,6 +28,7 @@ export default {
   'login.form.password': 'Mot de passe',
   'login.form.modal.title': 'Échec de connexion.',
   'signup.form.modal.title': 'Échec de création de compte.',
+  'login.form.modal.400': 'Mot de passe erroné. :(',
   'login.form.modal.404': 'Utilisateur inexistant. :(',
   'signup.form.modal.409': 'Utilisateur existant. :(',
   'signup.form.modal.500': 'Erreur du serveur, veuillez essayer plus tard. :(',
