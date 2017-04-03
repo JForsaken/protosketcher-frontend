@@ -425,11 +425,11 @@ class SideMenu extends Component {
         </div>
         <SelectableList value={this.state.selectedControl} onChange={this.updateSelectedControl}>
         {
-          map(Object.keys(controls), control =>
+          map(Object.entries(controls), control =>
             <ListItem
-              key={control}
-              value={control}
-              primaryText={control}
+              key={control[0]}
+              value={control[0]}
+              primaryText={this.props.intl.messages[actionTypes[control[1].actionTypeId]]}
             />
           )
         }
