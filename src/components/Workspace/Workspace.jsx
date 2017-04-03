@@ -128,7 +128,7 @@ class Workspace extends Component {
     this.extractCreatedElementMoment = extractCreatedElementMoment.bind(this);
     this.extractMovedElementMoment = extractMovedElementMoment.bind(this);
     this.extractDeletedElementMoment = extractDeletedElementMoment.bind(this);
-    
+
     // Workspace
     this.getRealId = this.getRealId.bind(this);
 
@@ -410,7 +410,7 @@ class Workspace extends Component {
         >
         {this.state.showMenu && this.renderRadialMenu(this.currentPos)}
           <svg height="100%" width="100%">
-            <filter id="dropshadow-line" height="130%" filterUnits="userSpaceOnUse">
+            <filter id="dropshadow-line-alpha" height="130%" filterUnits="userSpaceOnUse">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
               <feOffset dx="0" dy="0" result="offsetblur" />
               <feMerge>
@@ -418,8 +418,24 @@ class Workspace extends Component {
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
-            <filter id="dropshadow-curve" height="130%">
+            <filter id="dropshadow-line-graphic" height="130%" filterUnits="userSpaceOnUse">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+              <feOffset dx="0" dy="0" result="offsetblur" />
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="dropshadow-curve-alpha" height="130%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+              <feOffset dx="0" dy="0" result="offsetblur" />
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="dropshadow-curve-graphic" height="130%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
               <feOffset dx="0" dy="0" result="offsetblur" />
               <feMerge>
                 <feMergeNode />
@@ -499,7 +515,7 @@ class Workspace extends Component {
 
   render() {
     return (
-      <div className="flexbox">
+      <div className="workspace-flexbox">
         {this.state.currentMode === constants.modes.CREATE_CONTROL && <div className="backdrop" />}
         <SideMenu parent={this} parentState={this.state} />
         <div

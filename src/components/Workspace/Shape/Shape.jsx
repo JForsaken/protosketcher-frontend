@@ -65,7 +65,7 @@ class Shape extends Component {
       classes += ` workspace-${type}-hovered`;
     }
     if (this.props.affected) {
-      classes += 'workspace-line-affected';
+      classes += ` workspace-${type}-affected`;
     }
 
     return (

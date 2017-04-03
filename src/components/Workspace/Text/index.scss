@@ -4,18 +4,18 @@
   user-select: none;
 
   &.workspace-text-selected {
-    filter: url(#dropshadow-curve);
+    filter: url(#dropshadow-curve-alpha);
   }
 
 
   &.workspace-text-hovered {
-    filter: url(#dropshadow-curve);
+    filter: url(#dropshadow-curve-graphic);
     stroke: color('accent');
     fill: color('accent');
   }
 
   &.workspace-text-affected {
-    filter: url(#dropshadowGraphic);
+    filter: url(#dropshadow-curve-graphic);
     stroke: color(selection, base);
     fill: color(selection, base);
   }

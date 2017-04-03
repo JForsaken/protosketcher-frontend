@@ -1,6 +1,6 @@
 /* Node modules */
 import React from 'react';
-import { has } from 'lodash';
+import { has, clone } from 'lodash';
 
 /* Components */
 import RadialMenu from '../../common/RadialMenu/RadialMenu';

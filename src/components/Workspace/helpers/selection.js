@@ -107,7 +107,7 @@ export function monoSelect(uuid, e) {
 
  // Select the item
   else {
-  if (e && e.ctrlKey) {
+    if (e && e.ctrlKey) {
       // User used CTRL, so we add the item
       this.addItemToSelection(uuid);
       return;

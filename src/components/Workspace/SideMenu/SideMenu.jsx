@@ -364,7 +364,7 @@ class SideMenu extends Component {
     return (
       <div>
         <SelectField
-          className={'select-control'}
+          className="select-control"
           floatingLabelText={this.props.intl.messages['sidemenu.changePageLabel']}
           fullWidth
           value={changePageControlId && shape.controls[changePageControlId].affectedPageId}
@@ -441,7 +441,7 @@ class SideMenu extends Component {
   render() {
     const { isOpen } = this.state;
     return (
-      <div style={{ height: '100%', display: 'flex' }}>
+      <div className="flexbox">
         <div className={`side-menu ${isOpen ? 'opened' : ''}`} >
         {this.renderSettingsPanel()}
         </div>
