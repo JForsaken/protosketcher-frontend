@@ -255,7 +255,7 @@ class PrototypeDashboard extends Component {
         {this.renderAddModal()}
         {this.renderDeleteModal()}
         <div className="prototype-dashboard">
-          <h1 className="title">
+          <h1 className="titleV2">
             <FormattedMessage id="dashboard.title" />
           </h1>
           <Row>

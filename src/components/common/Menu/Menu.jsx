@@ -18,7 +18,6 @@ import Scroll from 'react-scroll';
 
 /* Icons */
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import Hamburger from 'material-ui/svg-icons/navigation/menu';
 import Visibility from 'material-ui/svg-icons/action/visibility';
 import VisibilityOff from 'material-ui/svg-icons/action/visibility-off';
 import Create from 'material-ui/svg-icons/content/create';
@@ -75,8 +74,12 @@ class Menu extends Component {
   }
 
   onHome() {
-    if (this.props.router.location.pathname !== '/') {
-      this.props.router.push('/');
+    const { application: { user, selectedPrototype }, router } = this.props;
+    const insideWorkspace = user && selectedPrototype && router.location.pathname !== '/landing';
+    if (insideWorkspace) {
+      this.redirectToDashboard();
+    } else {
+      this.props.router.push('/landing');
     }
   }
 
@@ -145,9 +148,9 @@ class Menu extends Component {
   }
 
   renderPrototypeName() {
-    const { user, selectedPrototype } = this.props.application;
+    const { application: { user, selectedPrototype }, router } = this.props;
 
-    if (!user || !selectedPrototype) {
+    if (!user || !selectedPrototype || router.location.pathname === '/landing') {
       return null;
     }
 
@@ -187,20 +190,29 @@ class Menu extends Component {
   }
 
   renderLogged() {
-    const { application: { locale, locales, simulation }, intl: { messages } } = this.props;
+    const {
+      application: { locale, locales, simulation, user, selectedPrototype },
+      intl: { messages },
+      router,
+    } = this.props;
+
     const otherLocale = locales.find(o => o !== locale);
+
+    const insideWorkspace = user && selectedPrototype && router.location.pathname !== '/landing';
 
     return (
       <Row className="app-bar__right-container">
-        <Col xs={6} className="app-bar__right-container__col">
-          <Checkbox
-            iconStyle={{ fill: 'white' }}
-            className={"app-bar__right-container__col__eye"}
-            checkedIcon={simulation.isSimulating ? <VisibilityOff /> : <Visibility />}
-            uncheckedIcon={simulation.isSimulating ? <VisibilityOff /> : <Visibility />}
-            onTouchTap={() => this.toggleSimulation()}
-          />
-        </Col>
+        {insideWorkspace &&
+          <Col xs={6} className="app-bar__right-container__col">
+            <Checkbox
+              iconStyle={{ fill: 'white' }}
+              className={"app-bar__right-container__col__eye"}
+              checkedIcon={simulation.isSimulating ? <VisibilityOff /> : <Visibility />}
+              uncheckedIcon={simulation.isSimulating ? <VisibilityOff /> : <Visibility />}
+              onTouchTap={() => this.toggleSimulation()}
+            />
+          </Col>
+        }
         <Col xs={6} className="app-bar__right-container__col">
           <IconMenu
             iconStyle={{ fill: 'white' }}
@@ -231,30 +243,13 @@ class Menu extends Component {
     );
   }
 
-  renderNav() {
-    return (
-      <IconMenu
-        iconButtonElement={<IconButton iconStyle={{ fill: 'white' }}><Hamburger /></IconButton>}
-        targetOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        className="app-bar__icon"
-      >
-        <MenuItem
-          primaryText={this.props.intl.messages['landing.features']}
-          onTouchTap={() => this.scrollToElement('features')}
-        />
-      </IconMenu>
-    );
-  }
-
   render() {
     return (
       <div>
         <AppBar
           title={this.renderBrand()}
           className="app-bar"
-          iconElementLeft={this.props.router.location.pathname === '/landing' ?
-                           this.renderNav() : <i />}
+          iconElementLeft={<i />}
           iconElementRight={this.props.application.user ?
                             this.renderLogged() : this.renderLogin()}
         />
