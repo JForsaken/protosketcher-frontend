@@ -365,19 +365,13 @@ function onCreateControl(state, action) {
     return { ...state };
   }
 
-  const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
-  const shapes = omit(page.shapes, action.requestedShape);
-  const shape = omit(shapes[action.requestedShape], ['controls']);
-
   return cloneMerge(state, {
     prototypes: {
       [action.requestedPrototype]: {
         pages: {
           [action.requestedPage]: {
             shapes: {
-              ...shapes,
               [action.requestedShape]: {
-                ...shape,
                 controls: {
                   [action.requestedControl]: action.control,
                 },
@@ -395,22 +389,14 @@ function onPatchControl(state, action) {
     return { ...state };
   }
 
-  const page = state.prototypes[action.requestedPrototype].pages[action.requestedPage];
-  const shapes = omit(page.shapes, action.requestedShape);
-  const shape = omit(shapes[action.requestedShape], ['controls']);
-  const controls = omit(shape.controls, [action.requestedControl]);
-
   return cloneMerge(state, {
     prototypes: {
       [action.requestedPrototype]: {
         pages: {
           [action.requestedPage]: {
             shapes: {
-              ...shapes,
               [action.requestedShape]: {
-                ...shape,
                 controls: {
-                  ...controls,
                   [action.requestedControl]: action.control,
                 },
               },

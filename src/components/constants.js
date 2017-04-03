@@ -38,6 +38,7 @@ export const events = {
 /* Workspace Modes */
 export const modes = {
   TEXT: 'text',
+  CREATE_CONTROL: 'createControl',
 };
 
 /* Workspace paths */

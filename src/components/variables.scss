@@ -33,7 +33,10 @@ $colors: (
     'medium': #a0b3b0,
     'dark': #000000,
     'label': rgba(0, 0, 0, .298039),
-  )
+  ),
+  'selection': (
+    'base': #03a9f4,
+  ),
 );
 
 @function color($key: 'primary', $tone: 'base') {

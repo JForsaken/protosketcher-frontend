@@ -8,13 +8,18 @@ import uuidV1 from 'uuid/v1';
 import SelectField from 'material-ui/SelectField';
 import RaisedButton from 'material-ui/RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
 import ArrowIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-right.js';
+import { red500, blue500 } from 'material-ui/styles/colors';
+
 
 /* ACTIONS */
 import { patchShape, createControl, patchControl, deleteControl } from '../../../actions/api';
 
 /* Constants */
-import { menuItems } from '../../constants';
+import { menuItems, modes } from '../../constants';
+
+let SelectableList = makeSelectable(List);
 
 @injectIntl
 class SideMenu extends Component {
@@ -28,12 +33,17 @@ class SideMenu extends Component {
       isOpen: true,
       currentEvent: null,
       currentAction: null,
+      selectedControl: null,
     };
 
     this.updateShapeType = this.updateShapeType.bind(this);
     this.updateChangePage = this.updateChangePage.bind(this);
     this.updateCurrentEvent = this.updateCurrentEvent.bind(this);
     this.updateCurrentAction = this.updateCurrentAction.bind(this);
+    this.selectAffectedItems = this.selectAffectedItems.bind(this);
+    this.createControl = this.createControl.bind(this);
+    this.createControlCanceled = this.createControlCanceled.bind(this);
+    this.updateSelectedControl = this.updateSelectedControl.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -41,6 +51,7 @@ class SideMenu extends Component {
       this.setState({
         currentEvent: invert(this.props.api.getEventTypes.eventTypes).click,
         currentAction: invert(this.props.api.getActionTypes.actionTypes).show,
+        selectedControl: null,
       });
     }
   }
@@ -176,6 +187,82 @@ class SideMenu extends Component {
   }
 
   /**
+   * Set the workspace mode to select items affected by the action being created
+   */
+  selectAffectedItems() {
+    this.setState({ selectedControl: null });
+    this.props.parent.setState({
+      currentMode: modes.CREATE_CONTROL,
+      selectedControlItems: [],
+    });
+  }
+
+  /**
+   * Create a new control from the options selected in the menu and the affected shapes
+   */
+  createControl() {
+    const { shapes, selectedItems, currentPageId } = this.props.parentState;
+    const id = selectedItems[0];
+    const shape = shapes[id];
+    const { selectedPrototype, user } = this.props.application;
+    const realId = this.props.parent.getRealId(id);
+
+    // Split items into shapes and texts
+    const affectedShapeIds = [];
+    const affectedTextIds = [];
+    this.props.parentState.selectedControlItems.forEach(currentId => {
+      if (has(this.props.parentState.shapes, (currentId))) {
+        affectedShapeIds.push(currentId);
+      } else if (has(this.props.parentState.texts, (currentId))) {
+        affectedTextIds.push(currentId);
+      }
+    });
+
+    const uuid = uuidV1();
+    const control = {
+      uuid,
+      affectedShapeIds,
+      affectedTextIds,
+      affectedPageId: null,
+      actionTypeId: this.state.currentAction,
+      eventTypeId: this.state.currentEvent,
+      shapeId: id,
+    };
+    shape.controls[uuid] = control;
+
+    this.props.actions.createControl(selectedPrototype, currentPageId, realId, control, user.token);
+
+    // Update the state
+    this.props.parent.setState({
+      shapes: {
+        ...omit(shapes, [id]),
+        [id]: shape,
+      },
+      currentMode: null,
+      selectedControlItems: [],
+    });
+  }
+
+  /**
+   * Cancel control creation and return to normal mode
+   */
+  createControlCanceled() {
+    this.props.parent.setState({
+      currentMode: null,
+      selectedControlItems: [],
+    });
+  }
+
+  updateSelectedControl(event, value) {
+    const shapeId = this.props.parentState.selectedItems[0];
+    const control = this.props.parentState.shapes[shapeId].controls[value];
+    this.setState({ selectedControl: value });
+    this.props.parent.setState({
+      selectedControlItems: control.affectedShapeIds.concat(control.affectedTextIds),
+    });
+  }
+
+  /**
    * Render the settings panel for the selected shape
    * @return {html} The HTML code of the rendered panel
    */
@@ -230,7 +317,7 @@ class SideMenu extends Component {
           <div className="settings-label"><FormattedMessage id="sidemenu.colorLabel" /></div>
           <div className="color-settings-container">
             {
-              menuItems.CHANGE_COLOR.items.map((item) =>
+              menuItems.CHANGE_COLOR.items.map(item =>
                 <div
                   key={item.color}
                   className={`change-color-btn ${(shape.color === item.color) ? 'selected' : ''}`}
@@ -258,18 +345,21 @@ class SideMenu extends Component {
     const { prototypes, selectedPrototype, selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
     const id = selectedItems[0];
+    const changePageActionId = invert(this.props.api.getActionTypes.actionTypes).changePage;
 
     const shape = shapes[id];
     if (!shape) return ('');
 
-    let affectedPageId = null;
-    Object.values(shape.controls).some(control => {
-      if (control.actionTypeId === invert(this.props.api.getActionTypes.actionTypes).changePage) {
-        affectedPageId = control.affectedPageId;
+    let changePageControlId = null;
+    Object.entries(shape.controls).some(control => {
+      if (control[1].actionTypeId === changePageActionId) {
+        changePageControlId = control[0];
         return true;
       }
       return false;
     });
+
+    const controls = omit(shape.controls, changePageControlId);
 
     return (
       <div>
@@ -277,7 +367,7 @@ class SideMenu extends Component {
           className={'select-control'}
           floatingLabelText={this.props.intl.messages['sidemenu.changePageLabel']}
           fullWidth
-          value={affectedPageId}
+          value={changePageControlId && shape.controls[changePageControlId].affectedPageId}
           onChange={this.updateChangePage}
         >
           <MenuItem
@@ -328,10 +418,22 @@ class SideMenu extends Component {
         <RaisedButton
           label={this.props.intl.messages['sidemenu.selectItems']}
           style={{ margin: '12px auto', display: 'table' }}
+          onTouchTap={this.selectAffectedItems}
         />
-        <div className="settings-label" style={{ marginBottom: -12 }}>
+        <div className="settings-label" style={{ marginBottom: 0 }}>
           <FormattedMessage id="sidemenu.controlsLabel" />
         </div>
+        <SelectableList value={this.state.selectedControl} onChange={this.updateSelectedControl}>
+        {
+          map(Object.keys(controls), control =>
+            <ListItem
+              key={control}
+              value={control}
+              primaryText={control}
+            />
+          )
+        }
+        </SelectableList>
       </div>
     );
   }
@@ -354,6 +456,25 @@ class SideMenu extends Component {
           />
           <FormattedMessage className="vertical-text" id="sidemenu.toggle" />
         </div>
+        {this.props.parentState.currentMode === modes.CREATE_CONTROL &&
+          <div className="create-control-container">
+            <div style={{ flex: 1 }} />
+            <RaisedButton
+              label={this.props.intl.messages.cancel}
+              className="create-control-button"
+              backgroundColor={red500}
+              onTouchTap={this.createControlCanceled}
+            />
+            <div style={{ flex: 1 }} />
+            <RaisedButton
+              label={this.props.intl.messages.OK}
+              className="create-control-button"
+              backgroundColor={blue500}
+              onTouchTap={this.createControl}
+            />
+            <div style={{ flex: 1 }} />
+          </div>
+        }
       </div>
     );
   }

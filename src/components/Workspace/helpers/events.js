@@ -19,6 +19,8 @@ export function onStartingEvent(e) {
   // Add text if there was one being created
   if (this.state.currentMode === constants.modes.TEXT) {
     this.createText();
+  } else if (this.state.currentMode === constants.modes.CREATE_CONTROL) {
+    return;
   }
 
   const point = this.getPointFromEvent(e, constants.events.TOUCH_START);
@@ -45,6 +47,7 @@ export function onStartingEvent(e) {
         pathString: '',
         position: point,
       },
+      selectedControlItems: [],
     });
   }
 }
@@ -60,6 +63,8 @@ export function onEndingEvent(e) {
   // Add text if there was one being created
   if (this.state.currentMode === constants.modes.TEXT) {
     this.createText();
+  } else if (this.state.currentMode === constants.modes.CREATE_CONTROL) {
+    return;
   }
 
   const point = this.getPointFromEvent(e, constants.events.TOUCH_END);
@@ -106,6 +111,10 @@ export function onMouseLeaveEvent(e) {
  */
 export function onMovingEvent(e) {
   absorbEvent(e);
+
+  if (this.state.currentMode === constants.modes.CREATE_CONTROL) {
+    return;
+  }
 
   // Get event position
   let pointer = e;
@@ -253,6 +262,9 @@ export function onMovingEvent(e) {
  * @param {Object} e event
  */
 export function onKeyDownEvent(e) {
+  if (this.state.currentMode === constants.modes.CREATE_CONTROL) {
+    return;
+  }
   if (e.key === constants.keys.DELETE || e.key === constants.keys.BACKSPACE) {
     const mementoId = this.memento.length;
     this.state.selectedItems.forEach(o => this.deleteSvgItem(o, mementoId));

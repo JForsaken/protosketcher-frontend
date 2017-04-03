@@ -22,7 +22,6 @@ class Shape extends Component {
     this.state = {
       hovered: false,
     };
-
     this.type = 'curve';
   }
 
@@ -34,7 +33,6 @@ class Shape extends Component {
     if (onLoad) {
       onLoad(id, this.svgShape);
     }
-
     // if the bounding box width or height is 0, its a straight line
     if (boundingBox.width === 0 || boundingBox.height === 0) {
       this.type = 'line';
@@ -65,6 +63,9 @@ class Shape extends Component {
     }
     if (this.state.hovered) {
       classes += ` workspace-${type}-hovered`;
+    }
+    if (this.props.affected) {
+      classes += 'workspace-line-affected';
     }
 
     return (

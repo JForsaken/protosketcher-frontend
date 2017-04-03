@@ -10,7 +10,7 @@
   position: absolute;
   user-select: none;
   width: 48px;
-  z-index: 1;
+  z-index: 2;
 
   &:hover {
     background: color(primary, dark);
@@ -109,4 +109,19 @@
   &.selected {
     opacity: 1;
   }
+}
+
+.create-control-container {
+  bottom: 12px;
+  display: flex;
+  height: 50px;
+  left: $left-menu-width;
+  position: absolute;
+  right: 0;
+  z-index: 15;
+}
+
+.create-control-button {
+  height: 36px;
+  width: 150px;
 }

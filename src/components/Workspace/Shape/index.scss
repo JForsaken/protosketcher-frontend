@@ -12,6 +12,11 @@
     filter: url(#dropshadowGraphic);
   }
 
+ &.workspace-line-affected {
+    filter: url(#dropshadowGraphic);
+    stroke: color(selection, base);
+  }
+
   &.line-padding {
     cursor: pointer;
     stroke-width: 18;

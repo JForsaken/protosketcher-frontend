@@ -7,10 +7,17 @@
     filter: url(#dropshadow-curve);
   }
 
+
   &.workspace-text-hovered {
     filter: url(#dropshadow-curve);
     stroke: color('accent');
     fill: color('accent');
+  }
+
+  &.workspace-text-affected {
+    filter: url(#dropshadowGraphic);
+    stroke: color(selection, base);
+    fill: color(selection, base);
   }
 }
 

@@ -155,6 +155,7 @@ class Workspace extends Component {
       currentMode: null,
       fontSize: constants.paths.TEXT_DEFAULT_SIZE,
       selectedItems: [],
+      selectedControlItems: [],
     };
 
     // undo
@@ -261,7 +262,7 @@ class Workspace extends Component {
             this.setState({ texts: prototype.pages[selectedPage].texts });
           }
           break;
-        // Replace the uuid of the created shape with the uuid of the DB
+        // Add the uuid of the created shape with the uuid of the DB
         case actions.CREATE_SHAPE: {
           const { id, uuid } = newProps.api.createShape.shape;
           if (this.state.shapes.hasOwnProperty(uuid) && !this.state.shapes[uuid].id) {
@@ -276,6 +277,7 @@ class Workspace extends Component {
                 [uuid]: {
                   ...shape,
                   id,
+                  controls: [],
                 },
               },
             });
@@ -283,7 +285,7 @@ class Workspace extends Component {
           break;
         }
 
-        // Replace the uuid of the created text with th uui of the DB
+        // Add the uuid of the created text with th uui of the DB
         case actions.CREATE_TEXT: {
           const { id, uuid } = newProps.api.createText.text;
           if (this.state.texts.hasOwnProperty(uuid) && !this.state.texts[uuid].id) {
@@ -298,6 +300,34 @@ class Workspace extends Component {
                 [uuid]: {
                   ...text,
                   id,
+                },
+              },
+            });
+          }
+          break;
+        }
+
+        // Add the new control to the shape
+        case actions.CREATE_CONTROL: {
+          const { shapeId, id, uuid } = newProps.api.createControl.control;
+          if (this.state.shapes[shapeId].controls.hasOwnProperty(uuid)
+            && !this.state.shapes[shapeId].controls[uuid].id) {
+            const shape = this.state.shapes[shapeId];
+            const control = shape.controls[uuid];
+
+            // update the shape list with that shape
+            this.setState({
+              shapes: {
+                ...this.state.shapes,
+                [shapeId]: {
+                  ...shape,
+                  controls: {
+                    ...shape.controls,
+                    [uuid]: {
+                      ...control,
+                      id,
+                    },
+                  },
                 },
               },
             });
@@ -362,10 +392,11 @@ class Workspace extends Component {
       prototypeType = (this.isMobile) ? 'mobile' : 'desktop';
     }
 
+    const fg = this.state.currentMode === constants.modes.CREATE_CONTROL;
     if (this.state.shapes && this.state.texts) {
       return (
         <div
-          className={`workspace workspace-${this.pageType} ${prototypeType}`}
+          className={`workspace workspace-${this.pageType} ${prototypeType} ${fg ? 'front' : ''}`}
           ref={div => { this.workspace = div; }}
           onMouseDown={this.onStartingEvent}
           onMouseMove={this.onMovingEvent}
@@ -418,6 +449,7 @@ class Workspace extends Component {
                   posX={item[1].x}
                   posY={item[1].y}
                   selected={this.state.selectedItems.some(e => e === item[0])}
+                  affected={this.state.selectedControlItems.some(e => e === item[0])}
                   monoSelect={this.monoSelect}
                   onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
                   key={i}
@@ -433,6 +465,7 @@ class Workspace extends Component {
                   size={item[1].fontSize}
                   content={item[1].content}
                   selected={this.state.selectedItems.some(e => e === item[0])}
+                  affected={this.state.selectedControlItems.some(e => e === item[0])}
                   monoSelect={this.monoSelect}
                   onLoad={(id, svgText) => this.textDidMount(id, svgText)}
                   key={i}
@@ -467,6 +500,7 @@ class Workspace extends Component {
   render() {
     return (
       <div className="flexbox">
+        {this.state.currentMode === constants.modes.CREATE_CONTROL && <div className="backdrop" />}
         <SideMenu parent={this} parentState={this.state} />
         <div
           id="workspace-container"
