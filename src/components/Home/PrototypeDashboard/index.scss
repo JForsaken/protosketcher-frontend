@@ -10,6 +10,7 @@
     height: 60px;
     margin: 0;
     width: 100%;
+    margin-top: 50px;
     outline: none;
     text-transform: uppercase;
     letter-spacing: .1em;
@@ -20,6 +21,22 @@
     &:hover {
       background: color('accent', 'dark');
     }
+  }
+
+  .titleV2 {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 92px;
+    height: 60px;
+    margin: 0;
+    width: 100%;
+    margin-top: 50px;
+    outline: none;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: color('text', 'dark');
+    @include transition(all 0.5s ease);
   }
 
   .row {
