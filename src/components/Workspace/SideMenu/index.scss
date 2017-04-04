@@ -130,3 +130,10 @@
   height: 36px;
   width: 150px;
 }
+
+.icon-list {
+  position: absolute;
+  right: 0;
+  top: 12px;
+  transition: color .3s cubic-bezier(.4, 0, .2, 1);
+}

@@ -9,6 +9,7 @@ import SelectField from 'material-ui/SelectField';
 import RaisedButton from 'material-ui/RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
+import DeleteIcon from 'material-ui/svg-icons/action/delete.js';
 import ArrowIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-right.js';
 import { red500, blue500 } from 'material-ui/styles/colors';
 
@@ -44,6 +45,7 @@ class SideMenu extends Component {
     this.createControl = this.createControl.bind(this);
     this.createControlCanceled = this.createControlCanceled.bind(this);
     this.updateSelectedControl = this.updateSelectedControl.bind(this);
+    this.deleteControl = this.deleteControl.bind(this);
   }
 
   componentWillReceiveProps(newProps) {
@@ -253,6 +255,30 @@ class SideMenu extends Component {
     });
   }
 
+  /**
+   * Delete selected control
+   */
+  deleteControl(controlId) {
+    const { shapes, selectedItems, currentPageId } = this.props.parentState;
+    const id = selectedItems[0];
+    const shape = shapes[id];
+    const { selectedPrototype, user } = this.props.application;
+    const realId = this.props.parent.getRealId(id);
+
+    this.props.actions.deleteControl(selectedPrototype, currentPageId, realId,
+      shape.controls[controlId].id || controlId, user.token);
+    delete shape.controls[controlId];
+
+    // Update the state
+    this.props.parent.setState({
+      shapes: {
+        ...omit(shapes, [id]),
+        [id]: shape,
+      },
+      selectedControlItems: [],
+    });
+  }
+
   updateSelectedControl(event, value) {
     const shapeId = this.props.parentState.selectedItems[0];
     const control = this.props.parentState.shapes[shapeId].controls[value];
@@ -429,8 +455,15 @@ class SideMenu extends Component {
             <ListItem
               key={control[0]}
               value={control[0]}
-              primaryText={this.props.intl.messages[actionTypes[control[1].actionTypeId]]}
-            />
+            >
+              <FormattedMessage id={actionTypes[control[1].actionTypeId]} />
+              <DeleteIcon
+                className="icon-list"
+                color="rgba(0,0,0,.5)"
+                hoverColor="rgba(0,0,0,.75)"
+                onClick={() => this.deleteControl(control[0])}
+              />
+            </ListItem>
           )
         }
         </SelectableList>
