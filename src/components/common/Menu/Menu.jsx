@@ -26,6 +26,9 @@ import Apps from 'material-ui/svg-icons/navigation/apps';
 import ExitToApp from 'material-ui/svg-icons/action/exit-to-app';
 import Language from 'material-ui/svg-icons/action/language';
 
+/* Logo */
+import Logo from '../../../../assets/images/logo.png';
+
 /* Actions */
 import {
   redirectToDashboard,
@@ -142,7 +145,7 @@ class Menu extends Component {
         className="app-bar__title"
         onClick={() => this.onHome()}
       >
-        {this.props.intl.messages['website.title']}
+        <img src={Logo} alt="Logo" />
       </a>
     );
   }
