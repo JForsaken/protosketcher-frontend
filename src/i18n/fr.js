@@ -91,6 +91,7 @@ export default {
   'sidemenu.newControlLabel': 'Nouveau contrôle',
   'sidemenu.controlsLabel': 'Contrôles',
   'sidemenu.selectItems': 'Sélection des items',
+  'sidemenu.selectShapeToSee': 'Sélectionnez une forme pour voir ses paramètres',
 
   // SHAPE TYPES
   'line': 'Ligne',

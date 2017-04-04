@@ -70,7 +70,22 @@
         transform: rotate(180deg);
       }
     }
+
+    .select-shape-to-see {
+      opacity: 1;
+      @include transition(opacity 1s cubic-bezier(.23, 1, .32, 1))
+    }
   }
+}
+
+.select-shape-to-see {
+  opacity: 0;
+  color: color('text', 'label');
+  font-size: 2em;
+  padding: 10px;
+  text-align: center;
+  font-weight: 900;
+  font-variant: small-caps;
 }
 
 .select-type {
