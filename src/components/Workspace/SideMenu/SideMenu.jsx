@@ -294,6 +294,8 @@ class SideMenu extends Component {
    */
   renderSettingsPanel() {
     if (this.props.parentState.selectedItems.length !== 1) return (<div></div>);
+
+    // TODO: empty div & empty side menu is blank
     return (
       <div className="settings-panel">
         {this.renderSettings()}
