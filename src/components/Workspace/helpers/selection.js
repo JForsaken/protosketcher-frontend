@@ -91,22 +91,18 @@ export function addItemToSelection(uuid) {
 export function monoSelect(uuid, e) {
   // Add selected items to control being created
   if (this.state.currentMode === modes.CREATE_CONTROL) {
-    const { selectedControlItems } = this.state;
-    const index = selectedControlItems.indexOf(uuid);
+    const { selectedControlItems, selectedItems } = this.state;
 
-    if (index > -1) {
-      selectedControlItems.splice(index, 1);
-    } else {
-      selectedControlItems.push(uuid);
+    if (uuid === selectedItems[0]) {
+      return;
     }
 
     this.setState({
-      selectedControlItems,
+      selectedControlItems: selectedControlItems.includes(uuid) ?
+        selectedControlItems.filter(o => o !== uuid) : [...selectedControlItems, uuid],
     });
-  }
-
- // Select the item
-  else {
+  // Select the item
+  } else {
     if (e && e.ctrlKey) {
       // User used CTRL, so we add the item
       this.addItemToSelection(uuid);

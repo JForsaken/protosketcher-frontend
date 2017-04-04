@@ -309,28 +309,30 @@ class Workspace extends Component {
 
         // Add the new control to the shape
         case actions.CREATE_CONTROL: {
-          const { shapeId, id, uuid } = newProps.api.createControl.control;
-          if (this.state.shapes[shapeId].controls.hasOwnProperty(uuid)
-            && !this.state.shapes[shapeId].controls[uuid].id) {
-            const shape = this.state.shapes[shapeId];
-            const control = shape.controls[uuid];
+          if (isEmpty(newProps.api.createControl.error)) {
+            const { shapeId, id, uuid } = newProps.api.createControl.control;
+            if (this.state.shapes[shapeId].controls.hasOwnProperty(uuid)
+                && !this.state.shapes[shapeId].controls[uuid].id) {
+              const shape = this.state.shapes[shapeId];
+              const control = shape.controls[uuid];
 
-            // update the shape list with that shape
-            this.setState({
-              shapes: {
-                ...this.state.shapes,
-                [shapeId]: {
-                  ...shape,
-                  controls: {
-                    ...shape.controls,
-                    [uuid]: {
-                      ...control,
-                      id,
+              // update the shape list with that shape
+              this.setState({
+                shapes: {
+                  ...this.state.shapes,
+                  [shapeId]: {
+                    ...shape,
+                    controls: {
+                      ...shape.controls,
+                      [uuid]: {
+                        ...control,
+                        id,
+                      },
                     },
                   },
                 },
-              },
-            });
+              });
+            }
           }
           break;
         }
