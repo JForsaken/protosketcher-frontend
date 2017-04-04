@@ -1,13 +1,139 @@
-.drawer-toggle {
-  position: absolute;
-  transform: rotate(90deg);
-  transform-origin: right top 0;
-  top: 200px;
-  right: -32px;
-  @include box-shadow(0px, 0px, 0px, #000, false);
-  @include rounded-indiv(0, 2px, 0, 2px);
+.flexbox {
+  display: flex;
+  height: 100%;
+}
 
-  .fa {
-    margin-right: 8px;
+.drawer-toggle {
+  @include rounded-indiv(0, 2px, 0, 2px);
+  @include transition(background, left .3s cubic-bezier(.4, 0, .2, 1));
+  background: color(primary, light);
+  cursor: pointer;
+  height: 148px;
+  left: 0;
+  margin-top: 150px;
+  outline: none;
+  position: absolute;
+  user-select: none;
+  width: 48px;
+  z-index: 2;
+
+  &:hover {
+    background: color(primary, dark);
   }
+
+  svg {
+    transition: transform 450ms cubic-bezier(.23, 1, .32, 1) 0ms;
+  }
+}
+
+.vertical-text {
+  font-weight: bold;
+  text-transform: uppercase;
+  writing-mode: tb-rl;
+}
+
+.settings-container {
+  transform: translateY(-20px);
+}
+
+.settings-panel {
+  display: none;
+  padding: 16px;
+}
+
+.settings-label {
+  color: color(text, label);
+  font-size: 16px;
+  font-variant: small-caps;
+  font-weight: bold;
+  margin: 24px 0;
+}
+
+.side-menu {
+  @include box-shadow(0, 0, 15px, #000, false);
+  background: color(background, light);
+  height: 100%;
+  transition: width 450ms cubic-bezier(.23, 1, .32, 1) 0ms;
+  width: 0;
+
+  &.opened {
+    width: $left-menu-width;
+
+    .settings-panel {
+      display: block;
+    }
+
+    +.drawer-toggle {
+      left: $left-menu-width;
+
+      svg {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
+.select-type {
+  margin-top: -24px;
+
+  +.settings-label {
+    margin-top: -8px;
+  }
+}
+
+.select-control {
+  margin-bottom: -12px;
+
+  +.settings-label {
+    margin-bottom: -24px;
+  }
+
+  +.select-control {
+    margin-top: -12px;
+  }
+}
+
+.color-settings-container {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.change-color-btn {
+  @include transition(opacity .3s cubic-bezier(.4, 0, .2, 1));
+  border-radius: 18px;
+  cursor: pointer;
+  height: 36px;
+  margin: auto;
+  opacity: .5;
+  width: 36px;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &.selected {
+    opacity: 1;
+  }
+}
+
+.create-control-container {
+  bottom: 12px;
+  display: flex;
+  height: 50px;
+  left: $left-menu-width;
+  position: absolute;
+  right: 0;
+  z-index: 15;
+}
+
+.create-control-button {
+  height: 36px;
+  width: 150px;
+}
+
+.icon-list {
+  position: absolute;
+  right: 0;
+  top: 12px;
+  transition: color .3s cubic-bezier(.4, 0, .2, 1);
 }

@@ -1,6 +1,5 @@
 /* Node modules */
 import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { injectIntl } from 'react-intl';
 
@@ -32,25 +31,23 @@ export default class AddPageMenu extends Component {
     };
 
     return (
-      <MuiThemeProvider>
-        <SpeedDial
-          positionV="inline"
-          positionH="right"
-          className="addPageMenu"
-          classNameBackdrop="addPageBackdrop"
-          styleButtonWrap={{
-            right: '22px', // To adjust to the changes made in CSS to the size
-          }}
+      <SpeedDial
+        positionV="inline"
+        positionH="right"
+        className="addPageMenu"
+        classNameBackdrop="addPageBackdrop"
+        styleButtonWrap={{
+          right: '22px', // To adjust to the changes made in CSS to the size
+        }}
+      >
+        <BubbleList
+          direction="up"
         >
-          <BubbleList
-            direction="up"
-          >
-            {buttonList.items.map(
-              (item, index) => (<BubbleListItem key={`bubble${index}`} {...item} />)
-            )}
-          </BubbleList>
-        </SpeedDial>
-      </MuiThemeProvider>
+          {buttonList.items.map(
+            (item, index) => (<BubbleListItem key={`bubble${index}`} {...item} />)
+          )}
+        </BubbleList>
+      </SpeedDial>
     );
   }
 }

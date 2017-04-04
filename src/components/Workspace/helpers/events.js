@@ -19,6 +19,8 @@ export function onStartingEvent(e) {
   // Add text if there was one being created
   if (this.state.currentMode === constants.modes.TEXT) {
     this.createText();
+  } else if (this.state.currentMode === constants.modes.CREATE_CONTROL) {
+    return;
   }
 
   const point = this.getPointFromEvent(e, constants.events.TOUCH_START);
@@ -45,6 +47,7 @@ export function onStartingEvent(e) {
         pathString: '',
         position: point,
       },
+      selectedControlItems: [],
     });
   }
 }
@@ -60,6 +63,8 @@ export function onEndingEvent(e) {
   // Add text if there was one being created
   if (this.state.currentMode === constants.modes.TEXT) {
     this.createText();
+  } else if (this.state.currentMode === constants.modes.CREATE_CONTROL) {
+    return;
   }
 
   const point = this.getPointFromEvent(e, constants.events.TOUCH_END);
@@ -70,11 +75,8 @@ export function onEndingEvent(e) {
     this.createShape(point);
   }
 
-  if (!(e.type === constants.events.MOUSE_LEAVE
-        && e.target.classList.contains('workspace-container'))) {
-    this.toggleMenu(false);
-    this.props.actions.updateWorkspace({ action: null });
-  }
+  this.toggleMenu(false);
+  this.props.actions.updateWorkspace({ action: null });
 
   // stops short touches from firing the event
   if (this.touchTimer) {
@@ -83,17 +85,25 @@ export function onEndingEvent(e) {
   if (!this.selectionDirty && !this.props.application.workspace.action) {
     this.setState({
       selectedItems: [],
+      showSettingsPanel: false,
     });
   }
   this.selectionDirty = false;
 
 
   this.doAction(point);
-  this.setState({
-    selectingRect: null,
-  });
 }
 
+/**
+ * On mouse leave event
+ * @param {Object} e event
+ */
+export function onMouseLeaveEvent(e) {
+  if (!e.target.classList.contains('workspace-container')
+    && this.props.application.workspace.action) {
+    this.onEndingEvent(e);
+  }
+}
 
 /**
  * On moving event
@@ -101,6 +111,10 @@ export function onEndingEvent(e) {
  */
 export function onMovingEvent(e) {
   absorbEvent(e);
+
+  if (this.state.currentMode === constants.modes.CREATE_CONTROL) {
+    return;
+  }
 
   // Get event position
   let pointer = e;
@@ -248,6 +262,9 @@ export function onMovingEvent(e) {
  * @param {Object} e event
  */
 export function onKeyDownEvent(e) {
+  if (this.state.currentMode === constants.modes.CREATE_CONTROL) {
+    return;
+  }
   if (e.key === constants.keys.DELETE || e.key === constants.keys.BACKSPACE) {
     const mementoId = this.memento.length;
     this.state.selectedItems.forEach(o => this.deleteSvgItem(o, mementoId));

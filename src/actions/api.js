@@ -499,40 +499,6 @@ export function getShapeTypes(token) {
   };
 }
 
-export function getActionTypes(token) {
-  return dispatch => {
-    fetch(`${BACKEND_API}/actiontypes`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'x-access-token': token,
-      },
-    })
-      .then(processResponse)
-      .then(data => {
-        dispatch({
-          type: constants.GET_ACTION_TYPES,
-          actionTypes: data.body,
-          time: Date.now(),
-          error: {},
-        });
-      })
-      .catch((data) => {
-        dispatch({
-          type: constants.GET_ACTION_TYPES,
-          actionTypes: {},
-          time: Date.now(),
-          error: {
-            msg: data.msg,
-            code: data.code,
-          },
-        });
-      });
-  };
-}
-
-
 export function createShape(prototypeId, pageId, shape, token) {
   return dispatch => {
     fetch(`${BACKEND_API}/prototypes/${prototypeId}/pages/${pageId}/shapes`, {
@@ -787,6 +753,190 @@ export function deleteText(prototypeId, pageId, textId, token) {
           text: {},
           requestedPrototype: prototypeId,
           requestedPage: pageId,
+          time: Date.now(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+/* --- Controls ---*/
+export function createControl(prototypeId, pageId, shapeId, control, token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/shapes/${shapeId}/controls`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(control),
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.CREATE_CONTROL,
+          control: data.body,
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          requestedShape: shapeId,
+          time: Date.now(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.CREATE_CONTROL,
+          control: {},
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          requestedShape: shapeId,
+          time: Date.now(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+export function patchControl(prototypeId, pageId, shapeId, controlId, control, token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/shapes/${shapeId}/controls/${controlId}`, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+      body: JSON.stringify(control),
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.PATCH_CONTROL,
+          control: data.body,
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          requestedShape: shapeId,
+          time: Date.now(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.PATCH_CONTROL,
+          control: {},
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          requestedShape: shapeId,
+          time: Date.now(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+export function deleteControl(prototypeId, pageId, shapeId, controlId, token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/prototypes/${prototypeId}/shapes/${shapeId}/controls/${controlId}`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.DELETE_CONTROL,
+          control: data.body,
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          requestedShape: shapeId,
+          time: Date.now(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.DELETE_CONTROL,
+          control: {},
+          requestedPrototype: prototypeId,
+          requestedPage: pageId,
+          requestedShape: shapeId,
+          time: Date.now(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+
+/* --- types ---*/
+export function getActionTypes(token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/actiontypes`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.GET_ACTION_TYPES,
+          actionTypes: data.body,
+          time: Date.now(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_ACTION_TYPES,
+          actionTypes: {},
+          time: Date.now(),
+          error: {
+            msg: data.msg,
+            code: data.code,
+          },
+        });
+      });
+  };
+}
+export function getEventTypes(token) {
+  return dispatch => {
+    fetch(`${BACKEND_API}/eventtypes`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    })
+      .then(processResponse)
+      .then(data => {
+        dispatch({
+          type: constants.GET_EVENT_TYPES,
+          eventTypes: data.body,
+          time: Date.now(),
+          error: {},
+        });
+      })
+      .catch((data) => {
+        dispatch({
+          type: constants.GET_EVENT_TYPES,
+          eventTypes: {},
           time: Date.now(),
           error: {
             msg: data.msg,

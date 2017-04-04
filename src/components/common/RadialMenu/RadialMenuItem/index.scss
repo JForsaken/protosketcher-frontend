@@ -2,7 +2,7 @@
   path {
     @include transition(fill-opacity .3s cubic-bezier(.4, 0, .2, 1));
     fill-opacity: .5;
-    stroke: color(background, base);
+    stroke: color(background, light);
     stroke-width: 3;
 
     &.hover {
@@ -25,6 +25,6 @@
 };
 
 .radial-menu-item-separator {
-  fill: color(background, base);
+  fill: color(background, light);
   fill-opacity: 1 !important;
 }

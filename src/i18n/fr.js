@@ -81,10 +81,16 @@ export default {
   'workspace.loading': "Chargement de l'espace de travail",
 
   // SIDEMENU
-  'sidemenu.toggle': 'Paramètres des formes',
+  'sidemenu.toggle': 'Paramètres',
   'sidemenu.typeSelector': 'Type de forme',
+  'sidemenu.eventSelector': 'Type d\'événement',
   'sidemenu.actionSelector': 'Type d\'action',
-  'sidemenu.pageSelector': 'Page affectée',
+  'sidemenu.pageSelector': 'Ne pas changer',
+  'sidemenu.colorLabel': 'Couleur',
+  'sidemenu.changePageLabel': 'Aller à la page :',
+  'sidemenu.newControlLabel': 'Nouveau contrôle',
+  'sidemenu.controlsLabel': 'Contrôles',
+  'sidemenu.selectItems': 'Sélection des items',
 
   // SHAPE TYPES
   'line': 'Ligne',
@@ -95,6 +101,9 @@ export default {
   'show': 'Montrer',
   'hide': 'Cacher',
   'changePage': 'Changer de Page',
+
+  // EVENT TYPES
+  'click': 'Clic',
 
   // SIMULATION
   'simulation.loading': 'Chargement de la simulation',

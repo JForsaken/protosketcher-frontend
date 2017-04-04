@@ -3,12 +3,18 @@
   stroke-width: 3;
   cursor: pointer;
 
-  &.workspace-line-selected, &.workspace-line-hovered {
-    filter: url(#dropshadow-line);
+  &.workspace-line-selected {
+    filter: url(#dropshadow-line-alpha);
   }
 
   &.workspace-line-hovered {
     stroke: color('accent');
+    filter: url(#dropshadow-line-graphic);
+  }
+
+ &.workspace-line-affected {
+    filter: url(#dropshadow-line-graphic);
+    stroke: color(selection, base);
   }
 
   &.line-padding {
@@ -22,12 +28,18 @@
   stroke-width: 3;
   cursor: pointer;
 
-  &.workspace-curve-selected, &.workspace-curve-hovered {
-    filter: url(#dropshadow-curve);
+  &.workspace-curve-selected {
+    filter: url(#dropshadow-curve-alpha);
   }
 
   &.workspace-curve-hovered {
+    filter: url(#dropshadow-curve-graphic);
     stroke: color('accent');
+  }
+
+  &.workspace-curve-affected {
+    filter: url(#dropshadow-curve-graphic);
+    stroke: color(selection, base);
   }
 
   &.curve-padding {

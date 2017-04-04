@@ -261,7 +261,7 @@ class Simulation extends Component {
       <div className={`workspace workspace-${this.pageType} ${prototypeType}`}>
         {this.state.modalId && this.renderModal()}
         <svg height="100%" width="100%">
-          <filter className="dropshadow" height="130%">
+          <filter className="dropshadowAlpha" height="130%">
             <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
             <feOffset dx="0" dy="0" result="offsetblur" />
             <feMerge>

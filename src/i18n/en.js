@@ -82,10 +82,16 @@ export default {
   'workspace.loading': 'Loading workspace',
 
   // SIDEMENU
-  'sidemenu.toggle': 'Shape settings',
+  'sidemenu.toggle': 'Settings',
   'sidemenu.typeSelector': 'Shape Type',
   'sidemenu.actionSelector': 'Action Type',
-  'sidemenu.pageSelector': 'Affected Page',
+  'sidemenu.eventSelector': 'Event Type',
+  'sidemenu.pageSelector': 'Do not change',
+  'sidemenu.colorLabel': 'Color',
+  'sidemenu.changePageLabel': 'Go to page :',
+  'sidemenu.newControlLabel': 'New control',
+  'sidemenu.controlsLabel': 'Controls',
+  'sidemenu.selectItems': 'Select items',
 
   // SHAPE TYPES
   'line': 'Line',
@@ -96,6 +102,9 @@ export default {
   'show': 'Show',
   'hide': 'Hide',
   'changePage': 'Change Page',
+
+  // EVENT TYPES
+  'click': 'Click',
 
   // SIMULATION
   'simulation.loading': 'Loading Preview',

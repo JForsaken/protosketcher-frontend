@@ -4,13 +4,12 @@ import iconText from '../../assets/images/icons/text-fields.svg';
 import dragSelection from '../../assets/images/icons/drag-selection.svg';
 import copySelection from '../../assets/images/icons/copy-selection.svg';
 import deleteSelection from '../../assets/images/icons/delete-selection.svg';
-import settings from '../../assets/images/icons/settings.svg';
 
-import { red500, blue500, green500, yellow500, pink500, black } from 'material-ui/styles/colors';
+import { red500, blue500, green500, pink500, black } from 'material-ui/styles/colors';
 
 /* Sizes */
 export const TOP_MENU_HEIGHT = 50;
-export const LEFT_MENU_WIDTH = 0;
+export const LEFT_MENU_WIDTH = 256;
 export const RADIAL_MENU_SIZE = 150;
 export const PAGE_WIDTH = 1024;
 export const PAGE_HEIGHT = 768;
@@ -39,6 +38,7 @@ export const events = {
 /* Workspace Modes */
 export const modes = {
   TEXT: 'text',
+  CREATE_CONTROL: 'createControl',
 };
 
 /* Workspace paths */
@@ -107,12 +107,6 @@ export const menuItems = {
     action: 'deleteSelection',
     color: red500,
     icon: deleteSelection,
-    items: [],
-  },
-  SETTINGS: {
-    action: 'editSettings',
-    color: yellow500,
-    icon: settings,
     items: [],
   },
 };

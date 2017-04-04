@@ -92,8 +92,28 @@ const initialState = {
     time: null,
     error: {},
   },
+  createControl: {
+    control: {},
+    time: null,
+    error: {},
+  },
+  patchControl: {
+    control: {},
+    time: null,
+    error: {},
+  },
+  deleteControl: {
+    control: {},
+    time: null,
+    error: {},
+  },
   getActionTypes: {
     actionTypes: {},
+    time: null,
+    error: {},
+  },
+  getEventTypes: {
+    eventTypes: {},
     time: null,
     error: {},
   },
@@ -304,6 +324,45 @@ const actionHandlers = {
         ...acc,
         [curr.id]: curr.type,
       }), {}),
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.GET_EVENT_TYPES]: (state, action) => ({
+    lastAction: action.type,
+    lastCallError: action.error,
+    getEventTypes: {
+      eventTypes: action.eventTypes.reduce((acc, curr) => ({
+        ...acc,
+        [curr.id]: curr.type,
+      }), {}),
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.CREATE_CONTROL]: (state, action) => ({
+    lastAction: action.type,
+    lastCallError: action.error,
+    createControl: {
+      control: action.control,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.PATCH_CONTROL]: (state, action) => ({
+    lastAction: action.type,
+    lastCallError: action.error,
+    patchControl: {
+      control: action.control,
+      time: action.time,
+      error: action.error,
+    },
+  }),
+  [constants.DELETE_CONTROL]: (state, action) => ({
+    lastAction: action.type,
+    lastCallError: action.error,
+    deleteControl: {
+      control: action.control,
       time: action.time,
       error: action.error,
     },

@@ -360,6 +360,67 @@ function onDeleteText(state, action) {
   return data;
 }
 
+function onCreateControl(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  return cloneMerge(state, {
+    prototypes: {
+      [action.requestedPrototype]: {
+        pages: {
+          [action.requestedPage]: {
+            shapes: {
+              [action.requestedShape]: {
+                controls: {
+                  [action.requestedControl]: action.control,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+function onPatchControl(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  return cloneMerge(state, {
+    prototypes: {
+      [action.requestedPrototype]: {
+        pages: {
+          [action.requestedPage]: {
+            shapes: {
+              [action.requestedShape]: {
+                controls: {
+                  [action.requestedControl]: action.control,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+function onDeleteControl(state, action) {
+  if (!isEmpty(action.error)) {
+    return { ...state };
+  }
+
+  const data = cloneDeep(state);
+  const { requestedPrototype, requestedPage, requestedShape, control } = action;
+  delete data.prototypes[requestedPrototype].pages[requestedPage].shapes[requestedShape]
+    .controls[control.id];
+
+  return data;
+}
+
 const actionHandlers = {
   /* --- Locale switcher --- */
   [constants.LOCALE_SWITCHED]: (_, action) => ({ locale: action.payload }),
@@ -414,6 +475,9 @@ const actionHandlers = {
   [constants.CREATE_TEXT]: (state, action) => onCreateText(state, action),
   [constants.PATCH_TEXT]: (state, action) => onPatchText(state, action),
   [constants.DELETE_TEXT]: (state, action) => onDeleteText(state, action),
+  [constants.CREATE_CONTROL]: (state, action) => onCreateControl(state, action),
+  [constants.PATCH_CONTROL]: (state, action) => onPatchControl(state, action),
+  [constants.DELETE_CONTROL]: (state, action) => onDeleteControl(state, action),
 
   [constants.LOGOUT]: () => ({
     user: null,
