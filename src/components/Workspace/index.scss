@@ -1,5 +1,4 @@
 .workspace-flexbox {
-  align-items: center;
   bottom: $footer-height;
   display: flex;
   justify-content: center;
@@ -25,6 +24,8 @@
 .workspace {
   background-color: color(background, light);
   position: relative;
+  top: 50%;
+  left: 50%;
   margin: 0 auto;
   @include rounded-equal(2px);
   width: 0;
@@ -34,20 +35,28 @@
   &.desktop {
     width: $page-width;
     height: $page-height;
+    margin-left: -$page-width/2;
+    margin-top: -$page-height/2;
 
     &.workspace-modal {
       width: $modal-width;
       height: $modal-height;
+      margin-left: -$modal-width/2;
+      margin-top: -$modal-height/2;
     }
   }
 
   &.mobile {
     width: $portait-width;
     height: $portait-height;
+    margin-left: -$portait-width/2;
+    margin-top: -$portait-height/2;
 
     &.workspace-modal {
       width: $portait-modal-width;
       height: $portait-modal-height;
+      margin-left: -$portait-modal-width/2;
+      margin-top: -$portait-modal-height/2;
     }
   }
 
