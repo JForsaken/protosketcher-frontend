@@ -38,6 +38,7 @@ class HomePage extends Component {
     if (!this.props.application.selectedPrototype) {
       return (
         <div key="dashboard-anim">
+          <Menu router={router} />
           <PrototypeDashboard />
         </div>
       );

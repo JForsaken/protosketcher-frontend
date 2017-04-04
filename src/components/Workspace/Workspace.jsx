@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { isEmpty, has } from 'lodash';
-import { MuiThemeProvider } from 'material-ui';
+import { isEmpty } from 'lodash';
 
 import * as constants from '../constants';
 import * as actions from '../../actions/constants';
@@ -29,7 +28,8 @@ import {
   createText,
   patchText,
   deleteText,
-  getActionTypes } from '../../actions/api';
+  getActionTypes,
+  getEventTypes } from '../../actions/api';
 import { updateWorkspace, selectPage } from '../../actions/application';
 
 /* Helpers */
@@ -66,6 +66,7 @@ import {
   onStartingEvent,
   onEndingEvent,
   onMovingEvent,
+  onMouseLeaveEvent,
   onKeyDownEvent } from './helpers/events';
 
 import {
@@ -91,6 +92,7 @@ class Workspace extends Component {
     this.onStartingEvent = onStartingEvent.bind(this);
     this.onEndingEvent = onEndingEvent.bind(this);
     this.onMovingEvent = onMovingEvent.bind(this);
+    this.onMouseLeaveEvent = onMouseLeaveEvent.bind(this);
     this.onKeyDownEvent = onKeyDownEvent.bind(this);
     this.getPointFromEvent = getPointFromEvent.bind(this);
 
@@ -129,7 +131,6 @@ class Workspace extends Component {
 
     // Workspace
     this.getRealId = this.getRealId.bind(this);
-    this.renderItemSettings = this.renderItemSettings.bind(this);
 
     const { prototypes, selectedPrototype, selectedPage } = this.props.application;
     const prototype = prototypes[selectedPrototype];
@@ -154,6 +155,7 @@ class Workspace extends Component {
       currentMode: null,
       fontSize: constants.paths.TEXT_DEFAULT_SIZE,
       selectedItems: [],
+      selectedControlItems: [],
     };
 
     // undo
@@ -161,7 +163,6 @@ class Workspace extends Component {
     this.groupCopy = {};
     this.memento = [];
     this.keepsake = [];
-
     this.touchTimer = 0;
     this.menuPending = false;
     this.selectionDirty = false;
@@ -175,6 +176,7 @@ class Workspace extends Component {
       x: 0,
       y: 0,
     };
+    this.itemsList = {};
   }
 
   componentDidMount() {
@@ -220,6 +222,7 @@ class Workspace extends Component {
       this.props.actions.getPageTypes(newProps.application.user.token);
     }
 
+
     // If the shape types are not cached, get them
     if (isEmpty(newProps.api.getShapeTypes.shapeTypes)) {
       this.props.actions.getShapeTypes(newProps.application.user.token);
@@ -228,6 +231,11 @@ class Workspace extends Component {
     // If the action types are not cached, get them
     if (isEmpty(newProps.api.getActionTypes.actionTypes)) {
       this.props.actions.getActionTypes(newProps.application.user.token);
+    }
+
+    // If the event types are not cached, get them
+    if (isEmpty(newProps.api.getEventTypes.eventTypes)) {
+      this.props.actions.getEventTypes(newProps.application.user.token);
     }
 
     // If the selected prototype's pages are not cached, get them
@@ -254,7 +262,7 @@ class Workspace extends Component {
             this.setState({ texts: prototype.pages[selectedPage].texts });
           }
           break;
-        // Replace the uuid of the created shape with the uuid of the DB
+        // Add the uuid of the created shape with the uuid of the DB
         case actions.CREATE_SHAPE: {
           const { id, uuid } = newProps.api.createShape.shape;
           if (this.state.shapes.hasOwnProperty(uuid) && !this.state.shapes[uuid].id) {
@@ -262,7 +270,6 @@ class Workspace extends Component {
 
             // for undo
             this.extractCreatedElementMoment(id, uuid, shape, 'shape');
-
             // update the shape list with that shape
             this.setState({
               shapes: {
@@ -270,6 +277,7 @@ class Workspace extends Component {
                 [uuid]: {
                   ...shape,
                   id,
+                  controls: [],
                 },
               },
             });
@@ -277,12 +285,11 @@ class Workspace extends Component {
           break;
         }
 
-        // Replace the uuid of the created text with th uui of the DB
+        // Add the uuid of the created text with th uui of the DB
         case actions.CREATE_TEXT: {
           const { id, uuid } = newProps.api.createText.text;
           if (this.state.texts.hasOwnProperty(uuid) && !this.state.texts[uuid].id) {
             const text = this.state.texts[uuid];
-
             // for undo
             this.extractCreatedElementMoment(id, uuid, text, 'text');
 
@@ -293,6 +300,34 @@ class Workspace extends Component {
                 [uuid]: {
                   ...text,
                   id,
+                },
+              },
+            });
+          }
+          break;
+        }
+
+        // Add the new control to the shape
+        case actions.CREATE_CONTROL: {
+          const { shapeId, id, uuid } = newProps.api.createControl.control;
+          if (this.state.shapes[shapeId].controls.hasOwnProperty(uuid)
+            && !this.state.shapes[shapeId].controls[uuid].id) {
+            const shape = this.state.shapes[shapeId];
+            const control = shape.controls[uuid];
+
+            // update the shape list with that shape
+            this.setState({
+              shapes: {
+                ...this.state.shapes,
+                [shapeId]: {
+                  ...shape,
+                  controls: {
+                    ...shape.controls,
+                    [uuid]: {
+                      ...control,
+                      id,
+                    },
+                  },
                 },
               },
             });
@@ -341,20 +376,6 @@ class Workspace extends Component {
     this.selectionRadialMenuEl = el;
   }
 
-  renderItemSettings() {
-    const { shapes, texts, selectedItems } = this.state;
-    const id = selectedItems[0];
-
-    // Text item
-    if (has(texts, id)) {
-    }
-
-    // Shape item
-    else if (has(shapes, id)) {
-      // const shapeType = this.props.api.getShapeTypes.shapeTypes[shapes[id].shapeTypeId];
-    }
-  }
-
   /* Rendering */
   renderWorkspace() {
     const { prototypes, selectedPrototype, selectedPage } = this.props.application;
@@ -371,15 +392,16 @@ class Workspace extends Component {
       prototypeType = (this.isMobile) ? 'mobile' : 'desktop';
     }
 
+    const fg = this.state.currentMode === constants.modes.CREATE_CONTROL;
     if (this.state.shapes && this.state.texts) {
       return (
         <div
-          className={`workspace workspace-${this.pageType} ${prototypeType}`}
+          className={`workspace workspace-${this.pageType} ${prototypeType} ${fg ? 'front' : ''}`}
           ref={div => { this.workspace = div; }}
           onMouseDown={this.onStartingEvent}
           onMouseMove={this.onMovingEvent}
           onMouseUp={this.onEndingEvent}
-          onMouseLeave={this.onEndingEvent}
+          onMouseLeave={this.onMouseLeaveEvent}
           onTouchStart={this.onStartingEvent}
           onTouchMove={this.onMovingEvent}
           onTouchEnd={this.onEndingEvent}
@@ -388,7 +410,7 @@ class Workspace extends Component {
         >
         {this.state.showMenu && this.renderRadialMenu(this.currentPos)}
           <svg height="100%" width="100%">
-            <filter id="dropshadow-line" height="130%" filterUnits="userSpaceOnUse">
+            <filter id="dropshadow-line-alpha" height="130%" filterUnits="userSpaceOnUse">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
               <feOffset dx="0" dy="0" result="offsetblur" />
               <feMerge>
@@ -396,8 +418,24 @@ class Workspace extends Component {
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
-            <filter id="dropshadow-curve" height="130%">
+            <filter id="dropshadow-line-graphic" height="130%" filterUnits="userSpaceOnUse">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+              <feOffset dx="0" dy="0" result="offsetblur" />
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="dropshadow-curve-alpha" height="130%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+              <feOffset dx="0" dy="0" result="offsetblur" />
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="dropshadow-curve-graphic" height="130%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
               <feOffset dx="0" dy="0" result="offsetblur" />
               <feMerge>
                 <feMergeNode />
@@ -421,11 +459,13 @@ class Workspace extends Component {
               Object.entries(this.state.shapes).map((item, i) =>
                 <Shape
                   id={item[0]}
+                  ref={(shape) => { this.itemsList[item[0]] = shape; }}
                   color={item[1].color}
                   path={item[1].path}
                   posX={item[1].x}
                   posY={item[1].y}
                   selected={this.state.selectedItems.some(e => e === item[0])}
+                  affected={this.state.selectedControlItems.some(e => e === item[0])}
                   monoSelect={this.monoSelect}
                   onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
                   key={i}
@@ -435,11 +475,13 @@ class Workspace extends Component {
               Object.entries(this.state.texts).map((item, i) =>
                 <Text
                   id={item[0]}
+                  ref={(text) => { this.itemsList[item[0]] = text; }}
                   posX={item[1].x}
                   posY={item[1].y}
                   size={item[1].fontSize}
                   content={item[1].content}
                   selected={this.state.selectedItems.some(e => e === item[0])}
+                  affected={this.state.selectedControlItems.some(e => e === item[0])}
                   monoSelect={this.monoSelect}
                   onLoad={(id, svgText) => this.textDidMount(id, svgText)}
                   key={i}
@@ -473,17 +515,18 @@ class Workspace extends Component {
 
   render() {
     return (
-      <div
-        id="workspace-container"
-        ref={div => div && div.focus()}
-        className="workspace-container"
-        tabIndex="0"
-        onKeyDown={this.onKeyDownEvent}
-      >
-        <MuiThemeProvider>
-          <SideMenu />
-        </MuiThemeProvider>
-        {this.renderWorkspace()}
+      <div className="workspace-flexbox">
+        {this.state.currentMode === constants.modes.CREATE_CONTROL && <div className="backdrop" />}
+        <SideMenu parent={this} parentState={this.state} />
+        <div
+          id="workspace-container"
+          ref={div => div && div.focus()}
+          className="workspace-container"
+          tabIndex="0"
+          onKeyDown={this.onKeyDownEvent}
+        >
+          {this.renderWorkspace()}
+        </div>
         <Footer selectedPage={this.state.currentPageId || ''} />
       </div>
     );
@@ -508,6 +551,7 @@ export default connect(
       patchText,
       deleteText,
       getActionTypes,
+      getEventTypes,
     }, dispatch),
   })
 )(Workspace);

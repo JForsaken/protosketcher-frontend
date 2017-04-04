@@ -2,6 +2,7 @@
 import React from 'react';
 import { has } from 'lodash';
 
+import { modes } from '../../constants';
 /**
  * Return the central point of the selected element's bounding boxes
  * @param {Object} selectedItems The ids of the selected items, contained in an array
@@ -86,23 +87,43 @@ export function addItemToSelection(uuid) {
 /**
  * Applies a selection of a single shape or a single text
  * @param {String} uuid The id of the selected shape/text
- * @param {Object} e The event
  */
 export function monoSelect(uuid, e) {
-  if (e && e.ctrlKey) {
-    // User used CTRL, so we add the item
-    this.addItemToSelection(uuid);
-    return;
+  // Add selected items to control being created
+  if (this.state.currentMode === modes.CREATE_CONTROL) {
+    const { selectedControlItems } = this.state;
+    const index = selectedControlItems.indexOf(uuid);
+
+    if (index > -1) {
+      selectedControlItems.splice(index, 1);
+    } else {
+      selectedControlItems.push(uuid);
+    }
+
+    this.setState({
+      selectedControlItems,
+    });
   }
-  this.selectionDirty = true;
-  const items = this.updateSelectionOriginalPosition([uuid]);
-  this.centralSelectionPoint = this.getCentralPointOfSelection([uuid]);
-  this.setState({
-    selectedItems: [uuid],
-    shapes: items.shapes,
-    texts: items.texts,
-  });
+
+ // Select the item
+  else {
+    if (e && e.ctrlKey) {
+      // User used CTRL, so we add the item
+      this.addItemToSelection(uuid);
+      return;
+    }
+    this.selectionDirty = true;
+    const items = this.updateSelectionOriginalPosition([uuid]);
+    this.centralSelectionPoint = this.getCentralPointOfSelection([uuid]);
+    this.changePageChecked = false;
+    this.setState({
+      selectedItems: [uuid],
+      shapes: items.shapes,
+      texts: items.texts,
+    });
+  }
 }
+
 
 /**
  * Applies a multiple element selection on the ending event of the cursor
@@ -125,8 +146,15 @@ export function multiSelect(pointerPos) {
     //   return false;
     // }
 
-    // FIXME use React refs instead of getElementById
-    const box = document.getElementById(key).getBoundingClientRect();
+    const component = this.itemsList[key].getWrappedInstance();
+    let element;
+    // Check if component is Shape or Text
+    if (component.svgShape) {
+      element = component.svgShape;
+    } else {
+      element = component.svgText;
+    }
+    const box = element.getBoundingClientRect();
     const workspacePos = this.workspace.getBoundingClientRect();
     const pathRectRight = box.right - workspacePos.left;
     const pathRectLeft = box.left - workspacePos.left;
@@ -144,6 +172,8 @@ export function multiSelect(pointerPos) {
     selectedItems,
     shapes: items.shapes,
     texts: items.texts,
+    showSettingsPanel: false,
+    selectingRect: null,
   });
 }
 

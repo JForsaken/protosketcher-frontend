@@ -1,5 +1,8 @@
 .landing-page {
 
+  .parallax-content {
+    height: 600px;
+  }
   .navbar {
 
     .accent-btn {
@@ -33,5 +36,76 @@
     .content {
       margin-top: 45px;
     }
+  }
+
+  .parallax-text {
+    text-align: center;
+    margin-top: 10%;
+    margin-bottom: 50px;
+    margin-left: 20%;
+    margin-right: 20%;
+    font-family: 'Gloria Hallelujah';
+  }
+
+  #holder{
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    background: white;
+    padding: 10px;
+    width: 250px;
+    margin: 0 auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-65%);
+    @include box-shadow(0px, 3px, 8px, rgba(0,0,0,0.25), true);
+    border-radius: 2px;
+  }
+  .callToActionInactive {
+    display:block;
+    background: color('accent');
+    margin : 20px auto;
+    width : 300px;
+    height : 75px;
+    overflow: hidden;
+    text-align : center;
+    @include transition(.2s);
+    cursor : pointer;
+    border-radius: 3px;
+    @include box-shadow(0px, 1px, 2px, rgba(0,0,0,.2), true);
+  }
+  .callToActionHovered {
+    position : relative;
+    width : 400px;
+    height : 150px;
+    margin-top: -90px;
+    padding-top: 2px;
+    background : #26A69A;
+    left : -450px;
+    @include transition(.3s);
+  }
+  .ctaInactiveText {
+    color : black;
+    font-size : 30px;
+    @include transition(.3s);
+    margin-top: 16px;
+    font-family: 'Permanent Marker';
+  }
+  .ctaHoveredText {
+    margin-top : 36px;
+    margin-right : -130px;
+    font-size : 30px;
+    color : black;
+    margin-left: -25px;
+    font-family: 'Permanent Marker';
+  }
+  .callToActionInactive:hover .callToActionHovered {
+    left: -100px;
+  }
+  .callToActionInactive:hover .ctaInactiveText {
+    margin-left : 135px;
+  }
+  .callToActionInactive:active {
+    @include box-shadow(0px, 5px, 6px, rgba(0,0,0,0.3), true);
   }
 }

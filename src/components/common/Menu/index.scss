@@ -21,6 +21,11 @@
     &:hover, :focus {
       color: white;
     }
+
+    img {
+      margin-top: -2px;
+      margin-left: 20px;
+    }
   }
 
   &__right-container {

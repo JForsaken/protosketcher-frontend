@@ -1,11 +1,19 @@
-.workspace-container {
+.workspace-flexbox {
+  align-items: center;
   bottom: $footer-height;
+  display: flex;
+  justify-content: center;
   left: 0;
   position: absolute;
   right: 0;
   top: $top-menu-height;
-  padding: 20px;
+}
+
+.workspace-container {
+  flex: 1;
+  outline: none;
   overflow: auto;
+  padding: 20px;
 }
 
 .in-simulation {
@@ -15,7 +23,7 @@
 }
 
 .workspace {
-  background-color: color('background', 'light');
+  background-color: color(background, light);
   position: relative;
   margin: 0 auto;
   @include rounded-equal(2px);
@@ -42,15 +50,21 @@
       height: $portait-modal-height;
     }
   }
+
+  &.front {
+    z-index: 10;
+  }
 }
 
 .backdrop {
+  @include animation(fadeIn 450ms);
   background: color(background, backdrop);
   bottom: 0;
   left: 0;
   position: fixed;
   right: 0;
   top: 0;
+  z-index: 5;
 }
 
 .loading {
@@ -71,7 +85,7 @@
 }
 
 .workspace-text-selected {
-  filter: url(#dropshadow);
+  filter: url(#dropshadowAlpha);
 }
 
 #textEdit {

@@ -59,6 +59,7 @@ class Text extends Component {
         className={classNames({
           'workspace-text': true,
           'workspace-text-selected': this.props.selected,
+          'workspace-text-affected': this.props.affected,
           'workspace-text-hovered': this.state.hovered,
         })}
         transform={`translate(${this.props.posX} ${this.props.posY})`}
@@ -76,5 +77,9 @@ export default connect(
     actions: bindActionCreators({
       updateWorkspace,
     }, dispatch),
-  })
+  }),
+  null,
+  {
+    withRef: true,
+  }
 )(Text);
