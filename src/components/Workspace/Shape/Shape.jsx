@@ -22,20 +22,14 @@ class Shape extends Component {
     this.state = {
       hovered: false,
     };
-    this.type = 'curve';
   }
 
   componentDidMount() {
     const { onLoad, id } = this.props;
-    const boundingBox = this.svgShape.getBBox();
 
     // if an onLoad callback has been provided
     if (onLoad) {
       onLoad(id, this.svgShape);
-    }
-    // if the bounding box width or height is 0, its a straight line
-    if (boundingBox.width === 0 || boundingBox.height === 0) {
-      this.type = 'line';
     }
   }
 
@@ -54,7 +48,15 @@ class Shape extends Component {
   }
 
   render() {
-    const { type } = this;
+    // if the bounding box width or height is 0, its a straight line
+    let type = 'curve';
+    if (this.svgShape) {
+      const boundingBox = this.svgShape.getBBox();
+      if (boundingBox.width === 0 || boundingBox.height === 0) {
+        type = 'line';
+      }
+    }
+
     let classes = `workspace-${type}`;
 
     // add conditional css classes depending on line or curve

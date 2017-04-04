@@ -79,6 +79,7 @@ class RadialMenu extends Component {
             <RadialMenuItem
               {...item}
               key={i}
+              toggleMenu={this.props.toggleMenu}
             />)
         }
         <circle

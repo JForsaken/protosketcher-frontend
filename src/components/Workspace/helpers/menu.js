@@ -162,11 +162,27 @@ export function renderRadialMenu(currentPos) {
         onLoad={(svgEl) => this.radialMenuDidMount(svgEl)}
         x={currentPos.x}
         y={currentPos.y}
+        toggleMenu={this.toggleMenu}
+      />
+    );
+  }
+
+  // Menu with settings when only one item is selected
+  else if (length === 1) {
+    return (
+      <RadialMenu
+        items={selectionMenuItems}
+        offset={Math.PI / 4}
+        onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
+        x={currentPos.x}
+        y={currentPos.y}
+        toggleMenu={this.toggleMenu}
       />
     );
   }
 
   // General menu for single and multiple selection
+
   return (
     <RadialMenu
       items={selectionMenuItems}
@@ -174,6 +190,7 @@ export function renderRadialMenu(currentPos) {
       onLoad={(svgEl) => this.selectionRadialMenuDidMount(svgEl)}
       x={currentPos.x}
       y={currentPos.y}
+      toggleMenu={this.toggleMenu}
     />
   );
 }
