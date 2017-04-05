@@ -92,6 +92,11 @@ class Simulation extends Component {
       const { prototypes, selectedPrototype, selectedPage } = nextProps.application;
       const prototype = prototypes[selectedPrototype];
 
+      // If modal is opened and we change the page, close the modal
+      if (this.state.modalId) {
+        this.closeModal();
+      }
+
       if (prototype) {
         const { shapes, texts } = prototype.pages[selectedPage];
 
