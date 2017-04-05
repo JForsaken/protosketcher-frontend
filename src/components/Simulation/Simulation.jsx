@@ -14,9 +14,6 @@ import Control from './Control/Control';
 import { getShapes, getTexts } from '../../actions/api';
 import { hideElements } from '../../actions/application';
 
-/* CONSTANTS */
-import { MODAL_WIDTH, MODAL_HEIGHT, PAGE_WIDTH, PAGE_HEIGHT } from '../constants';
-
 class Simulation extends Component {
 
   constructor(props, context) {
@@ -143,8 +140,8 @@ class Simulation extends Component {
             .filter(item => !hiddenElements.includes(item[0]))
             .map((item, i) => {
               if (this.isModal) {
-                posX = (item[1].x / PAGE_WIDTH) * MODAL_WIDTH;
-                posY = (item[1].y / PAGE_HEIGHT) * MODAL_HEIGHT;
+                posX = (item[1].x);
+                posY = (item[1].y);
               } else {
                 posX = item[1].x;
                 posY = item[1].y;
