@@ -179,3 +179,26 @@ $desktop-width: 1024px;
   background: -moz-linear-gradient(top,  $from, $to);
   filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}');
 }
+
+/*
+  NICE SCROLL BARS
+
+  Usage:
+  .container {
+    @include gradient(#000, #FFF);
+  }
+*/
+@mixin nice-scrollbars($size: 7px) {
+  &::-webkit-scrollbar-track {
+    background-color: color('background');
+  }
+
+  &::-webkit-scrollbar {
+    width: $size;
+    height: $size;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: color('foreground', 'light');
+  }
+}
