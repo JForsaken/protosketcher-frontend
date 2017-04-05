@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { isEmpty, forEach, intersection, invert } from 'lodash';
+import { isEmpty, forEach, intersection } from 'lodash';
 import { bindActionCreators } from 'redux';
 
 /* Actions */
@@ -107,7 +107,7 @@ class Control extends Component {
     const { shapeTypes } = this.props.api.getShapeTypes;
     const { actionTypes: types } = this.props.api.getActionTypes;
     // in order to have the pageTypes already mapped as { id: value }
-    const allPageTypes = invert(this.props.api.getPageTypes.pageTypes);
+    const allPageTypes = this.props.api.getPageTypes.pageTypes;
     const { pages } = this.props.application.prototypes[this.props.application.selectedPrototype];
 
     const affectedPages = [];
