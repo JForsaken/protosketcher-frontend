@@ -293,15 +293,19 @@ class SideMenu extends Component {
    * @return {html} The HTML code of the rendered panel
    */
   renderSettingsPanel() {
-    if (this.props.parentState.selectedItems.length !== 1) return (<div></div>);
+    if (this.props.parentState.selectedItems.length !== 1) {
+      return (
+        <div className="select-shape-to-see">
+          <FormattedMessage id="sidemenu.selectShapeToSee" />
+        </div>
+      );
+    }
 
     // TODO: empty div & empty side menu is blank
     return (
       <div className="settings-panel">
         {this.renderSettings()}
         {this.renderControls()}
-        <div>
-        </div>
       </div>
     );
   }
