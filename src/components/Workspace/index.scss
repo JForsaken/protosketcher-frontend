@@ -13,6 +13,7 @@
   outline: none;
   overflow: auto;
   padding: 20px;
+  @include nice-scrollbars(10px);
 }
 
 .in-simulation {

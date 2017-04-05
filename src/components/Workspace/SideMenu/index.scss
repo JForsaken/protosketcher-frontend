@@ -31,6 +31,8 @@
     height: 100%;
     transition: width 450ms cubic-bezier(.23, 1, .32, 1) 0ms;
     width: 0;
+    overflow: auto;
+    @include nice-scrollbars;
 
     .select-shape-to-see {
       opacity: 0;
