@@ -8,6 +8,8 @@
   top: $top-menu-height;
 }
 
+$container-padding: 20px;
+$total-spacing: $container-padding + $top-menu-height + $footer-height;
 .workspace-container {
   flex: 1;
   outline: none;
@@ -26,38 +28,55 @@
   background-color: color(background, light);
   position: relative;
   top: 50%;
-  left: 50%;
   margin: 0 auto;
   @include rounded-equal(2px);
   width: 0;
   height: 0;
   @include box-shadow(0px, 0px, 15px, #000);
 
+  // Used to cancel mid-centering when size is too small
+  @mixin cancel-centering-vertical() {
+    top: 0;
+    margin-top: 0;
+  }
+
   &.desktop {
     width: $page-width;
     height: $page-height;
-    margin-left: -$page-width/2;
     margin-top: -$page-height/2;
+
+    @media ( max-height: $page-height + $total-spacing ) {
+      @include cancel-centering-vertical;
+    }
 
     &.workspace-modal {
       width: $modal-width;
       height: $modal-height;
-      margin-left: -$modal-width/2;
       margin-top: -$modal-height/2;
+
+      @media ( max-height: $modal-height + $total-spacing ){
+        @include cancel-centering-vertical;
+      }
     }
   }
 
   &.mobile {
     width: $portait-width;
     height: $portait-height;
-    margin-left: -$portait-width/2;
     margin-top: -$portait-height/2;
+
+    @media ( max-height: $portait-height + $total-spacing ){
+      @include cancel-centering-vertical;
+    }
 
     &.workspace-modal {
       width: $portait-modal-width;
       height: $portait-modal-height;
-      margin-left: -$portait-modal-width/2;
       margin-top: -$portait-modal-height/2;
+
+      @media ( max-height: $portait-modal-height + $total-spacing ){
+        @include cancel-centering-vertical;
+      }
     }
   }
 
