@@ -19,11 +19,6 @@
   &.mobile {
     width: $portait-width;
     height: $portait-height;
-
-    &.workspace-modal {
-      width: $portait-modal-width;
-      height: $portait-modal-height;
-    }
   }
 
   &.modalSimulation {
@@ -35,6 +30,7 @@
     right: 0;
     bottom: 0;
 
+
     .workspace {
       position: absolute;
       top: 50%;
@@ -44,6 +40,13 @@
       background-color: color('background', 'light');
       width: $modal-width;
       height: $modal-height;
+
+      &.mobile {
+        width: $portait-modal-width;
+        height: $portait-modal-height;
+        margin-left: -$portait-modal-width/2;
+        margin-top: -$portait-modal-height/2;
+      }
     }
   }
 }
