@@ -23,19 +23,20 @@
   &.mobile {
     width: $portait-width;
     height: $portait-height;
-
-    &.workspace-modal {
-      width: $portait-modal-width;
-      height: $portait-modal-height;
-    }
   }
 
   &.modalSimulation {
     z-index: 10;
     background-color: color('background', 'backdrop');
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
 
     .workspace {
-      position: fixed;
+      position: absolute;
       top: 50%;
       left: 50%;
       margin-left: -$modal-width/2;
@@ -43,6 +44,13 @@
       background-color: color('background', 'light');
       width: $modal-width;
       height: $modal-height;
+
+      &.mobile {
+        width: $portait-modal-width;
+        height: $portait-modal-height;
+        margin-left: -$portait-modal-width/2;
+        margin-top: -$portait-modal-height/2;
+      }
     }
   }
 }
