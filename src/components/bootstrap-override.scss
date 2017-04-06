@@ -1,7 +1,6 @@
 .modal.in, .modal.fade, .modal {
   .modal-dialog {
-    top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(100%);
     margin-top: 0;
 
     .modal-content {
