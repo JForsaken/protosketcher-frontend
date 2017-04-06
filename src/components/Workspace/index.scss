@@ -53,6 +53,7 @@ $total-spacing: $container-padding + $top-menu-height + $footer-height;
       width: $modal-width;
       height: $modal-height;
       margin-top: -$modal-height/2;
+      top: 50%;
 
       @media ( max-height: $modal-height + $total-spacing ){
         @include cancel-centering-vertical;
@@ -73,6 +74,7 @@ $total-spacing: $container-padding + $top-menu-height + $footer-height;
       width: $portait-modal-width;
       height: $portait-modal-height;
       margin-top: -$portait-modal-height/2;
+      top: 50%;
 
       @media ( max-height: $portait-modal-height + $total-spacing ){
         @include cancel-centering-vertical;
