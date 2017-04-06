@@ -5,10 +5,12 @@
   z-index: 5;
   outline: none;
   position: absolute;
-  top: 0;
+  top: $top-menu-height;
   bottom: 0;
   left: 0;
   right: 0;
+  overflow: auto;
+  @include nice-scrollbars(10px);
 
   &.desktop {
     width: $page-width;
