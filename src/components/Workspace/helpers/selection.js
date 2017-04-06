@@ -138,17 +138,10 @@ export function multiSelect(pointerPos) {
   const selectRectTop = pointerPos.y > this.currentPos.y ? this.currentPos.y : pointerPos.y;
   const selectRectBottom = pointerPos.y < this.currentPos.y ? this.currentPos.y : pointerPos.y;
 
-  // const svgPool = { ...this.svgShapes, ...this.svgTexts };
-
   const selectedItems = Object.keys({
     ...this.state.shapes,
     ...this.state.texts,
   }).filter((key) => {
-    // If the selected shape has not been created in the backend yet
-    // if (!has(svgPool, key)) {
-    //   return false;
-    // }
-
     const component = this.itemsList[key].getWrappedInstance();
     let element;
     // Check if component is Shape or Text

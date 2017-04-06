@@ -362,15 +362,6 @@ class Workspace extends Component {
     return items[uuid].id || uuid;
   }
 
-  /* Ref referencing */
-  shapeDidMount(id, shapeSvg) {
-    this.svgShapes = { ...this.svgShapes, [id]: shapeSvg };
-  }
-
-  textDidMount(id, textSvg) {
-    this.svgTexts = { ...this.svgTexts, [id]: textSvg };
-  }
-
   radialMenuDidMount(el) {
     this.radialMenuEl = el;
   }
@@ -469,7 +460,6 @@ class Workspace extends Component {
                   selected={this.state.selectedItems.some(e => e === item[0])}
                   affected={this.state.selectedControlItems.some(e => e === item[0])}
                   monoSelect={this.monoSelect}
-                  onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
                   key={i}
                 />)
             }
@@ -485,7 +475,6 @@ class Workspace extends Component {
                   selected={this.state.selectedItems.some(e => e === item[0])}
                   affected={this.state.selectedControlItems.some(e => e === item[0])}
                   monoSelect={this.monoSelect}
-                  onLoad={(id, svgText) => this.textDidMount(id, svgText)}
                   key={i}
                 />)
             }
