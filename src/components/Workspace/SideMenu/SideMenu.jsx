@@ -293,7 +293,10 @@ class SideMenu extends Component {
    * @return {html} The HTML code of the rendered panel
    */
   renderSettingsPanel() {
-    if (this.props.parentState.selectedItems.length !== 1) {
+    const { selectedItems, texts } = this.props.parentState;
+
+    if (selectedItems.length !== 1
+        || (selectedItems.length === 1 && has(texts, selectedItems[0]))) {
       return (
         <div className="select-shape-to-see">
           <FormattedMessage id="sidemenu.selectShapeToSee" />
