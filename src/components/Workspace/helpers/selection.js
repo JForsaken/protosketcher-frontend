@@ -13,9 +13,16 @@ export function getCentralPointOfSelection(selectedItems = this.state.selectedIt
   let top = 0;
   let bottom = Number.MAX_SAFE_INTEGER;
 
-  const svgPool = { ...this.svgShapes, ...this.svgTexts };
   for (const uuid of selectedItems) {
-    const box = svgPool[uuid].getBoundingClientRect();
+    const component = this.itemsList[uuid].getWrappedInstance();
+    let element;
+    // Check if component is Shape or Text
+    if (component.svgShape) {
+      element = component.svgShape;
+    } else {
+      element = component.svgText;
+    }
+    const box = element.getBoundingClientRect();
 
     right = Math.max(right, box.right);
     left = Math.min(left, box.left);
