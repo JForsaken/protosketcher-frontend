@@ -55,16 +55,20 @@ class Control extends Component {
     const { posX, posY } = this.props;
 
     // the position where the control should be placed
-    // const x = (Math.floor(rect.x + rect.width / 2.0) + posX) - rect.width / 2.0;
-    // const y = (Math.floor(rect.y + rect.height / 2.0) + posY) - rect.height / 2.0;
+    // Width and height need to be hardcoded, because without the ref, we can't get them
+    // and the ref is never available on first render
+    const width = 500;
+    const height = 50;
+    const padding = 10;
     const x = posX;
-    const y = posY;
+    const y = posY - height / 2 + padding / 2;
 
     const controlStyle = {
       left: x,
       top: y,
-      width: 200,
-      height: 50,
+      width,
+      height,
+      padding,
     };
 
     switch (this.shapeType) {
