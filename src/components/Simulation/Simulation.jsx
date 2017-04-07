@@ -100,6 +100,8 @@ class Simulation extends Component {
       if (prototype) {
         const { shapes, texts } = prototype.pages[selectedPage];
 
+        this.itemsList = {};
+
         this.setState({
           shapes,
           texts,
@@ -122,7 +124,6 @@ class Simulation extends Component {
   closeModal() {
     this.setState({ modalId: '' });
   }
-
 
   renderShapes() {
     const { hiddenElements } = this.props.application.simulation;
@@ -180,33 +181,19 @@ class Simulation extends Component {
 
     return (
       // only show a control if its relative shape svg has been rendered
-      Object.entries(shapes).map((item, i) => {
-        if (this.itemsList[item[0]]) {
-          const component = this.itemsList[item[0]].getWrappedInstance();
-          let element;
-            // Check if component is Shape or Text
-          if (component.svgShape) {
-            element = component.svgShape;
-          } else {
-            element = component.svgText;
-          }
-          return (
-            <Control
-              id={`control-${item[0]}`}
-              controls={item[1].controls || {}}
-              shapeTypeId={item[1].shapeTypeId}
-              color={item[1].color}
-              rect={element.getBBox()}
-              posX={item[1].x}
-              posY={item[1].y}
-              path={item[1].path}
-              key={`control-${i}`}
-              onClickModal={(pageId) => this.showModal(pageId)}
-            />
-          );
-        }
-        return null;
-      })
+      Object.entries(shapes).map((item, i) => (
+        <Control
+          id={`control-${item[0]}`}
+          controls={item[1].controls || {}}
+          shapeTypeId={item[1].shapeTypeId}
+          color={item[1].color}
+          posX={item[1].x}
+          posY={item[1].y}
+          path={item[1].path}
+          key={`control-${i}`}
+          onClickModal={(pageId) => this.showModal(pageId)}
+        />
+      ))
     );
   }
 
