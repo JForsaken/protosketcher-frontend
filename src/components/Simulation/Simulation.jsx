@@ -35,6 +35,8 @@ class Simulation extends Component {
     }
     const { shapes, texts } = prototype.pages[selectedPage];
 
+    this.itemsList = {};
+
     this.state = {
       pages: prototype.pages || null,
       currentPageId: selectedPage,
@@ -175,7 +177,6 @@ class Simulation extends Component {
 
   renderControls() {
     const { shapes } = this.state;
-
 
     return (
       // only show a control if its relative shape svg has been rendered
