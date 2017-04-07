@@ -174,10 +174,21 @@ class Menu extends Component {
   }
 
   renderLogin() {
-    const { messages } = this.props.intl;
+    const {
+      application: { locale, locales },
+      intl: { messages },
+    } = this.props;
+
+    const otherLocale = locales.find(o => o !== locale);
 
     return (
       <div>
+        <FlatButton
+          label={otherLocale.toUpperCase()}
+          labelStyle={{ color: 'white' }}
+          onTouchTap={() => this.handleSwitchLocale()}
+          icon={<Language style={{ fill: 'white', width: 18 }} />}
+        />
         <FlatButton
           label={messages['login.form.button']}
           onTouchTap={() => this.props.router.push('/login')}
