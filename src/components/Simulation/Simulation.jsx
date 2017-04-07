@@ -181,7 +181,7 @@ class Simulation extends Component {
 
     return (
       // only show a control if its relative shape svg has been rendered
-      Object.entries(shapes).map((item, i) => (
+      Object.entries(shapes).map((item) => (
         <Control
           id={`control-${item[0]}`}
           controls={item[1].controls || {}}
@@ -190,7 +190,7 @@ class Simulation extends Component {
           posX={item[1].x}
           posY={item[1].y}
           path={item[1].path}
-          key={`control-${i}`}
+          key={`control-${item[0]}`}
           onClickModal={(pageId) => this.showModal(pageId)}
         />
       ))
