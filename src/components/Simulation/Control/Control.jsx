@@ -77,18 +77,20 @@ class Control extends Component {
             d={this.props.path}
             stroke="transparent"
             fill="transparent"
-            transform={`translate(${this.props.posX} ${this.props.posY})`}
+            transform={`translate(${posX} ${posY})`}
           />
         );
         break;
 
       case 'textbox':
         control = (
-          <FormControl
-            type="text"
-            className="simulation-control"
-            style={controlStyle}
-          />
+          <foreignObject>
+            <FormControl
+              type="text"
+              className="simulation-control simulation-textbox"
+              style={controlStyle}
+            />
+          </foreignObject>
         );
         break;
 
