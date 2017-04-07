@@ -493,7 +493,7 @@ class SideMenu extends Component {
             color="rgba(0,0,0,.5)"
             hoverColor="rgba(0,0,0,.75)"
           />
-          <FormattedMessage className="vertical-text" id="sidemenu.toggle" />
+          <span className="vertical-text">{this.props.intl.messages['sidemenu.toggle']}</span>
         </div>
         {this.props.parentState.currentMode === modes.CREATE_CONTROL &&
           <div className="create-control-container">

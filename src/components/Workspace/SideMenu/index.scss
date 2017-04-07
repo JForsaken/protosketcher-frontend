@@ -9,7 +9,8 @@
     cursor: pointer;
     height: 148px;
     left: 0;
-    margin-top: 150px;
+    top: 0;
+    transform: translateY(150%);
     outline: none;
     position: absolute;
     user-select: none;
@@ -133,6 +134,8 @@
     font-weight: bold;
     text-transform: uppercase;
     writing-mode: tb-rl;
+    position: absolute;
+    left: 15px;
   }
 
   .settings-container {

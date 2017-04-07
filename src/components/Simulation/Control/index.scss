@@ -1,6 +1,14 @@
 .simulation-control {
   z-index: 10000;
   position: absolute;
+
+  &.simulation-textbox {
+    background: none;
+    border: none;
+    font-size: 1.4em;
+    font-family: 'Permanent Marker', 'Roboto', 'Helvetica Light', sans-serif;
+    @include box-shadow(0, 0, 0, #000, false);
+  }
 }
 
 .simulation-btn {
