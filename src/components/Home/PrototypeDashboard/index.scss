@@ -66,13 +66,17 @@
     margin: 0 auto;
 
     &:hover {
-      background: color('accent', 'dark');
+      background: color('primary', 'dark');
       cursor: pointer;
     }
 
     &--add {
       @extend .prototype-container__prototype;
       background: color('accent', 'light');
+
+      &:hover {
+        background: color('accent', 'dark');
+      }
     }
 
     &__title {
