@@ -28,7 +28,6 @@ class Simulation extends Component {
                                 p => (!has(prototype.pages[p], 'shapes') &&
                                       !has(prototype.pages[p], 'texts')));
 
-    this.svgShapes = {};
     this.isModal = props.isModal;
     // If this Simulation is a Modal, hard assign the Page
     if (this.isModal) {
@@ -36,12 +35,13 @@ class Simulation extends Component {
     }
     const { shapes, texts } = prototype.pages[selectedPage];
 
+    this.itemsList = {};
+
     this.state = {
       pages: prototype.pages || null,
       currentPageId: selectedPage,
       shapes,
       texts,
-      svgShapes: {},
       pagesToFetch,
       pagesWithShapesFetched: [],
       pagesWithTextsFetched: [],
@@ -100,22 +100,11 @@ class Simulation extends Component {
       if (prototype) {
         const { shapes, texts } = prototype.pages[selectedPage];
 
-        this.svgShapes = {};
         this.setState({
           shapes,
           texts,
         });
       }
-    }
-  }
-
-  shapeDidMount(id, shapeSvg) {
-    // intermediate container to prevent unnecessary renders
-    this.svgShapes = { ...this.svgShapes, [id]: shapeSvg };
-
-    // when all the svgs have been rendered
-    if (Object.keys(this.svgShapes).length === Object.keys(this.state.shapes).length) {
-      this.setState({ svgShapes: this.svgShapes });
     }
   }
 
@@ -155,7 +144,7 @@ class Simulation extends Component {
               return (
                 <Shape
                   id={item[0]}
-                  onLoad={(id, svgShape) => this.shapeDidMount(id, svgShape)}
+                  ref={(shape) => { this.itemsList[item[0]] = shape; }}
                   color={item[1].color}
                   path={item[1].path}
                   posX={posX}
@@ -176,6 +165,7 @@ class Simulation extends Component {
             .map((item, i) =>
               <Text
                 id={item[0]}
+                ref={(text) => { this.itemsList[item[0]] = text; }}
                 posX={item[1].x}
                 posY={item[1].y}
                 size={item[1].fontSize}
@@ -186,24 +176,37 @@ class Simulation extends Component {
   }
 
   renderControls() {
-    const { svgShapes, shapes } = this.state;
+    const { shapes } = this.state;
 
     return (
       // only show a control if its relative shape svg has been rendered
-      Object.entries(shapes).map((item, i) => svgShapes[item[0]] &&
-        <Control
-          id={`control-${item[0]}`}
-          controls={item[1].controls || {}}
-          shapeTypeId={item[1].shapeTypeId}
-          color={item[1].color}
-          rect={svgShapes[item[0]].getBBox()}
-          posX={item[1].x}
-          posY={item[1].y}
-          path={item[1].path}
-          key={`control-${i}`}
-          onClickModal={(pageId) => this.showModal(pageId)}
-        />
-      )
+      Object.entries(shapes).map((item, i) => {
+        if (this.itemsList[item[0]]) {
+          const component = this.itemsList[item[0]].getWrappedInstance();
+          let element;
+            // Check if component is Shape or Text
+          if (component.svgShape) {
+            element = component.svgShape;
+          } else {
+            element = component.svgText;
+          }
+          return (
+            <Control
+              id={`control-${item[0]}`}
+              controls={item[1].controls || {}}
+              shapeTypeId={item[1].shapeTypeId}
+              color={item[1].color}
+              rect={element.getBBox()}
+              posX={item[1].x}
+              posY={item[1].y}
+              path={item[1].path}
+              key={`control-${i}`}
+              onClickModal={(pageId) => this.showModal(pageId)}
+            />
+          );
+        }
+        return null;
+      })
     );
   }
 

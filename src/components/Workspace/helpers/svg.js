@@ -19,12 +19,12 @@ export function deleteSvgItem(uuid, mementoId) {
   if (has(shapes, uuid)) {
     element = { type: 'shape', object: clone(shapes[uuid]) };
     delete shapes[uuid];
-    delete this.svgShapes[id];
+    delete this.itemsList[id];
     this.props.actions.deleteShape(selectedPrototype, currentPageId, id, user.token);
   } else if (has(texts, uuid)) {
     element = { type: 'text', object: clone(texts[uuid]) };
     delete texts[uuid];
-    delete this.svgTexts[id];
+    delete this.itemsList[id];
     this.props.actions.deleteText(selectedPrototype, currentPageId, id, user.token);
   }
 

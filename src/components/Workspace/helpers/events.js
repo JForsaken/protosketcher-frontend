@@ -218,15 +218,11 @@ export function onMovingEvent(e) {
       this.copySelectedItems();
     } else if (this.copiedItesmsInit === false) {
       this.copiedItesmsInit = this.state.selectedItems.every(id => {
-        const svgPool = {
-          ...this.svgShapes,
-          ...this.svgTexts,
-        };
         const itemsPool = {
           ...this.state.shapes,
           ...this.state.texts,
         };
-        return has(svgPool, id) && has(itemsPool, id);
+        return has(this.itemsList, id) && has(itemsPool, id);
       });
       if (this.copiedItesmsInit) {
         const items = this.updateSelectionOriginalPosition(this.state.selectedItems);
