@@ -19,7 +19,6 @@ class Control extends Component {
     controls: PropTypes.object.isRequired,
     shapeTypeId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    rect: PropTypes.object.isRequired,
     color: PropTypes.string.isRequired,
     posX: PropTypes.number.isRequired,
     posY: PropTypes.number.isRequired,
@@ -53,17 +52,23 @@ class Control extends Component {
 
   getControl() {
     let control = null;
-    const { posX, posY, rect } = this.props;
+    const { posX, posY } = this.props;
 
     // the position where the control should be placed
-    const x = (Math.floor(rect.x + rect.width / 2.0) + posX) - rect.width / 2.0;
-    const y = (Math.floor(rect.y + rect.height / 2.0) + posY) - rect.height / 2.0;
+    // Width and height need to be hardcoded, because without the ref, we can't get them
+    // and the ref is never available on first render
+    const width = 500;
+    const height = 50;
+    const padding = 10;
+    const x = posX;
+    const y = posY;
 
     const controlStyle = {
       left: x,
       top: y,
-      width: rect.width,
-      height: rect.height,
+      width,
+      height,
+      padding,
     };
 
     switch (this.shapeType) {
