@@ -382,6 +382,10 @@ class SideMenu extends Component {
     const id = selectedItems[0];
     const changePageActionId = invert(this.props.api.getActionTypes.actionTypes).changePage;
 
+    if (!prototype) {
+      return null;
+    }
+
     const shape = shapes[id];
     if (!shape) return ('');
 

@@ -166,7 +166,7 @@ class Menu extends Component {
           inputStyle={{ textAlign: 'center', margin: 'auto 0', fontSize: 20, color: 'white' }}
           onBlur={(e) => this.renamePrototype(e)}
           onChange={(e) => this.setState({ prototypeName: e.target.value })}
-          value={this.state.prototypeName}
+          value={this.state.prototypeName || ''}
           underlineFocusStyle={{ borderColor: orange500 }}
         />
       </form>
