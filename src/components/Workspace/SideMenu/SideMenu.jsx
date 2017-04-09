@@ -485,7 +485,7 @@ class SideMenu extends Component {
         {this.renderSettingsPanel()}
         </div>
         <div
-          className="drawer-toggle vertical-text"
+          className="drawer-toggle"
           onClick={() => this.handleToggle()}
         >
           <ArrowIcon

@@ -12,7 +12,7 @@
       }
 
       .modal-header {
-        background-color: color('accent');
+        background-color: color('primary');
         text-align: center;
         color: color('text', 'light');
         @include rounded-indiv(2px, 2px, 0, 0);
@@ -49,7 +49,7 @@
   transition: .2s ease;
 
   &.btn-default {
-    background-color: color('primary', 'light');
+    background-color: color('primary', 'base');
     border: color('primary', 'base');
 
     &:hover {
@@ -89,11 +89,11 @@
   }
 
   &.btn-warning {
-    background-color: color('secondary', 'light');
+    background-color: color('secondary', 'base');
     border: color('secondary', 'dark');
 
     &:hover {
-      background-color: color('secondary', 'base');
+      background-color: color('secondary', 'dark');
       border: color('secondary', 'light');
     }
   }

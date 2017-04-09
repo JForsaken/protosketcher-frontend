@@ -21,10 +21,10 @@ export default {
   'landing.contentText5': 'Protosketcher peut magnifiquement simuler sur le pouce les interfaces que vous dessinez.',
   'landing.contentText6': "Effectuer des démonstrations d'interfaces à vos clients durant les phases de pré-développement n'aura jamais été aussi facile.",
   'landing.contentText7': "N'hésitez plus et sautez tête première dans une expérience sans pareil de conception d'interfaces usagers",
-  'landing.firstCtaInactiveText': 'ÊTES-VOUS PRÊT(E)?',
+  'landing.firstCtaInactiveText': 'PRÊT(E)?',
   'landing.firstCtaHoveredText': 'INSCRIVEZ-VOUS!',
   'landing.secondCtaInactiveText': 'ALLEZ-Y!',
-  'landing.secondCtaHoveredText': 'VOUS Y ÊTES PRESQUE!!!',
+  'landing.secondCtaHoveredText': 'LANCEZ-VOUS!!!',
 
   // LOGIN FORM
   'login.form.title': 'Bon Retour!',

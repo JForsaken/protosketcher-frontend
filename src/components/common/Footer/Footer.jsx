@@ -193,7 +193,7 @@ class Footer extends Component {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            bsStyle="primary"
+            bsStyle="default"
             onClick={() => this.closeModal()}
             className="doubleButton"
           >

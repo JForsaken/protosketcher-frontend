@@ -61,7 +61,7 @@ class Control extends Component {
     const height = 50;
     const padding = 10;
     const x = posX;
-    const y = posY - height / 2 + padding / 2;
+    const y = posY;
 
     const controlStyle = {
       left: x,
