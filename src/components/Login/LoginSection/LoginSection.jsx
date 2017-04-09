@@ -134,7 +134,6 @@ class LoginSection extends Component {
             validate={isRequired}
             placeholder={intl.messages['login.form.password']}
           />
-          <a className="login-section__input-container__forgot-password">Forgot password?</a>
           <Button
             className="login-section__login-button"
             type="submit"

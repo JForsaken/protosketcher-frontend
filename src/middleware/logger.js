@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
+export default () => next => action => next(action);
 
+/* If you want logs back on...
 export default function logger({ getState }) {
   return next => action => {
     console.group();
@@ -11,3 +13,4 @@ export default function logger({ getState }) {
     return result;
   };
 }
+*/

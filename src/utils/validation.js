@@ -1,5 +1,5 @@
 export const isRequired = value => (
-  value ? null : 'form.errors.required'
+  value ? null : { error: 'form.errors.required', values: {} }
 );
 
 export const isEmail = value => (
