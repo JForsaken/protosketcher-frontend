@@ -155,7 +155,7 @@ class SideMenu extends Component {
         affectedPageId: pageId,
         actionTypeId: changePageActionId,
         eventTypeId: onClickEventId,
-        shapeId: id,
+        shapeId: realId,
       };
       shape.controls[uuid] = control;
 
@@ -206,9 +206,9 @@ class SideMenu extends Component {
     const affectedTextIds = [];
     this.props.parentState.selectedControlItems.forEach(currentId => {
       if (has(this.props.parentState.shapes, (currentId))) {
-        affectedShapeIds.push(currentId);
+        affectedShapeIds.push(this.props.parent.getRealId(currentId));
       } else if (has(this.props.parentState.texts, (currentId))) {
-        affectedTextIds.push(currentId);
+        affectedTextIds.push(this.props.getRealId(currentId));
       }
     });
 
@@ -220,7 +220,7 @@ class SideMenu extends Component {
       affectedPageId: null,
       actionTypeId: this.state.currentAction,
       eventTypeId: this.state.currentEvent,
-      shapeId: id,
+      shapeId: realId,
     };
     shape.controls[uuid] = control;
 
