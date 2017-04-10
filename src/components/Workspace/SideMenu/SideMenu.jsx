@@ -338,6 +338,7 @@ class SideMenu extends Component {
    */
   renderSettings() {
     const { shapes, texts, selectedItems } = this.props.parentState;
+    const { messages } = this.props.intl;
     const { shapeTypes } = this.props.api.getShapeTypes;
     const id = selectedItems[0];
 
@@ -369,7 +370,7 @@ class SideMenu extends Component {
               )}
           </SelectField>
           <Checkbox
-            label={<span className="settings-checkbox">Starts as visible</span>}
+            label={<span className="settings-checkbox">{messages['sidemenu.visible']}</span>}
             checked={shapes[id].visible}
             onCheck={() => this.toggleVisible()}
           />
