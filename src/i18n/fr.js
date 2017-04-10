@@ -84,6 +84,7 @@ export default {
   'sidemenu.toggle': 'Paramètres',
   'sidemenu.typeSelector': 'Type de forme',
   'sidemenu.eventSelector': 'Type d\'événement',
+  'sidemenu.visible': 'Visible au rendu',
   'sidemenu.actionSelector': 'Type d\'action',
   'sidemenu.pageSelector': 'Ne pas changer',
   'sidemenu.colorLabel': 'Couleur',

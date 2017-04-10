@@ -86,6 +86,7 @@ export default {
   'sidemenu.typeSelector': 'Shape Type',
   'sidemenu.actionSelector': 'Action Type',
   'sidemenu.eventSelector': 'Event Type',
+  'sidemenu.visible': 'Starts as visible',
   'sidemenu.pageSelector': 'Do not change',
   'sidemenu.colorLabel': 'Color',
   'sidemenu.changePageLabel': 'Go to page :',

@@ -46,7 +46,10 @@ class Control extends Component {
 
     // hide the elements
     if (!isEmpty(this.elementsToHide)) {
-      this.props.actions.hideElements(this.elementsToHide);
+      this.props.actions.hideElements([
+        ...this.props.application.simulation.hiddenElements,
+        ...this.elementsToHide,
+      ]);
     }
   }
 

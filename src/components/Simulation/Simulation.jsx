@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { filter, has, isEqual, map } from 'lodash';
+import { filter, has, isEqual } from 'lodash';
 
 /* Components */
 import Shape from '../Workspace/Shape/Shape';
@@ -66,10 +66,11 @@ class Simulation extends Component {
       // get all the elements that start the simulation as hidden
       Object.keys(prototypes[selectedPrototype].pages).forEach((p) => {
         const page = prototypes[selectedPrototype].pages[p];
-        elementsToHide = map(page.shapes, (o, k) => (!o.visible ? k : false))
-          .concat(map(page.texts, (o, k) => (!o.visible ? k : false)))
-          .concat(elementsToHide);
+        elementsToHide = Object.keys(page.shapes).filter(o => !page.shapes[o].visible)
+                               .concat(Object.keys(page.texts).filter(o => !page.texts[o].visible))
+                               .concat(elementsToHide);
       });
+
 
       this.props.actions.hideElements(elementsToHide);
     }

@@ -15,6 +15,7 @@ export function createShape(point) {
     x: position.x,
     y: position.y,
     shapeTypeId: invert(this.props.api.getShapeTypes.shapeTypes).line,
+    visible: true,
     uuid,
   };
 
