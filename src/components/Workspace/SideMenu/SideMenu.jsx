@@ -5,9 +5,7 @@ import { bindActionCreators } from 'redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { has, omit, map, invert } from 'lodash';
 import uuidV1 from 'uuid/v1';
-import SelectField from 'material-ui/SelectField';
-import RaisedButton from 'material-ui/RaisedButton';
-import MenuItem from 'material-ui/MenuItem';
+import { SelectField, RaisedButton, MenuItem, Checkbox } from 'material-ui';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import DeleteIcon from 'material-ui/svg-icons/action/delete.js';
 import ArrowIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-right.js';
@@ -56,12 +54,6 @@ class SideMenu extends Component {
         selectedControl: null,
       });
     }
-  }
-
-  handleToggle() {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
   }
 
   /**
@@ -255,6 +247,33 @@ class SideMenu extends Component {
     });
   }
 
+  toggleVisible() {
+    const { shapes, selectedItems, currentPageId } = this.props.parentState;
+    const id = selectedItems[0];
+    const shape = shapes[id];
+    this.props.parent.setState({
+      shapes: {
+        ...omit(shapes, [id]),
+        [id]: {
+          ...omit(shape, ['visible']),
+          visible: !shape.visible,
+        },
+      },
+    });
+
+    const { selectedPrototype, user } = this.props.application;
+    const realId = this.props.parent.getRealId(id);
+
+    const patch = { visible: !shape.visible };
+    this.props.actions.patchShape(selectedPrototype, currentPageId, realId, patch, user.token);
+  }
+
+  handleToggle() {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+  }
+
   /**
    * Delete selected control
    */
@@ -349,6 +368,11 @@ class SideMenu extends Component {
                 />
               )}
           </SelectField>
+          <Checkbox
+            label={<span className="settings-checkbox">Starts as visible</span>}
+            checked={shapes[id].visible}
+            onCheck={() => this.toggleVisible()}
+          />
           <div className="settings-label"><FormattedMessage id="sidemenu.colorLabel" /></div>
           <div className="color-settings-container">
             {
