@@ -251,12 +251,14 @@ class SideMenu extends Component {
     const { shapes, selectedItems, currentPageId } = this.props.parentState;
     const id = selectedItems[0];
     const shape = shapes[id];
+    const patch = { visible: !shape.visible };
+
     this.props.parent.setState({
       shapes: {
         ...omit(shapes, [id]),
         [id]: {
           ...omit(shape, ['visible']),
-          visible: !shape.visible,
+          visible: patch.visible,
         },
       },
     });
@@ -264,7 +266,6 @@ class SideMenu extends Component {
     const { selectedPrototype, user } = this.props.application;
     const realId = this.props.parent.getRealId(id);
 
-    const patch = { visible: !shape.visible };
     this.props.actions.patchShape(selectedPrototype, currentPageId, realId, patch, user.token);
   }
 
