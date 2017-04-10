@@ -239,7 +239,7 @@ function onPatchShape(state, action) {
         pages: {
           [action.requestedPage]: {
             shapes: {
-              [action.shape.id]: action.shape,
+              [action.shape.id]: omit(action.shape, ['id']),
             },
           },
         },
@@ -339,7 +339,7 @@ function onPatchText(state, action) {
         pages: {
           [action.requestedPage]: {
             texts: {
-              [action.text.id]: action.text,
+              [action.text.id]: omit(action.text, ['id']),
             },
           },
         },
@@ -526,7 +526,7 @@ const actionHandlers = {
   [constants.HIDE_ELEMENTS]: (state, action) => ({
     simulation: {
       ...state.simulation,
-      hiddenElements: state.simulation.hiddenElements.concat(action.elements),
+      hiddenElements: action.elements,
     },
   }),
 };
