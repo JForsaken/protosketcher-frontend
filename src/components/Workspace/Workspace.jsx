@@ -222,7 +222,6 @@ class Workspace extends Component {
       this.props.actions.getPageTypes(newProps.application.user.token);
     }
 
-
     // If the shape types are not cached, get them
     if (isEmpty(newProps.api.getShapeTypes.shapeTypes)) {
       this.props.actions.getShapeTypes(newProps.application.user.token);
@@ -239,7 +238,7 @@ class Workspace extends Component {
     }
 
     // If the selected prototype's pages are not cached, get them
-    else if (!prototype.pages) {
+    if (isEmpty(prototype.pages)) {
       newProps.actions.getPages(selectedPrototype, newProps.application.user.token);
     }
 
