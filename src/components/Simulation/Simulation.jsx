@@ -66,8 +66,11 @@ class Simulation extends Component {
       // get all the elements that start the simulation as hidden
       Object.keys(prototypes[selectedPrototype].pages).forEach((p) => {
         const page = prototypes[selectedPrototype].pages[p];
-        elementsToHide = Object.keys(page.shapes).filter(o => !page.shapes[o].visible)
-                               .concat(Object.keys(page.texts).filter(o => !page.texts[o].visible))
+        const shapes = page.shapes || {};
+        const texts = page.texts || {};
+
+        elementsToHide = Object.keys(shapes).filter(o => !shapes[o].visible)
+                               .concat(Object.keys(texts).filter(o => !texts[o].visible))
                                .concat(elementsToHide);
       });
 

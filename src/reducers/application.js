@@ -3,10 +3,11 @@
 import * as constants from '../actions/constants';
 import createReducer from '../utils/create-reducer';
 import { has, isEmpty, omit, cloneDeep } from 'lodash';
+import { get } from '../persistence/storage';
 import { cloneMerge } from '../utils/collections';
 
 const initialState = {
-  locale: 'en',
+  locale: get('locale') || 'en',
   locales: [
     'en',
     'fr',

@@ -2,6 +2,7 @@ import * as constants from './constants';
 import { put, remove } from '../persistence/storage';
 
 export function switchLocale(locale) {
+  put('locale', locale);
   return { type: constants.LOCALE_SWITCHED, payload: locale };
 }
 
@@ -32,6 +33,7 @@ export function hideElements(list) {
 
 export function logout() {
   remove('token');
+  remove('locale');
   remove('selectedPrototype');
   remove('selectedPage');
   return { type: constants.LOGOUT };
