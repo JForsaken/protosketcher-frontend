@@ -226,35 +226,27 @@ class Workspace extends Component {
     }
 
     // If the page types are not cached, get them
-    if (isEmpty(newProps.api.getPageTypes.pageTypes)) {
-      if (!this.fetched.pageTypes) {
-        this.props.actions.getPageTypes(newProps.application.user.token);
-        this.fetched.pageTypes = true;
-      }
+    if (isEmpty(newProps.api.getPageTypes.pageTypes) && !this.fetched.pageTypes) {
+      this.props.actions.getPageTypes(newProps.application.user.token);
+      this.fetched.pageTypes = true;
     }
 
     // If the shape types are not cached, get them
-    if (isEmpty(newProps.api.getShapeTypes.shapeTypes)) {
-      if (!this.fetched.shapeTypes) {
-        this.props.actions.getShapeTypes(newProps.application.user.token);
-        this.fetched.shapeTypes = true;
-      }
+    if (isEmpty(newProps.api.getShapeTypes.shapeTypes) && !this.fetched.shapeTypes) {
+      this.props.actions.getShapeTypes(newProps.application.user.token);
+      this.fetched.shapeTypes = true;
     }
 
     // If the action types are not cached, get them
-    if (isEmpty(newProps.api.getActionTypes.actionTypes)) {
-      if (!this.fetched.actionTypes) {
-        this.props.actions.getActionTypes(newProps.application.user.token);
-        this.fetched.actionTypes = true;
-      }
+    if (isEmpty(newProps.api.getActionTypes.actionTypes) && !this.fetched.actionTypes) {
+      this.props.actions.getActionTypes(newProps.application.user.token);
+      this.fetched.actionTypes = true;
     }
 
     // If the event types are not cached, get them
-    if (isEmpty(newProps.api.getEventTypes.eventTypes)) {
-      if (!this.fetched.eventTypes) {
-        this.props.actions.getEventTypes(newProps.application.user.token);
-        this.fetched.eventTypes = true;
-      }
+    if (isEmpty(newProps.api.getEventTypes.eventTypes) && !this.fetched.eventTypes) {
+      this.props.actions.getEventTypes(newProps.application.user.token);
+      this.fetched.eventTypes = true;
     }
 
     // If the selected prototype's pages are not cached, get them
