@@ -17,7 +17,7 @@
     "build:i18n:langs": "npm run build:i18n && babel-node scripts/i18nToXliff.js",
     "clean": "rimraf dist",
     "deploy": "npm run build && ./bin/deploy.sh",
-    "dist": "npm run clean && npm run lint && NODE_ENV=production webpack --config webpack.config.production.js",
+    "prod": "npm run clean && npm run lint && NODE_ENV=production webpack --config webpack.config.production.js",
     "lint": "eslint --ext .js --ext .jsx --fix src",
     "start": "npm run build && node server.js",
     "dev": "npm run build && DEVTOOLS=true node server.js",
