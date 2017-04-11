@@ -226,6 +226,7 @@ class Menu extends Component {
               checkedIcon={simulation.isSimulating ? <VisibilityOff /> : <Visibility />}
               uncheckedIcon={simulation.isSimulating ? <VisibilityOff /> : <Visibility />}
               onTouchTap={() => this.toggleSimulation()}
+              title={this.props.intl.messages['menu.simulation']}
             />
           </Col>
         }

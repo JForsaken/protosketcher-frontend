@@ -98,6 +98,11 @@ body {
     }
   }
 
+  .separator {
+    margin-top: 35px;
+    border-bottom: 1px solid color('text', label);
+  }
+
   /* Local CSS */
   @import './common/index';
   @import './Login/index';

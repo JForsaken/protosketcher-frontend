@@ -445,6 +445,7 @@ class SideMenu extends Component {
               <MenuItem key={pageId} value={pageId} primaryText={page.name} />
             )}
         </SelectField>
+        <div className="separator"></div>
         <div className="settings-label" style={{ marginBottom: -12 }}>
           <FormattedMessage id="sidemenu.newControlLabel" />
         </div>

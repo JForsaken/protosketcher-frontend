@@ -91,7 +91,7 @@ export default {
   'sidemenu.visible': 'Starts as visible',
   'sidemenu.pageSelector': 'Do not change',
   'sidemenu.colorLabel': 'Color',
-  'sidemenu.changePageLabel': 'Go to page :',
+  'sidemenu.changePageLabel': 'Go to page/modal :',
   'sidemenu.newControlLabel': 'New control',
   'sidemenu.controlsLabel': 'Controls',
   'sidemenu.selectItems': 'Select items',
@@ -125,5 +125,5 @@ export default {
   'footer.delete': 'Delete',
   'footer.moreThanOnePage': 'You need to have at least one page at all times',
   'footer.addModalPage': 'Modal page ("popup")',
-  'footer.addNormalPage': 'Complete page',
+  'footer.addNormalPage': 'Normal page',
 };
