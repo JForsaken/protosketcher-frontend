@@ -6,10 +6,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 process.noDeprecation = true;
 
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
   entry: [
     'babel-polyfill',
-    'webpack-hot-middleware/client',
     './src/index',
   ],
   output: {
