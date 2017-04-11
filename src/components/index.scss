@@ -70,6 +70,34 @@ body {
     }
   }
 
+  .backdrop {
+    @include animation(fadeIn 450ms);
+    background: color(background, backdrop);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 5;
+  }
+
+  .loading {
+    color: color(text, grey);
+    font-size: 24px;
+    font-weight: bold;
+    position: absolute;
+    text-align: center;
+    text-transform: uppercase;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+
+    .spinner {
+      margin-left: 16px;
+      top: 6px;
+    }
+  }
+
   /* Local CSS */
   @import './common/index';
   @import './Login/index';

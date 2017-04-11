@@ -37,6 +37,7 @@ export default {
   'login.form.lastname': 'Last Name',
   'login.form.email': 'Email',
   'login.form.password': 'Password',
+  'login.form.confirmPassword': 'Confirm password',
   'login.form.modal.title': 'Failed login.',
   'signup.form.modal.title': 'Failed sign up.',
   'login.form.modal.400': 'Wrong password. :(',
@@ -61,6 +62,7 @@ export default {
   'form.errors.upperCase': 'Requires at least 1 upper case and lower case character',
   'form.errors.special': 'Requires at least 1 special character (!@#$%^&*()_+)',
   'form.errors.digit': 'Requires at least 1 digit',
+  'form.errors.matching': 'Passwords must match',
 
   // HUD MENU
   'hud.saving': 'Saving...',

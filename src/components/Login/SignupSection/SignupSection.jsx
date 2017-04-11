@@ -25,6 +25,7 @@ import {
   isMaxLengthValid,
   containsUpperCase,
   containsSpecial,
+  isMatching,
   containsDigit } from '../../../utils/validation';
 
 @injectIntl
@@ -41,6 +42,17 @@ class SignupSection extends Component {
       isShowingModal: false,
       pending: false,
       message: '',
+    };
+
+    this.fields = {
+      password: {
+        value: '',
+        visited: false,
+      },
+      newPassword: {
+        value: '',
+        visited: false,
+      },
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -79,6 +91,20 @@ class SignupSection extends Component {
         this.redirectToSketch();
       }
     }
+  }
+
+  onChange(e, inputId) {
+    this.fields[inputId] = {
+      ...this.fields[inputId],
+      value: e.target.value,
+    };
+  }
+
+  onBlur(e, inputId) {
+    this.fields[inputId] = {
+      ...this.fields[inputId],
+      visited: true,
+    };
   }
 
   handleModalClose() {
@@ -151,8 +177,30 @@ class SignupSection extends Component {
                        (v) => containsUpperCase(v, false),
                        (v) => containsSpecial(v, false),
                        (v) => containsDigit(v, false),
-              ]}
+                       () => isMatching(this.fields.password,
+                                        this.fields.newPassword)]}
             placeholder={intl.messages['login.form.password']}
+            onChange={(e) => this.onChange(e, 'password')}
+            onBlur={(e) => this.onBlur(e, 'password')}
+          />
+          <Field
+            name="newPassword"
+            component={ValidatedField}
+            containerClass="login-section__input-container"
+            inputClass="login-section__input-container__input"
+            errorClass="login-section__input-container__error-label"
+            type="password"
+            validate={[isRequired,
+                       (v) => isMaxLengthValid(v, 25),
+                       (v) => isMinLengthValid(v, 8),
+                       (v) => containsUpperCase(v, false),
+                       (v) => containsSpecial(v, false),
+                       (v) => containsDigit(v, false),
+                       () => isMatching(this.fields.password,
+                                        this.fields.newPassword)]}
+            placeholder={intl.messages['login.form.confirmPassword']}
+            onChange={(e) => this.onChange(e, 'newPassword')}
+            onBlur={(e) => this.onBlur(e, 'newPassword')}
           />
           <Button
             className="login-section__login-button"
@@ -170,6 +218,7 @@ class SignupSection extends Component {
 export default reduxForm({
   form: 'signupForm',
   destroyOnUnmount: true,
+  asyncBlurFields: ['password', 'newPassword'],
 })(connect(
   ({ api, form }) => ({ api, form }),
   dispatch => ({

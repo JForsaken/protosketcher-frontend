@@ -37,6 +37,7 @@ export default {
   'login.form.lastname': 'Nom',
   'login.form.email': 'Courriel',
   'login.form.password': 'Mot de passe',
+  'login.form.confirmPassword': 'Confirmer le mot de passe',
   'login.form.modal.title': 'Échec de connexion.',
   'signup.form.modal.title': 'Échec de création de compte.',
   'login.form.modal.400': 'Mot de passe erroné. :(',
@@ -59,6 +60,7 @@ export default {
   'form.errors.minLength': 'La longueur est sous {length} caractères',
   'form.errors.upperCase': 'Doit contenir au moins une lettre majuscule et minuscule',
   'form.errors.special': 'Doit contenir au moins 1 caractère spécial (!@#$%^&*()_+)',
+  'form.errors.matching': 'Les mots de passe doivent correspondre',
   'form.errors.digit': 'Doit contenir au moins 1 chiffre',
 
   // MENU

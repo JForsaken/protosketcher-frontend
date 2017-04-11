@@ -41,3 +41,10 @@ export const containsDigit = (value, flag) => (
     ? { error: 'form.errors.digit', values: {} }
     : null
 );
+
+export const isMatching = (valueObj, matchingValueObj) => (
+  (valueObj.visited && matchingValueObj.visited)
+    && (valueObj.value !== matchingValueObj.value)
+    ? { error: 'form.errors.matching', values: {} }
+    : null
+);

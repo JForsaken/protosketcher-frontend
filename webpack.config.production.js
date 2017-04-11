@@ -1,14 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 process.noDeprecation = true;
 
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
   entry: [
     'babel-polyfill',
-    'webpack-hot-middleware/client',
     './src/index',
   ],
   output: {
@@ -20,13 +19,18 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify('development'),
+        NODE_ENV: JSON.stringify('production'),
       },
-      __DEVTOOLS__: process.env.DEVTOOLS === 'true',
+      __DEVTOOLS__: process.env.DEVTOOLS === 'false',
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false,
+      },
     }),
     new HtmlWebpackPlugin({
       title: 'Protosketcher',
@@ -38,12 +42,16 @@ module.exports = {
       $: 'jquery',
       jQuery: 'jquery',
     }),
+    new ExtractTextPlugin('[name].css'),
   ],
   module: {
     loaders: [
       {
         test: /\.(scss|css)$/,
-        loaders: ['style-loader', 'css-loader?sourceMap', 'sass-loader?sourceMap'],
+        loader: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader!sass-loader",
+        }),
       },
       {
         test: /\.(eot|otf|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/,
