@@ -12,19 +12,17 @@
     "url": "https://github.com/JForsaken/protosketcher-frontend/issues"
   },
   "scripts": {
-    "build": "npm run clean && npm run lint && webpack",
+    "build": "npm run clean && npm run lint && webpack --config webpack.config.js",
     "build:i18n": "rimraf _translations && BABEL_ENV=i18n babel --quiet src > /dev/null",
     "build:i18n:langs": "npm run build:i18n && babel-node scripts/i18nToXliff.js",
     "clean": "rimraf dist",
-    "build-prod": "npm run dist && gh-pages -d dist",
     "deploy": "npm run build && ./bin/deploy.sh",
     "dist": "npm run clean && npm run lint && NODE_ENV=production webpack --config webpack.config.production.js",
     "lint": "eslint --ext .js --ext .jsx --fix src",
     "start": "npm run build && node server.js",
     "dev": "npm run build && DEVTOOLS=true node server.js",
     "dev-windows": "npm run build && set DEVTOOLS=true && node server.js",
-    "debug": "npm run clean && webpack && DEVTOOLS=true node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "debug": "npm run clean && webpack && DEVTOOLS=true node server.js"
   },
   "pre-commit": [
     "lint"
@@ -33,6 +31,7 @@
     "bootstrap": "^3.3.7",
     "bootstrap-loader": "^2.0.0-beta.19",
     "classnames": "~2.2.3",
+    "extract-text-webpack-plugin": "^2.1.0",
     "font-awesome": "^4.7.0",
     "history": "^3.0.0",
     "immutability-helper": "^2.1.2",
@@ -104,7 +103,7 @@
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
-    "webpack": "^1.14.0",
+    "webpack": "^2.3.3",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0"
   }

@@ -39,6 +39,7 @@ class Application extends Component {
 
   render() {
     const { user } = this.props.api.login;
+
     return (
       <div id="layout">
         <div id="main">
@@ -52,11 +53,9 @@ class Application extends Component {
                 <div className="spinner" />
               </div>
             </div>
-           : null
+           /* this will render the child routes */
+           : this.props.children
           }
-
-          {/* this will render the child routes */}
-          {this.props.children}
         </div>
       </div>
     );
