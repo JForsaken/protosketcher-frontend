@@ -49,7 +49,7 @@ class SignupSection extends Component {
         value: '',
         visited: false,
       },
-      newPassword: {
+      confirmPassword: {
         value: '',
         visited: false,
       },
@@ -145,9 +145,17 @@ class SignupSection extends Component {
 
     const { pending, isShowingModal } = this.state;
 
+    let syncErrors = {};
+    let asyncErrors = {};
+
     const submitButtonContent = pending ?
       <div className="spinner" /> :
       intl.messages['signup.form.button'];
+
+    if (this.props.form.signupForm) {
+      asyncErrors = this.props.form.signupForm.asyncErrors;
+      syncErrors = this.props.form.signupForm.syncErrors;
+    }
 
     return (
       <div>
@@ -178,13 +186,13 @@ class SignupSection extends Component {
                        (v) => containsSpecial(v, false),
                        (v) => containsDigit(v, false),
                        () => isMatching(this.fields.password,
-                                        this.fields.newPassword)]}
+                                        this.fields.confirmPassword)]}
             placeholder={intl.messages['login.form.password']}
             onChange={(e) => this.onChange(e, 'password')}
             onBlur={(e) => this.onBlur(e, 'password')}
           />
           <Field
-            name="newPassword"
+            name="confirmPassword"
             component={ValidatedField}
             containerClass="login-section__input-container"
             inputClass="login-section__input-container__input"
@@ -197,15 +205,20 @@ class SignupSection extends Component {
                        (v) => containsSpecial(v, false),
                        (v) => containsDigit(v, false),
                        () => isMatching(this.fields.password,
-                                        this.fields.newPassword)]}
+                                        this.fields.confirmPassword)]}
             placeholder={intl.messages['login.form.confirmPassword']}
-            onChange={(e) => this.onChange(e, 'newPassword')}
-            onBlur={(e) => this.onBlur(e, 'newPassword')}
+            onChange={(e) => this.onChange(e, 'confirmPassword')}
+            onBlur={(e) => this.onBlur(e, 'confirmPassword')}
           />
           <Button
             className="login-section__login-button"
             type="submit"
-            disabled={pending || isShowingModal}
+            disabled={pending
+                  || isShowingModal
+                  || !isEmpty(asyncErrors)
+                  || !isEmpty(syncErrors)
+                  || this.fields.password.value
+                  !== this.fields.confirmPassword.value}
           >
             {submitButtonContent}
           </Button>
@@ -218,7 +231,7 @@ class SignupSection extends Component {
 export default reduxForm({
   form: 'signupForm',
   destroyOnUnmount: true,
-  asyncBlurFields: ['password', 'newPassword'],
+  asyncBlurFields: ['password', 'confirmPassword'],
 })(connect(
   ({ api, form }) => ({ api, form }),
   dispatch => ({
