@@ -177,6 +177,14 @@ class Workspace extends Component {
       y: 0,
     };
     this.itemsList = {};
+
+    this.fetched = {
+      pages: false,
+      actionTypes: false,
+      shapeTypes: false,
+      eventTypes: false,
+      pageTypes: false,
+    };
   }
 
   componentDidMount() {
@@ -218,28 +226,35 @@ class Workspace extends Component {
     }
 
     // If the page types are not cached, get them
-    if (isEmpty(newProps.api.getPageTypes.pageTypes)) {
+    if (isEmpty(newProps.api.getPageTypes.pageTypes) && !this.fetched.pageTypes) {
       this.props.actions.getPageTypes(newProps.application.user.token);
+      this.fetched.pageTypes = true;
     }
 
     // If the shape types are not cached, get them
-    if (isEmpty(newProps.api.getShapeTypes.shapeTypes)) {
+    if (isEmpty(newProps.api.getShapeTypes.shapeTypes) && !this.fetched.shapeTypes) {
       this.props.actions.getShapeTypes(newProps.application.user.token);
+      this.fetched.shapeTypes = true;
     }
 
     // If the action types are not cached, get them
-    if (isEmpty(newProps.api.getActionTypes.actionTypes)) {
+    if (isEmpty(newProps.api.getActionTypes.actionTypes) && !this.fetched.actionTypes) {
       this.props.actions.getActionTypes(newProps.application.user.token);
+      this.fetched.actionTypes = true;
     }
 
     // If the event types are not cached, get them
-    if (isEmpty(newProps.api.getEventTypes.eventTypes)) {
+    if (isEmpty(newProps.api.getEventTypes.eventTypes) && !this.fetched.eventTypes) {
       this.props.actions.getEventTypes(newProps.application.user.token);
+      this.fetched.eventTypes = true;
     }
 
     // If the selected prototype's pages are not cached, get them
     if (isEmpty(prototype.pages)) {
-      newProps.actions.getPages(selectedPrototype, newProps.application.user.token);
+      if (!this.fetched.pages) {
+        newProps.actions.getPages(selectedPrototype, newProps.application.user.token);
+        this.fetched.pages = true;
+      }
     }
 
     // If you just cached the pages, select the first one
