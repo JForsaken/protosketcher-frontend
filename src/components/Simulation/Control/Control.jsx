@@ -31,7 +31,6 @@ class Control extends Component {
   }
 
 
-
   componentWillMount() {
     this.extractControlData();
   }
