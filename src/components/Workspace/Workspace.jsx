@@ -209,11 +209,11 @@ class Workspace extends Component {
       });
 
       // Get shapes and texts if they are not cached
-      if (isEmpty(shapes)) {
+      if (!shapes) {
         this.props.actions.getShapes(selectedPrototype, selectedPage,
         newProps.application.user.token);
       }
-      if (isEmpty(texts)) {
+      if (!texts) {
         this.props.actions.getTexts(selectedPrototype, selectedPage,
         newProps.application.user.token);
       }
