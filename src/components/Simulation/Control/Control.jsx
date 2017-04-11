@@ -25,6 +25,13 @@ class Control extends Component {
     path: PropTypes.string.isRequired,
   };
 
+  constructor(props, context) {
+    super(props, context);
+    this.padding = 10;
+  }
+
+
+
   componentWillMount() {
     this.extractControlData();
   }
@@ -53,6 +60,13 @@ class Control extends Component {
     }
   }
 
+  onTexboxKeyPress(e) {
+    const textbox = e.currentTarget;
+    const letterSize = 13;
+    // Increment textbox size
+    textbox.style.width = `${this.padding * 2 + (textbox.value.length + 1) * letterSize}px`;
+  }
+
   getControl() {
     let control = null;
     const { posX, posY } = this.props;
@@ -60,9 +74,8 @@ class Control extends Component {
     // the position where the control should be placed
     // Width and height need to be hardcoded, because without the ref, we can't get them
     // and the ref is never available on first render
-    const width = 500;
+    const width = 200;
     const height = 50;
-    const padding = 10;
     const x = posX;
     const y = posY;
 
@@ -71,7 +84,7 @@ class Control extends Component {
       top: y,
       width,
       height,
-      padding,
+      padding: this.padding,
     };
 
     switch (this.shapeType) {
@@ -97,6 +110,7 @@ class Control extends Component {
               type="text"
               className="simulation-control simulation-textbox"
               style={controlStyle}
+              onKeyPress={(e) => this.onTexboxKeyPress(e)}
             />
           </foreignObject>
         );
