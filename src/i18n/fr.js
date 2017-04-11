@@ -28,9 +28,9 @@ export default {
 
   // LOGIN FORM
   'login.form.title': 'Bon Retour!',
-  'signup.form.title': 'Vous enregistrer Gratuitement',
+  'signup.form.title': 'Enregistez-vous gratuitement',
   'login.form.context': 'Connexion',
-  'signup.form.context': 'Créer un compte',
+  'signup.form.context': 'Création de compte',
   'login.form.button': 'Me connecter',
   'signup.form.button': "M'enregistrer",
   'login.form.firstname': 'Prénom',
