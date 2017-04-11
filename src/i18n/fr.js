@@ -90,7 +90,7 @@ export default {
   'sidemenu.actionSelector': 'Type d\'action',
   'sidemenu.pageSelector': 'Ne pas changer',
   'sidemenu.colorLabel': 'Couleur',
-  'sidemenu.changePageLabel': 'Aller à la page :',
+  'sidemenu.changePageLabel': 'Aller à la page/modal:',
   'sidemenu.newControlLabel': 'Nouveau contrôle',
   'sidemenu.controlsLabel': 'Contrôles',
   'sidemenu.selectItems': 'Sélection des items',
@@ -124,5 +124,5 @@ export default {
   'footer.delete': 'Supprimer',
   'footer.moreThanOnePage': 'Vous devez avoir au moins une page en tout temps',
   'footer.addModalPage': 'Page modale ("popup")',
-  'footer.addNormalPage': 'Page complète',
+  'footer.addNormalPage': 'Page normale',
 };
