@@ -57,10 +57,10 @@ class RadialMenuItem extends Component {
     }
   }
 
-  onMovingEvent(isTouch) {
+  onMovingEvent() {
     if (this.props.action !== this.props.application.workspace.action) {
       this.props.actions.updateWorkspace({ action: this.props.action });
-      if (isTouch && this.props.closeMenuOnLeave) {
+      if (this.props.closeMenuOnLeave) {
         // If event was touch and this is a closable action, close menu
         this.props.toggleMenu(false);
       }
@@ -169,7 +169,7 @@ class RadialMenuItem extends Component {
           d={this.createSvgArc(150, 150, 100, this.props.startAngle, this.props.endAngle)}
           fill={this.props.color}
           onMouseMove={() => this.onMovingEvent()}
-          onTouchMove={() => this.onMovingEvent(true)}
+          onTouchMove={() => this.onMovingEvent()}
           onMouseLeave={(e) => this.onLeavingEvent(e)}
         />
         <image
