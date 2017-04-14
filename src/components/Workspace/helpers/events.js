@@ -1,5 +1,6 @@
 /* Node modules */
 import { isEmpty, clone, has, pick } from 'lodash';
+import simplify from 'simplify-js/simplify';
 
 /* Utils */
 import absorbEvent from '../../../utils/events.js';
@@ -45,6 +46,7 @@ export function onStartingEvent(e) {
       previousPoint: point,
       currentPath: {
         pathString: '',
+        pathArray: [],
         position: point,
       },
       selectedControlItems: [],
@@ -72,6 +74,11 @@ export function onEndingEvent(e) {
   // Finish drawing by adding last point
   if (this.state.currentPath && this.state.currentPath.pathString
       && isEmpty(this.state.selectedItems)) {
+    // Recompute from scratch the string path using Douglas–Peucker algorithm
+    this.createSvgPathFromArray(
+      simplify(this.state.currentPath.pathArray)
+    );
+    // Create shape
     this.createShape(point);
   }
 
