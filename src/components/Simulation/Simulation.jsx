@@ -110,6 +110,7 @@ class Simulation extends Component {
         this.setState({
           shapes,
           texts,
+          refsLoaded: false,
         });
       }
     }
