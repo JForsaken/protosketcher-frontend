@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { filter, has, isEqual } from 'lodash';
+import { filter, has, isEqual, size } from 'lodash';
 
 /* Components */
 import Shape from '../Workspace/Shape/Shape';
@@ -46,6 +46,7 @@ class Simulation extends Component {
       pagesWithShapesFetched: [],
       pagesWithTextsFetched: [],
       modalId: '',
+      refsLoaded: false,
     };
   }
 
@@ -109,6 +110,7 @@ class Simulation extends Component {
         this.setState({
           shapes,
           texts,
+          refsLoaded: false,
         });
       }
     }
@@ -129,35 +131,34 @@ class Simulation extends Component {
     this.setState({ modalId: '' });
   }
 
+  shapeDidLoad() {
+    // All refs are needed to show controls, so we wait to have them all to set state
+    if (size(this.itemsList) >= size(this.state.shapes) && !this.state.refsLoaded) {
+      this.setState({ refsLoaded: true });
+    }
+  }
+
   renderShapes() {
     const { hiddenElements } = this.props.application.simulation;
-    let posX;
-    let posY;
 
     return (
       Object.entries(this.state.shapes)
             .filter(item => !hiddenElements.includes(item[0]))
-            .map((item, i) => {
-              if (this.isModal) {
-                posX = (item[1].x);
-                posY = (item[1].y);
-              } else {
-                posX = item[1].x;
-                posY = item[1].y;
-              }
-
-              return (
-                <Shape
-                  id={item[0]}
-                  ref={(shape) => { this.itemsList[item[0]] = shape; }}
-                  color={item[1].color}
-                  path={item[1].path}
-                  posX={posX}
-                  posY={posY}
-                  key={i}
-                />
-              );
-            })
+            .map((item, i) => (
+              <Shape
+                id={item[0]}
+                ref={(shape) => {
+                  this.itemsList[item[0]] = shape;
+                  this.shapeDidLoad();
+                }}
+                color={item[1].color}
+                path={item[1].path}
+                posX={item[1].x}
+                posY={item[1].y}
+                key={i}
+              />
+            )
+          )
     );
   }
 
@@ -185,19 +186,33 @@ class Simulation extends Component {
 
     return (
       // only show a control if its relative shape svg has been rendered
-      Object.entries(shapes).map((item) => (
-        <Control
-          id={`control-${item[0]}`}
-          controls={item[1].controls || {}}
-          shapeTypeId={item[1].shapeTypeId}
-          color={item[1].color}
-          posX={item[1].x}
-          posY={item[1].y}
-          path={item[1].path}
-          key={`control-${item[0]}`}
-          onClickModal={(pageId) => this.showModal(pageId)}
-        />
-      ))
+      Object.entries(shapes).map((item) => {
+        if (this.itemsList[item[0]]) {
+          const component = this.itemsList[item[0]].getWrappedInstance();
+          let element;
+          // Check if component is Shape or Text
+          if (component.svgShape) {
+            element = component.svgShape;
+          } else {
+            element = component.svgText;
+          }
+          return (
+            <Control
+              id={`control-${item[0]}`}
+              controls={item[1].controls || {}}
+              shapeTypeId={item[1].shapeTypeId}
+              color={item[1].color}
+              posX={item[1].x}
+              posY={item[1].y}
+              path={item[1].path}
+              key={`control-${item[0]}`}
+              rect={element.getBBox()}
+              onClickModal={(pageId) => this.showModal(pageId)}
+            />
+          );
+        }
+        return null;
+      })
     );
   }
 
@@ -264,7 +279,7 @@ class Simulation extends Component {
           </filter>
           {this.renderShapes()}
           {this.renderTexts()}
-          {this.renderControls()}
+          {this.state.refsLoaded && this.renderControls()}
         </svg>
       </div>
     );
