@@ -57,6 +57,7 @@ import {
 
 import {
   computeSvgPath,
+  createSvgPathFromArray,
   dragItems,
   arePointsFeedable,
   deleteSvgItem } from './helpers/svg';
@@ -104,6 +105,7 @@ class Workspace extends Component {
     // svg
     this.deleteSvgItem = deleteSvgItem.bind(this);
     this.computeSvgPath = computeSvgPath.bind(this);
+    this.createSvgPathFromArray = createSvgPathFromArray.bind(this);
     this.arePointsFeedable = arePointsFeedable.bind(this);
     this.dragItems = dragItems.bind(this);
 

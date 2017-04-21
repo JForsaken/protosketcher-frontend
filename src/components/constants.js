@@ -34,7 +34,7 @@ export const modes = {
 
 /* Workspace paths */
 export const paths = {
-  SEGMENT_LENGTH: 10,
+  SEGMENT_LENGTH: 4,
   MIN_PATH_LENGTH: 3,
   TEXT_OFFSET_Y: 27,
   TEXT_DEFAULT_SIZE: 24,

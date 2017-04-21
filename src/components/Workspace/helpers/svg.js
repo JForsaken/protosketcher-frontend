@@ -45,7 +45,31 @@ export function deleteSvgItem(uuid, mementoId) {
  */
 export function computeSvgPath(point, prefix) {
   const path = this.state.currentPath;
-  path.pathString += `${prefix}${point.x - path.position.x} ${point.y - path.position.y} `;
+  const relativePoint = {
+    x: point.x - path.position.x,
+    y: point.y - path.position.y,
+  };
+  path.pathString += `${prefix}${relativePoint.x} ${relativePoint.y} `;
+  path.pathArray.push(relativePoint);
+  this.setState({
+    currentPath: path,
+  });
+}
+
+
+/**
+ * Creates an entire SVG path string from an array of points
+ * @param {Array} the array of points
+ */
+export function createSvgPathFromArray(points) {
+  const path = this.state.currentPath;
+  let newPathString = '';
+  let prefix;
+  for (let i = 0; i < points.length; i++) {
+    prefix = i === 0 ? 'M' : 'L';
+    newPathString += `${prefix}${points[i].x} ${points[i].y} `;
+  }
+  path.pathString = newPathString;
   this.setState({
     currentPath: path,
   });
