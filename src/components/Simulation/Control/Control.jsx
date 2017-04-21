@@ -23,13 +23,8 @@ class Control extends Component {
     posX: PropTypes.number.isRequired,
     posY: PropTypes.number.isRequired,
     path: PropTypes.string.isRequired,
+    rect: PropTypes.object.isRequired,
   };
-
-  constructor(props, context) {
-    super(props, context);
-    this.padding = 10;
-  }
-
 
   componentWillMount() {
     this.extractControlData();
@@ -59,31 +54,23 @@ class Control extends Component {
     }
   }
 
-  onTexboxKeyPress(e) {
-    const textbox = e.currentTarget;
-    const letterSize = 13;
-    // Increment textbox size
-    textbox.style.width = `${this.padding * 2 + (textbox.value.length + 1) * letterSize}px`;
-  }
-
   getControl() {
     let control = null;
-    const { posX, posY } = this.props;
+    const { posX, posY, rect } = this.props;
 
     // the position where the control should be placed
+    const x = (Math.floor(rect.x + rect.width / 2.0) + posX) - rect.width / 2.0;
+    const y = (Math.floor(rect.y + rect.height / 2.0) + posY) - rect.height / 2.0;
     // Width and height need to be hardcoded, because without the ref, we can't get them
     // and the ref is never available on first render
-    const width = 200;
-    const height = 50;
-    const x = posX;
-    const y = posY;
+    const width = rect.width;
+    const height = rect.height;
 
     const controlStyle = {
       left: x,
       top: y,
       width,
       height,
-      padding: this.padding,
     };
 
     switch (this.shapeType) {
@@ -109,7 +96,6 @@ class Control extends Component {
               type="text"
               className="simulation-control simulation-textbox"
               style={controlStyle}
-              onKeyPress={(e) => this.onTexboxKeyPress(e)}
             />
           </foreignObject>
         );
