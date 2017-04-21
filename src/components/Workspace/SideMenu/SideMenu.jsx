@@ -76,6 +76,9 @@ class SideMenu extends Component {
       },
     });
 
+    // Change parentState for rendering purposes
+    this.props.parentState.shapes[id].shapeTypeId = value;
+
     const { selectedPrototype, user } = this.props.application;
     const realId = this.props.parent.getRealId(id);
 
@@ -119,6 +122,7 @@ class SideMenu extends Component {
     const shape = shapes[id];
     const { selectedPrototype, user } = this.props.application;
     const changePageActionId = invert(this.props.api.getActionTypes.actionTypes).changePage;
+    const buttonShapeTypeId = invert(this.props.api.getShapeTypes.shapeTypes).button;
     const onClickEventId = invert(this.props.api.getEventTypes.eventTypes).click;
     const realId = this.props.parent.getRealId(id);
 
@@ -158,6 +162,9 @@ class SideMenu extends Component {
         shapeId: realId,
       };
       shape.controls[uuid] = control;
+
+      // Change shape type to button
+      this.updateShapeType(null, null, buttonShapeTypeId);
 
       this.props.actions.createControl(selectedPrototype, currentPageId, realId, control,
         user.token);
@@ -200,6 +207,7 @@ class SideMenu extends Component {
     const shape = shapes[id];
     const { selectedPrototype, user } = this.props.application;
     const realId = this.props.parent.getRealId(id);
+    const buttonShapeTypeId = invert(this.props.api.getShapeTypes.shapeTypes).button;
 
     // Split items into shapes and texts
     const affectedShapeIds = [];
@@ -223,6 +231,9 @@ class SideMenu extends Component {
       shapeId: realId,
     };
     shape.controls[uuid] = control;
+
+    // Change shape type to button
+    this.updateShapeType(null, null, buttonShapeTypeId);
 
     this.props.actions.createControl(selectedPrototype, currentPageId, realId, control, user.token);
 
